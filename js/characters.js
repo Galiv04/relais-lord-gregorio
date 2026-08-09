@@ -1,0 +1,171 @@
+/* ============ PERSONAGGI — i 5 amici + il bestiario del Relais ============ */
+
+/* Sistema semplificato (identico al motore Corona):
+   - Caratteristiche come modificatori diretti (da -1 a +4)
+   - Tiro: d20 + modificatore  vs  CD (difficoltà)
+   - Attacco: d20 + mod arma   vs  CA del bersaglio
+   - Danno: dadi + modificatore                                    */
+
+const HEROES = [
+  {
+    id: 'gaetano',
+    sprite: 'gaetano',
+    name: 'Gaetano',
+    class: 'L\'Ingegnere',
+    tagline: 'Progetta satelliti. Stanotte gli servirebbe che uno guardasse QUI GIÙ.',
+    role: 'La mente fredda del gruppo: analizza, pianifica, non perde la calma. Quasi mai.',
+    stats: { FOR: 1, DES: 1, COS: 2, INT: 4, SAG: 2, CAR: 0 },
+    maxHp: 26, ac: 14,
+    attack: { name: 'Chiave inglese del kit auto', stat: 'FOR', dice: [1, 8], bonus: 1, desc: '1d8+2 danni' },
+    abilities: [
+      { id: 'analisi', name: 'Analisi Fredda', uses: 3, type: 'autohit', dice: [2, 6], bonus: 2,
+        desc: 'Trova il punto debole strutturale e lo colpisce senza sbagliare: 2d6+2 danni automatici.' },
+      { id: 'powerbank', name: 'Sovraccarico', uses: 2, type: 'stun', dice: [1, 10], stat: 'INT',
+        desc: 'Powerbank + fili scoperti: 1d10+4 danni e il bersaglio resta folgorato (salta il turno).' },
+    ],
+    passive: 'Metodo Scientifico: +2 a tutte le prove di Intelligenza.',
+    backstory: `Gaetano progetta satelliti: passa le giornate a mandare cose nello spazio e a spiegare al gruppo che no, "il wifi non arriva dall'universo". È il fidanzato di Claudia e il pilota designato di ogni viaggio, incluso questo — il che significa che se stanotte finisce male, sul gruppo WhatsApp la colpa dei tornanti sarà per sempre sua. Crede solo in ciò che può misurare. Il Relais di Lord Gregorio sta per presentargli una lunga serie di dati... difficili da pubblicare.`,
+    voice: 'Cerca spiegazioni razionali finché ha voce: "C\'è SICURAMENTE una spiegazione. Probabilmente il gas."',
+  },
+  {
+    id: 'natalino',
+    sprite: 'natalino',
+    name: 'Natalino',
+    class: 'Il Parrucchiere',
+    tagline: 'Forbici professionali giapponesi. Non escono MAI dalla custodia. Fino a stanotte.',
+    role: 'Rapido e letale nei colpi mirati: il pugnale del gruppo, con più stile.',
+    stats: { FOR: 0, DES: 4, COS: 1, INT: 1, SAG: 1, CAR: 2 },
+    maxHp: 22, ac: 15,
+    attack: { name: 'Forbici professionali', stat: 'DES', dice: [1, 6], bonus: 2, desc: '1d6+6 danni' },
+    abilities: [
+      { id: 'taglio', name: 'Taglio Scalato', uses: 3, type: 'sneak', dice: [3, 6], stat: 'DES',
+        desc: 'Vent\'anni di polso fermo, con vantaggio (2 dadi, tieni il migliore): 3d6+4 danni dove fa più male.' },
+      { id: 'lacca', name: 'Lacca Extra-Forte', uses: 2, type: 'smoke',
+        desc: 'Una nuvola di fissaggio professionale negli occhi di TUTTI i nemici: per un giro attaccano con svantaggio.' },
+    ],
+    passive: 'Mani di Fata: una volta per scontro, se tira 1 sul d20, può ritirare.',
+    backstory: `Natalino fa il parrucchiere con Emanuela, e tra un taglio e una piega ha sviluppato le due doti che stanotte contano davvero: un polso chirurgico e la capacità di far parlare CHIUNQUE si sieda davanti a lui. È l'unico single del gruppo — "per scelta", precisa — e quindi, per le leggi non scritte dei film horror, quello che tutti guardano con apprensione. Lui lo sa. Ha portato le forbici buone.`,
+    voice: 'Commenta l\'orrore come un cliente difficile: "Amore, questo candelabro è di un dozzinale che GRIDA."',
+  },
+  {
+    id: 'claudia',
+    sprite: 'claudia',
+    name: 'Claudia',
+    class: 'L\'Osservatrice',
+    tagline: 'Social media manager. Nota TUTTO: un dettaglio fuori posto, una storia che non torna.',
+    role: 'Gli occhi del gruppo: percepisce, scopre, acceca i nemici con il ring light.',
+    stats: { FOR: 0, DES: 2, COS: 1, INT: 2, SAG: 4, CAR: 1 },
+    maxHp: 22, ac: 14,
+    attack: { name: 'Treppiede telescopico', stat: 'DES', dice: [1, 8], bonus: 1, desc: '1d8+3 danni' },
+    abilities: [
+      { id: 'flash', name: 'Ring Light a Palla', uses: 3, type: 'pet', dice: [2, 6], bonus: 2,
+        desc: 'Luce da studio dritta nelle orbite: 2d6+2 danni automatici e il bersaglio, accecato, attacca con svantaggio.' },
+      { id: 'inquadratura', name: 'Occhio Clinico', uses: 2, type: 'taunt',
+        desc: 'Legge i movimenti del nemico e guida gli schivamenti: per un giro i nemici prendono di mira lei, che subisce metà danni.' },
+    ],
+    passive: 'Scroll Infinito: +2 a tutte le prove di Saggezza (percezione, dettagli, cose che non tornano).',
+    backstory: `Claudia gestisce i social di un colosso degli occhiali a Milano: vive di dettagli, inquadrature e crisi da disinnescare prima che esplodano. Fidanzata con Gaetano, è l'unica del gruppo che ha letto le recensioni del relais PRIMA di partire — e le è rimasta in testa quella, del 1999, che diceva solo: "Personale gentilissimo. Non guardate nel pozzo." Ha portato il ring light "per i contenuti". Farà da torcia da guerra.`,
+    voice: 'Inquadra tutto per istinto: "Aspetta, rifallo: era PERFETTO per la storia... oddio no, SCAPPA."',
+  },
+  {
+    id: 'federico',
+    sprite: 'federico',
+    name: 'Federico',
+    class: 'Il Persuasore',
+    tagline: 'Consulente di comunicazione. Ha convinto clienti peggiori di un demone. Forse.',
+    role: 'La parlantina del gruppo: tratta, distrae, convince. Anche i mostri hanno bisogni.',
+    stats: { FOR: 1, DES: 1, COS: 1, INT: 2, SAG: 0, CAR: 4 },
+    maxHp: 24, ac: 14,
+    attack: { name: 'Mazza da trekking (mai usata)', stat: 'FOR', dice: [1, 8], bonus: 1, desc: '1d8+2 danni' },
+    abilities: [
+      { id: 'pitch', name: 'Pitch Aggressivo', uses: 3, type: 'bighit', dice: [2, 8], stat: 'CAR',
+        desc: 'Un\'invettiva così precisa e personale che fa MALE fisicamente: 2d8+4 danni. Funziona pure sui manichini.' },
+      { id: 'meeting', name: 'Convochiamo un Meeting', uses: 2, type: 'stun', dice: [1, 8], stat: 'CAR',
+        desc: '1d8+4 danni e il nemico, intrappolato in un discorso motivazionale, salta il turno per riprendersi.' },
+    ],
+    passive: 'Media Training: +2 a tutte le prove di Carisma.',
+    backstory: `Federico ha una sua agenzia di comunicazione e consulenza, il che significa che passa la vita a rendere presentabili cose che non lo sono — un talento che al Relais di Lord Gregorio troverà applicazioni inaspettate. Fidanzato con Emanuela, è quello che ha PRENOTATO questo posto ("cinque stelle, ragazzi, un AFFARE") e intende difendere quella scelta fino all'ultimo candelabro insanguinato. Il suo record: 34 minuti di monologo senza che il cliente riuscisse a dire no. Stanotte potrebbe doverlo battere.`,
+    voice: 'Tratta con qualunque cosa: "Ok. OK. Sento che c\'è margine per un win-win, qui."',
+  },
+  {
+    id: 'emanuela',
+    sprite: 'emanuela',
+    name: 'Emanuela',
+    class: 'La Guaritrice',
+    tagline: 'Parrucchiera, mani d\'oro e borsa di Mary Poppins: dentro c\'è SEMPRE quello che serve.',
+    role: 'Tiene in piedi il gruppo: medica, rianima, e con la piastra fa danni veri.',
+    stats: { FOR: 1, DES: 2, COS: 2, INT: 1, SAG: 3, CAR: 1 },
+    maxHp: 24, ac: 14,
+    attack: { name: 'Piastra in ceramica (rovente)', stat: 'DES', dice: [1, 8], bonus: 1, desc: '1d8+3 danni' },
+    abilities: [
+      { id: 'pronto_soccorso', name: 'Mani d\'Oro', uses: 4, type: 'heal', dice: [2, 8], bonus: 3,
+        desc: 'Kit da borsa: garze, cerotti, ago e sangue freddo. Cura un amico di 2d8+3 PV — rialza anche chi è svenuto!' },
+      { id: 'phon', name: 'Colpo di Phon', uses: 2, type: 'holy', dice: [3, 6], stat: 'DES',
+        desc: 'Aria rovente a 2200W dritta in faccia: 3d6+2 danni, DOPPI contro le creature della villa (ombre, manichini, cose fredde).' },
+    ],
+    passive: 'Cuore Saldo: a inizio scontro tutto il gruppo recupera 3 PV. ("Respirate. Ci sono io.")',
+    backstory: `Emanuela taglia capelli con Natalino da anni: insieme sono una macchina da guerra di ritmo, pettegolezzi e caffè. Fidanzata con Federico, è la persona che il gruppo cerca con lo sguardo quando qualcosa va storto — perché lei ha già aperto la borsa e sta già tirando fuori LA cosa che serve. Nessuno ha mai visto il fondo di quella borsa. Nemmeno lei. Stanotte scopriremo se c'è un limite a ciò che contiene.`,
+    voice: 'Calma operativa da salone pieno il sabato: "Nessuno muore stasera. Ho i cerotti e ho da fare lunedì."',
+  },
+];
+
+/* ---------- BESTIARIO DEL RELAIS ---------- */
+/* ai: 'random' colpisce a caso, 'weakest' chi ha meno PV, 'strongest' chi ne ha di più,
+   'smart' punta chi cura. undead: subisce danni doppi dal Colpo di Phon e dal sale. */
+
+const BESTIARY = {
+  ombra_ospite: {
+    name: 'Ombra di un Ospite', sprite: 'ombra',
+    maxHp: 13, ac: 12, ai: 'random', undead: true,
+    attack: { name: 'Dita gelide', bonus: 3, dice: [1, 6], plus: 1 },
+    flavor: 'Un ospite di un altro venticinquennio. Ha ancora l\'accappatoio del relais.',
+  },
+  cameriere: {
+    name: 'Cameriere in Livrea', sprite: 'cameriere',
+    maxHp: 15, ac: 13, ai: 'random', undead: true,
+    attack: { name: 'Vassoio d\'argento', bonus: 3, dice: [1, 8], plus: 1 },
+    flavor: 'Un manichino in livrea impeccabile. Si muove solo quando non lo guardi.',
+  },
+  bambola: {
+    name: 'Bambola della Nursery', sprite: 'bambola',
+    maxHp: 10, ac: 14, ai: 'weakest', undead: true,
+    attack: { name: 'Denti di porcellana', bonus: 4, dice: [1, 6], plus: 0 },
+    flavor: 'Porcellana del 1924. Il sorriso è dipinto. Il resto no.',
+  },
+  spaventapasseri: {
+    name: 'Il Giardiniere', sprite: 'spaventapasseri',
+    maxHp: 24, ac: 13, ai: 'strongest', undead: true,
+    attack: { name: 'Cesoie da siepe', bonus: 4, dice: [1, 10], plus: 1 },
+    flavor: 'Cura l\'orto di notte. Nessuno gli ha mai dato un contratto. O un volto.',
+  },
+  lupo_nebbia: {
+    name: 'Lupo della Nebbia', sprite: 'lupo_nebbia',
+    maxHp: 14, ac: 13, ai: 'weakest',
+    attack: { name: 'Morso freddo', bonus: 4, dice: [1, 8], plus: 1 },
+    flavor: 'Scende dai monti con la nebbia. Gli occhi sono due lumini da cimitero.',
+  },
+  cuoco: {
+    name: 'Lo Chef', sprite: 'cuoco',
+    maxHp: 38, ac: 14, ai: 'smart', undead: true, boss: true,
+    attack: { name: 'Mannaia per il banchetto', bonus: 5, dice: [2, 6], plus: 2 },
+    flavor: 'Prepara il Banchetto del Venticinquennio dal 1899. Il menù non è mai cambiato. Gli ingredienti sì.',
+  },
+  ritratto: {
+    name: 'Ritratto Affamato', sprite: 'ritratto',
+    maxHp: 12, ac: 12, ai: 'random', undead: true,
+    attack: { name: 'Mani dalla cornice', bonus: 3, dice: [1, 8], plus: 0 },
+    flavor: 'Gli ospiti del 1974. Sorridono dalla parete. Vorrebbero compagnia.',
+  },
+  gregorio: {
+    name: 'Lord Gregorio', sprite: 'gregorio',
+    maxHp: 55, ac: 16, ai: 'smart', undead: true, boss: true, lifesteal: true,
+    attack: { name: 'L\'Etichetta del Padrone di Casa', bonus: 6, dice: [2, 8], plus: 2 },
+    flavor: 'Il vostro ospite. Gentile, elegante, immortale. Il sorriso è sincero: è questo il problema.',
+  },
+  gregorio_fame: {
+    name: 'La Fame di Gregorio', sprite: 'gregorio_fame',
+    maxHp: 45, ac: 17, ai: 'smart', undead: true, boss: true,
+    attack: { name: 'Il Conto da Saldare', bonus: 7, dice: [3, 8], plus: 0 },
+    flavor: 'Ciò che il patto ha fatto di lui, sotto il completo di lino. Il Belvedere ha sempre fame.',
+  },
+};
