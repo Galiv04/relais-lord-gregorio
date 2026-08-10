@@ -115,19 +115,19 @@ const HEROES = [
 
 const BESTIARY = {
   ombra_ospite: {
-    name: 'Ombra di un Ospite', sprite: 'ombra',
+    name: 'Ombra di un Ospite', short: 'Ombra', sprite: 'ombra',
     maxHp: 13, ac: 12, ai: 'random', undead: true,
     attack: { name: 'Dita gelide', bonus: 3, dice: [1, 6], plus: 1 },
     flavor: 'Un ospite di un altro venticinquennio. Ha ancora l\'accappatoio del relais.',
   },
   cameriere: {
-    name: 'Cameriere in Livrea', sprite: 'cameriere',
+    name: 'Cameriere in Livrea', short: 'Cameriere', sprite: 'cameriere',
     maxHp: 15, ac: 13, ai: 'random', undead: true,
     attack: { name: 'Vassoio d\'argento', bonus: 3, dice: [1, 8], plus: 1 },
     flavor: 'Un manichino in livrea impeccabile. Si muove solo quando non lo guardi.',
   },
   bambola: {
-    name: 'Bambola della Nursery', sprite: 'bambola',
+    name: 'Bambola della Nursery', short: 'Bambola', sprite: 'bambola',
     maxHp: 10, ac: 14, ai: 'weakest', undead: true,
     attack: { name: 'Denti di porcellana', bonus: 4, dice: [1, 6], plus: 0 },
     flavor: 'Porcellana del 1924. Il sorriso è dipinto. Il resto no.',
@@ -139,7 +139,7 @@ const BESTIARY = {
     flavor: 'Cura l\'orto di notte. Nessuno gli ha mai dato un contratto. O un volto.',
   },
   lupo_nebbia: {
-    name: 'Lupo della Nebbia', sprite: 'lupo_nebbia',
+    name: 'Lupo della Nebbia', short: 'Lupo', sprite: 'lupo_nebbia',
     maxHp: 14, ac: 13, ai: 'weakest',
     attack: { name: 'Morso freddo', bonus: 4, dice: [1, 8], plus: 1 },
     flavor: 'Scende dai monti con la nebbia. Gli occhi sono due lumini da cimitero.',
@@ -151,13 +151,13 @@ const BESTIARY = {
     flavor: 'Prepara il Banchetto del Venticinquennio dal 1899. Il menù non è mai cambiato. Gli ingredienti sì.',
   },
   ritratto: {
-    name: 'Ritratto Affamato', sprite: 'ritratto',
+    name: 'Ritratto Affamato', short: 'Ritratto', sprite: 'ritratto',
     maxHp: 12, ac: 12, ai: 'random', undead: true,
     attack: { name: 'Mani dalla cornice', bonus: 3, dice: [1, 8], plus: 0 },
     flavor: 'Gli ospiti del 1974. Sorridono dalla parete. Vorrebbero compagnia.',
   },
   cameriere_riflesso: {
-    name: 'Cameriere del Riflesso', sprite: 'cameriere',
+    name: 'Cameriere del Riflesso', short: 'Riflesso', sprite: 'cameriere',
     maxHp: 16, ac: 13, ai: 'random', undead: true,
     attack: { name: 'Vassoio Capovolto', bonus: 3, dice: [1, 8], plus: 1 },
     flavor: 'Serve una cena che nessuno mangia da venticinque anni. Cammina all\'incontrario, ma arriva sempre prima.',
@@ -181,7 +181,7 @@ const BESTIARY = {
     flavor: 'Il vostro ospite. Gentile, elegante, immortale. Il sorriso è sincero: è questo il problema.',
   },
   gregorio_fame: {
-    name: 'La Fame di Gregorio', sprite: 'gregorio_fame',
+    name: 'La Fame di Gregorio', short: 'LA FAME', sprite: 'gregorio_fame',
     maxHp: 45, ac: 17, ai: 'smart', undead: true, boss: true,
     attack: { name: 'Il Conto da Saldare', bonus: 7, dice: [3, 8], plus: 0 },
     flavor: 'Ciò che il patto ha fatto di lui, sotto il completo di lino. Il Belvedere ha sempre fame.',

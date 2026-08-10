@@ -198,7 +198,7 @@ const Combat = (() => {
         ctx.fillRect(x, y - 14 - lift, Math.floor(bw * frac), bh);
         // nome
         ctx.fillStyle = '#fff'; ctx.font = "9px 'Press Start 2P'"; ctx.textAlign = 'center';
-        ctx.fillText(e.name.split(',')[0].slice(0, 16), x + eSize / 2, y - 22 - lift);
+        ctx.fillText((e.short || e.name.split(',')[0]).slice(0, 16), x + eSize / 2, y - 22 - lift);
         ctx.textAlign = 'left';
         if (e.stunned) { ctx.font = "14px 'Press Start 2P'"; ctx.fillText('💫', x + eSize - 10, y + 4); }
       }
