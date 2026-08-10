@@ -90,6 +90,7 @@ const IMPRESE = [
   { flag: 'ada_ride',            icon: '😄', title: 'La Risata che Costa',          desc: 'Ada ha riso, dopo cinquant\'anni. L\'ha pagata volentieri.' },
   { flag: 'fumata_di_gruppo',    icon: '🌿', title: 'Il Cerchio del Balcone',       desc: 'Dieci minuti di vacanza vera. E il fumo, in cambio, vi ha disegnato la mappa.' },
   { flag: 'intercapedine_trovata', icon: '📐', title: 'Ottanta Centimetri',         desc: 'La stanza era più corta dei suoi muri. Dietro la quinta cornice: il ritratto della casa.' },
+  { flag: 'anello_reso',           icon: '💍', title: 'Per Sempre Qui',              desc: 'La piscina ha emesso una ricevuta, e voi l\'avete recapitata: a Sofia, 25 anni dopo.' },
 ];
 
 /* ---------- CRONACHE DEL BELVEDERE ----------

@@ -615,7 +615,12 @@ L'infradito, piano, comincia a ruotare su sé stessa. Controcorrente. Poi qualco
 
 > Federico: "...era NUOVA, porca puttana. Comprata IERI."
 
-**(Sangue freddo +2: avete guardato nell'abisso con metodo. Flag: la finestra.)**`,
+E poi — un secondo dopo, con la stessa calma da ufficio — qualcosa **risale.** Piccolo, dorato, rotola sul fondo fino al bordo e si ferma esattamente sotto la mano di Gaetano. Un anello. Dentro, un'incisione consumata dall'acqua ma leggibile: *"A Sofia — per sempre qui."*
+
+> Gaetano: *(asciugandolo, piano)* "...ha preso l'infradito e ha emesso una RICEVUTA. Questa casa fa la contabilità anche degli scambi."
+
+**(Sangue freddo +2: avete guardato nell'abisso con metodo. Oggetto: ANELLO DEL 1999. Flag: la finestra.)**`,
+    item: 'anello_1999',
     sets: { vista_finestra: true },
     gold: 2,
     choices: [{ text: 'Fuori dall\'acqua. La scienza ha dato il suo verdetto.', next: 'p3_fuori' }],
@@ -2910,6 +2915,7 @@ Sofia si volta verso il gruppo, e per un momento — solo un momento — non ha 
       { text: '🤝 Rispettare la sua scelta: "Sofia, se è questo che vuoi... grazie."', next: 'w16_amaro' },
       { text: '⚔ Rifiutare: "No. Nessuno resta. Combattiamo TUTTI insieme, e usciamo TUTTI insieme."', next: 'w14_direttore_boss' },
       { text: '⏰ "Sofì. Il tuo tempo è ripartito. Non devi restare per nessuno, nemmeno per noi."', requires: { flag: 'orologio_reso' }, sets: { sorpresa: true }, next: 'w14_direttore_boss' },
+      { text: '💍 Mostrarle l\'anello ripescato dalla piscina: "A Sofia — per sempre qui." Qualcuno, fuori, non ha mai smesso.', requires: { item: 'anello_1999' }, removeItem: 'anello_1999', sets: { sorpresa: true, anello_reso: true }, next: 'w14_direttore_boss' },
     ],
   },
 

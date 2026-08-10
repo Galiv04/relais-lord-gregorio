@@ -1312,6 +1312,20 @@ executeUntil('intercapedine: la mappa di fumo -> misurare la stanza -> IL RITRAT
   ['tronello_cerchio', 'u4_intercapedine'], 20,
   r => !!(r.log.flags && r.log.flags.intercapedine_trovata) && r.log.usedForceItem === true);
 
+
+executeUntil('anello del 1999: la ricevuta dell\'esperimento -> mostrato a Sofia ("per sempre qui") -> sorpresa al Direttore',
+  ['gaetano', 'claudia'],
+  {
+    p2: '🔬 Gaetano vuole capire',
+    w10_orologio: '⏳ "Non ora, Sofì',
+    w11_inventario: '🕯 Fermarsi: "La decisione tocca a Sofia',
+    w12_sofia: '💍 Mostrarle l\'anello',
+  },
+  { checkBias: 'best', seedBase: 955000,
+    sequences: { h1: ['POZZO', 'Tornare alla PISCINA', 'barricarsi'] } },
+  ['p2_esperimento', 'w12_sofia', 'w14_direttore_boss'], 20,
+  r => !!(r.log.flags && r.log.flags.anello_reso));
+
 const fatalRuns = results.filter(r => !r.ok);
 for (const r of fatalRuns) fail(`Partita "${r.scenario.name}" (seed ${r.scenario.seed}): ${r.error.split('\n')[0]}`);
 
@@ -1513,7 +1527,7 @@ coverageFlag('Il tronello — flag', ['tronello_promesso', 'ada_ride']);
 /* ---- ESPANSIONE: NUOVI OGGETTI ---- */
 
 coverageItem('Nuovi oggetti — ottenuti almeno una volta nelle rispettive scene', [
-  'lanterna_1899', 'asso_di_denari', 'nastro_1974', 'candela_motore', 'gratta_vinci', 'torcia_led', 'accendino', 'birra_limone', 'orologio_sofia', 'inventario_riflesso', 'lettere_1899',
+  'lanterna_1899', 'asso_di_denari', 'nastro_1974', 'candela_motore', 'gratta_vinci', 'torcia_led', 'accendino', 'birra_limone', 'anello_1999', 'orologio_sofia', 'inventario_riflesso', 'lettere_1899',
 ]);
 
 console.log(`  ${allEndings.size >= 5 ? '✅' : '❌'} Finali raggiunti (${allEndings.size}/5): ${[...allEndings].join(', ') || '(nessuno)'}`);
