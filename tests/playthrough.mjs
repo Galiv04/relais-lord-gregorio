@@ -1292,6 +1292,17 @@ executeUntil('tronello: il CERCHIO del balcone (dilemma: consumato in gruppo, ni
   ['nat_tronello', 'tronello_cerchio'], 20,
   r => !!(r.log.flags && r.log.flags.fumata_di_gruppo && r.log.flags.stanza_intravista && !r.log.flags.ada_ride));
 
+
+executeUntil('intercapedine: la mappa di fumo -> misurare la stanza -> IL RITRATTO DELLA CASA (e usato in battaglia)',
+  ['gaetano', 'claudia'],
+  { u1: '🚪 1924 — la stanza del valzer', u2_1924: '🚨 La porta con la targhetta vuota',
+    u4_porta_vuota: '📐 La mappa di fumo' },
+  { checkBias: 'best', seedBase: 950000,
+    sequences: { h1: ['ho bisogno di un tronello', 'il CERCHIO del tronello', 'PIANO PROIBITO', 'barricarsi'] },
+    forceCombatItem: 'Ritratto della Casa' },
+  ['tronello_cerchio', 'u4_intercapedine'], 20,
+  r => !!(r.log.flags && r.log.flags.intercapedine_trovata) && r.log.usedForceItem === true);
+
 const fatalRuns = results.filter(r => !r.ok);
 for (const r of fatalRuns) fail(`Partita "${r.scenario.name}" (seed ${r.scenario.seed}): ${r.error.split('\n')[0]}`);
 
@@ -1477,6 +1488,8 @@ coverage('Il quinto finale — la proposta, il rifiuto e la penna spezzata', ['z
 coverage('Il tronello — la pausa di Natalino e la promessa al pozzo', ['nat_tronello', 'b4_tronello']);
 coverage('Il tronello — il cerchio del balcone', ['tronello_cerchio']);
 coverageFlag('Il cerchio — flag', ['fumata_di_gruppo', 'stanza_intravista']);
+coverage('L\'intercapedine — il ritratto della casa', ['u4_intercapedine']);
+coverageFlag('L\'intercapedine — flag', ['intercapedine_trovata']);
 coverageFlag('Il tronello — flag', ['tronello_promesso', 'ada_ride']);
 
 
