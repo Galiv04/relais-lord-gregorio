@@ -1387,7 +1387,7 @@ executeUntil('la NOTTE SENZA SANGUE: vino a Gregorio + menù dei vivi -> capitol
 
 
 executeUntil('la Stanza del Custode -> il biglietto del 1949 -> Gregorio vacilla -> PENNA SENZA DADO',
-  ['natalino', 'emanuela'],
+  ['federico', 'claudia'],
   {
     a3: '📖 Prima, sfogliare il registro',
     a3_registro: 'Firmiamo domani con calma',
