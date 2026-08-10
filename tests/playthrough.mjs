@@ -217,6 +217,8 @@ function buildGame(seed) {
     clearTimeout: timers.clearTimeout,
     setInterval: timers.setInterval,
     clearInterval: timers.clearInterval,
+    btoa: (x) => Buffer.from(x, 'binary').toString('base64'),
+    atob: (x) => Buffer.from(x, 'base64').toString('binary'),
   };
   const context = vm.createContext(sandbox);
   for (const { name, script } of scriptCache) {
@@ -1577,6 +1579,30 @@ function findHeroButton(box, heroName) {
 })();
 
 
+
+
+(function testExportImportSalvataggio() {
+  section('Verifica diretta: codice di esportazione dei salvataggi (roundtrip tra dispositivi)');
+  const game = buildGame(7711);
+  const E = game.api.Engine;
+  game.act(() => E.newGame([{ heroId: 'gaetano', player: 'Gali' }, { heroId: 'emanuela', player: '' }], 1));
+  game.act(() => E.gotoScene('a2'));
+  const G1 = game.getG();
+  G1.inventory.push('asso_di_denari'); G1.gold = 7;
+  game.act(() => E.gotoScene('a3'));   // l'auto-save fotografa lo stato
+  const code = E.exportCode(1);
+  if (!code) { fail('testExportImport: exportCode ha restituito null'); return; }
+  // "altro dispositivo": si importa su uno slot diverso e si carica
+  const err = E.importCode(code, 3);
+  if (err) { fail('testExportImport: importCode ha rifiutato il proprio codice: ' + err); return; }
+  game.act(() => E.loadGame(3));
+  const G2 = game.getG();
+  if (G2.sceneId !== 'a3') fail(`testExportImport: scena attesa a3, trovata ${G2.sceneId}`);
+  if (!G2.inventory.includes('asso_di_denari') || G2.gold !== 7) fail('testExportImport: inventario o Sangue Freddo persi nel viaggio');
+  if (G2.party[0].player !== 'Gali') fail('testExportImport: nome del giocatore perso');
+  if (E.importCode('non-un-codice!!!', 3) === null) fail('testExportImport: un codice spazzatura è stato accettato');
+  console.log('  ✅ Export/import: codice generato, importato su altro slot, stato integro (scena, zaino, oro, nomi) e spazzatura rifiutata');
+})();
 
 (function testRiviviLaNotte() {
   section('Verifica diretta: Rivivi la Notte (sblocco al finale, capitoli con flag e zaino pronti)');
