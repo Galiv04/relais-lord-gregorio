@@ -3962,6 +3962,8 @@ const DIARY_FLAGS = [
   ['bambole_addormentate',  'Le signorine del 1924 DORMONO, grate alla luce di mamma Ada. Un valzer fischiato può chiamarle, se servisse.'],
   ['chef_amico',            'Lo Chef vi considera OSPITI: ai signori del \'74 non si dice di no. E gli ospiti non si impiattano.'],
   ['chef_allertato',        'La bottiglia di Ernesto si è spaccata e lo Chef si è SVEGLIATO: in cucina, adesso, rubare è molto più difficile.'],
+  ['tacca_di_gregorio',     'Nell\'ossario, tra le tacche degli ospiti, ce n\'è UNA incisa e reincisa da centoventicinque anni: quella di Gregorio. Il primo prigioniero conta anche sé stesso.'],
+  ['bagagli_visti',          'I bagagli mai ritirati, catalogati per anno sugli scaffali dell\'ossario. E in fondo, uno scaffale VUOTO con le targhette già scritte: "2024".'],
   ['sceso_ossario',         'Siete scesi nell\'ossario dietro la cella frigorifera: i bagagli mai ritirati, le tacche sul muro.'],
   ['segreto_contabile',     'Il Contabile vi ha confidato il suo segreto: anche la casa tiene una contabilità. E i conti non tornano.'],
   ['pista_paese',           'Pietrafonda vi conosce: Don Michele, il bar del 1999, la cripta dei custodi.'],
