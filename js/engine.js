@@ -386,6 +386,7 @@ const Engine = (() => {
   function choiceAvailable(c) {
     if (c.requires) {
       if (c.requires.flag && !G.flags[c.requires.flag]) return false;
+      if (c.requires.flag2 && !G.flags[c.requires.flag2]) return false;
       if (c.requires.notFlag && G.flags[c.requires.notFlag]) return false;
       if (c.requires.item && !G.inventory.includes(c.requires.item)) return false;
       if (c.requires.item2 && !G.inventory.includes(c.requires.item2)) return false;

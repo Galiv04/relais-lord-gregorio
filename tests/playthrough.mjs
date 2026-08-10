@@ -1375,6 +1375,16 @@ executeUntil('il menù dei vivi: la contro-offerta di Emanuela al Banchetto -> z
   ['a6_menu', 'z2_menu_vivi'], 20,
   r => !!(r.log.flags && r.log.flags.menu_dei_vivi));
 
+
+executeUntil('la NOTTE SENZA SANGUE: vino a Gregorio + menù dei vivi -> capitolazione -> alba senza boss',
+  ['emanuela', 'gaetano'],
+  { a6: '🍝', k3: '💇 Natalino fa un passo avanti' },
+  { checkBias: 'best', seedBase: 985000,
+    sequences: { h1: ['CANTINA', 'barricarsi'],
+                 z1: ['MENÙ DEI VIVI', 'versare il vino del 1899', 'La casa ha già PERSO'] } },
+  ['z2_menu_vivi', 'z2_vino', 'z2_capitolazione', 'z6_alba'], 24,
+  r => !!(r.log.flags && r.log.flags.capitolazione) && !r.log.scenes.includes('z3_boss') && !r.log.scenes.includes('z4_fase2'));
+
 const fatalRuns = results.filter(r => !r.ok);
 for (const r of fatalRuns) fail(`Partita "${r.scenario.name}" (seed ${r.scenario.seed}): ${r.error.split('\n')[0]}`);
 

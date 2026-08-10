@@ -95,6 +95,7 @@ const IMPRESE = [
   { flag: 'orto_curato',           icon: '🌱', title: 'Da Giardiniera a Giardiniera', desc: 'La menta tagliata come la tagliava la madre di Ada. Le giardiniere si ringraziano lavorando.' },
   { flag: 'benzinaio_sapeva',      icon: '⛽', title: 'L\'Uomo del Distributore',    desc: 'Cinque macchine contate in centoventicinque anni. E una frase sola per provarci: lasciate stare il pozzo.' },
   { flag: 'menu_dei_vivi',         icon: '🍳', title: 'Il Menù dei Vivi',            desc: 'Pancakes, crêpes, bruschette e grigliata contro un pasto solo. La casa ci sta ancora pensando.' },
+  { flag: 'capitolazione',         icon: '🤝', title: 'La Notte Senza Sangue',       desc: 'Nessuna battaglia: solo i conti fatti bene, un maggiordomo stanco e il pugno che si apre.' },
 ];
 
 /* ---------- CRONACHE DEL BELVEDERE ----------
