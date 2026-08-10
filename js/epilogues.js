@@ -91,6 +91,7 @@ const IMPRESE = [
   { flag: 'fumata_di_gruppo',    icon: '🌿', title: 'Il Cerchio del Balcone',       desc: 'Dieci minuti di vacanza vera. E il fumo, in cambio, vi ha disegnato la mappa.' },
   { flag: 'intercapedine_trovata', icon: '📐', title: 'Ottanta Centimetri',         desc: 'La stanza era più corta dei suoi muri. Dietro la quinta cornice: il ritratto della casa.' },
   { flag: 'anello_reso',           icon: '💍', title: 'Per Sempre Qui',              desc: 'La piscina ha emesso una ricevuta, e voi l\'avete recapitata: a Sofia, 25 anni dopo.' },
+  { flag: 'foto_balcone',          icon: '📷', title: 'La Foto Venuta Male',         desc: 'La nebbia sbagliata, le mani mosse e vive. La preferita di sempre, proprio per questo.' },
 ];
 
 /* ---------- CRONACHE DEL BELVEDERE ----------

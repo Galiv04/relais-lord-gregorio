@@ -3867,6 +3867,7 @@ const DIARY_FLAGS = [
   ['tronello_promesso',     'Ada vi ha chiesto un tiro di tronello "per quando esce". E i ragazzi del \'74, il cuoco li ADORAVA.'],
   ['stanza_intravista',     'Il fumo del cerchio ha disegnato la pianta del primo piano: in fondo al corridoio c\'è una STANZA CHE NON C\'È. La porta con la targhetta vuota.'],
   ['intercapedine_trovata', 'Dietro la quinta cornice: il ritratto che la casa tiene di sé — di giorno, felice, "per ricordarmi". Non regge il confronto: è un\'arma.'],
+  ['foto_balcone',          'Sfondo del telefono di Claudia: la foto del balcone con la nebbia sbagliata — e le vostre mani, mosse e vive, che la casa non può toccare.'],
   ['ultimo_biglietto',      'Natalino conserva l\'ULTIMO Gratta e Vinci: "lo gratto quando usciamo, con l\'alba in faccia". È una promessa.'],
   ['biglietto_strappato',   'Il quinto biglietto aveva vinto "una notte, ospite della casa, per sempre". Natalino l\'ha strappato: RITENTA.'],
   ['casa_rispetta',         'Avete denunciato la trappola in faccia a Gregorio, e il suo sorriso è scivolato: la casa vi RISPETTA.'],
