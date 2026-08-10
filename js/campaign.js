@@ -45,6 +45,11 @@ const ITEMS = {
     desc: 'Una candela d\'accensione, ancora TIEPIDA, targhetta d\'ottone: "Gruppo 2024". È la vostra. E da qualche parte, il motore che la aspetta gira ancora: scagliata contro una creatura, morde con la scintilla di un motore vivo (2d6). Un lancio solo — poi addio, macchina.',
     combat: { dice: [2, 6] }, icon: '⚡',
   },
+  erbe_ada: {
+    name: 'Rametto d\'argento di Ada',
+    desc: 'Un rametto delle erbe argentate dell\'orto, consegnato dalla padrona di casa in persona. "Contro il freddo. Il MIO." Cura il VELENO del Belvedere e scalda anche il resto (+3 PV).',
+    usable: true, heal: 3, cureVeleno: true,
+  },
   taralli: {
     name: 'Taralli razionati (scorta di Emanuela)',
     desc: 'Il pacco dell\'autogrill, razionato con criteri militari. "UNO a testa nei momenti di crisi, e la crisi la certifico IO." +2 PV e un morale insospettabilmente migliore.',
@@ -758,6 +763,7 @@ E davvero: mentre lo dice, una ciocca dei suoi capelli diventa bianca.`,
       { text: '🕯 Natalino: la finestra della Camera del Pozzo lo sta aspettando', next: 'cuore_nat', once: true },
       { text: '🎫 Cinque minuti di normalità: Natalino tira fuori i Gratta e Vinci di Baiano', requires: { item: 'gratta_vinci' }, next: 'gv1', once: true },
       { text: '🌿 Natalino alza una mano: "Io ho bisogno di un tronello. Da solo. Camera mia. CINQUE minuti."', next: 'nat_tronello', once: true },
+      { text: '🌱 Emanuela prende il phon come una fondina: "Devo controllare una cosa nell\'orto. Da sola."', next: 'ema_orto', once: true },
       { text: '🌿🌿 Stavolta si condivide: il CERCHIO del tronello, sul balcone. Tutti. (consuma il tronello di riserva)', requires: { item: 'tronello' }, removeItem: 'tronello', next: 'tronello_cerchio', once: true },
       { text: '🌅 Basta così: barricarsi e aspettare l\'alba (verso il finale)', next: 'z1', requires: { flag: 'un_nodo_sciolto' } },
     ],
@@ -3170,6 +3176,32 @@ L'ultimo filo di fumo si stacca dal cerchio, scavalca la ringhiera e se ne va ve
     ],
   },
 
+  ema_orto: {
+    location: 'giardino',
+    caption: 'Emanuela e l\'orto di Ada',
+    text: `Nessuno discute nemmeno stavolta — anche perché Emanuela è già uscita.
+
+L'orto di Ada, di notte, è l'unico angolo del Belvedere che non fa paura. Emanuela si inginocchia tra le file di erbe come si inginocchia una che gli orti li ha visti fare da sua nonna: senza toccare niente, all'inizio. Solo guardando. Poi le mani partono da sole — un'erbaccia tolta con lo strappo giusto, un tutore raddrizzato, una foglia secca staccata con due dita.
+
+Non lo fa per la casa. Lo fa perché **non si può guardare un orto tenuto così bene e non dargli una mano.** È più forte di lei.
+
+> La voce dal pozzo: *(piano, vicinissima, come da dietro la siepe)* "...la menta la tagli come la tagliava mia madre."
+
+> Emanuela: *(senza voltarsi, senza fermarsi, col tono di chi parla a una collega)* "Perché è il modo giusto. Se la strappi, il cespo si offende e non ricaccia più uguale."
+
+> La voce dal pozzo: "L'ho detto per QUARANT'ANNI a quel disgraziato del Giardiniere." *(una pausa. e poi, più piano)* "Prendine un rametto. Di quelle d'argento, in fondo. Contro il freddo. Il MIO."
+
+Emanuela lo taglia — come lo taglierebbe la madre di Ada — lo annusa, e se lo mette nella borsa senza fare cerimonie. Le giardiniere si ringraziano così: continuando a lavorare.
+
+**(Oggetto: RAMETTO D'ARGENTO DI ADA — cura il veleno e scalda il resto. Sangue freddo +1. Flag: orto_curato.)**`,
+    item: 'erbe_ada',
+    gold: 1,
+    sets: { orto_curato: true },
+    choices: [
+      { text: '↩ Rientrare, con le mani che sanno di menta e la borsa più ricca', next: 'h1' },
+    ],
+  },
+
   gv1: {
     location: 'corridoio',
     caption: 'Cinque minuti di normalità',
@@ -3890,6 +3922,7 @@ const DIARY_FLAGS = [
   ['tronello_promesso',     'Ada vi ha chiesto un tiro di tronello "per quando esce". E i ragazzi del \'74, il cuoco li ADORAVA.'],
   ['stanza_intravista',     'Il fumo del cerchio ha disegnato la pianta del primo piano: in fondo al corridoio c\'è una STANZA CHE NON C\'È. La porta con la targhetta vuota.'],
   ['intercapedine_trovata', 'Dietro la quinta cornice: il ritratto che la casa tiene di sé — di giorno, felice, "per ricordarmi". Non regge il confronto: è un\'arma.'],
+  ['orto_curato',           'Emanuela ha curato l\'orto di Ada, da giardiniera a giardiniera. Il rametto d\'argento nella sua borsa è un regalo della padrona di casa.'],
   ['cuore_fe',              'Il ferro di cavallo Made in China è appuntato al colletto di Federico: una volta per scontro, il suo primo 1 si ritira. "Ridicolo e vivo."'],
   ['foto_balcone',          'Sfondo del telefono di Claudia: la foto del balcone con la nebbia sbagliata — e le vostre mani, mosse e vive, che la casa non può toccare.'],
   ['ultimo_biglietto',      'Natalino conserva l\'ULTIMO Gratta e Vinci: "lo gratto quando usciamo, con l\'alba in faccia". È una promessa.'],
@@ -3905,7 +3938,7 @@ const WORLD_MAP = [
   { key: 'tornanti', label: 'I Tornanti',      x: 0.12, y: 0.80, scenes: ['a0', 'a0_benzina', 'a1', 'a1b', 'ft1', 'ft1_inseguiti', 'ft_cesoie', 'ft_cesoie_vinto', 'ft2_capito', 'ft2_notte'] },
   { key: 'relais',   label: 'Il Relais',       x: 0.40, y: 0.30, scenes: ['a2', 'a2_siepi', 'p4_fuga', 'gr1', 'gr2', 'gr3', 'gr3_ko'] },
   { key: 'hall',     label: 'La Hall',         x: 0.56, y: 0.48, scenes: ['a3', 'a3_registro', 'a3_registro_ko', 'a4_firma', 'a4_rinvio', 'a4_firma_forzata', 'p4_rientro'] },
-  { key: 'camere',   label: 'Le Camere',       x: 0.74, y: 0.32, scenes: ['a5', 'a5_pozzo', 'h1', 'h2', 'gv1', 'nat_tronello', 'tronello_cerchio', 'u1', 'u2_1999', 'u2_1924', 'u2_1899', 'u3_medaglione', 'u3_lanterna', 'u3_bambole_fight', 'u3_bambole_vinte', 'u5_specchio', 'u4_porta_vuota', 'u4_intercapedine', 'sf1', 'sf2', 'sf3', 'sf4', 'sf5', 'sf6', 's49_1', 's49_2', 's49_3', 's49_3_ko', 's74_1', 's74_2', 's74_3', 'cuore_gc', 'cuore_gc_esito', 'cuore_fe', 'cuore_fe_esito', 'cuore_nat', 'cuore_nat_esito'] },
+  { key: 'camere',   label: 'Le Camere',       x: 0.74, y: 0.32, scenes: ['a5', 'a5_pozzo', 'h1', 'h2', 'gv1', 'nat_tronello', 'tronello_cerchio', 'ema_orto', 'u1', 'u2_1999', 'u2_1924', 'u2_1899', 'u3_medaglione', 'u3_lanterna', 'u3_bambole_fight', 'u3_bambole_vinte', 'u5_specchio', 'u4_porta_vuota', 'u4_intercapedine', 'sf1', 'sf2', 'sf3', 'sf4', 'sf5', 'sf6', 's49_1', 's49_2', 's49_3', 's49_3_ko', 's74_1', 's74_2', 's74_3', 'cuore_gc', 'cuore_gc_esito', 'cuore_fe', 'cuore_fe_esito', 'cuore_nat', 'cuore_nat_esito'] },
   { key: 'pranzo',   label: 'Sala da Pranzo',  x: 0.46, y: 0.62, scenes: ['a6', 'a6_menu', 'a6_brindisi', 'a6_no_brindisi', 'a7', 'z1', 'z2_vino', 'z2_perdono', 'z2_trattativa', 'z2_rituale', 'gvz', 'z2_strada', 'z2_alleato', 'z2_bambole', 'z2_claudia', 'z3_boss', 'z3_boss_solo', 'z3_boss_arrabbiato', 'z3_boss_indebolito', 'z4_fase2', 'z5_vittoria', 'z6_alba', 'e_alba', 'z_penna', 'z_penna_no', 'e_penna', 'z_custode', 'e_custode', 'z_resa', 'e_ospiti', 'z_vespri', 'z_smemorati', 'e_smemorati'] },
   { key: 'riflesso', label: 'Il Riflesso',      x: 0.10, y: 0.28, scenes: ['w1_tuffo', 'w2_riflesso', 'w2_riflesso_ko', 'w3_giardino', 'w3_pattuglia_combat', 'w4_sofia', 'w5_racconto', 'w6_1924', 'w7_ronda', 'w7_ronda_combat', 'w8_direttore', 'w9_studio', 'w9_studio_combat', 'w10_orologio', 'w10_orologio_reso', 'w11_inventario', 'w12_tradimento', 'w12_sofia', 'w14_direttore_boss', 'w15_vittoria', 'w16_amaro', 'w17_fuga', 'w17_fuga_ko', 'w18_soglia', 'w_finale'] },
   { key: 'paese',    label: 'Pietrafonda',     x: 0.16, y: 0.90, scenes: ['pp1', 'pp2', 'pp2_bar', 'pp3', 'pp_anello', 'pp4_cripta', 'pp4', 'pp6', 'pp6_ko', 'pp7'] },

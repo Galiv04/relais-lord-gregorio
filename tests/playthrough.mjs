@@ -1357,6 +1357,15 @@ executeUntil('l\'avviso del benzinaio si capisce al pozzo -> b1_avviso (benzinai
   ['a0_benzina', 'b1_avviso'], 20,
   r => !!(r.log.flags && r.log.flags.benzinaio_sapeva));
 
+
+executeUntil('Emanuela nell\'orto di Ada -> ema_orto (rametto d\'argento: cura veleno + PV)',
+  ['emanuela', 'gaetano'],
+  {},
+  { checkBias: 'best', seedBase: 975000,
+    sequences: { h1: ['controllare una cosa nell', 'PIANO PROIBITO', 'barricarsi'] } },
+  ['ema_orto'], 20,
+  r => !!(r.log.flags && r.log.flags.orto_curato));
+
 const fatalRuns = results.filter(r => !r.ok);
 for (const r of fatalRuns) fail(`Partita "${r.scenario.name}" (seed ${r.scenario.seed}): ${r.error.split('\n')[0]}`);
 
