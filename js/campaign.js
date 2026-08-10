@@ -42,7 +42,12 @@ const ITEMS = {
   },
   candela_motore: {
     name: 'Candela del motore (gruppo 2024)',
-    desc: 'Una candela d\'accensione, ancora tiepida, con una targhetta d\'ottone: "Gruppo 2024". Gaetano la riconosce: è la SUA.',
+    desc: 'Una candela d\'accensione, ancora TIEPIDA, targhetta d\'ottone: "Gruppo 2024". È la vostra. E da qualche parte, il motore che la aspetta gira ancora: scagliata contro una creatura, morde con la scintilla di un motore vivo (2d6). Un lancio solo — poi addio, macchina.',
+    combat: { dice: [2, 6] }, icon: '⚡',
+  },
+  gratta_vinci: {
+    name: 'Gratta e Vinci di Baiano (x5)',
+    desc: 'Cinque biglietti comprati all\'ultimo avamposto della civiltà. Natalino li custodisce come reliquie: "Se qualcuno vince, il weekend lo paga lui." Nessuno ha ancora grattato niente.',
     usable: false,
   },
   orologio_sofia:     { name: 'Orologio di Sofia', desc: 'Un modello economico da discount, cinturino di plastica scolorito. Fermo alle 23:58 del 31 luglio 1999 — due minuti prima che tutto cominciasse.', usable: false },
@@ -77,6 +82,7 @@ L'autogrill di Baiano è l'ultimo avamposto della civiltà: cinque caffè, due C
 Un silenzio da autogrill, con le tazzine a mezz'aria. Poi Natalino gratta il primo biglietto, perde, e la vita riparte.
 
 *(I Gratta e Vinci perdono tutti e cinque. Ovviamente. Ma questo lo scoprirete strada facendo.)*`,
+    item: 'gratta_vinci',
     choices: [
       { text: '🚗 Si riparte: ultima ora di strada, poi i tornanti', next: 'a1' },
       { text: '⛽ Prima, il pieno al distributore qui fuori — il serbatoio è a metà', next: 'a0_benzina' },
@@ -705,6 +711,7 @@ E davvero: mentre lo dice, una ciocca dei suoi capelli diventa bianca.`,
       { text: '💑 Gaetano e Claudia: due minuti, da soli, sul balcone', next: 'cuore_gc', once: true },
       { text: '💑 Federico ed Emanuela: la porta della loro camera è socchiusa', next: 'cuore_fe', once: true },
       { text: '🕯 Natalino: la finestra della Camera del Pozzo lo sta aspettando', next: 'cuore_nat', once: true },
+      { text: '🎫 Cinque minuti di normalità: Natalino tira fuori i Gratta e Vinci di Baiano', requires: { item: 'gratta_vinci' }, next: 'gv1', once: true },
       { text: '🌅 Basta così: barricarsi e aspettare l\'alba (verso il finale)', next: 'z1', requires: { flag: 'un_nodo_sciolto' } },
     ],
   },
@@ -2839,6 +2846,58 @@ Da qualche parte nella villa, una porta verde in fondo a un corridoio aspetta an
     choices: [{ text: 'Tornare al corridoio delle tre porte: la notte, di qua, non è ancora finita', next: 'h1' }],
   },
 
+
+  /* ==================== I GRATTA E VINCI DI BAIANO ==================== */
+
+  gv1: {
+    location: 'corridoio',
+    caption: 'Cinque minuti di normalità',
+    text: `Nel corridoio della casa che respira, Natalino si siede sul gradino, tira fuori dal portafoglio i cinque Gratta e Vinci di Baiano e li dispone sul marmo come un solitario.
+
+> Natalino: "Regola dell'autogrill: si grattano nei momenti di merda. E scusate il francesismo, ma se questo non è IL momento, ditemi voi."
+
+Gratta il primo con la chiave della camera. **RITENTA.** Il secondo: **RITENTA.** Il terzo vince *"un altro biglietto"* — che, fa notare Federico con la voce dell'esperienza contabile, "è il modo in cui ti dicono RITENTA facendoti pure tornare in tabaccheria". Il quarto: **RITENTA.**
+
+> Emanuela: "Come da pronostico. Cinque euro alla lotteria della speranza."
+
+> Natalino: *(che intasca l'ultimo biglietto, intatto, con una cura improvvisamente seria)* "L'ultimo no. L'ultimo lo gratto quando USCIAMO da qui. Tutti e cinque, con l'alba in faccia. È una promessa, non un biglietto."
+
+E per un momento — cinque amici seduti su un gradino a perdere alla lotteria mentre la casa trattiene il respiro — per un momento è di nuovo soltanto una vacanza.
+
+**(Sangue freddo +1: la normalità, stanotte, è un'arma. Flag: ultimo_biglietto.)**`,
+    gold: 1,
+    sets: { ultimo_biglietto: true },
+    choices: [
+      { text: '↩ Tornare al corridoio delle tre porte: la notte vi aspetta', next: 'h1' },
+    ],
+  },
+
+  gvz: {
+    location: 'salaBanchetto',
+    caption: 'L\'ultimo biglietto',
+    npc: ['gregorio'],
+    text: `Natalino si siede al tavolo del Banchetto. Non sulla sedia che la casa gli ha apparecchiato: su quella ACCANTO, storta, da ospite maleducato. E davanti a Gregorio, davanti al registro aperto e alla penna del 1899, tira fuori l'ultimo Gratta e Vinci di Baiano.
+
+> Natalino: "Avevo promesso di grattarlo all'alba, fuori. Ma sai che c'è? Lo gratto QUI. Davanti a te. Così impari come si fa un contratto onesto: due euro, e sai subito se hai perso."
+
+La moneta raschia. E sotto la patina argentata, i simboli — che dovrebbero essere ciliegie, campane, il tesoro del faraone — vengono su in una tipografia che Natalino non ha mai visto ma che voi riconoscete tutti: **caratteri del 1899.**
+
+*"HAI VINTO: UNA NOTTE. OSPITE DELLA CASA. PER SEMPRE."*
+
+Il silenzio dura tre secondi. Poi Natalino guarda Gregorio negli occhi, sorride il suo miglior sorriso da bancone del sabato mattina, e **strappa il biglietto in due.**
+
+> Natalino: "Ritenta."
+
+I ritratti alle pareti — tutti, tutti e quattro i gruppi — fanno una cosa che i ritratti non fanno: **ridono.** Un fruscio secco di risate dentro le cornici. E Gregorio, per la seconda volta in centoventicinque anni, si ritrova a corto di programma.
+
+**(Il Belvedere ha appena scoperto che si può perdere con stile: Sangue freddo +2.)**`,
+    gold: 2,
+    sets: { biglietto_strappato: true },
+    choices: [
+      { text: '↩ Tornare al tavolo, mentre i ritratti ridono ancora', next: 'z1' },
+    ],
+  },
+
   /* ==================== L'ALBA — IL BANCHETTO ==================== */
 
   z1: {
@@ -2862,6 +2921,7 @@ E la casa — le pareti, i lampadari, i ritratti, il pavimento a scacchi — **r
     choices: [
       { text: '🧂💧 IL RITUALE: sale sulla firma, acqua di Ada sul registro, e restituire il nome', requires: { flag: 'rituale_noto' }, next: 'z2_rituale' },
       { text: '🛣 "Le strade TORNANO, Gregorio. Le abbiamo viste tornare. E un contratto firmato dentro una trappola... è NULLO."', requires: { flag: 'strada_che_torna' }, once: true, next: 'z2_strada' },
+      { text: '🎫 Natalino mette i piedi sul tavolo del 1899 e gratta l\'ULTIMO Gratta e Vinci. Davanti a LUI.', requires: { flag: 'ultimo_biglietto' }, removeItem: 'gratta_vinci', once: true, next: 'gvz' },
       { text: '⚔ Il gruppo si mette in mezzo: se la casa vuole un nome, dovrà VENIRSELO A PRENDERE', next: 'z3_boss' },
       { text: '🗣 Federico chiede la parola: la trattativa della vita', tag: 'Prova di Carisma — CD 13', requires: { notFlag: 'casa_rispetta' }, check: { stat: 'CAR', dc: 13, success: 'z2_trattativa', fail: 'z3_boss_arrabbiato' } },
       { text: '🗣 Federico riprende la parola — e stavolta la casa ASCOLTA. Nessun dado: il tavolo è cambiato', requires: { flag: 'casa_rispetta' }, next: 'z2_trattativa' },
@@ -3276,8 +3336,8 @@ const WORLD_MAP = [
   { key: 'tornanti', label: 'I Tornanti',      x: 0.12, y: 0.80, scenes: ['a0', 'a0_benzina', 'a1', 'a1b', 'ft1', 'ft1_inseguiti', 'ft_cesoie', 'ft2_capito', 'ft2_notte'] },
   { key: 'relais',   label: 'Il Relais',       x: 0.40, y: 0.30, scenes: ['a2', 'a2_siepi', 'p4_fuga', 'gr1', 'gr2', 'gr3', 'gr3_ko'] },
   { key: 'hall',     label: 'La Hall',         x: 0.56, y: 0.48, scenes: ['a3', 'a3_registro', 'a3_registro_ko', 'a4_firma', 'a4_rinvio', 'a4_firma_forzata', 'p4_rientro'] },
-  { key: 'camere',   label: 'Le Camere',       x: 0.74, y: 0.32, scenes: ['a5', 'a5_pozzo', 'h1', 'h2', 'u1', 'u2_1999', 'u2_1924', 'u2_1899', 'u3_medaglione', 'u3_bambole_fight', 'u3_bambole_vinte', 'u5_specchio', 'u4_porta_vuota', 'sf1', 'sf2', 'sf3', 'sf4', 'sf5', 'sf6', 's49_1', 's49_2', 's49_3', 's49_3_ko', 's74_1', 's74_2', 's74_3', 'cuore_gc', 'cuore_fe', 'cuore_fe_esito', 'cuore_nat', 'cuore_nat_esito'] },
-  { key: 'pranzo',   label: 'Sala da Pranzo',  x: 0.46, y: 0.62, scenes: ['a6', 'a6_menu', 'a6_brindisi', 'a6_no_brindisi', 'a7', 'z1', 'z2_vino', 'z2_trattativa', 'z2_rituale', 'z2_strada', 'z3_boss', 'z3_boss_arrabbiato', 'z3_boss_indebolito', 'z4_fase2', 'z5_vittoria', 'z6_alba', 'e_alba', 'z_custode', 'e_custode', 'z_resa', 'e_ospiti', 'z_vespri', 'z_smemorati', 'e_smemorati'] },
+  { key: 'camere',   label: 'Le Camere',       x: 0.74, y: 0.32, scenes: ['a5', 'a5_pozzo', 'h1', 'h2', 'gv1', 'u1', 'u2_1999', 'u2_1924', 'u2_1899', 'u3_medaglione', 'u3_bambole_fight', 'u3_bambole_vinte', 'u5_specchio', 'u4_porta_vuota', 'sf1', 'sf2', 'sf3', 'sf4', 'sf5', 'sf6', 's49_1', 's49_2', 's49_3', 's49_3_ko', 's74_1', 's74_2', 's74_3', 'cuore_gc', 'cuore_fe', 'cuore_fe_esito', 'cuore_nat', 'cuore_nat_esito'] },
+  { key: 'pranzo',   label: 'Sala da Pranzo',  x: 0.46, y: 0.62, scenes: ['a6', 'a6_menu', 'a6_brindisi', 'a6_no_brindisi', 'a7', 'z1', 'z2_vino', 'z2_trattativa', 'z2_rituale', 'gvz', 'z2_strada', 'z3_boss', 'z3_boss_arrabbiato', 'z3_boss_indebolito', 'z4_fase2', 'z5_vittoria', 'z6_alba', 'e_alba', 'z_custode', 'e_custode', 'z_resa', 'e_ospiti', 'z_vespri', 'z_smemorati', 'e_smemorati'] },
   { key: 'riflesso', label: 'Il Riflesso',      x: 0.10, y: 0.28, scenes: ['w1_tuffo', 'w2_riflesso', 'w2_riflesso_ko', 'w3_giardino', 'w3_pattuglia_combat', 'w4_sofia', 'w5_racconto', 'w6_1924', 'w7_ronda', 'w7_ronda_combat', 'w8_direttore', 'w9_studio', 'w9_studio_combat', 'w10_orologio', 'w10_orologio_reso', 'w11_inventario', 'w12_tradimento', 'w12_sofia', 'w14_direttore_boss', 'w15_vittoria', 'w16_amaro', 'w17_fuga', 'w17_fuga_ko', 'w18_soglia', 'w_finale'] },
   { key: 'paese',    label: 'Pietrafonda',     x: 0.16, y: 0.90, scenes: ['pp1', 'pp2', 'pp2_bar', 'pp3', 'pp4_cripta', 'pp4', 'pp6', 'pp6_ko', 'pp7'] },
   { key: 'piscina',  label: 'La Piscina',      x: 0.22, y: 0.50, scenes: ['p1', 'p1_accappatoio', 'p1_accappatoio_ko', 'p2', 'p2_esperimento', 'p2_esperimento_ko', 'p3_fuori'] },

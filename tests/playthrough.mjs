@@ -1099,6 +1099,25 @@ executeUntil('Banchetto: la geometria denunciata -> z2_strada + trattativa SENZA
     sequences: { h1: ['POZZO', 'barricarsi'], z1: ['strade TORNANO', 'la casa ASCOLTA'] } },
   ['z2_strada', 'z2_trattativa'], 20, r => !!(r.log.flags && r.log.flags.casa_rispetta));
 
+
+/* ---- I GRATTA E VINCI DI BAIANO (gv1 nel corridoio, gvz al Banchetto) ----
+   e la Candela del motore scagliata DAVVERO in combattimento (2d6). */
+
+executeUntil('Gratta e Vinci: quattro RITENTA nel corridoio + l\'ultimo strappato in faccia a Gregorio',
+  ['natalino', 'federico'],
+  {},
+  { checkBias: 'best', seedBase: 870000,
+    sequences: { h1: ['Gratta e Vinci', 'POZZO', 'barricarsi'], z1: ['ULTIMO Gratta e Vinci', 'VENIRSELO A PRENDERE'] } },
+  ['gv1', 'gvz'], 20, r => !!(r.log.flags && r.log.flags.biglietto_strappato));
+
+executeUntil('Candela del motore: recuperata in rimessa e scagliata contro lo Chef (2d6)',
+  ['gaetano', 'natalino'],
+  { b1: '👁 Il piano di Gaetano', b2_orto: '🚗 Prima: la porta della rimessa',
+    gr3: 'Uscire dalla rimessa', gr3_ko: 'Correre fuori', k3: '⚔ Non si tratta con chi ha una mannaia' },
+  { checkBias: 'best', seedBase: 875000,
+    sequences: { h1: ['POZZO', 'CANTINA', 'barricarsi'] }, forceCombatItem: 'Candela del motore' },
+  ['k4_chef_fight'], 20, r => r.log.usedForceItem === true);
+
 const fatalRuns = results.filter(r => !r.ok);
 for (const r of fatalRuns) fail(`Partita "${r.scenario.name}" (seed ${r.scenario.seed}): ${r.error.split('\n')[0]}`);
 
@@ -1261,11 +1280,17 @@ coverage('Strada che torna — la discesa, la rivelazione e la notte persa', [
 coverage('Strada che torna — eco al Banchetto (denuncia della geometria)', ['z2_strada']);
 coverageFlag('Strada che torna — flag di trama', ['strada_che_torna', 'casa_rispetta']);
 
+/* ---- ESPANSIONE: GRATTA E VINCI ---- */
+
+coverage('Gratta e Vinci — il gradino del corridoio e l\'ultimo biglietto al Banchetto', ['gv1', 'gvz']);
+coverageFlag('Gratta e Vinci — flag di trama', ['ultimo_biglietto', 'biglietto_strappato']);
+
+
 
 /* ---- ESPANSIONE: NUOVI OGGETTI ---- */
 
 coverageItem('Nuovi oggetti — ottenuti almeno una volta nelle rispettive scene', [
-  'lanterna_1899', 'asso_di_denari', 'nastro_1974', 'candela_motore', 'orologio_sofia', 'inventario_riflesso', 'lettere_1899',
+  'lanterna_1899', 'asso_di_denari', 'nastro_1974', 'candela_motore', 'gratta_vinci', 'orologio_sofia', 'inventario_riflesso', 'lettere_1899',
 ]);
 
 console.log(`  ${allEndings.size >= 4 ? '✅' : '❌'} Finali raggiunti (${allEndings.size}/4): ${[...allEndings].join(', ') || '(nessuno)'}`);
