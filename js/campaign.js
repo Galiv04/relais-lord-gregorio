@@ -3763,6 +3763,26 @@ La leggete insieme, ogni anno, tutti e cinque. E ogni anno, per un momento che n
 const CAMPAIGN_START = 'a0';
 
 
+
+/* Rivivi la Notte: punti d'ingresso per rigiocare rami mai visti, sbloccati
+   dopo il primo finale del profilo. Ogni capitolo prepara flag e zaino minimi. */
+const CHAPTERS = [
+  { id: 'a0',       label: '🚗 Il viaggio — autogrill di Baiano', desc: 'Dall\'inizio: caffè, Gratta e Vinci e tornanti.' },
+  { id: 'p1',       label: '🌊 La piscina di sera', desc: 'La scena da cartolina. E il riflesso sbagliato.' },
+  { id: 'h1',       label: '🕯 Il corridoio di mezzanotte', desc: 'L\'hub delle tre piste: cantina, piano proibito, pozzo — e i momenti di respiro.' },
+  { id: 'pp1',      label: '⛪ Pietrafonda', desc: 'Il paese, Don Michele, la cripta dei custodi.', flags: { firma_rinviata: true } },
+  { id: 'k1',       label: '🍷 La cantina', desc: 'Lo Chef, il forno del 1899 e l\'ossario là sotto.' },
+  { id: 'u1',       label: '🚪 Il piano proibito', desc: 'Le stanze dei gruppi: 1999, 1949, 1974, 1924, 1899 — e la soffitta.' },
+  { id: 'b1',       label: '🌳 Il pozzo e il garage', desc: 'Il regno del Giardiniere, la voce dal pozzo, la rimessa dei motori.' },
+  { id: 'ft1',      label: '🛣 La Strada che Torna', desc: 'Scendere a piedi, di notte. Ventisei tornanti. O forse no.' },
+  { id: 'w1_tuffo', label: '🌒 Il Riflesso', desc: 'Il mondo capovolto sotto la piscina. Sofia vi aspetta.', flags: { un_nodo_sciolto: true } },
+  { id: 'z1',       label: '🍽 Il Banchetto — tutte le carte in mano', desc: 'Ore 5:57 con ogni nodo sciolto e ogni segreto in tasca: provate i finali che vi mancano.',
+    flags: { un_nodo_sciolto: true, rituale_noto: true, strada_che_torna: true, chef_amico: true, bambole_addormentate: true, segreto_custodi: true, ultimo_biglietto: true, storia_1974: true },
+    items: ['sale_grosso', 'acqua_pozzo', 'vino_1899', 'campanella_1974', 'gratta_vinci'] },
+  { id: 'z1_puro',  scene: 'z1', label: '🍽 Il Banchetto — a mani nude', desc: 'Ore 5:57 senza assi nella manica: la battaglia, la resa, la penna che non conoscete.',
+    flags: { un_nodo_sciolto: true } },
+];
+
 /* Il Diario della Notte: le conoscenze acquisite, in chiaro, per chi gioca 4-6 ore
    e non deve ricordare tutto a memoria. Ordine = ordine di visualizzazione. */
 const DIARY_FLAGS = [

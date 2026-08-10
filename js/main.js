@@ -66,6 +66,7 @@ const Main = (() => {
 
   function refreshTitle() {
     $('btn-continue').style.display = Engine.hasSave() ? '' : 'none';
+    $('btn-revive').style.display = Engine.reviveUnlocked() ? '' : 'none';
     $('btn-profile').textContent = '👤 ' + Engine.currentProfile();
     Sound.music('title');
   }
@@ -176,6 +177,7 @@ const Main = (() => {
     $('btn-howto-back').onclick = () => Engine.showScreen('screen-title');
     $('btn-setup-back').onclick = () => Engine.showScreen('screen-title');
     $('btn-start-adventure').onclick = startAdventure;
+    $('btn-revive').onclick = () => Engine.showRevive();
     $('btn-diff-normale').onclick = () => setDifficulty('normale');
     $('btn-diff-facile').onclick = () => setDifficulty('facile');
     $('btn-diff-incubo').onclick = () => setDifficulty('incubo');

@@ -1577,6 +1577,25 @@ function findHeroButton(box, heroName) {
 })();
 
 
+
+(function testRiviviLaNotte() {
+  section('Verifica diretta: Rivivi la Notte (sblocco al finale, capitoli con flag e zaino pronti)');
+  const game = buildGame(6060);
+  const E = game.api.Engine;
+  if (E.reviveUnlocked()) fail('testRiviviLaNotte: risulta sbloccato PRIMA di aver visto un finale');
+  game.act(() => E.newGame([{ heroId: 'gaetano', player: '' }]));
+  game.act(() => E.gotoScene('e_alba'));
+  if (!E.reviveUnlocked()) { fail('testRiviviLaNotte: NON sbloccato dopo il finale'); return; }
+  // capitolo 9: "Banchetto — tutte le carte in mano"
+  game.act(() => E.startChapter(9));
+  const G = game.getG();
+  if (G.sceneId !== 'z1') fail(`testRiviviLaNotte: capitolo 9 doveva aprire z1 (trovato ${G.sceneId})`);
+  if (G.party.length !== 5) fail('testRiviviLaNotte: il capitolo non schiera tutti e cinque');
+  if (!G.flags.rituale_noto || !G.flags.chef_amico) fail('testRiviviLaNotte: flag del capitolo non applicati');
+  if (!G.inventory.includes('sale_grosso') || !G.inventory.includes('acqua_pozzo')) fail('testRiviviLaNotte: zaino del capitolo non preparato');
+  console.log('  ✅ Rivivi la Notte: sblocco corretto, capitolo del Banchetto con 5 eroi, flag e ingredienti pronti');
+})();
+
 (function testCollezioneImprese() {
   section('Verifica diretta: la collezione delle imprese persiste tra le notti (per profilo)');
   const game = buildGame(9292);

@@ -801,6 +801,32 @@ const Engine = (() => {
     $('modal-generic').classList.remove('hidden');
   }
 
+  function reviveUnlocked() {
+    try { return localStorage.getItem('relais-notte-finita-' + encodeURIComponent(currentProfile())) === '1'; } catch (e) { return false; }
+  }
+
+  function showRevive() {
+    const box = $('modal-generic-content');
+    const rows = (typeof CHAPTERS !== 'undefined' ? CHAPTERS : []).map((c, i) =>
+      `<button class="choice-btn" onclick="Engine.startChapter(${i})">${c.label} <span class="choice-tag">${c.desc}</span></button>`).join('');
+    box.innerHTML = `<h2>🗝 Rivivi la Notte</h2>
+      <p style="color:var(--text-dim);margin-bottom:10px">Avete già visto un'alba: adesso il Belvedere vi lascia scegliere DA DOVE ricominciare. Tutti e cinque presenti, zaino e conoscenze preparati per il capitolo scelto.</p>
+      ${rows}
+      <button class="btn" style="margin-top:12px" onclick="document.getElementById('modal-generic').classList.add('hidden')">↩ Indietro</button>`;
+    $('modal-generic').classList.remove('hidden');
+  }
+
+  function startChapter(i) {
+    const c = (typeof CHAPTERS !== 'undefined') ? CHAPTERS[i] : null;
+    if (!c) return;
+    const tutti = ['gaetano', 'natalino', 'claudia', 'federico', 'emanuela'].map(id => ({ heroId: id, player: '' }));
+    newGame(tutti);
+    $('modal-generic').classList.add('hidden');
+    if (c.flags) Object.assign(G.flags, c.flags);
+    if (c.items) for (const it of c.items) G.inventory.push(it);
+    gotoScene(c.scene || c.id);
+  }
+
   function showDiary() {
     const box = $('modal-generic-content');
     const beats = (G.history || []).map((c, i) => `<div class="ability-box" style="border-left-color:var(--gold)"><div class="ability-desc">${i + 1}. ${c}</div></div>`).join('') ||
@@ -890,6 +916,8 @@ const Engine = (() => {
     }
 
     // imprese sbloccate
+    // sblocca "Rivivi la Notte" per il profilo: da adesso ogni ramo è visitabile a scelta
+    try { localStorage.setItem('relais-notte-finita-' + encodeURIComponent(currentProfile()), '1'); } catch (e) {}
     if (typeof IMPRESE !== 'undefined') {
       const unlocked = IMPRESE.filter(i => G.flags[i.flag]);
       // la COLLEZIONE del profilo: le imprese restano sbloccate tra una notte e l'altra
@@ -941,7 +969,7 @@ const Engine = (() => {
     newGame, saveGame, loadGame, hasSave, clearSave, listSaves, firstFreeSlot,
     listProfiles, currentProfile, setCurrentProfile, deleteProfile, renameProfile, exportCode, importCode,
     showScreen, gotoScene, currentScene, renderPartyBar,
-    showParty, showHeroSheet, showHeroSheetIdx, showInventory, showRules, showMap, showMenu, showDiary, showBestiary,
+    showParty, showHeroSheet, showHeroSheetIdx, showInventory, showRules, showMap, showMenu, showDiary, showBestiary, showRevive, startChapter, reviveUnlocked,
     usePotionOutside, applyPotion, useAntidote, applyAntidote, backToTitle, confirmRestart, doRestart,
     heroSheetHTML, formatText,
   };
