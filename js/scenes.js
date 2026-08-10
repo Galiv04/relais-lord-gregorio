@@ -423,7 +423,7 @@ const Scenes = (() => {
       ctx.fillStyle = '#4a5238'; ctx.fillRect(cx + 34, cy - 19, 14, 7);
       // Pietrafonda in basso: persiane tutte chiuse
       for (let i = 0; i < 5; i++) {
-        const px = W * 0.62 + (i % 3) * 30, py = H - 44 + Math.floor(i / 3) * 16;
+        const px = W * 0.62 + (i % 3) * 30, py = H - 78 + Math.floor(i / 3) * 16;
         blocks(ctx, px, py, 24, 14, '#2a2228', 6, r, 0.12);
         ctx.fillStyle = '#1a1418'; ctx.fillRect(px + 4, py + 3, 5, 7); ctx.fillRect(px + 14, py + 3, 5, 7);
       }
@@ -775,8 +775,8 @@ const Scenes = (() => {
       }
       // le luci sott'acqua
       for (const fx of [0.22, 0.5, 0.78]) {
-        glow(ctx, W * fx, py + ph - 10, 26, 14, '120,220,235');
-        ctx.fillStyle = '#a8e8f0'; ctx.fillRect(W * fx - 5, py + ph - 12, 10, 5);
+        glow(ctx, W * fx, py + ph - 42, 26, 14, '120,220,235');
+        ctx.fillStyle = '#a8e8f0'; ctx.fillRect(W * fx - 5, py + ph - 44, 10, 5);
       }
     },
 
@@ -890,6 +890,21 @@ const Scenes = (() => {
         ctx.fillStyle = '#060a06';
         ctx.fillRect(W * fx + 14, g - fh - 12, 5, 5); ctx.fillRect(W * fx + 26, g - fh - 12, 5, 5);
       }
+      // IL PALO DEL GIARDINIERE: il punto focale del giardino — e adesso è VUOTO
+      const spx = W * 0.55, spy = g - 8;
+      ctx.fillStyle = '#3a2a1c'; ctx.fillRect(spx - 3, spy - 92, 6, 92);            // il palo
+      ctx.fillStyle = '#2e2216'; ctx.fillRect(spx - 34, spy - 78, 68, 5);           // la traversa
+      ctx.fillStyle = '#4a3826'; ctx.fillRect(spx - 34, spy - 80, 5, 9); ctx.fillRect(spx + 29, spy - 80, 5, 9);
+      // sulla traversa: solo la giacca floscia e il cappello appeso. LUI non c'è.
+      ctx.fillStyle = '#4a4034'; ctx.fillRect(spx - 12, spy - 74, 24, 18);
+      ctx.fillStyle = '#8a7a4a'; ctx.fillRect(spx + 22, spy - 86, 14, 5); ctx.fillRect(spx + 26, spy - 90, 6, 5);
+      glow(ctx, spx, spy - 70, 30, 20, '190,180,195');
+      // il capanno degli attrezzi, la porta socchiusa
+      blocks(ctx, W * 0.06, g - 44, W * 0.12, 44, '#241c14', 8, r, 0.14);
+      for (let i = 0; i < 4; i++) blocks(ctx, W * 0.055 + i * 5, g - 50 - i * 4, W * 0.13 - i * 10, 6, '#1a140e', 6, r, 0.1);
+      ctx.fillStyle = '#0d0a08'; ctx.fillRect(W * 0.115, g - 32, 12, 32);           // la porta, socchiusa sul buio
+      ctx.fillStyle = '#d8dce8'; ctx.fillRect(W * 0.10, g - 26, 2, 10);             // il luccichio delle cesoie appese
+      ctx.fillStyle = '#9aa0b0'; ctx.fillRect(W * 0.098, g - 18, 4, 3);
       // l'orto recintato di Ada
       blocks(ctx, W * 0.36, g - 34, W * 0.28, 30, '#1d2e1d', 8, r, 0.16);
       ctx.fillStyle = '#4a3226';
@@ -913,8 +928,8 @@ const Scenes = (() => {
       crescentMoon(ctx, W * 0.80, 48, 18, '#c8b8c0', '#0a0710');
       const g = H - 60;
       hills(ctx, W, g - 26, 36, '#0f150f', r, 34);
-      for (let i = 0; i < 3; i++) willow(ctx, W * (0.12 + i * 0.38), g + 6, 70 + r() * 20, '#14261c', '#241a14', r);
       ground(ctx, W, H, g, '#16241a', r, 12, 8);
+      for (let i = 0; i < 3; i++) willow(ctx, W * (0.12 + i * 0.38), g + 6, 70 + r() * 20, '#14261c', '#241a14', r);
       // IL POZZO, al centro esatto
       const wx = W * 0.5 - 55, wy = g - 74;
       blocks(ctx, wx, wy, 110, 74, '#2e2a35', 8, r, 0.16);
@@ -1080,6 +1095,22 @@ const Scenes = (() => {
         ctx.fillStyle = '#4a4440'; ctx.fillRect(lx, ly - 12, 44, 10);
         ctx.fillStyle = '#c8c2b4'; ctx.fillRect(lx + 12, ly - 26, 18, 15);
       }
+      // ombrelloni NERI del Riflesso: aperti di notte, come lutti
+      for (const fx of [0.20, 0.56, 0.88]) {
+        const ux = W * fx, uy = deck + 2;
+        ctx.fillStyle = '#3a3234'; ctx.fillRect(ux - 1, uy - 34, 3, 34);
+        ctx.fillStyle = '#2a1218';
+        for (let k = 0; k < 5; k++) ctx.fillRect(ux - 22 + k * 2, uy - 34 + k * 3, 44 - k * 4, 4);
+        ctx.fillStyle = '#4a2028'; ctx.fillRect(ux - 22, uy - 22, 44, 2);
+      }
+      // il muro di cinta, scuro, col bordo che nel mondo giusto è bianco
+      blocks(ctx, 0, deck - 12, W, 12, '#241d22', 8, r, 0.12);
+      ctx.fillStyle = '#3a3036'; ctx.fillRect(0, deck - 13, W, 2);
+      // sul lettino di mezzo: un accappatoio piegato, senza iniziale — il sesto posto
+      ctx.fillStyle = '#d8d2c6'; ctx.fillRect(W * 0.08 + 2 * W * 0.17 + 12, deck - 24, 18, 12);
+      ctx.fillStyle = '#b0aca2'; ctx.fillRect(W * 0.08 + 2 * W * 0.17 + 14, deck - 20, 14, 2);
+      // la luna rossa cola sull'acqua nera
+      ctx.fillStyle = 'rgba(138,36,50,.22)'; ctx.fillRect(px + pw * 0.42, py + 4, pw * 0.16, ph - 8);
       // le finestre della villa capovolta, in alto, luce FREDDA
       ctx.fillStyle = '#6ab8ae';
       for (let i = 0; i < 6; i++) ctx.fillRect(W * 0.2 + i * W * 0.11, 8, 10, 12);
@@ -1120,6 +1151,21 @@ const Scenes = (() => {
         ctx.fillStyle = '#0d0a0c';
         for (let p = 0; p < 4; p++) ctx.fillRect(W * fx + 9 + p * 12, 96, 2, 2);
       }
+      // il bancone della reception, SPECCHIATO: qui sta a destra
+      blocks(ctx, W * 0.74, floorY - 40, W * 0.20, 40, '#2c1e26', 8, r, 0.12);
+      blocks(ctx, W * 0.73, floorY - 46, W * 0.22, 8, '#3a2a34', 8, r, 0.08);
+      ctx.fillStyle = '#d8d0c4'; ctx.fillRect(W * 0.78, floorY - 54, 16, 8);        // il registro aperto (bianco, di qua)
+      ctx.fillStyle = '#12101a'; ctx.fillRect(W * 0.785, floorY - 52, 6, 4);
+      glow(ctx, W * 0.88, floorY - 58, 22, 14, '106,184,174');
+      ctx.fillStyle = '#6ab8ae'; ctx.fillRect(W * 0.875, floorY - 62, 8, 10);       // lampada fredda da banco
+      ctx.fillStyle = '#8a8478'; ctx.fillRect(W * 0.873, floorY - 52, 12, 2);
+      // lo scalone, che di qua SCENDE dove di là saliva
+      for (let st = 0; st < 6; st++) {
+        blocks(ctx, W * 0.03, floorY - 12 - st * 12, W * 0.16 - st * 8, 12, '#241c28', 8, r, 0.1);
+        ctx.fillStyle = '#3a3036'; ctx.fillRect(W * 0.03, floorY - 12 - st * 12, W * 0.16 - st * 8, 2);
+      }
+      ctx.fillStyle = '#4a3a44';
+      for (let st = 0; st < 6; st++) ctx.fillRect(W * 0.03 + W * 0.16 - st * 8 - 2, floorY - 34 - st * 12, 3, 24);
       // l'Inventario: un leggio al centro con un registro NERO
       blocks(ctx, W * 0.46, floorY - 46, W * 0.08, 46, '#241a1e', 8, r, 0.1);
       ctx.fillStyle = '#12101a'; ctx.fillRect(W * 0.44, floorY - 58, W * 0.12, 14);
@@ -1304,10 +1350,10 @@ const Scenes = (() => {
         const rw2 = (W * 0.13 + 12) * (1 - i / 5);
         blocks(ctx, W * 0.40 - 6 + ((W * 0.13 + 12) - rw2) / 2, g - 58 - 5 - i * 6, rw2, 7, '#8a4a34', 6, r, 0.12);
       }
-      // ulivi nel giardino del mattino
+      // ulivi nel giardino del mattino (dopo il terreno, per non seppellirne la base)
+      ground(ctx, W, H, g, '#3a5a44', r, 12, 8);
       olive(ctx, W * 0.34, g + 4, 40, r);
       olive(ctx, W * 0.96, g + 2, 44, r);
-      ground(ctx, W, H, g, '#3a5a44', r, 12, 8);
       // la piscina, tranquilla, coi CINQUE accappatoi al sole
       blocks(ctx, W * 0.06, g + 8, W * 0.34, H - g - 14, '#4aa0b8', 10, r, 0.1);
       ctx.fillStyle = 'rgba(255,255,255,.3)';
