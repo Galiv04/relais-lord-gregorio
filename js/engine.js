@@ -509,7 +509,7 @@ const Engine = (() => {
   function offerReroll(onYes, onNo) {
     const box = $('modal-generic-content');
     box.innerHTML = `<h2>🃏 L'Asso di Denari scalda la tasca...</h2>
-      <p style="margin-bottom:12px">La prova è fallita, ma nello zaino il dado di Gedeone <i>vibra</i>. Un solo uso. Questo momento lo merita?</p>
+      <p style="margin-bottom:12px">La prova è fallita, ma in tasca l'Asso dei reduci del '49 <i>scotta</i>. Settant'anni di fortuna, un uso solo. Questo momento lo merita?</p>
       <button class="choice-btn" id="btn-reroll-yes">🃏 <b>SÌ: i reduci vi prestano la loro fortuna!</b> (consuma l'Asso di Denari)</button>
       <button class="choice-btn" id="btn-reroll-no">🙅 No, accettate il fato: sarà per un momento più importante</button>`;
     $('modal-generic').classList.remove('hidden');
