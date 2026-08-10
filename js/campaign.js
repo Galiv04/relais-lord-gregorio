@@ -37,8 +37,8 @@ const ITEMS = {
   },
   nastro_1974: {
     name: 'Nastro del \'74',
-    desc: 'Una cassetta senza custodia, scritta a pennarello: "ULTIMA REGISTRAZIONE — L. + comune". Un\'accordatura strana, quasi stonata apposta. Chi la sente, si calma. Anche le cose che non dovrebbero calmarsi.',
-    usable: false,
+    desc: 'Una cassetta senza custodia: "ULTIMA REGISTRAZIONE — L. + comune". In uno scontro, la musica del \'74 CALMA le creature della casa: le più piccole si fermano un giro, le grandi esitano. Un uso solo: il nastro poi si spezza.',
+    combat: { calm: true }, icon: '📼',
   },
   candela_motore: {
     name: 'Candela del motore (gruppo 2024)',
@@ -1723,6 +1723,7 @@ Vi accompagna fino al corridoio in salita con la candela in mano, e sulla soglia
 **(Oggetto: LANTERNA DEL 1899. Sangue freddo +1.)**`,
     gold: 1,
     sets: { ossario_visitato: true },
+    item: 'lanterna_1899',
     choices: [{ text: 'Su, verso il corridoio delle tre porte', next: 'h1' }],
   },
 

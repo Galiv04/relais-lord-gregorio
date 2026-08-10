@@ -480,12 +480,12 @@ const Engine = (() => {
         G.lastRoller = hIdx;   // il Belvedere ricorda chi ha osato tirare
         $('modal-generic').classList.add('hidden');
         const rollIt = (isReroll) => Dice.showRoll({
-          title: `${h.name} ${isReroll ? 'RITIRA (Dado del Destino!)' : 'tenta'}:<br>${STAT_NAMES[check.stat]} — CD ${check.dc}`,
+          title: `${h.name} ${isReroll ? 'RITIRA (l\'Asso di Denari!)' : 'tenta'}:<br>${STAT_NAMES[check.stat]} — CD ${check.dc}`,
           mod, dc: check.dc,
           onDone: res => {
-            if (!res.success && !isReroll && G.inventory.includes('dado_destino')) {
+            if (!res.success && !isReroll && G.inventory.includes('asso_di_denari')) {
               return offerReroll(() => {
-                const i = G.inventory.indexOf('dado_destino');
+                const i = G.inventory.indexOf('asso_di_denari');
                 if (i >= 0) G.inventory.splice(i, 1);
                 saveGame();
                 rollIt(true);
@@ -505,12 +505,12 @@ const Engine = (() => {
     $('modal-generic').classList.remove('hidden');
   }
 
-  // proposta di ritiro con il Dado del Destino
+  // proposta di ritiro con l'Asso di Denari dei reduci del 1949
   function offerReroll(onYes, onNo) {
     const box = $('modal-generic-content');
-    box.innerHTML = `<h2>🎲 Il Dado del Destino freme...</h2>
+    box.innerHTML = `<h2>🃏 L'Asso di Denari scalda la tasca...</h2>
       <p style="margin-bottom:12px">La prova è fallita, ma nello zaino il dado di Gedeone <i>vibra</i>. Un solo uso. Questo momento lo merita?</p>
-      <button class="choice-btn" id="btn-reroll-yes">🎲 <b>SÌ: ritirate il dado!</b> (consuma il Dado del Destino)</button>
+      <button class="choice-btn" id="btn-reroll-yes">🃏 <b>SÌ: i reduci vi prestano la loro fortuna!</b> (consuma l'Asso di Denari)</button>
       <button class="choice-btn" id="btn-reroll-no">🙅 No, accettate il fato: sarà per un momento più importante</button>`;
     $('modal-generic').classList.remove('hidden');
     $('btn-reroll-yes').onclick = () => { $('modal-generic').classList.add('hidden'); onYes(); };

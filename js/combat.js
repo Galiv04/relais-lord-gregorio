@@ -289,7 +289,7 @@ const Combat = (() => {
     for (const type of [...new Set(throwables)]) {
       const count = throwables.filter(p => p === type).length;
       mkBtn(`${ITEMS[type].icon || '🎯'} ${ITEMS[type].name} (x${count}) <span class="action-sub">${ITEMS[type].desc}</span>`,
-        () => pickTarget(t => useThrowable(hIdx, t, type)));
+        () => ITEMS[type].combat.calm ? useThrowable(hIdx, 0, type) : pickTarget(t => useThrowable(hIdx, t, type)));
     }
 
     // difesa
@@ -513,6 +513,20 @@ const Combat = (() => {
     const item = ITEMS[itemId];
     const i = G.inventory.indexOf(itemId);
     if (i >= 0) G.inventory.splice(i, 1);
+    if (item.combat.calm) {
+      // il nastro del '74: la musica ferma le cose che non dovrebbero fermarsi
+      let stunned = 0;
+      for (const e of battle.enemies) {
+        if (e.dead) continue;
+        if (e.boss) { e.distracted = true; }
+        else { e.stunned = true; stunned++; }
+      }
+      battle.smokeRounds = Math.max(battle.smokeRounds, 1);
+      log(`📼 ${G.party[hIdx].name} preme PLAY: la voce del '74 riempie la stanza. ${stunned ? `<b>${stunned} creature si FERMANO ad ascoltare</b>` : 'Le creature esitano'}${battle.enemies.some(e => e.boss && !e.dead) ? ' — e perfino la cosa grande, per un attimo, ricorda qualcosa' : ''}. Poi il nastro si spezza.`, 'log-crit');
+      if (typeof Sound !== 'undefined') Sound.play('heal');
+      render(); endHeroAction();
+      return;
+    }
     if (item.combat.all) {
       // colpisce TUTTI i nemici vivi
       log(`${item.icon || '🎯'} ${G.party[hIdx].name} lancia ${item.name}: la stanza DIVAMPA!`, 'log-crit');
@@ -606,6 +620,7 @@ const Combat = (() => {
     const h = G.party[tIdx];
 
     let atkBonus = e.attack.bonus;
+    if (G.inventory.includes('lanterna_1899')) atkBonus -= 1; // la lanterna del 1899: le creature esitano
     if (battle.isBoss && G.flags.casa_vacilla && battle.round <= 2) atkBonus -= 1;
 
     let die = Dice.roll(20);

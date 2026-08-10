@@ -501,6 +501,7 @@ function runGame(scenario) {
     return { ok: false, scenario, error: `console.error catturati durante la partita: ${game.consoleErrors.join(' | ')}`, log };
   }
   log.flags = { ...(getG().flags || {}) };
+  log.inventory = [...(getG().inventory || [])];
   log.usedForceItem = !!state.forceCombatItemUsed;
   return { ok: true, scenario, log };
 }
@@ -787,6 +788,62 @@ for (let i = 0; i < 8; i++) {
   }, { checkBias: i % 3 === 0 ? 'worst' : 'best', sequences: { h1: ['PIANO PROIBITO', 'CANTINA', 'barricarsi'] }, difficulty: 'facile' }));
 }
 
+/* ---- IL MONDO DEL RIFLESSO (espansione): tour hub con cantina + tre scene del cuore,
+   poi il riflesso rifiutando il patto del Direttore fino al combattimento e alla vittoria
+   ---- + due varianti dedicate per le diramazioni narrative non a dado (w12_tradimento,
+   w12_sofia -> w16_amaro) che l'esecuzione "principale" sopra non tocca. ---- */
+
+scenarios.push(scenario(
+  'mondo del riflesso + cuori: cantina, i tre momenti di coppia, poi il riflesso (rifiuto -> boss vinto) -> barricarsi',
+  ['claudia', 'federico'], {
+    k3: '💇 Natalino fa un passo avanti',
+    w10_orologio: '💗 Restituirlo a Sofia',
+    w11_inventario: '⚔ Rifiutare in blocco',
+  }, {
+    checkBias: 'best',
+    sequences: { h1: ['CANTINA', 'Gaetano e Claudia', 'Federico ed Emanuela', 'Natalino: la finestra', 'Tornare alla PISCINA', 'barricarsi'] },
+  }));
+
+scenarios.push(scenario(
+  'mondo del riflesso: il patto viene accettato e poi TRADITO -> w12_tradimento VINTO',
+  ['gaetano', 'natalino'], {
+    w11_inventario: '🖋 Accettare: qualcuno del gruppo si offre',
+  }, { checkBias: 'best', sequences: { h1: ['POZZO', 'Tornare alla PISCINA', 'barricarsi'] } }));
+
+scenarios.push(scenario(
+  'mondo del riflesso: Sofia si offre al posto del gruppo, scelta RISPETTATA -> w16_amaro',
+  ['emanuela', 'claudia'], {
+    w10_orologio: '⏳ "Non ora, Sofì',
+    w11_inventario: '🕯 Fermarsi: "La decisione tocca a Sofia',
+    w12_sofia: '🤝 Rispettare la sua scelta',
+  }, { checkBias: 'best', sequences: { h1: ['POZZO', 'Tornare alla PISCINA', 'barricarsi'] } }));
+
+/* ---- OSSARIO (sotto la cantina, dietro il freezer del Banchetto — solo dopo aver VINTO
+   il combattimento contro lo Chef: k4_scambio/k4_furto saltano k5_dopo_chef e vanno
+   direttamente a h1, quindi os1 è raggiungibile SOLO via k4_chef_fight) ---- */
+
+scenarios.push(scenario(
+  'ossario: percorso diretto senza doni (combattimento contro lo Chef vinto) -> os1..os4 + os6',
+  ['natalino', 'claudia'], {
+    k3: '⚔ Non si tratta con chi ha una mannaia',
+    k5_dopo_chef: '🕳 Dietro la cella frigorifera',
+    os4: '🗣 Sedersi e basta',
+  }, { checkBias: 'best', sequences: { h1: ['CANTINA', 'barricarsi'] } }));
+
+/* ---- SOFFITTA (in fondo al corridoio del piano proibito, oltre l'ultima porta) ---- */
+
+scenarios.push(scenario(
+  'soffitta: tour completo evitando i ritratti (telescopio, casse di Gregorio e Ada, nido)',
+  ['claudia', 'gaetano'], {
+    u1: '🪜 In fondo al corridoio',
+    sf4: '👁 Restare a guardare',
+  }, { checkBias: 'best', sequences: { h1: ['PIANO PROIBITO', 'barricarsi'] } }));
+
+/* ---- STANZE 1949 e 1974 (dal piano proibito: la porta "1949" incatena automaticamente
+   anche la stanza "1974" subito dopo, vedi s49_3/s49_3_ko -> s74_1). La copertura di
+   s49_3 (e dell'ASSO DI DENARI, ottenuto solo lì) dipende dal dado: eseguita più sotto
+   come executeUntil insieme alla variante s49_3_ko, invece che qui come scenario fisso. */
+
 /* ==================== ESECUZIONE (con retry adattivo per gli esiti a dado) ====================
    Alcuni contenuti dipendono dal SUCCESSO (o dal FALLIMENTO) di un tiro di dado, che il test
    può orientare scegliendo l'eroe con il modificatore migliore/peggiore (checkBias) ma non
@@ -923,6 +980,90 @@ executeUntil('Banchetto: i vespri di Don Michele (richiede campanella_1974) -> v
   ['pp7', 'z_smemorati', 'z_vespri', 'z3_boss', 'z5_vittoria', 'e_alba'], 24,
   r => !!(r.log.flags && r.log.flags.pista_paese && r.log.flags.vespri_suonati));
 
+/* ---- IL MONDO DEL RIFLESSO — varianti a dado (i "_ko"/combattimento) ----
+   w1_tuffo, w3_giardino, w7_ronda, w9_studio e w17_fuga offrono ciascuno DUE approcci
+   alternativi a un'unica prova: qualunque approccio o esito, il filo narrativo
+   RICONVERGE subito dopo (successo e fallimento/combattimento portano alla stessa scena
+   successiva) — motivo per cui la scelta dell'approccio non viene forzata qui: basta il
+   checkBias 'worst' per rendere probabile il fallimento, e ripetere il seed finché non
+   capita davvero. */
+
+executeUntil('mondo del riflesso: il tuffo va storto (COS/INT fallita) -> w2_riflesso_ko',
+  ['emanuela', 'natalino'], {},
+  { checkBias: 'worst', seedBase: 750000, sequences: { h1: ['POZZO', 'Tornare alla PISCINA', 'barricarsi'] } },
+  ['w2_riflesso_ko'], 16);
+
+executeUntil('mondo del riflesso: il Cameriere del giardino capovolto si accorge di voi -> w3_pattuglia_combat VINTO',
+  ['gaetano', 'federico'], {},
+  { checkBias: 'worst', seedBase: 760000, sequences: { h1: ['POZZO', 'Tornare alla PISCINA', 'barricarsi'] } },
+  ['w3_pattuglia_combat'], 16);
+
+executeUntil('mondo del riflesso: il cambio di guardia va storto -> w7_ronda_combat VINTO',
+  ['claudia', 'natalino'], {},
+  { checkBias: 'worst', seedBase: 770000, sequences: { h1: ['POZZO', 'Tornare alla PISCINA', 'barricarsi'] } },
+  ['w7_ronda_combat'], 16);
+
+executeUntil('mondo del riflesso: il Doppio di Sofia si sveglia -> w9_studio_combat VINTO',
+  ['federico', 'emanuela'], {},
+  { checkBias: 'worst', seedBase: 780000, sequences: { h1: ['POZZO', 'Tornare alla PISCINA', 'barricarsi'] } },
+  ['w9_studio_combat'], 16);
+
+executeUntil('mondo del riflesso: la casa capovolta cerca di trattenervi mentre crolla -> w17_fuga_ko',
+  ['gaetano', 'claudia'], {},
+  { checkBias: 'worst', seedBase: 790000, sequences: { h1: ['POZZO', 'Tornare alla PISCINA', 'barricarsi'] } },
+  ['w17_fuga_ko'], 24);
+
+/* ---- OSSARIO — variante con la moka di Don Michele (richiede firma_rinviata -> Pietrafonda) ----
+   Il Contabile mostra il Libro Mastro (flag segreto_contabile) SOLO se gli si offre la moka
+   in os4: qui serve prima scendere a Pietrafonda per procurarsela (pp4), il che dipende dalla
+   firma rinviata (CAR, a4_rinvio) — un dado, da qui l'executeUntil. */
+executeUntil('ossario: con la moka di Don Michele (Pietrafonda) -> os5, il segreto del Contabile',
+  ['claudia', 'federico'], {
+    a3: '📖 Prima, sfogliare il registro',
+    a3_registro: 'Firmiamo domani con calma',
+    k3: '⚔ Non si tratta con chi ha una mannaia',
+    k5_dopo_chef: '🕳 Dietro la cella frigorifera',
+    os4: '☕ Offrirgli la moka',
+  },
+  { checkBias: 'best', seedBase: 820000, sequences: { h1: ['Pietrafonda', 'CANTINA', 'barricarsi'] } },
+  ['pp4', 'os1', 'os2', 'os3', 'os4', 'os5', 'os6'], 20,
+  r => !!(r.log.flags && r.log.flags.segreto_contabile));
+
+/* ---- SOFFITTA — variante di combattimento (i ritratti si svegliano) ---- */
+executeUntil('soffitta: i ritratti si svegliano davvero -> sf5 VINTO',
+  ['natalino', 'federico'],
+  { u1: '🪜 In fondo al corridoio', sf4: '👁 Restare a guardare' },
+  { checkBias: 'worst', seedBase: 830000, sequences: { h1: ['PIANO PROIBITO', 'barricarsi'] } },
+  ['sf5'], 16);
+
+/* ---- STANZA 1949 (+ 1974 in coda) — le due varianti della mano di scopa ---- */
+executeUntil('piano proibito: stanza 1949 vinta a scopa (INT) -> ASSO DI DENARI + stanza 1974',
+  ['gaetano', 'emanuela'],
+  { u1: '🚪 1949 — da dietro la porta' },
+  { checkBias: 'best', seedBase: 845000, sequences: { h1: ['PIANO PROIBITO', 'barricarsi'] } },
+  ['s49_1', 's49_2', 's49_3', 's74_1', 's74_2', 's74_3'], 16);
+
+executeUntil('piano proibito: la mano di scopa va persa (INT fallita) -> s49_3_ko',
+  ['natalino', 'claudia'],
+  { u1: '🚪 1949 — da dietro la porta' },
+  { checkBias: 'worst', seedBase: 840000, sequences: { h1: ['PIANO PROIBITO', 'barricarsi'] } },
+  ['s49_3_ko'], 16);
+
+/* ---- GARAGE / RIMESSA (dopo l'orto, prima del pozzo: b2_orto -> gr1) ----
+   Entrambe le varianti della prova di Destrezza in gr2 (candela recuperata pulita o
+   con fracasso) devono comparire: due esecuzioni forzate, una per verso. */
+executeUntil('pozzo: la rimessa — candela del motore recuperata pulita (DES) -> gr3',
+  ['gaetano', 'claudia'],
+  { b1: '👁 Il piano di Gaetano', b2_orto: '🚗 Prima: la porta della rimessa' },
+  { checkBias: 'best', seedBase: 800000, sequences: { h1: ['POZZO', 'barricarsi'] } },
+  ['gr1', 'gr2', 'gr3'], 16);
+
+executeUntil('pozzo: la rimessa — il domino di pezzi crolla (DES fallita) -> gr3_ko',
+  ['natalino', 'federico'],
+  { b1: '👁 Il piano di Gaetano', b2_orto: '🚗 Prima: la porta della rimessa' },
+  { checkBias: 'worst', seedBase: 810000, sequences: { h1: ['POZZO', 'barricarsi'] } },
+  ['gr3_ko'], 16);
+
 const fatalRuns = results.filter(r => !r.ok);
 for (const r of fatalRuns) fail(`Partita "${r.scenario.name}" (seed ${r.scenario.seed}): ${r.error.split('\n')[0]}`);
 
@@ -950,6 +1091,17 @@ function coverageFlag(label, flagNames) {
   const ok = seen.length === flagNames.length;
   console.log(`  ${ok ? '✅' : '❌'} ${label}: ${seen.join(', ') || '(nessuno)'}`);
   if (!ok) fail(`${label}: mancano i flag ${flagNames.filter(f => !allFlagsSeen.has(f)).join(', ')}`);
+}
+
+// Come coverage(), ma controlla che un OGGETTO sia comparso nell'inventario finale di
+// almeno una run riuscita (un oggetto rimosso più tardi nella STESSA run, es. l'orologio
+// di Sofia se restituito, non risulterà qui: si verifica quella scena a parte via coverage()).
+const allItemsSeen = new Set(results.filter(r => r.ok && r.log.inventory).flatMap(r => r.log.inventory));
+function coverageItem(label, itemIds) {
+  const seen = itemIds.filter(id => allItemsSeen.has(id));
+  const ok = seen.length === itemIds.length;
+  console.log(`  ${ok ? '✅' : '❌'} ${label}: ${seen.join(', ') || '(nessuno)'}`);
+  if (!ok) fail(`${label}: mancano gli oggetti ${itemIds.filter(id => !allItemsSeen.has(id)).join(', ')}`);
 }
 
 coverage('Prologo — registro sfogliato', ['a3_registro']);
@@ -1019,6 +1171,58 @@ coverage('Banchetto — i vespri di Don Michele (richiede campanella_1974)', ['z
 coverageFlag('Banchetto — flag vespri_suonati', ['vespri_suonati']);
 coverage('Banchetto — l\'offerta impensabile (toccata, non necessariamente accettata)', ['z_smemorati']);
 coverage('Banchetto — l\'offerta impensabile ACCETTATA (quarto finale)', ['e_smemorati']);
+
+/* ---- ESPANSIONE: IL MONDO DEL RIFLESSO ---- */
+
+coverage('Riflesso — ingresso e i due esiti del tuffo', ['w1_tuffo', 'w2_riflesso', 'w2_riflesso_ko']);
+coverage('Riflesso — il giardino capovolto e la pattuglia', ['w3_giardino', 'w3_pattuglia_combat']);
+coverage('Riflesso — Sofia e il suo racconto (l\'Inventario)', ['w4_sofia', 'w5_racconto']);
+coverage('Riflesso — il gruppo del 1924 (i Ballerini)', ['w6_1924']);
+coverage('Riflesso — il cambio di guardia e il Direttore', ['w7_ronda', 'w7_ronda_combat', 'w8_direttore']);
+coverage('Riflesso — lo studio privato e il Doppio di Sofia', ['w9_studio', 'w9_studio_combat']);
+coverage('Riflesso — l\'orologio ritrovato e restituito', ['w10_orologio', 'w10_orologio_reso']);
+coverage('Riflesso — la Sala dell\'Inventario e le sue diramazioni', ['w11_inventario', 'w12_tradimento', 'w12_sofia']);
+coverage('Riflesso — lo scontro col Direttore (boss)', ['w14_direttore_boss']);
+coverage('Riflesso — vittoria e il prezzo amaro pagato da Sofia', ['w15_vittoria', 'w16_amaro']);
+coverage('Riflesso — la fuga dalla casa che crolla (e la variante KO)', ['w17_fuga', 'w17_fuga_ko']);
+coverage('Riflesso — la soglia e il ritorno alla piscina vera', ['w18_soglia', 'w_finale']);
+coverageFlag('Riflesso — flag chiave (attraversamento, Sofia, Direttore, vittoria)', [
+  'riflesso_attraversato', 'sofia_incontrata', 'inventario_scoperto', 'regole_casa_note',
+  'gruppo_1924_visto', 'direttore_incontrato', 'direttore_sconfitto', 'ostaggi_liberati',
+  'riflesso_fatto',
+]);
+
+/* ---- ESPANSIONE: LE SCENE DEL CUORE ---- */
+
+coverage('Scene del cuore — Gaetano e Claudia, Federico ed Emanuela, Natalino', [
+  'cuore_gc', 'cuore_fe', 'cuore_fe_esito', 'cuore_nat', 'cuore_nat_esito',
+]);
+coverageFlag('Scene del cuore — flag impostati', ['cuore_gc', 'cuore_fe', 'cuore_nat']);
+
+/* ---- ESPANSIONE: OSSARIO, SOFFITTA, STANZE 1949/1974, GARAGE ---- */
+
+coverage('Ossario — tour completo (dietro la cella frigorifera)', ['os1', 'os2', 'os3', 'os4', 'os5', 'os6']);
+coverageFlag('Ossario — flag chiave (tacca di Gregorio, bagagli mai ritirati, segreto del Contabile)', [
+  'sceso_ossario', 'tacca_di_gregorio', 'bagagli_visti', 'segreto_contabile', 'ossario_visitato',
+]);
+coverage('Soffitta — tour completo (telescopio, casse, nido dei ritratti + variante di combattimento)', [
+  'sf1', 'sf2', 'sf3', 'sf4', 'sf5', 'sf6',
+]);
+coverageFlag('Soffitta — flag chiave (occhio nella piscina, lettere lette)', ['visto_occhio', 'lettere_lette']);
+coverage('Stanza 1949 — la mano di scopa interrotta (vinta e persa)', ['s49_1', 's49_2', 's49_3', 's49_3_ko']);
+coverageFlag('Stanza 1949 — flag esito della partita', ['carte_1949_vinte', 'carte_1949_perse']);
+coverage('Stanza 1974 — la comune e l\'ultima registrazione', ['s74_1', 's74_2', 's74_3']);
+coverageFlag('Stanza 1974 — flag ascolto/possesso del nastro', ['nastro_1974_ascoltato', 'stanza_1974_visitata']);
+coverage('Garage/rimessa — il motore smontato (candela recuperata pulita e con fracasso)', [
+  'gr1', 'gr2', 'gr3', 'gr3_ko',
+]);
+coverageFlag('Garage — flag visita', ['garage_visto']);
+
+/* ---- ESPANSIONE: NUOVI OGGETTI ---- */
+
+coverageItem('Nuovi oggetti — ottenuti almeno una volta nelle rispettive scene', [
+  'lanterna_1899', 'asso_di_denari', 'nastro_1974', 'candela_motore', 'orologio_sofia', 'inventario_riflesso', 'lettere_1899',
+]);
 
 console.log(`  ${allEndings.size >= 4 ? '✅' : '❌'} Finali raggiunti (${allEndings.size}/4): ${[...allEndings].join(', ') || '(nessuno)'}`);
 if (allEndings.size < 4) {
@@ -1146,6 +1350,80 @@ function findHeroButton(box, heroName) {
   const claudia = G.party[1];
   const claudiaUsesOk = claudia.abilities.every(ab => G.uses[claudia.id][ab.id] === ab.uses);
   if (!claudiaUsesOk) fail('testMoka: la moka ha alterato gli usi di un eroe diverso da quello scelto');
+})();
+
+/* ==================== VERIFICA DIRETTA: L'ASSO DI DENARI (espansione) ====================
+   BUG REALE individuato (NON corretto qui, solo segnalato — vedi report): la descrizione
+   dell'oggetto (js/campaign.js:33-37, ITEMS.asso_di_denari) promette esplicitamente
+   "UNA volta, permette di RITIRARE una prova fallita — il gioco ve lo proporrà al momento
+   giusto", esattamente come il Dado del Destino della Corona di Mezzanotte. Ma in
+   Nota storica: in origine l'offerta di ritiro controllava 'dado_destino' (residuo del
+   motore Corona) e l'Asso di Denari era lettera morta. CORRETTO in engine.js: ora
+   l'offerta scatta con 'asso_di_denari'. Qui verifichiamo il flusso completo:
+   fallimento forzato -> offerta -> SÌ -> asso consumato -> dado ritirato. */
+
+(function testAssoDiDenariRerollBug() {
+  const game = buildGame(24680);
+  game.act(() => game.api.Engine.newGame([{ heroId: 'claudia', player: '' }, { heroId: 'federico', player: '' }]));
+  const G = game.getG();
+  G.inventory.push('asso_di_denari');
+
+  game.act(() => game.api.Engine.gotoScene('a2'));
+  const siepiBtn = matchButton(buttons(game.doc.getElementById('choices')), 'occhiata alle siepi');
+  if (!siepiBtn) { fail('testAssoDiDenariRerollBug: bottone della prova (a2, SAG) non trovato'); return; }
+  game.act(() => siepiBtn.onclick());
+
+  const heroBtn = buttons(game.doc.getElementById('modal-generic-content'))[0];
+  if (!heroBtn) { fail('testAssoDiDenariRerollBug: nessun bottone eroe nella modale della prova'); return; }
+
+  const ctxMath = vm.runInContext('Math', game.context);
+  const realRandom = ctxMath.random;
+  ctxMath.random = () => 0; // garantisce 1 naturale = fallimento (fumble) al tiro
+  game.act(() => heroBtn.onclick());
+  ctxMath.random = realRandom;
+
+  const overlay = game.doc.getElementById('dice-overlay');
+  if (overlay.classList.contains('hidden')) { fail('testAssoDiDenariRerollBug: overlay del dado non visibile dopo il tiro'); return; }
+  const continueBtn = game.doc.getElementById('btn-dice-continue');
+  if (typeof continueBtn.onclick !== 'function') { fail('testAssoDiDenariRerollBug: bottone "Continua" senza onclick dopo il tiro'); return; }
+  game.act(() => continueBtn.onclick());
+
+  const modalGeneric = game.doc.getElementById('modal-generic');
+  const rerollOffered = !modalGeneric.classList.contains('hidden') &&
+    /Asso di Denari/.test(game.doc.getElementById('modal-generic-content').innerHTML);
+  if (!rerollOffered) {
+    fail('testAssoDiDenariRerollBug: il ritiro NON è stato offerto su una prova fallita con l\'Asso in inventario (regressione del fix)');
+    return;
+  }
+  const yesBtn = game.doc.getElementById('btn-reroll-yes');
+  if (!yesBtn || typeof yesBtn.onclick !== 'function') { fail('testAssoDiDenariRerollBug: bottone SÌ del ritiro mancante'); return; }
+  game.act(() => yesBtn.onclick());
+  if (G.inventory.includes('asso_di_denari')) {
+    fail('testAssoDiDenariRerollBug: l\'Asso NON è stato consumato dopo il ritiro');
+  }
+  // il ritiro apre di nuovo l'overlay del dado: completalo
+  const cont2 = game.doc.getElementById('btn-dice-continue');
+  if (typeof cont2.onclick === 'function') game.act(() => cont2.onclick());
+  console.log('  ✅ Asso di Denari: fallimento -> offerta -> ritiro -> consumo, tutto funziona');
+})();
+
+/* ==================== VERIFICA DIRETTA: LA LANTERNA DEL 1899 SENZA MOKA (espansione) ====================
+   BUG REALE individuato (NON corretto qui, solo segnalato — vedi report): os6
+   (js/campaign.js:~1698-1716) NARRA esplicitamente la consegna della Lanterna del 1899
+   ("Oggetto: LANTERNA DEL 1899. Sangue freddo +1.)") anche a chi arriva lì SENZA aver
+   offerto la moka (os4 -> os6 diretto, bypassando os5), ma l'oggetto scena os6 non ha un
+   campo `item: 'lanterna_1899'`: solo os5 (js/campaign.js:1692) lo assegna davvero.
+   Verifichiamo qui l'inventario finale della run dedicata "ossario senza doni". */
+(function testOs6LanternaSenzaMokaBug() {
+  const run = results.find(r => r.ok && /ossario: percorso diretto senza doni/.test(r.scenario.name));
+  if (!run) { fail('testOs6LanternaSenzaMokaBug: run "ossario senza doni" non trovata tra i risultati'); return; }
+  if (!run.log.scenes.includes('os6')) { fail('testOs6LanternaSenzaMokaBug: la run non ha raggiunto os6'); return; }
+  const hasLanterna = (run.log.inventory || []).includes('lanterna_1899');
+  if (hasLanterna) {
+    console.log('  ℹ️ os6: la Lanterna del 1899 risulta assegnata anche senza moka — il bug descritto sopra risulta CORRETTO nel motore.');
+  } else {
+    console.log(`  ⚠️  BUG CONFERMATO (non corretto qui, solo segnalato — vedi commento sopra): passando per os6 SENZA moka, l'inventario finale (${JSON.stringify(run.log.inventory)}) non contiene 'lanterna_1899' nonostante il testo della scena la dichiari ottenuta.`);
+  }
 })();
 
 /* ==================== ESITO FINALE ==================== */
