@@ -3941,7 +3941,7 @@ const CHAPTERS = [
   { id: 'ft1',      label: '🛣 La Strada che Torna', desc: 'Scendere a piedi, di notte. Ventisei tornanti. O forse no.' },
   { id: 'w1_tuffo', label: '🌒 Il Riflesso', desc: 'Il mondo capovolto sotto la piscina. Sofia vi aspetta.', flags: { un_nodo_sciolto: true } },
   { id: 'z1',       label: '🍽 Il Banchetto — tutte le carte in mano', desc: 'Ore 5:57 con ogni nodo sciolto e ogni segreto in tasca: provate i finali che vi mancano.',
-    flags: { un_nodo_sciolto: true, rituale_noto: true, strada_che_torna: true, chef_amico: true, bambole_addormentate: true, segreto_custodi: true, ultimo_biglietto: true, storia_1974: true },
+    flags: { un_nodo_sciolto: true, rituale_noto: true, strada_che_torna: true, chef_amico: true, bambole_addormentate: true, segreto_custodi: true, ultimo_biglietto: true, storia_1974: true, menu_memoria: true },
     items: ['sale_grosso', 'acqua_pozzo', 'vino_1899', 'campanella_1974', 'gratta_vinci'] },
   { id: 'z1_puro',  scene: 'z1', label: '🍽 Il Banchetto — a mani nude', desc: 'Ore 5:57 senza assi nella manica: la battaglia, la resa, la penna che non conoscete.',
     flags: { un_nodo_sciolto: true } },
