@@ -86,6 +86,8 @@ const IMPRESE = [
   { flag: 'cerchio_di_porcellana', icon: '🧸', title: 'Il Recinto delle Signorine', desc: 'Trentadue bambole sonnambule in cerchio tra voi e la Fame.' },
   { flag: 'paese_sa',            icon: '🚌', title: 'La Corriera del \'74',        desc: 'Gennaro guidò quaranta minuti in discesa a chilometraggio zero. Il paese lo sa dal 1899.' },
   { flag: 'finale_penna',        icon: '🖋', title: 'La Penna Spezzata',            desc: 'Nessun custode nuovo. Nessun custode vecchio. Un finale fuori registro.' },
+  { flag: 'tronello_promesso',   icon: '🌿', title: 'Manutenzione',                 desc: 'Natalino ha condiviso il tronello con un fantasma. E gli è sembrato EDUCATO così.' },
+  { flag: 'ada_ride',            icon: '😄', title: 'La Risata che Costa',          desc: 'Ada ha riso, dopo cinquant\'anni. L\'ha pagata volentieri.' },
 ];
 
 /* ---------- CRONACHE DEL BELVEDERE ----------
@@ -106,4 +108,5 @@ const CRONACA = [
   { flag: 'bambole_addormentate', text: 'Le trentadue signorine del 1924 dormono ancora, composte, le mani in grembo. Un restauratore le ha definite "pezzi unici in condizioni perfette". Nessuno osa svegliarle per venderle.' },
   { flag: 'paese_sa', text: 'La corriera azzurra è ripartita dal tornante undici con la benzina che aveva nel 1974. Alla guida, per l\'ultima tratta, un pensionato di nome Gennaro. In discesa. Cantando.' },
   { flag: 'finale_penna', text: 'La stilografica spezzata riposa nella cripta di Pietrafonda, tra i registri parrocchiali, in una piccola teca. Il cartellino dice: "Non scrive più. Non deve."' },
+  { flag: 'ada_ride', text: 'Dal pozzo del giardino, certe sere d\'estate, sale un profumo d\'erba bruciata e una risata di donna, giovane e fuori orario. Gli ospiti pensano a una festa in valle. Il giardiniere nuovo, che ne sa più di loro, lascia sempre una foglia di fico sul secchio.' },
 ];

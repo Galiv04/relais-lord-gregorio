@@ -1031,7 +1031,7 @@ executeUntil('ossario: con la moka di Don Michele (Pietrafonda) -> os5, il segre
     os4: '☕ Offrirgli la moka',
   },
   { checkBias: 'best', seedBase: 820000, sequences: { h1: ['Pietrafonda', 'CANTINA', 'barricarsi'] } },
-  ['pp4', 'os1', 'os2', 'os3', 'os4', 'os5', 'os6'], 20,
+  ['pp4', 'os1', 'os2', 'os3', 'os4', 'os5'], 20,
   r => !!(r.log.flags && r.log.flags.segreto_contabile));
 
 /* ---- SOFFITTA — variante di combattimento (i ritratti si svegliano) ---- */
@@ -1262,6 +1262,18 @@ executeUntil('accendino di Federico: la fiamma vera scagliata sullo Chef (2d4, d
   { checkBias: 'best', seedBase: 930000, sequences: { h1: ['CANTINA', 'barricarsi'] }, forceCombatItem: 'Accendino' },
   ['k4_chef_fight'], 20, r => r.log.usedForceItem === true);
 
+
+/* ---- IL TRONELLO: la pausa di Natalino e la promessa mantenuta al pozzo ---- */
+
+executeUntil('tronello: la pausa di Natalino (nat_tronello) e la promessa calata nel pozzo (b4_tronello)',
+  ['natalino', 'gaetano'],
+  { b1: '👁 Il piano di Gaetano', b3_pozzo: '🌿 Mantenere la promessa' },
+  { checkBias: 'best', seedBase: 935000,
+    sequences: { h1: ['ho bisogno di un tronello', 'POZZO', 'barricarsi'] } },
+  ['nat_tronello', 'b4_tronello'], 20,
+  r => !!(r.log.flags && r.log.flags.tronello_promesso && r.log.flags.ada_ride));
+
+
 const fatalRuns = results.filter(r => !r.ok);
 for (const r of fatalRuns) fail(`Partita "${r.scenario.name}" (seed ${r.scenario.seed}): ${r.error.split('\n')[0]}`);
 
@@ -1444,6 +1456,9 @@ coverageFlag('Coerenza del Giardiniere — flag', ['giardiniere_potato']);
 coverage('Eco a Pietrafonda — la corriera del \'74', ['pp_anello']);
 coverageFlag('Eco a Pietrafonda — flag', ['paese_sa']);
 coverage('Il quinto finale — la proposta, il rifiuto e la penna spezzata', ['z_penna', 'z_penna_no', 'e_penna']);
+coverage('Il tronello — la pausa di Natalino e la promessa al pozzo', ['nat_tronello', 'b4_tronello']);
+coverageFlag('Il tronello — flag', ['tronello_promesso', 'ada_ride']);
+
 
 
 
@@ -1456,7 +1471,7 @@ coverage('Il quinto finale — la proposta, il rifiuto e la penna spezzata', ['z
 /* ---- ESPANSIONE: NUOVI OGGETTI ---- */
 
 coverageItem('Nuovi oggetti — ottenuti almeno una volta nelle rispettive scene', [
-  'lanterna_1899', 'asso_di_denari', 'nastro_1974', 'candela_motore', 'gratta_vinci', 'torcia_led', 'accendino', 'orologio_sofia', 'inventario_riflesso', 'lettere_1899',
+  'lanterna_1899', 'asso_di_denari', 'nastro_1974', 'candela_motore', 'gratta_vinci', 'torcia_led', 'accendino', 'birra_limone', 'orologio_sofia', 'inventario_riflesso', 'lettere_1899',
 ]);
 
 console.log(`  ${allEndings.size >= 5 ? '✅' : '❌'} Finali raggiunti (${allEndings.size}/5): ${[...allEndings].join(', ') || '(nessuno)'}`);
