@@ -661,8 +661,8 @@ const Engine = (() => {
 
   function showMap() {
     const box = $('modal-generic-content');
-    box.innerHTML = `<h2>🗺 Regno di Lumelia</h2><canvas id="map-canvas" width="720" height="480"></canvas>
-      <p style="color:var(--text-dim);font-size:19px;margin-top:8px">⭐ = posizione attuale della compagnia</p>
+    box.innerHTML = `<h2>🗺 Il Belvedere — pianta della proprietà</h2><canvas id="map-canvas" width="720" height="480"></canvas>
+      <p style="color:var(--text-dim);font-size:19px;margin-top:8px">⭐ = dove siete adesso. La nebbia segna il confine: di notte, il confine è ovunque.</p>
       <button class="btn" style="margin-top:10px" onclick="document.getElementById('modal-generic').classList.add('hidden')">✔ Chiudi</button>`;
     $('modal-generic').classList.remove('hidden');
     drawMap();
