@@ -261,6 +261,26 @@ const words = Math.round(totalChars / 6);
 console.log(`  ✔ ${Object.keys(CAMPAIGN).length} scene, ~${words} parole di narrazione (~${Math.round(words / 180)} min di sola lettura ad alta voce)`);
 if (words < 6000) warn('campagna forse corta per 2-4 ore');
 
+
+/* ---------- flag morti: imprese/cronache/diario devono poter scattare ---------- */
+section('Flag di imprese, cronache e diario (nessun flag morto)');
+
+const epiSrc = readFileSync(join(root, 'js/epilogues.js'), 'utf8');
+const campSrc = readFileSync(join(root, 'js/campaign.js'), 'utf8');
+const setsBlocks = [...campSrc.matchAll(/sets:\s*{([^}]*)}/g)].map(m => m[1]).join(' ');
+const settableFlags = new Set([...setsBlocks.matchAll(/([a-z_0-9]+)\s*:/g)].map(m => m[1]));
+// flag impostati fuori dalle scene (motore/combattimento) — da tenere aggiornata a mano
+const FLAG_ESTERNI = new Set(['rituale_fatto', 'sorpresa', 'stufato_consumato', 'reputazione']);
+const flagRichiesti = new Set([
+  ...[...epiSrc.matchAll(/flag:\s*'([a-z_0-9]+)'/g)].map(m => m[1]),
+  ...[...campSrc.matchAll(/^\s*\['([a-z_0-9]+)',/gm)].map(m => m[1]), // DIARY_FLAGS
+]);
+let flagMorti = 0;
+for (const f of flagRichiesti) {
+  if (!settableFlags.has(f) && !FLAG_ESTERNI.has(f)) { fail(`flag "${f}" richiesto da imprese/cronache/diario ma MAI impostato da nessuna scena`); flagMorti++; }
+}
+if (!flagMorti) { ok(); console.log(`  ✔ ${flagRichiesti.size} flag di imprese/cronache/diario, tutti impostabili da almeno una scena`); }
+
 /* ---------- esito ---------- */
 console.log('\n' + '═'.repeat(50));
 if (failures === 0) {
