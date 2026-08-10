@@ -29,7 +29,8 @@ Per le prossime campagne, il motore di QUESTO repo è il più avanzato. Novità 
 - **Scaling**: "porzioni ridotte" per gruppi 1-2 (auto) · difficoltà `facile`/`normale`/`incubo`
 - **Meta-progressione**: `DIARY_FLAGS` (conoscenze nel diario) · `IMPRESE` con collezione persistente per profilo · `CRONACA` (epiloghi mondiali per flag) · `HERO_EPILOGUES` con un set per TIPO di finale · `CHAPTERS` + `Engine.showRevive()` ("Rivivi la Notte", sbloccato al primo finale)
 - **Eclissi**: `moon(..., eclipse=true)` usa la fase di `Engine.eclipsePhaseFor(sceneId)` — la luna cresce e si arrossa con l'orologio della notte
-- **Validatori di coerenza** (tests/validate.mjs): flag di imprese/cronache/diario impostabili, stinger esistenti, sprite/palette coerenti — tenerli verdi previene le classi di bug trovate durante la produzione
+- **Echi dei flag nei boss** (js/combat.js, blocco d'apertura del combattimento): `sorpresa`, `rituale_fatto`, `gregorio_umano`, `cucina_in_sciopero`, `cerchio_di_porcellana`, `menu_dei_vivi` — il posto giusto per far pesare in battaglia le scelte della notte
+- **4 validatori di coerenza** (tests/validate.mjs): flag di imprese/cronache/diario impostabili · stinger esistenti in sound.js · sprite/palette coerenti · capitoli di Rivivi la Notte con destinazioni e zaini validi — tenerli verdi previene le classi di bug trovate durante la produzione. Regola d'oro: **ogni flag narrativo deve avere un consumatore** (meccanica, diario, impresa o cronaca)
 
 ## Comandi
 
