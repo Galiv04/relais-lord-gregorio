@@ -176,17 +176,18 @@ section('Sprite pixel-art');
 
 let spriteProblems = 0;
 for (const [name, def] of Object.entries(Sprites.registry)) {
-  if (def.map.length !== 16) { fail(`sprite "${name}": ${def.map.length} righe (attese 16)`); spriteProblems++; }
+  const n = def.map.length;
+  if (n !== 16 && n !== 32) { fail(`sprite "${name}": ${n} righe (attese 16 o 32)`); spriteProblems++; }
   def.map.forEach((row, i) => {
-    if (row.length !== 16) { fail(`sprite "${name}" riga ${i}: ${row.length} colonne (attese 16)`); spriteProblems++; }
+    if (row.length !== n) { fail(`sprite "${name}" riga ${i}: ${row.length} colonne (attese ${n}, mappa quadrata)`); spriteProblems++; }
     for (const ch of row) {
       if (ch !== '.' && !def.palette[ch]) { fail(`sprite "${name}" riga ${i}: carattere "${ch}" non in palette`); spriteProblems++; }
     }
   });
   const solid = def.map.join('').split('').filter(c => c !== '.').length;
-  if (solid < 40) warn(`sprite "${name}": molto vuoto (${solid} pixel)`);
+  if (solid < (n === 32 ? 160 : 40)) warn(`sprite "${name}": molto vuoto (${solid} pixel)`);
 }
-if (!spriteProblems) { ok(); console.log(`  ✔ ${Object.keys(Sprites.registry).length} sprite ben formati (16x16, palette coerenti)`); }
+if (!spriteProblems) { ok(); console.log(`  ✔ ${Object.keys(Sprites.registry).length} sprite ben formati (16x16 o 32x32, palette coerenti)`); }
 
 /* ---------- 6. mappa del mondo ---------- */
 section('Mappa del mondo');

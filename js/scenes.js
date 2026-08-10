@@ -378,9 +378,11 @@ const Scenes = (() => {
       ctx.fillStyle = '#0d070a';
       for (let i = 0; i < 6; i++) ctx.fillRect(W * 0.40 + i * W * 0.035, g + 14, 4, H - g - 18);
       ctx.fillRect(W * 0.395, g + 12, W * 0.21, 5);
-      // i cinque, di spalle davanti al cancello: la vacanza sta per cominciare
+      // i cinque sul viale, a sinistra del cancello (sfondo uniforme alle loro spalle)
       if (typeof Sprites !== 'undefined' && Sprites.registry) {
+        ctx.save(); ctx.translate(-W * 0.21, 0);
         heroesRow(ctx, W, H - 4, ['gaetano', 'claudia', 'natalino', 'emanuela', 'federico'], 2);
+        ctx.restore();
       }
       // nebbia bassa
       ctx.fillStyle = 'rgba(180,170,180,.08)';
