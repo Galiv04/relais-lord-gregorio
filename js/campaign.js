@@ -546,7 +546,7 @@ Nell'acqua si riflette un cielo. Ma non È il cielo che avete sopra la testa: le
 
 Alzate la testa: sopra di voi, la luna vera è un taglio sottile, bianco, al primo quarto.
 
-> Gaetano: *(molto piano, da ingegnere che ha finito le spiegazioni)* "...rifrazione. No. Inversione termica. No. Ragazzi, io non..."
+> Gaetano: *(molto piano, da ingegnere che ha finito le spiegazioni)* "...rifrazione. No. Inversione termica. No. Ragazzi, io non... io non ho un cazzo di modello per QUELLA."
 
 E mentre lo dice, nel riflesso, la luna rossa **inizia lentissimamente a salire.**`,
     choices: [
@@ -572,7 +572,7 @@ Nel cielo capovolto sotto la superficie, dove dovrebbe esserci l'ombra dell'infr
 
 L'infradito, piano, comincia a ruotare su sé stessa. Controcorrente. Poi qualcosa, da sotto, la **tira giù.** Senza schizzi. Come un appunto preso.
 
-> Federico: "...era NUOVA."
+> Federico: "...era NUOVA, porca puttana. Comprata IERI."
 
 **(Sangue freddo +2: avete guardato nell'abisso con metodo. Flag: la finestra.)**`,
     sets: { vista_finestra: true },
@@ -591,7 +591,7 @@ Non un'onda: un rigonfiamento, silenzioso e mirato, come un gatto che si inarca 
 
 Perché qualcosa, davanti a lei, si è affacciato a guardare. Una sagoma. In piedi sull'acqua capovolta. Col **taglio di capelli anni '90.**
 
-Gaetano fa quello che farebbe qualunque ingegnere aerospaziale con dieci anni di studi: cade seduto all'indietro urlando *"MADONNA"* e l'infradito finisce in acqua.
+Gaetano fa quello che farebbe qualunque ingegnere aerospaziale con dieci anni di studi: cade seduto all'indietro urlando *"MADONNA SANTISSIMA CHE CAZZO È"* e l'infradito finisce in acqua.
 
 Il rigonfiamento si ritira. L'infradito affonda **in verticale**, risucchiata, senza una bolla.
 
@@ -662,7 +662,7 @@ E accanto alle tazze, un biglietto con la solita calligrafia elegante:
 
 > Emanuela: *(rileggendo)* "...'con la voce di qualcuno che è già dentro'."
 
-> Natalino: "Io questa tisana non la bevo manco morto. Scusate il gioco di parole."
+> Natalino: "Io questa tisana non la bevo manco morto. Scusate il gioco di parole, ma sono le due e ho visto una piscina posseduta: il bon ton è ufficialmente SOSPESO."
 
 Da qualche parte sopra di voi, al piano delle camere, **un pavimento scricchiola.** Una volta. Poi, educatamente, si ferma ad aspettare.`,
     choices: [{ text: 'Su. Insieme. Si va a capire che notte è questa', next: 'h1' }],
@@ -857,6 +857,8 @@ Un silenzio lungo come una lievitazione. Poi lo Chef prende la ciocca con due di
 
 > Lo Chef: "Ingredienti... **agitati.** Meglio: la carne si intenerisce."
 
+> Emanuela: *(accendendo la piastra, gelida)* "Io in cucina ci sono cresciuta, pezzo di merda. Vediamo chi cucina chi."
+
 Solleva la mannaia. Dal buio dietro il forno, due **camerieri in livrea** si raddrizzano dagli angoli dove stavano piegati come abiti su una sedia.
 
 *(Consiglio da narratore: lo Chef è una creatura della villa — il Colpo di Phon di Emanuela e il sale fanno danni DOPPI. Se qualcuno è ferito, le cure PRIMA che dopo.)*`,
@@ -1040,6 +1042,8 @@ Trentadue teste di porcellana **ruotano insieme**, con un solo *crick* coordinat
 
 > La bambola grande: *(senza muovere il sorriso dipinto)* "Fuori... tempo."
 
+> Natalino: *(sottovoce, con sentimento)* "No no no, col cazzo, io i film con le bambole manco li GUARDO—"
+
 Si alzano. Non tutte — le bastano tre, le più grandi, quelle coi denti veri — mentre le altre ventinove restano sedute a **guardare**, che è peggio.
 
 *(Sono creature della villa: phon e sale fanno danni doppi. Sono piccole e velocissime: attente ai più deboli del gruppo!)*`,
@@ -1174,6 +1178,10 @@ Quando il sipario si alza, lo spaventapasseri **non c'è più.**
 > Il Giardiniere: *(voce di foglie secche)* "Fuori... orario. Il giardino... si pota... di notte. E stanotte... siete NEL giardino."
 
 Le cesoie si aprono con lo scatto oliato di centoventicinque anni di manutenzione amorevole.
+
+> Federico: "Gaetano. GAETANO. Il tuo piano matematico faceva SCHIFO."
+
+> Gaetano: "Il piano era PERFETTO, è la nebbia che bara, STRONZA—"
 
 *(È una creatura della villa: phon e sale doppi. Colpisce come una falciatrice: proteggetevi a vicenda!)*`,
     combat: {
@@ -1579,6 +1587,8 @@ Le ferite sono state **medicate.** Bende pulite, perfino una coperta a testa. Su
 Sulla soglia, senza voltarsi:
 
 > Gregorio: "L'alba è vicina, signori. Se avete ancora qualcosa da sciogliere... **correte.**"
+
+> Natalino: *(massaggiandosi il collo)* "Ragazzi, punto della situazione: siamo chiusi in una dispensa per esseri umani, il maggiordomo immortale ci ha rimboccato le coperte, e domani ho due colori e una permanente. Quindi adesso usciamo di qua e sfasciamo tutto, va bene? VA BENE."
 
 **(Tutti i PV e le abilità sono ripristinati. Chi era PRESO è di nuovo con voi. Riproverete lo scontro: stavolta, tattica.)**`,
     fullHeal: true,
@@ -2802,6 +2812,8 @@ I ritratti alle pareti hanno smesso di sbattere nelle cornici. Adesso vi guardan
 
 È larga esattamente quanto **cinque persone in costume da bagno.**
 
+> Gregorio: *(un ultimo filo di voce, da lontanissimo)* "ALZATEVI, CAZZO. Scusate il francese. Centoventicinque anni di etichetta e la butto via adesso: ALZATEVI."
+
 *(Ultima possibilità. Davvero l'ultima.)*`,
     choices: [
       { text: '🪑 Restare seduti. La cena è servita. Il Belvedere ha vinto.', next: 'e_ospiti' },
@@ -2903,6 +2915,8 @@ I candelabri si spengono in sequenza, dal fondo verso di voi, come passi. I ritr
 C'è seduta una cosa che ha la forma di un padrone di casa: alta, elegante, con qualcosa che somiglia a un completo di lino se il lino fosse buio compresso. Non ha volto. Ha **un tovagliolo**, che si annoda al collo con gesti curati.
 
 > La Fame: *(con la voce di Gregorio, rubata, come tutto il resto)* "Gli ospiti... al loro posto. Il Banchetto... è servito."
+
+> Claudia: *(alzando il treppiede come una mazza)* "Io c'ho messo DIECI ANNI a farmi una carriera, brutto stronzo di una casa: non finisco appesa a una parete come un centrino."
 
 > Gregorio: *(da qualche parte, debole)* "...vi chiedo scusa. Fa sempre così: usa la voce del maggiordomo. Le voci sono la prima cosa che prende. COLPITELA NEL PIATTO: odia il sale, odia il phon della signora, odia tutto ciò che è CALDO E VIVO—"
 
