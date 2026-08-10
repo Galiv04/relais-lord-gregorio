@@ -12,12 +12,14 @@ C'è solo un dettaglio: **il Belvedere prende un gruppo di ospiti ogni venticinq
 
 - 🎭 **5 protagonisti = voi**: ognuno interpreta sé stesso, con abilità nate dal proprio mestiere (le forbici professionali contano, in certe notti)
 - 🎙 **Narratore automatico**: racconta, propone scelte macabre, tira i dadi, arbitra gli scontri
-- 🗺 **158 scene, ~30.000 parole**: l'autogrill di Baiano, il paese di Pietrafonda, la sera in piscina col riflesso sbagliato, tre piste nella notte (la cantina con l'ossario, il piano proibito fino alla soffitta, il pozzo e il garage), la **Strada che Torna** (i tornanti sono un anello — e vederlo cambia il finale), il mondo capovolto del **Riflesso** e il Banchetto dell'alba
+- 🗺 **163 scene, ~34.000 parole**: l'autogrill di Baiano, il paese di Pietrafonda, la sera in piscina col riflesso sbagliato, tre piste nella notte (la cantina con l'ossario, il piano proibito fino alla soffitta, il pozzo e il garage), la **Strada che Torna** (i tornanti sono un anello — e vederlo cambia il finale), il mondo capovolto del **Riflesso** e il Banchetto dell'alba
 - 🌒 **5 finali**: uno si conquista, uno si sceglie (e non se ne parlerà mai più), uno si subisce, uno si dimentica... e uno non era nemmeno previsto dal Belvedere: lo scrivete voi
 - ☠ **Condizioni, non morti**: al Belvedere nessuno muore — si viene avvelenati dal freddo, presi dalla casa, appesi alle pareti. Gli amici possono salvarti. Di solito.
-- 🎒 **25 oggetti**, molti con effetti veri: l'Asso di Denari dei reduci ritira una prova fallita, la Lanterna del 1899 fa esitare le creature (e addormenta le bambole), il Nastro del '74 le ferma ad ascoltare (o ammansisce lo Chef — scegliete voi)
+- 🎒 **28 oggetti**, 13 con effetti veri: l'Asso di Denari dei reduci ritira una prova fallita, la Lanterna del 1899 fa esitare le creature (e addormenta le bambole), il Nastro del '74 le ferma ad ascoltare (o ammansisce lo Chef — scegliete voi)
 - 🔗 **Le piste si parlano**: ciò che scoprite in una apre strade nelle altre, e le gentilezze seminate nella notte tornano come alleati al Banchetto. Un 📔 Diario della Notte tiene il conto di ciò che sapete
-- ⚖ **Porzioni ridotte**: in 1-2 giocatori il Belvedere apparecchia in proporzione — giocabile anche in solitaria
+- ⚖ **Tre difficoltà** (Tranquilla / Normale / Incubo) e **porzioni ridotte** in 1-2 giocatori — giocabile anche in solitaria
+- 🗝 **Rivivi la Notte**: dopo il primo finale, 11 capitoli d'ingresso per giocare piste, segreti e finali che vi siete persi — con zaino e conoscenze già pronti
+- 🏆 **43 imprese con collezione persistente** per profilo: il Belvedere tiene il registro degli ospiti, voi tenete il suo
 - ⚔ Combattimenti a turni in stile D&D, con **musica di battaglia diversa per luogo** · 📖 regole in un click · 💾 salvataggio automatico su 3 slot con profili + codici di esportazione tra dispositivi · 🎵 colonna sonora chiptune che cambia con la scena (dal carillon al valzer marcio del Banchetto) · 🕹 pixel art via canvas ispirata al vero relais irpino · zero dipendenze
 
 ## Come si gioca
@@ -35,7 +37,7 @@ Sito statico (HTML/CSS/JS vanilla, zero build). Motore di gioco condiviso con [L
 
 ```bash
 node tests/validate.mjs      # controlli statici: grafo scene, dati, sprite, bilanciamento
-node tests/playthrough.mjs   # 130 partite complete simulate headless, 4/4 finali coperti
+node tests/playthrough.mjs   # 150 partite complete simulate headless, 5/5 finali coperti
 ```
 
 ---
