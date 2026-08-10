@@ -1150,34 +1150,57 @@ const Scenes = (() => {
     },
 
     garage(ctx, W, H) {
-      const r = rng(173);
-      blocks(ctx, 0, 0, W, H, '#20181a', 16, r, 0.16);
-      const floorY = H - 56;
-      blocks(ctx, 0, floorY, W, H - floorY, '#2a2426', 12, r, 0.12);
-      // la saracinesca in fondo
-      ctx.fillStyle = '#3a3438';
-      for (let i = 0; i < 8; i++) ctx.fillRect(W * 0.36, 30 + i * 16, W * 0.28, 12);
-      // IL MOTORE APPESO AL MURO come un trofeo, coi pezzi etichettati
-      for (const [mx, my, mw, mh] of [[0.08, 0.24, 70, 50], [0.08, 0.55, 50, 34], [0.20, 0.38, 40, 30]]) {
-        blocks(ctx, W * mx, H * my, mw, mh, '#4a4a55', 6, r, 0.18);
-        ctx.fillStyle = '#c8a032'; ctx.fillRect(W * mx + mw / 2 - 10, H * my + mh + 2, 20, 6);
+      const r = rng(151);
+      blocks(ctx, 0, 0, W, H, '#241d1a', 16, r, 0.14);
+      const floorY = H - 64;
+      // pavimento in cemento, distinto dal muro
+      blocks(ctx, 0, floorY, W, H - floorY, '#3a3632', 12, r, 0.1);
+      ctx.fillStyle = 'rgba(0,0,0,.25)';
+      for (let i = 0; i < 5; i++) ctx.fillRect(W * 0.12 * i + 30, floorY + 6, 60, 3); // macchie d'olio
+      // la serranda basculante, chiusa
+      blocks(ctx, W * 0.30, 24, W * 0.34, floorY - 60, '#4a453e', 10, r, 0.08);
+      ctx.fillStyle = '#332f2a';
+      for (let y = 32; y < floorY - 44; y += 16) ctx.fillRect(W * 0.30, y, W * 0.34, 4);
+      ctx.fillStyle = '#8a8478'; ctx.fillRect(W * 0.455, floorY - 52, 26, 6); // maniglia
+      // scaffalature cariche a sinistra
+      blocks(ctx, W * 0.03, H * 0.18, W * 0.20, floorY - H * 0.18, '#4a3a28', 8, r, 0.12);
+      for (let sh = 0; sh < 4; sh++) {
+        const sy = H * 0.22 + sh * (floorY - H * 0.26) / 4;
+        ctx.fillStyle = '#33281c'; ctx.fillRect(W * 0.035, sy + 18, W * 0.19, 4);
+        for (let b = 0; b < 5; b++) {
+          const cols = ['#6a5a45', '#5a6a5a', '#7a5a35', '#4a5a6e', '#8a6a2d'];
+          ctx.fillStyle = cols[(sh + b) % 5];
+          ctx.fillRect(W * 0.045 + b * W * 0.036, sy + 2, W * 0.026, 15);
+        }
       }
-      ctx.strokeStyle = '#5a5a66'; ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.moveTo(W * 0.115, H * 0.24); ctx.lineTo(W * 0.115, 8); ctx.stroke();
-      // la macchina VOSTRA senza motore, col cofano aperto
-      const cx = W * 0.62, cy = floorY - 34;
-      ctx.fillStyle = '#7a2432'; ctx.fillRect(cx, cy, 130, 30);
-      ctx.fillStyle = '#5a1a26'; ctx.fillRect(cx + 16, cy - 16, 90, 18);
-      ctx.fillStyle = '#8ab8d0'; ctx.fillRect(cx + 22, cy - 12, 30, 12); ctx.fillRect(cx + 62, cy - 12, 30, 12);
-      ctx.fillStyle = '#3a1017'; ctx.fillRect(cx + 6, cy - 26, 34, 28);   // cofano alzato
-      ctx.fillStyle = '#0d0a0c'; ctx.fillRect(cx + 10, cy + 2, 26, 16);   // il VUOTO dove era il motore
-      ctx.fillStyle = '#1a1a22'; ctx.fillRect(cx + 12, cy + 28, 18, 14); ctx.fillRect(cx + 96, cy + 28, 18, 14);
-      // attrezzi ordinati OSSESSIVAMENTE
-      ctx.fillStyle = '#8a8f9e';
-      for (let i = 0; i < 8; i++) ctx.fillRect(W * 0.36 + i * 18, floorY - 90, 4, 16 + (i % 3) * 6);
-      // lampada da officina
-      glow(ctx, W * 0.68, 40, 30, 20, '232,182,76');
-      ctx.fillStyle = '#e8b64c'; ctx.fillRect(W * 0.665, 34, 18, 8);
+      // banco da lavoro a destra con attrezzi appesi
+      blocks(ctx, W * 0.70, floorY - 44, W * 0.26, 44, '#4a3a28', 8, r, 0.12);
+      blocks(ctx, W * 0.69, floorY - 50, W * 0.28, 8, '#5d4a35', 8, r, 0.08);
+      ctx.fillStyle = '#2a241e'; ctx.fillRect(W * 0.70, H * 0.24, W * 0.26, 42); // pannello attrezzi
+      ctx.fillStyle = '#8a8478';
+      for (let t = 0; t < 6; t++) ctx.fillRect(W * 0.715 + t * W * 0.04, H * 0.26, 4, 22 + (t % 3) * 8);
+      ctx.fillStyle = '#c05a48'; ctx.fillRect(W * 0.72, floorY - 60, 22, 10); // cassetta attrezzi
+      // lampade da officina appese, una tremolante
+      for (const fx of [0.14, 0.48, 0.82]) {
+        ctx.fillStyle = '#2a2a30'; ctx.fillRect(W * fx, 0, 3, 34);
+        ctx.fillStyle = '#3a3a42'; ctx.fillRect(W * fx - 14, 34, 31, 10);
+        glow(ctx, W * fx + 1, 52, 40, 22, '232,182,76');
+        ctx.fillStyle = '#e8d8a0'; ctx.fillRect(W * fx - 10, 44, 23, 5);
+      }
+      // LA VOSTRA macchina, ferma, col cofano che vi guarda
+      const cx = W * 0.36, cy = floorY - 34;
+      ctx.fillStyle = '#7a2432'; ctx.fillRect(cx, cy, 120, 30);
+      ctx.fillStyle = '#5a1a26'; ctx.fillRect(cx + 14, cy - 16, 84, 18);
+      ctx.fillStyle = '#8ab8d0'; ctx.fillRect(cx + 20, cy - 12, 30, 12); ctx.fillRect(cx + 60, cy - 12, 30, 12);
+      ctx.fillStyle = '#1a1a22'; ctx.fillRect(cx + 12, cy + 26, 24, 16); ctx.fillRect(cx + 84, cy + 26, 24, 16);
+      ctx.fillStyle = '#3a3a45'; ctx.fillRect(cx + 18, cy + 30, 12, 8); ctx.fillRect(cx + 90, cy + 30, 12, 8);
+      ctx.fillStyle = '#e8e4c8'; ctx.fillRect(cx + 112, cy + 8, 7, 6); ctx.fillRect(cx, cy + 8, 7, 6);
+      // il cofano APERTO: qualcuno ha lavorato al motore
+      ctx.fillStyle = '#5a1a26'; ctx.fillRect(cx - 26, cy - 10, 30, 6);
+      ctx.fillStyle = '#0d0a0c'; ctx.fillRect(cx - 20, cy - 4, 24, 16);
+      // taniche e corda in un angolo
+      ctx.fillStyle = '#5a6a5a'; ctx.fillRect(W * 0.26, floorY - 20, 16, 20);
+      ctx.fillStyle = '#6a5a45'; ctx.fillRect(W * 0.28 + 18, floorY - 14, 18, 14);
     },
 
     albaRelais(ctx, W, H) {
