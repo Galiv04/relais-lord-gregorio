@@ -21,6 +21,9 @@ const ITEMS = {
   torcia_led:       { name: 'Torcia LED di Gaetano', desc: '1200 lumen, tre modalità. La terza non l\'avete mai provata.', usable: false },
   vino_1899:        { name: 'Bottiglia del 1899', desc: 'Il vino del primo Banchetto. L\'etichetta scritta a mano: "Da aprire solo per il Padrone".', usable: false },
   campanello:       { name: 'Campanello di Servizio', desc: 'Ottone lucido. Il cartellino dice: "Suonare in caso di bisogno. Verranno."', usable: false },
+  moka:             { name: 'Moka di Don Michele', desc: 'Caffè del paese, nero come la notte e due volte più forte. Ricarica TUTTE le abilità di una persona.', usable: true, recharge: true },
+  bengala:          { name: 'Bengala di Federico', desc: '"Per le emergenze", diceva. Da lancio: 2d6 danni a TUTTI i nemici, che restano accecati (svantaggio).', combat: { dice: [2, 6], all: true, distract: true }, icon: '🧨' },
+  campanella_1974:  { name: 'Campanella del 1974', desc: 'La campanella della vecchia chiesa di Pietrafonda. Don Michele: "Quando LEI si siede a tavola... suonate i vespri."', usable: false },
 };
 
 const CAMPAIGN = {
@@ -589,6 +592,7 @@ E davvero: mentre lo dice, una ciocca dei suoi capelli diventa bianca.`,
       { text: '🚪 Salire al PIANO PROIBITO — i ricordi della casa', next: 'u1', once: true },
       { text: '🌳 Uscire verso il POZZO — la cosa con cui Gregorio firmò', next: 'b1', once: true },
       { text: '❓ Trattenere Gregorio: ancora una domanda, gliela si legge in faccia', next: 'h2', once: true },
+      { text: '🚶 Il cancello: chi non ha FIRMATO può ancora passare. Scendere a Pietrafonda', requires: { flag: 'firma_rinviata' }, next: 'pp1', once: true },
       { text: '🌅 Basta così: barricarsi e aspettare l\'alba (verso il finale)', next: 'z1', requires: { flag: 'un_nodo_sciolto' } },
     ],
   },
@@ -1228,6 +1232,203 @@ Il secchio risale da solo, pieno.
     choices: [{ text: 'Dentro. Subito.', next: 'h1' }],
   },
 
+  /* ==================== PISTA SEGRETA — PIETRAFONDA ====================
+     Disponibile solo se la firma è stata RINVIATA: il patto non vi tiene. Ancora. */
+
+  pp1: {
+    location: 'tornanti',
+    caption: 'La discesa a Pietrafonda — ore 1:20',
+    text: `Il cancello si apre.
+
+Non cigola, non esita: si apre e basta, come una bocca che non ha motivo di mordere. Gregorio ve l'aveva lasciato intendere con lo sguardo, alla firma rinviata: *il patto tiene chi ha firmato.* Voi, tecnicamente, siete ancora ospiti **in prova.**
+
+E la nebbia — il muro bianco che ha respinto i fari della macchina — davanti a voi si RITIRA. Un corridoio di aria pulita largo esattamente quanto cinque persone affiancate, giù per i tornanti, fino alle luci spente di Pietrafonda.
+
+> Claudia: "Si apre solo per noi. Il che significa che può chiudersi solo per noi."
+
+> Gaetano: "Andata e ritorno. Un'ora. E passiamo dalla macchina: se scendiamo in un paese fantasma alle una di notte, ci scendiamo EQUIPAGGIATI."
+
+Dalla macchina, ferma dove l'avete lasciata, recuperate il **kit emergenze di Federico** — che si rivela contenere: un poncho, tre barrette scadute, e un **BENGALA** da stadio.
+
+> Federico: "Per le emergenze."
+
+> Natalino: "Fedé, in che emergenza serve un BENGALA da CURVA?"
+
+> Federico: *(infilandolo nello zaino)* "Questa, evidentemente."
+
+**(Ottenuto: BENGALA — da lancio, acceca e brucia tutto ciò che è nella stanza.)**`,
+    item: 'bengala',
+    sets: { discesa_paese: true },
+    choices: [{ text: '⬇ Giù, nel corridoio di nebbia, verso il paese', next: 'pp2' }],
+  },
+
+  pp2: {
+    location: 'paese',
+    caption: 'Pietrafonda, ab. 41 — la piazza',
+    text: `Pietrafonda di notte è un presepe a cui hanno soffiato via le candele.
+
+Quarantuno case di pietra grigia, strette attorno a una piazza col campanile mozzato. Ogni persiana chiusa. Ogni comignolo freddo. Il bar — insegna arrugginita: **"DA PEPPE — dal 1961"** — ha ancora i tavolini fuori, impilati e incatenati con la cura di chi pensava di riaprire lunedì. Il lunedì, a giudicare dalla polvere, era venticinque anni fa.
+
+E poi la vedete: **una luce.** Una sola, in tutto il paese. Una finestra al piano terra della casa addossata alla chiesa — la canonica — con dietro un'ombra che si muove piano, avanti e indietro, come chi cammina per non pensare.
+
+> Natalino: "Quarantuno abitanti, e l'UNO è sveglio all'una di notte. Ragazzi. Ve l'avevo detto io che lo volevo conoscere."`,
+    choices: [
+      { text: '🚪 Bussare alla canonica: chi veglia stanotte, veglia per un motivo', next: 'pp3' },
+      { text: '🔦 Prima, una torcia dentro al bar chiuso dal 1999', tag: 'Prova di Saggezza — CD 12', check: { stat: 'SAG', dc: 12, success: 'pp2_bar', fail: 'pp3' } },
+    ],
+  },
+
+  pp2_bar: {
+    location: 'paese',
+    caption: 'Da Peppe — chiuso dal 1999',
+    text: `La torcia LED di Gaetano attraversa la vetrina impolverata, e il bar restituisce la sua fotografia: sedie sui tavoli, la macchina del caffè coperta da un telo, il calendario fermo ad **agosto 1999.**
+
+E sul bancone, ancora lì, cinque tazzine. Una fila di cinque tazzine sporche, mai lavate, con accanto un conto scritto a mano e mai battuto: *"5 caffè — offre Peppe. Ai ragazzi del Belvedere: tornate a raccontarmi com'è lassù."*
+
+> Emanuela: *(piano)* "Sono scesi a prendere il caffè. La mattina prima. Come noi al ristorante, ieri."
+
+Sotto il conto, aggiunto dopo, con una grafia più tremante: *"Settembre. Non sono tornati. Il paese lo sapeva e io gli ho fatto il caffè lo stesso. Che Dio mi perdoni."*
+
+La firma è: **Peppe.** E sotto ancora, un'ultima riga, di mano diversa, che riconoscete — minuta, fitta, femminile:
+
+*"Non era colpa tua, Peppe. Non è MAI stata colpa di nessuno di voi. — A."*
+
+Ada scrive anche fuori dalla proprietà. Ada, in cinquant'anni, ha consolato **tutto il paese.**
+
+**(Sangue freddo +2: adesso sapete per chi state combattendo, oltre che per voi.)**`,
+    gold: 2,
+    sets: { visto_bar_1999: true },
+    choices: [{ text: 'Alla canonica', next: 'pp3' }],
+  },
+
+  pp3: {
+    location: 'paese',
+    caption: 'La canonica — Don Michele',
+    npc: ['donmichele'],
+    text: `La porta si apre prima che le nocche tocchino il legno. Sulla soglia c'è un uomo che il tempo ha piegato ma non convinto: novant'anni portati come una tonaca stirata, occhi lucidi e velocissimi, e in mano — non una Bibbia — **una tazza di caffè fumante.**
+
+> Don Michele: "Cinque. Del Belvedere. In discesa e VIVI." *(vi conta col dito, due volte)* "E senza firma addosso — si vede, sapete: chi ha firmato ha la nebbia che gli cammina dietro. Entrate. Il caffè è pronto da cinquant'anni."
+
+Dentro, la canonica è un archivio di guerra: ritagli, registri parrocchiali, una parete di foto. Gruppi di ragazzi in vacanza: 1949. 1974. 1999. Cerchiati, annotati, PIANTI.
+
+> Don Michele: "1974. Io ero il sesto. Salimmo in sei da Napoli — io, mio fratello Aldo, e altri quattro. La sera della firma io dissi no. Non per coraggio: per SUPERBIA, non firmo mica io i registri degli alberghi... La nebbia mi lasciò scendere. Loro..." *(indica la foto: cinque ragazzi in piscina, un sesto ritagliato via)* "...loro no. Da cinquant'anni abito qui, dico messa a nessuno e suono i vespri ogni sera. Non per Dio, ragazzi. Perché LEI, lassù — la signora del pozzo — mi rispose UNA volta, nel '74. Disse: 'suona, che chi è dentro almeno sente l'ora.'"
+
+Si versa un altro caffè. Le mani, per la prima volta, gli tremano.
+
+> Don Michele: "Stanotte è il venticinquennio. E voi siete scesi a bussare alla MIA porta. Ditemi tutto. E poi vediamo cosa vi do."`,
+    sets: { storia_1974: true },
+    choices: [
+      { text: '📖 Raccontargli tutto: il registro, il pozzo, i nodi, il Banchetto', next: 'pp4' },
+      { text: '⛪ Prima: chiedergli della cripta dei registri parrocchiali', tag: 'Prova di Intelligenza — CD 12', check: { stat: 'INT', dc: 12, success: 'pp4_cripta', fail: 'pp4' } },
+    ],
+  },
+
+  pp4_cripta: {
+    location: 'paese',
+    caption: 'La cripta dei registri',
+    text: `L'intuizione è di quelle che Gaetano chiama "banali a posteriori": se il Belvedere tiene un registro... **anche la parrocchia tiene i suoi.**
+
+Don Michele vi guida nella cripta sotto la chiesa, tra scaffali di registri parrocchiali che risalgono al Seicento. Battesimi, matrimoni, sepolture. E lì, alla voce "custodi del Belvedere", la mano di dodici parroci diversi ha annotato per due secoli la stessa cosa:
+
+*1824: "sale al Belvedere il nuovo custode, forestiero."*
+*1849: "sale il custode nuovo."*
+*1874: "sale il custode."*
+**Ogni venticinque anni. Anche PRIMA di Gregorio.**
+
+> Gaetano: "Gregorio ha firmato nel 1899. Ma il ciclo era già vecchio di decenni. Lui non è il primo custode. È solo... il più longevo."
+
+> Don Michele: "Il più TESTARDO. Gli altri cedevano al giro dopo: firmava un ospite nuovo e loro sparivano. Lui no. Lui è rimasto a fare il maggiordomo della cosa che l'ha fregato, pur di non passare la penna a un altro. Centoventicinque anni di dispetto, ragazzi. Quasi lo ammiro."
+
+**(Segreto pesante: il patto è più vecchio di Gregorio — e un custode può RIFIUTARSI di passare la penna. Sangue freddo +2.)**`,
+    sets: { segreto_custodi: true },
+    gold: 2,
+    choices: [{ text: 'Su, da Don Michele: il racconto e i doni', next: 'pp4' }],
+  },
+
+  pp4: {
+    location: 'paese',
+    caption: 'Il racconto e i doni',
+    npc: ['donmichele'],
+    text: `Il racconto dura un caffè intero — e con Don Michele il caffè è un'unità di misura seria. Ascolta senza interrompere: il registro coi vostri nomi già scritti, la piscina col cielo sbagliato, la voce dal pozzo, i nodi, il Banchetto delle 5:57.
+
+Alla fine si alza, apre un armadio a muro, e comincia a posare cose sul tavolo con la precisione di un armiere.
+
+> Don Michele: "**Uno.** La moka grande. Caffè di Pietrafonda: sveglia i vivi, e stanotte vi serve essere MOLTO vivi." *(posa la moka ancora calda)* "**Due.** Questa."
+
+Ed è una **campanella di bronzo**, consumata, con incisa una data: 1974.
+
+> Don Michele: "La campanella dei vespri della chiesa vecchia. La suono ogni sera da cinquant'anni, e ogni sera, lassù, QUALCOSA si ferma ad ascoltare. Non so cosa sia per lei — un ricordo, un dispetto, un orario. So che quando LEI si siede a tavola..." *(ve la mette in mano, e le sue mani adesso non tremano più)* "...voi suonate i vespri. E ditele che ve la manda il sesto del Settantaquattro."
+
+Sulla porta, mentre uscite, aggiunge l'ultima cosa, quasi sottovoce:
+
+> Don Michele: "Se vedete mio fratello Aldo — è in un ritratto, avrà vent'anni e la riga da una parte — ditegli che ho fatto il prete per sbaglio e il fratello per vocazione. Lui capisce."
+
+**(Ottenute: MOKA e CAMPANELLA DEL 1974. Sangue freddo +2.)**`,
+    item: 'moka',
+    item2: 'campanella_1974',
+    sets: { doni_don_michele: true },
+    gold: 2,
+    choices: [{ text: '⬆ Risalire, prima che la nebbia cambi idea', next: 'pp6' }],
+  },
+
+  pp6: {
+    location: 'tornanti',
+    caption: 'La risalita — la nebbia ha imparato',
+    text: `Il corridoio nella nebbia è ancora lì. Più stretto.
+
+All'andata ci passavate in cinque affiancati; adesso, a stento in due. E le pareti bianche non sono più ferme: **respirano**, dentro e fuori, e a ogni respiro il corridoio perde un centimetro. Il Belvedere ha capito dove siete andati. E ha capito, soprattutto, **cosa state riportando su.**
+
+> Don Michele: *(dalla piazza, le mani a imbuto)* "CAMMINATE AL CENTRO! Non rispondete se vi chiama! E se vi tocca — NON È FREDDO, è solo PAURA, ripetetevelo!"
+
+A metà salita, la nebbia vi chiama. Con la voce di Peppe che offre il caffè. Con la voce di Aldo che chiede del fratello. Con le voci di casa vostra — quelle a cui non si è mai abbastanza pronti.
+
+Si cammina. Al centro. Insieme.`,
+    choices: [
+      { text: '🚶 Testa bassa e passo costante: guidare il gruppo attraverso', tag: 'Prova di Saggezza — CD 12', check: { stat: 'SAG', dc: 12, success: 'pp7', fail: 'pp6_ko' } },
+      { text: '🏃 Di corsa, tutti insieme, contando i passi ad alta voce', tag: 'Prova di Costituzione — CD 12', check: { stat: 'COS', dc: 12, success: 'pp7', fail: 'pp6_ko' } },
+    ],
+  },
+
+  pp6_ko: {
+    location: 'tornanti',
+    caption: 'La nebbia assaggia',
+    text: `Qualcuno risponde.
+
+È un attimo — una voce troppo simile a quella giusta, un *"aspetta"* detto col tono di casa — e un passo esce dal centro del corridoio. La nebbia non aspettava altro: un tentacolo bianco, delicato come un tovagliolo, avvolge il polso di chi ha risposto e **stringe.**
+
+Le mani degli altri lo strappano indietro in un secondo — di nuovo, la disperazione coordinata delle famiglie vere — e il corridoio vi sputa fuori tutti e cinque, in ginocchio sulla ghiaia del Belvedere.
+
+Ma il polso di chi ha risposto porta il segno: cinque dita bianche, fredde, che non se ne vanno.
+
+**(Chi ha tirato è AVVELENATO dal freddo della nebbia — serve l'antidoto. -1 Sangue freddo.)**
+
+> La voce di Don Michele: *(lontanissima, dalla valle)* "...VI AVEVO DETTO DI NON RISPONDERE!"`,
+    poisonRoller: true,
+    gold: -1,
+    choices: [{ text: 'Dentro. Con quel che resta della dignità', next: 'pp7' }],
+  },
+
+  pp7: {
+    location: 'hall',
+    caption: 'Il rientro — Gregorio non ci crede',
+    text: `Gregorio è nella hall, col candeliere, e quando vi vede entrare fa una cosa che in centoventicinque anni probabilmente non ha fatto mai: **resta senza parole.**
+
+> Gregorio: "Siete... USCITI." *(conta, ricontra)* "E siete TORNATI. Di vostra volontà. Dentro." *(posa il candeliere, si siede sulle scale, e per un attimo è solo un uomo molto vecchio e molto stanco)* "Signori, in tutta la storia di questa casa, nessuno è mai tornato DENTRO potendo restare fuori. Siete magnifici. E completamente scemi. Le due cose, ho imparato quassù, viaggiano spesso insieme."
+
+Poi vede la campanella. E il modo in cui la guarda — come si guarda una fotografia di famiglia in casa d'altri — vi dice che sa ESATTAMENTE cos'è.
+
+> Gregorio: "I vespri di Don Michele." *(si rialza, si ricompone, maggiordomo di nuovo)* "Ada li ascolta ogni sera, sapete. Si ferma. Qualunque cosa stia facendo, alle otto, si ferma. Io fingo di non accorgermene da cinquant'anni: certe cose, tra la signora e il paese, non riguardano il personale."
+
+Si avvia verso il corridoio, poi si volta:
+
+> Gregorio: "Il sesto del Settantaquattro. Ditegli, quando tutto questo finisce... che suo fratello Aldo, nel ritratto, **sorride.** Sono io che spolvero le cornici: lo so per certo."
+
+**(La pista di Pietrafonda è completa. Sangue freddo +1.)**`,
+    gold: 1,
+    sets: { pista_paese: true, un_nodo_sciolto: true },
+    choices: [{ text: 'Al corridoio delle tre porte', next: 'h1' }],
+  },
+
   /* ==================== LE CELLE (sconfitta non letale) ==================== */
 
   x_celle: {
@@ -1275,8 +1476,53 @@ E la casa — le pareti, i lampadari, i ritratti, il pavimento a scacchi — **r
       { text: '⚔ Il gruppo si mette in mezzo: se la casa vuole un nome, dovrà VENIRSELO A PRENDERE', next: 'z3_boss' },
       { text: '🗣 Federico chiede la parola: la trattativa della vita', tag: 'Prova di Carisma — CD 13', check: { stat: 'CAR', dc: 13, success: 'z2_trattativa', fail: 'z3_boss_arrabbiato' } },
       { text: '🍷 Prima di tutto: versare il vino del 1899 nel bicchiere di Gregorio', requires: { item: 'vino_1899' }, removeItem: 'vino_1899', next: 'z2_vino' },
+      { text: '🔔 Suonare la campanella di Don Michele: "quando LEI si siede a tavola..."', requires: { item: 'campanella_1974' }, removeItem: 'campanella_1974', next: 'z_vespri' },
+      { text: '🫙 L\'offerta impensabile: non UN nome. Un RICORDO a testa: questa notte, intera.', next: 'z_smemorati' },
       { text: '🖋 La scelta di cui non parlerete mai più: UNO di voi prende la penna', next: 'z_custode' },
       { text: '🍽 Sedersi. Tutti e cinque. C\'è una pace terribile, nello smettere di lottare...', next: 'z_resa' },
+    ],
+  },
+
+  z_vespri: {
+    location: 'salaBanchetto',
+    caption: 'I vespri del Settantaquattro',
+    text: `La campanella di bronzo esce dallo zaino, e la sala — la casa intera — se ne accorge PRIMA che suoni. I candelabri si irrigidiscono. I ritratti trattengono il fiato dipinto.
+
+*Din.*
+
+Un suono piccolo, stonato, umanissimo: la campanella di una chiesa di paese, suonata da mani che tremano da cinquant'anni. Rimbalza sul pavimento a scacchi, sale lungo i lampadari — e da qualche parte, sotto la casa, **il pozzo risponde.**
+
+> La voce di ADA: *(non più solo dal pavimento: da OVUNQUE, chiara, giovane, in piedi)* "...i vespri. Lui suona ANCORA i vespri."
+
+E la Fame — la cosa a capotavola, la casa affamata, il patto vestito da padrone — per la prima volta in centoventicinque anni esita, perché tutte le voci che ha rubato si sono girate INSIEME verso il suono.
+
+> Ada: "Ditegli che li ho sentiti. Tutti. Ogni sera, per cinquant'anni. E adesso, ospiti..." *(l'acqua canta nelle tubature come un esercito che si sveglia)* "...adesso SÌ che apparecchiamo NOI."
+
+**(Ada è in campo apertamente e la casa VACILLA: nello scontro finale partirete con VANTAGGIO, e la Fame sarà più debole nei primi giri.)**`,
+    sets: { vespri_suonati: true, casa_vacilla: true, sorpresa: true, ada_alleata: true },
+    choices: [
+      { text: '🧂💧 Adesso il rituale: sale, acqua, nome', requires: { flag: 'rituale_noto' }, next: 'z2_rituale' },
+      { text: '⚔ Adesso la battaglia: che venga a riscuotere, se ci riesce', next: 'z3_boss' },
+    ],
+  },
+
+  z_smemorati: {
+    location: 'salaBanchetto',
+    caption: 'Il prezzo che nessuno aveva previsto',
+    text: `L'idea è di quelle che possono venire solo alle sei meno venti del mattino, dopo una notte intera di orrore: se il patto vuole NUTRIRSI — e se il vino in cantina è fatto di ricordi — allora forse non gli serve una persona intera.
+
+Forse bastano **cinque ricordi.** Uno a testa. Lo stesso, per tutti: **questa notte.**
+
+La casa ci pensa. La sentite pensare: le travi che scricchiolano piano, i lampadari che tintinnano come un abaco. È un'offerta nuova — in centoventicinque anni nessuno le ha mai offerto qualcosa di SPONTANEO — e la novità, per una creatura che vive di rituali, è la tentazione più grande che esista.
+
+> La Fame: *(con mille voci, INCURIOSITA)* "...cinque notti intere. Cinque paure fresche. Cinque amicizie... così strette." *(il tovagliolo si riannoda)* "Accetto. Ma sappiatelo, ospiti: mi prendo TUTTO, di stanotte. Il terrore E il coraggio. La piscina E il pozzo. Ricorderete di essere venuti. Non ricorderete di essere stati GRANDI."
+
+> Gregorio: *(piano, sconvolto)* "Nessuno ha mai... signori, pensateci: dimenticherete anche di esserVI salvati. Vi resterà solo una vacanza qualunque e un vuoto grande così. È QUESTO che volete?"
+
+*(È una via d'uscita pulita. Nessun combattimento, nessun custode, tutti a casa. Il prezzo è la storia stessa: la vostra.)*`,
+    choices: [
+      { text: '🫙 Sì. Offrire i ricordi. Tutti insieme, mano nella mano.', next: 'e_smemorati' },
+      { text: '↩ No. Questa notte è NOSTRA, e ce la teniamo. Si torna alle armi.', next: 'z1', gold: 2 },
     ],
   },
 
@@ -1578,6 +1824,28 @@ E voi, ormai... anche.
     ending: true,
   },
 
+  e_smemorati: {
+    location: 'albaRelais',
+    caption: 'EPILOGO — La Vacanza Qualunque',
+    text: `**Lunedì mattina, a casa.**
+
+La vacanza è stata... bella? Bella. Il relais era curato, il padrone di casa gentile — Gregorio, no, Giorgio? — la piscina fantastica. Avete dormito benissimo. Strano solo che nessuno abbia fatto foto la seconda sera: ottantasette foto il primo giorno e poi il nulla, come se i telefoni fossero rimasti in camera.
+
+C'è qualcos'altro, però. Piccole cose.
+
+Natalino ha comprato una campanella di bronzo a un mercatino, "non so, mi diceva qualcosa", e la tiene in salone. Emanuela ha piantato erbe argentate sul balcone, e non ricorda dove ha preso i semi. Claudia ha uno scatto in galleria che non sa spiegare — sei asciugamani su sei lettini — e non riesce a cancellarlo. Gaetano, ogni tanto, calcola a mente quanto dista Avellino, e non sa perché. Federico ha disdetto un cliente per andare a trovare "un vecchio prete che fa un caffè incredibile", e nessuno gli ha chiesto come lo conosce.
+
+E ogni anno, l'ultima settimana di agosto, arriva una cartolina. Una villa liberty, una piscina turchese, una grafia elegante:
+
+*"Il Belvedere ringrazia i suoi ospiti più generosi. Le vostre stanze sono sempre pronte. — G. & A."*
+
+La leggete insieme, ogni anno, tutti e cinque. E ogni anno, per un momento che nessuno confessa agli altri, vi trovate a piangere **senza nessun motivo al mondo.**
+
+**🫙 FINE — Avete vinto. È costato solo la notte in cui siete stati più grandi di così. Rigiocate: stavolta, tenetevela.**`,
+    sets: { finale_smemorati: true },
+    ending: true,
+  },
+
 };
 
 /* Scena iniziale della campagna */
@@ -1589,7 +1857,8 @@ const WORLD_MAP = [
   { key: 'relais',   label: 'Il Relais',       x: 0.40, y: 0.30, scenes: ['a2', 'a2_siepi', 'p4_fuga'] },
   { key: 'hall',     label: 'La Hall',         x: 0.56, y: 0.48, scenes: ['a3', 'a3_registro', 'a3_registro_ko', 'a4_firma', 'a4_rinvio', 'a4_firma_forzata', 'p4_rientro'] },
   { key: 'camere',   label: 'Le Camere',       x: 0.74, y: 0.32, scenes: ['a5', 'a5_pozzo', 'h1', 'h2', 'u1', 'u2_1999', 'u2_1924', 'u2_1899', 'u3_medaglione', 'u3_bambole_fight', 'u3_bambole_vinte', 'u5_specchio', 'u4_porta_vuota'] },
-  { key: 'pranzo',   label: 'Sala da Pranzo',  x: 0.46, y: 0.62, scenes: ['a6', 'a6_brindisi', 'a6_no_brindisi', 'a7', 'z1', 'z2_vino', 'z2_trattativa', 'z2_rituale', 'z3_boss', 'z3_boss_arrabbiato', 'z3_boss_indebolito', 'z4_fase2', 'z5_vittoria', 'z6_alba', 'e_alba', 'z_custode', 'e_custode', 'z_resa', 'e_ospiti'] },
+  { key: 'pranzo',   label: 'Sala da Pranzo',  x: 0.46, y: 0.62, scenes: ['a6', 'a6_brindisi', 'a6_no_brindisi', 'a7', 'z1', 'z2_vino', 'z2_trattativa', 'z2_rituale', 'z3_boss', 'z3_boss_arrabbiato', 'z3_boss_indebolito', 'z4_fase2', 'z5_vittoria', 'z6_alba', 'e_alba', 'z_custode', 'e_custode', 'z_resa', 'e_ospiti', 'z_vespri', 'z_smemorati', 'e_smemorati'] },
+  { key: 'paese',    label: 'Pietrafonda',     x: 0.16, y: 0.90, scenes: ['pp1', 'pp2', 'pp2_bar', 'pp3', 'pp4_cripta', 'pp4', 'pp6', 'pp6_ko', 'pp7'] },
   { key: 'piscina',  label: 'La Piscina',      x: 0.22, y: 0.50, scenes: ['p1', 'p1_accappatoio', 'p1_accappatoio_ko', 'p2', 'p2_esperimento', 'p2_esperimento_ko', 'p3_fuori'] },
   { key: 'cantina',  label: 'La Cantina',      x: 0.62, y: 0.78, scenes: ['k1', 'k2_sofia', 'k2_sofia_ko', 'k3', 'k4_scambio', 'k4_chef_fight', 'k4_furto', 'k4_furto_ko', 'k5_dopo_chef', 'x_celle'] },
   { key: 'pozzo',    label: 'Il Pozzo',        x: 0.86, y: 0.66, scenes: ['b1', 'b2_giardiniere_fight', 'b2_orto', 'b3_pozzo', 'b4_medaglione', 'b4_vino', 'b4_parole', 'b4_ira', 'b4_calata', 'b4_calata_ko'] },

@@ -511,6 +511,23 @@ const Combat = (() => {
     const item = ITEMS[itemId];
     const i = G.inventory.indexOf(itemId);
     if (i >= 0) G.inventory.splice(i, 1);
+    if (item.combat.all) {
+      // colpisce TUTTI i nemici vivi
+      log(`${item.icon || '🎯'} ${G.party[hIdx].name} lancia ${item.name}: la stanza DIVAMPA!`, 'log-crit');
+      for (const en of battle.enemies) {
+        if (en.dead) continue;
+        let d = Dice.rollDice(item.combat.dice[0], item.combat.dice[1]).total;
+        if (item.combat.holy && en.undead) d *= 2;
+        en.hp -= d;
+        if (item.combat.distract && en.hp > 0) en.distracted = true;
+        log(`🔥 ${en.name}: <b>${d} danni</b>${item.combat.distract && en.hp > 0 ? ' (accecato)' : ''}.`, 'log-hit');
+        if (en._x != null) floatText(en._x + en._size / 2, en._y, `-${d}`, 'float-dmg');
+        checkEnemyDeath(en);
+      }
+      if (typeof Sound !== 'undefined') Sound.play('hit');
+      render(); endHeroAction();
+      return;
+    }
     const e = battle.enemies[tIdx];
     let dmg = Dice.rollDice(item.combat.dice[0], item.combat.dice[1]).total;
     const doubled = item.combat.holy && e.undead;
@@ -529,6 +546,14 @@ const Combat = (() => {
     const item = ITEMS[itemId];
     const i = G.inventory.indexOf(itemId);
     if (i >= 0) G.inventory.splice(i, 1);
+    if (item.recharge) {
+      // la moka di Don Michele: abilità di nuovo cariche, anche in piena battaglia
+      for (const ab of ally.abilities) G.uses[ally.id][ab.id] = ab.uses;
+      log(`☕ ${G.party[hIdx].name} passa la moka a ${ally.name}: TUTTE le abilità ricaricate. Caffè di Pietrafonda: rispettare.`, 'log-heal');
+      if (typeof Sound !== 'undefined') Sound.play('heal');
+      render(); endHeroAction();
+      return;
+    }
     const wasDown = ally.down;
     ally.down = false;
     ally.hp = Math.min(ally.maxHp, Math.max(0, ally.hp) + item.heal);

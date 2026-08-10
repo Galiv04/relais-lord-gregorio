@@ -311,7 +311,7 @@ const Engine = (() => {
   let typeTimer = null;
 
   const MUSIC_BY_LOCATION = {
-    tornanti: 'viaggio', relais: 'villa', hall: 'villa', corridoio: 'villa',
+    tornanti: 'viaggio', paese: 'viaggio', relais: 'villa', hall: 'villa', corridoio: 'villa',
     camera: 'carillon', salaDaPranzo: 'villa', piscina: 'piscina',
     cantina: 'cantina', pianoProibito: 'carillon', giardino: 'giardino',
     pozzo: 'pozzo', salaBanchetto: 'banchetto', albaRelais: 'alba',
@@ -642,6 +642,14 @@ const Engine = (() => {
     if (i < 0) return;
     G.inventory.splice(i, 1);
     const h = G.party[heroIdx];
+    if (ITEMS[itemId].recharge) {
+      // il caffè di Don Michele: tutte le abilità di nuovo cariche
+      for (const ab of h.abilities) G.uses[h.id][ab.id] = ab.uses;
+      saveGame();
+      renderPartyBar('party-bar');
+      showInventory();
+      return;
+    }
     h.down = false;
     h.hp = Math.min(h.maxHp, Math.max(0, h.hp) + ITEMS[itemId].heal);
     saveGame();
@@ -691,7 +699,7 @@ const Engine = (() => {
     ctx.strokeStyle = '#6e5a42'; ctx.lineWidth = 4; ctx.setLineDash([8, 6]);
     const pts = k => { const l = WORLD_MAP.find(w => w.key === k); return l ? [l.x * W, l.y * H] : [W / 2, H / 2]; };
     const path = (a, b) => { const [x1, y1] = pts(a), [x2, y2] = pts(b); ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); };
-    path('tornanti', 'relais'); path('relais', 'hall'); path('hall', 'pranzo'); path('hall', 'camere');
+    path('tornanti', 'relais'); path('tornanti', 'paese'); path('relais', 'hall'); path('hall', 'pranzo'); path('hall', 'camere');
     path('pranzo', 'piscina'); path('camere', 'cantina'); path('camere', 'pozzo'); path('pranzo', 'cantina');
     ctx.setLineDash([]);
 
@@ -718,6 +726,11 @@ const Engine = (() => {
         ctx.strokeStyle = '#332e3a'; ctx.lineWidth = 5;
         ctx.beginPath(); ctx.moveTo(x - 20, y + 12); ctx.quadraticCurveTo(x + 16, y + 4, x - 12, y - 4);
         ctx.quadraticCurveTo(x - 30, y - 10, x + 10, y - 16); ctx.stroke();
+      } else if (loc.key === 'paese') {
+        ctx.fillStyle = '#4a4450';
+        for (let i = 0; i < 3; i++) ctx.fillRect(x - 16 + i * 12, y - 8 + (i % 2) * 3, 10, 10);
+        ctx.fillStyle = '#5a5464'; ctx.fillRect(x + 2, y - 20, 6, 14);
+        ctx.fillStyle = '#e8b64c'; ctx.fillRect(x + 3, y - 17, 3, 3);
       } else if (loc.key === 'camere') {
         ctx.fillStyle = '#3a2620'; ctx.fillRect(x - 12, y - 14, 24, 18);
         ctx.fillStyle = '#e8b64c'; ctx.fillRect(x - 6, y - 9, 5, 6); ctx.fillRect(x + 2, y - 9, 5, 6);

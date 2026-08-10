@@ -377,8 +377,14 @@ const Sprites = (() => {
     ].map(r => r.replace(/ /g, '.').padEnd(16, '.').slice(0, 16)),
   };
 
+  // Don Michele: il sesto del Settantaquattro (tonaca nera, colletto, caffè)
+  const donmichele = {
+    palette: { s:'#e0c8b0', h:'#d8d4cc', H:'#b8b4ac', e:'#3a3a45', l:'#26222a', L:'#17141c', d:'#26222a', w:'#fff', k:'#e8e4dc' },
+    map: gregorio.map,
+  };
+
   const registry = {
-    gaetano, natalino, claudia, federico, emanuela,
+    gaetano, natalino, claudia, federico, emanuela, donmichele,
     ombra, cameriere, bambola, spaventapasseri, lupo_nebbia: lupoNebbia,
     cuoco, ritratto, gregorio, gregorio_fame: gregorioFame, ada,
   };

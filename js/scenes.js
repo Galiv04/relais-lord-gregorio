@@ -870,6 +870,50 @@ const Scenes = (() => {
       glow(ctx, W * 0.81, floorY - 50, 30, 30, '20,8,16');
     },
 
+
+    paese(ctx, W, H) {
+      const r = rng(103);
+      skyGradient(ctx, W, H, '#0a0710', '#171022', 10);
+      stars(ctx, W, H, r, 40);
+      crescentMoon(ctx, W * 0.88, 44, 16, '#c8b8c0', '#0a0710');
+      const g = H - 64;
+      hills(ctx, W, g - 34, 44, '#100a12', r, 34);
+      // il campanile mozzato
+      blocks(ctx, W * 0.46, g - 168, 44, 168, '#3a3644', 8, r, 0.12);
+      blocks(ctx, W * 0.44, g - 178, 52, 14, '#443f50', 8, r, 0.1);
+      ctx.fillStyle = '#171017'; ctx.fillRect(W * 0.465, g - 160, 30, 24);
+      // la chiesa e la canonica addossata
+      blocks(ctx, W * 0.52, g - 96, W * 0.14, 96, '#4a4450', 8, r, 0.1);
+      for (let i = 0; i < 5; i++) blocks(ctx, W * 0.515 + i * 6, g - 104 - i * 7, W * 0.15 - i * 12, 8, '#332e3a', 6, r, 0.1);
+      blocks(ctx, W * 0.67, g - 70, W * 0.10, 70, '#57505e', 8, r, 0.1);
+      // LA luce: la finestra della canonica
+      glow(ctx, W * 0.71, g - 44, 30, 26, '232,182,76');
+      ctx.fillStyle = '#e8b64c'; ctx.fillRect(W * 0.695, g - 52, 16, 18);
+      ctx.fillStyle = '#8a6a2d'; ctx.fillRect(W * 0.702, g - 52, 2, 18);
+      // le case buie, persiane chiuse
+      for (const [fx, fw, fh] of [[0.04, 0.11, 62], [0.17, 0.09, 50], [0.28, 0.12, 70], [0.82, 0.12, 58]]) {
+        blocks(ctx, W * fx, g - fh, W * fw, fh, '#3d3844', 8, r, 0.1);
+        for (let i = 0; i < 4; i++) blocks(ctx, W * fx + 4 + i * 5, g - fh - 6 - i * 5, W * fw - 8 - i * 10, 7, '#2a2530', 6, r, 0.1);
+        ctx.fillStyle = '#211d26';
+        ctx.fillRect(W * fx + 8, g - fh + 12, 12, 16); ctx.fillRect(W * fx + W * fw - 20, g - fh + 12, 12, 16);
+      }
+      // la piazza: sampietrini e la fontanella asciutta
+      ground(ctx, W, H, g, '#2a2530', r, 10, 6);
+      blocks(ctx, W * 0.36, g + 16, 40, 18, '#4a4450', 6, r, 0.12);
+      ctx.fillStyle = '#38333e'; ctx.fillRect(W * 0.365 + 14, g + 6, 8, 12);
+      // il bar "Da Peppe": insegna e tavolini incatenati
+      blocks(ctx, W * 0.05, g - 26, 60, 8, '#57505e', 6, r, 0.1);
+      ctx.fillStyle = '#8a3a3a'; ctx.fillRect(W * 0.055, g - 40, 48, 12);
+      ctx.fillStyle = '#d8d0c0'; ctx.fillRect(W * 0.06, g - 37, 38, 3); ctx.fillRect(W * 0.06, g - 32, 26, 2);
+      ctx.fillStyle = '#4a4450';
+      ctx.fillRect(W * 0.10, g - 14, 16, 14); ctx.fillRect(W * 0.125, g - 20, 14, 20);
+      // la nebbia ferma sui bordi del paese
+      for (let i = 0; i < 4; i++) {
+        ctx.fillStyle = `rgba(190,180,195,${0.03 + i * 0.012})`;
+        ctx.fillRect(0, H - 26 + i * 5, W, 8);
+      }
+    },
+
     albaRelais(ctx, W, H) {
       const r = rng(97);
       skyGradient(ctx, W, H, '#4a6a9a', '#e8a05a', 12);

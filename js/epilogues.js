@@ -61,4 +61,24 @@ const IMPRESE = [
   { flag: 'fame_sconfitta',      icon: '🍽', title: 'Il Tovagliolo Piegato',       desc: 'Avete sconfitto la Fame. Il pasto è finito. Per sempre.' },
   { flag: 'finale_custode',      icon: '🗝', title: 'Il Nuovo Custode',            desc: 'Uno di voi è rimasto. Il finale di cui non parlerete mai più.' },
   { flag: 'finale_ospiti',       icon: '🖼', title: 'Il Ritratto Più Bello',       desc: 'Vi siete seduti al Banchetto. Il Belvedere ringrazia per la posa.' },
+  { flag: 'pista_paese',         icon: '⛪', title: 'Il Sesto del Settantaquattro', desc: 'Siete scesi a Pietrafonda senza firma addosso, e siete TORNATI dentro.' },
+  { flag: 'visto_bar_1999',      icon: '☕', title: 'Cinque Caffè, Offre Peppe',    desc: 'Avete letto il conto mai battuto del bar. E la consolazione di Ada.' },
+  { flag: 'segreto_custodi',     icon: '📚', title: 'Più Vecchio di Gregorio',      desc: 'I registri parrocchiali: il patto cambia custode ogni 25 anni. Da SEMPRE.' },
+  { flag: 'vespri_suonati',      icon: '🔔', title: 'I Vespri del Belvedere',       desc: 'Avete suonato la campanella di Don Michele davanti alla Fame. Ada ha risposto.' },
+  { flag: 'finale_smemorati',    icon: '🫙', title: 'La Vacanza Qualunque',         desc: 'Avete pagato con la memoria della notte. Vittoria. Di chi, non lo ricordate.' },
+];
+
+/* ---------- CRONACHE DEL BELVEDERE ----------
+   Righe di epilogo mondiale mostrate nel finale SOLO se il flag è attivo. */
+
+const CRONACA = [
+  { flag: 'chef_amico',       text: 'Lo Chef ha appeso la mannaia: ora impasta pane per il paese, ogni alba. Sul grembiule, ricamata da mani che conoscete, una ciocca di capelli.' },
+  { flag: 'ada_alleata',      text: 'Il pozzo non conta più le notti: le tacche sulla pietra si stanno cancellando da sole, una per sera, come un debito che si estingue.' },
+  { flag: 'voce_sofia',       text: 'La bottiglia "Sofia, 1999" è stata stappata in giardino, al sole. Il profumo — dicono — era di crema solare e di risate. Poi, più niente. Libera.' },
+  { flag: 'ernesto_libero',   text: 'A una sorella molto anziana, in una casa di riposo di Avellino, è sembrato di sentire il fratello dire "grazie". Ha smesso di aspettare. Ha iniziato a ricordare.' },
+  { flag: 'gregorio_umano',   text: 'Gregorio invecchia di un anno all\'anno, come tutti, e lo trova MERAVIGLIOSO: festeggia due compleanni al mese "per recuperare l\'arretrato".' },
+  { flag: 'storia_1974',      text: 'Don Michele è salito al Belvedere, dopo cinquant\'anni. Ha spolverato lui la cornice di Aldo. Nessuno ha sentito cosa si sono detti, ma i vespri, quella sera, sono durati il doppio.' },
+  { flag: 'pista_paese',      text: 'Pietrafonda riapre le persiane. Il bar "Da Peppe" ha riacceso la macchina del caffè: il nuovo gestore batte per primo un conto rimasto aperto dal 1999. Cinque caffè. Offerti.' },
+  { flag: 'medaglione',       text: 'Il medaglione d\'argento è tornato al pozzo, dove le sei ciocche intrecciate riposano insieme. Ogni tanto, di notte, qualcuno canticchia. In sei.' },
+  { flag: 'avvertimento_specchio', text: 'Lo specchio della camera del 1899 adesso riflette solo la stanza. Qualche ospite giura di vederci, ogni tanto, cinque figure che salutano. Sorridendo.' },
 ];
