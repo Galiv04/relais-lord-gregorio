@@ -3544,6 +3544,7 @@ Il vino scende. E con il vino, il tempo: le mani si segnano, le spalle si curvan
     choices: [
       { text: '🧂💧 ORA il rituale: sale, acqua, e il nome da restituire', requires: { flag: 'rituale_noto', item: 'sale_grosso', item2: 'acqua_pozzo' }, removeItem: 'sale_grosso', removeItem2: 'acqua_pozzo', next: 'z2_rituale' },
       { text: '⚔ La casa manderà qualcuno a riscuotere: pronti a combattere', next: 'z3_boss' },
+      { text: '↩ Tornare al tavolo con Gregorio al fianco: la notte ha ancora carte da giocare', next: 'z1' },
     ],
   },
 

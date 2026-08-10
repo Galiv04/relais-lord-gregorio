@@ -1378,7 +1378,7 @@ executeUntil('il menù dei vivi: la contro-offerta di Emanuela al Banchetto -> z
 
 executeUntil('la NOTTE SENZA SANGUE: vino a Gregorio + menù dei vivi -> capitolazione -> alba senza boss',
   ['emanuela', 'gaetano'],
-  { a6: '🍝', k3: '💇 Natalino fa un passo avanti' },
+  { a6: '🍝', k3: '💇 Natalino fa un passo avanti', z2_vino: '↩ Tornare al tavolo' },
   { checkBias: 'best', seedBase: 985000,
     sequences: { h1: ['CANTINA', 'barricarsi'],
                  z1: ['MENÙ DEI VIVI', 'versare il vino del 1899', 'La casa ha già PERSO'] } },
