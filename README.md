@@ -2,7 +2,7 @@
 
 **Un horror interattivo in stile D&D per 1-5 giocatori, con Narratore automatico. I protagonisti? Voi.**
 
-🎮 **Gioca subito:** https://galiv04.github.io/relais-lord-gregorio/
+🎮 **Gioca subito:** https://galiv04.github.io/relais-lord-gregorio/ · [![Test del Belvedere](https://github.com/Galiv04/relais-lord-gregorio/actions/workflows/tests.yml/badge.svg)](https://github.com/Galiv04/relais-lord-gregorio/actions/workflows/tests.yml)
 
 ## Cos'è
 

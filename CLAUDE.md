@@ -38,7 +38,7 @@ node tests/validate.mjs      # 16 controlli statici
 node tests/playthrough.mjs   # partite simulate headless
 ```
 
-Regole operative identiche alla Corona: **test verdi prima di ogni push**, audit visivo con `__audit`/`__auditGrid` (banco di prova iniettabile da console sul sito live), niente localhost su questa macchina, push con `curloptResolve` (già configurato), cache Pages ~10 minuti.
+Regole operative identiche alla Corona: **test verdi prima di ogni push** (e da agosto 2026 la CI di GitHub li riesegue a ogni push: badge nel README), audit visivo con `__audit`/`__auditGrid` (banco di prova iniettabile da console sul sito live), niente localhost su questa macchina, push con `curloptResolve` (già configurato), cache Pages ~10 minuti.
 
 ## Attenzione ai contenuti
 
