@@ -322,17 +322,15 @@ const Engine = (() => {
     return MUSIC_BY_LOCATION[scene.location] || 'villa';
   }
 
-  /* Quanto è avanzata l'eclissi, scena per scena (0 = appena iniziata, 1 = mezzanotte).
-     Segue l'orologio della storia: mezzogiorno → 15:00 → 18:00 → 22:00 → 23:55. */
+  /* Quanto è fonda la notte, scena per scena (0 = tramonto, 1 = l'ora del Banchetto). */
   function eclipsePhaseFor(id) {
-    if (/^e_/.test(id)) return 0;                       // epiloghi: il sole è tornato
-    if (/^(f_|c_vetta)/.test(id)) return 1;             // mezzanotte meno cinque
-    if (/^c_scala/.test(id)) return 0.92;               // 23:30
-    if (/^c_/.test(id)) return 0.78;                    // il castello, ore 22:00
-    if (/^(b|m|r)\d|^(b|m|r)[0-9_]/.test(id)) return 0.6; // atti 2: sera inoltrata
-    if (id === 'v3') return 0.45;                       // il bivio, ore 18:00
-    if (/^v2/.test(id)) return 0.32;                    // il ponte, ore 15:00
-    return 0.16;                                        // prologo a Brindolo
+    if (/^e_/.test(id)) return 0;          // epiloghi: l'alba
+    if (/^z/.test(id)) return 1;           // il Banchetto, ore 5:57
+    if (/^(k|u|b)/.test(id)) return 0.8;   // le tre piste, notte fonda
+    if (/^(h|x)/.test(id)) return 0.6;     // mezzanotte
+    if (/^p/.test(id)) return 0.45;        // la piscina, ore 22:10
+    if (/^a[5-7]/.test(id)) return 0.3;    // cena e camere
+    return 0.15;                           // l'arrivo, il tramonto
   }
 
   function renderScene(scene, instant = false) {
@@ -776,8 +774,8 @@ const Engine = (() => {
   function showBestiary() {
     const box = $('modal-generic-content');
     const seen = G.seenEnemies || [];
-    let html = `<h2>🐺 Bestiario di Lumelia</h2>
-      <p style="color:var(--text-dim);margin-bottom:10px">Creature incontrate finora: ${seen.length}. Le altre... le scoprirete nel modo divertente.</p>`;
+    let html = `<h2>🕯 Le Creature del Belvedere</h2>
+      <p style="color:var(--text-dim);margin-bottom:10px">Creature incontrate finora: ${seen.length}. Le altre vi stanno già aspettando.</p>`;
     if (!seen.length) html += '<p style="color:var(--text-dim)">Nessuno scontro finora. Beati voi.</p>';
     for (const key of seen) {
       const b = BESTIARY[key];
