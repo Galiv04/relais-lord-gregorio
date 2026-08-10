@@ -28,6 +28,9 @@ const Combat = (() => {
 
   function start(combatDef, sceneId) {
     const isBoss = /^z\d/.test(sceneId) || (combatDef.enemies || []).some(e => /gregorio|cuoco/.test(e));
+    // il Belvedere apparecchia in proporzione: meno ospiti al tavolo, porzioni più piccole
+    const attivi = G.party.filter(h => !h.down && !h.preso).length;
+    const porzione = attivi === 1 ? 0.7 : attivi === 2 ? 0.85 : 1;
     battle = {
       def: combatDef,
       sceneId,
@@ -41,6 +44,11 @@ const Combat = (() => {
           e.maxHp = Math.max(1, Math.round(e.maxHp * 0.8));
           e.hp = e.maxHp;
           e.attack.bonus = Math.max(0, e.attack.bonus - 1);
+        }
+        if (porzione < 1) {
+          e.maxHp = Math.max(1, Math.round(e.maxHp * porzione));
+          e.hp = e.maxHp;
+          if (attivi === 1) e.attack.bonus = Math.max(0, e.attack.bonus - 1);
         }
         return e;
       }),
@@ -63,6 +71,9 @@ const Combat = (() => {
     const brun = G.party.find(h => h.id === 'emanuela' && !h.down && !h.preso);
     // bonus stufato: +2 PV primo combattimento
     let openLines = [];
+    if (porzione < 1) {
+      openLines.push(`🍽 <b>Porzioni ridotte</b>: siete ${attivi === 1 ? 'in UNO' : 'in due'}, e il Belvedere apparecchia in proporzione — nemici meno robusti${attivi === 1 ? ' e meno precisi' : ''}.`);
+    }
     if (brun) {
       for (const h of G.party) if (!h.down && !h.preso) h.hp = Math.min(h.maxHp, h.hp + 3);
       openLines.push(`🧰 <b>Cuore Saldo</b>: Emanuela ha già la borsa aperta — +3 PV a tutti. «Respirate. Ci sono io.»`);

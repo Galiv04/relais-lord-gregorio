@@ -752,6 +752,11 @@ scenarios.push(scenario('finale: z_resa -> restare seduti -> e_ospiti', ['gaetan
 
 /* ---- Party solitario (1 eroe) — copre la modalità Sopravvissuto end-to-end ---- */
 
+scenarios.push(scenario('modalità Sopravvissuto: Natalino SOLO a difficoltà NORMALE (porzioni ridotte)', ['natalino'], {
+  u1: '🚪 1899 — la stanza dov\'è cominciato tutto',
+  z1: '🧂💧 IL RITUALE',
+}, { checkBias: 'best', sequences: { h1: ['PIANO PROIBITO', 'barricarsi'] } }));
+
 scenarios.push(scenario('modalità Sopravvissuto: Emanuela SOLA, rituale -> alba', ['emanuela'], {
   u1: '🚪 1899 — la stanza dov\'è cominciato tutto',
   z1: '🧂💧 IL RITUALE',
@@ -1379,6 +1384,26 @@ function findHeroButton(box, heroName) {
   return buttons(box).find(b => b.innerHTML.startsWith(heroName));
 }
 
+
+
+(function testPorzioniRidotte() {
+  section('Verifica diretta: porzioni ridotte per gruppi da 1-2 (scaling dei nemici)');
+  // solo: -30% PV e -1 al colpo
+  const game1 = buildGame(777);
+  game1.act(() => game1.api.Engine.newGame([{ heroId: 'natalino', player: '' }]));
+  game1.act(() => game1.api.Engine.gotoScene('u3_bambole_fight'));
+  game1.act(() => matchButton(buttons(game1.doc.getElementById('choices')), 'INIZIA IL COMBATTIMENTO').onclick());
+  const log1 = game1.doc.getElementById('combat-log').children.map(c => c.innerHTML).join('\n');
+  if (!/Porzioni ridotte/.test(log1) || !/in UNO/.test(log1)) fail('testPorzioniRidotte: nessun avviso di porzioni ridotte per il gruppo da 1');
+  // in tre: nessuno scaling
+  const game3 = buildGame(778);
+  game3.act(() => game3.api.Engine.newGame([{ heroId: 'natalino', player: '' }, { heroId: 'claudia', player: '' }, { heroId: 'gaetano', player: '' }]));
+  game3.act(() => game3.api.Engine.gotoScene('u3_bambole_fight'));
+  game3.act(() => matchButton(buttons(game3.doc.getElementById('choices')), 'INIZIA IL COMBATTIMENTO').onclick());
+  const log3 = game3.doc.getElementById('combat-log').children.map(c => c.innerHTML).join('\n');
+  if (/Porzioni ridotte/.test(log3)) fail('testPorzioniRidotte: lo scaling è scattato anche per un gruppo da 3');
+  console.log('  ✅ Porzioni ridotte: attive in solitaria (avviso nel log), assenti con 3 eroi');
+})();
 
 (function testDiarioDellaNotte() {
   section('Verifica diretta: il Diario della Notte elenca le conoscenze acquisite');
