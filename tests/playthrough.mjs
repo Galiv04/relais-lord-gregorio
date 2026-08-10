@@ -1328,6 +1328,16 @@ executeUntil('anello del 1999: la ricevuta dell\'esperimento -> mostrato a Sofia
   ['p2_esperimento', 'w12_sofia', 'w14_direttore_boss'], 20,
   r => !!(r.log.flags && r.log.flags.anello_reso));
 
+
+executeUntil('il perdono di Ada riferito al Banchetto -> z2_perdono (gregorio_umano senza il vino)',
+  ['emanuela', 'gaetano'],
+  { b1: '👁 Il piano di Gaetano', k3: '💇 Natalino fa un passo avanti',
+    b3_pozzo: '🍷 Calare nel secchio la BOTTIGLIA' },
+  { checkBias: 'best', seedBase: 960000,
+    sequences: { h1: ['CANTINA', 'POZZO', 'barricarsi'], z1: ['Ada ti perdona', 'VENIRSELO A PRENDERE'] } },
+  ['b4_vino', 'z2_perdono'], 20,
+  r => !!(r.log.flags && r.log.flags.gregorio_umano) && !r.log.scenes.includes('z2_vino'));
+
 const fatalRuns = results.filter(r => !r.ok);
 for (const r of fatalRuns) fail(`Partita "${r.scenario.name}" (seed ${r.scenario.seed}): ${r.error.split('\n')[0]}`);
 
@@ -1505,6 +1515,7 @@ coverageFlag('Echi incrociati — flag di trama', ['bambole_addormentate', 'chef
 coverage('Alleati del Banchetto — lo sciopero della cucina e il cerchio di porcellana', ['z2_alleato', 'z3_boss_solo', 'z2_bambole']);
 coverageFlag('Alleati del Banchetto — flag di trama', ['cucina_in_sciopero', 'cerchio_di_porcellana']);
 coverage('La diretta di Claudia', ['z2_claudia']);
+coverage('Il perdono di Ada al Banchetto', ['z2_perdono']);
 coverage('Coerenza del Giardiniere — vittoria nell\'orto ricordata dai filari', ['b2_vinto']);
 coverageFlag('Coerenza del Giardiniere — flag', ['giardiniere_potato']);
 coverage('Eco a Pietrafonda — la corriera del \'74', ['pp_anello']);
