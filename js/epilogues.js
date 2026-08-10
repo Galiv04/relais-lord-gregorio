@@ -92,6 +92,8 @@ const IMPRESE = [
   { flag: 'intercapedine_trovata', icon: '📐', title: 'Ottanta Centimetri',         desc: 'La stanza era più corta dei suoi muri. Dietro la quinta cornice: il ritratto della casa.' },
   { flag: 'anello_reso',           icon: '💍', title: 'Per Sempre Qui',              desc: 'La piscina ha emesso una ricevuta, e voi l\'avete recapitata: a Sofia, 25 anni dopo.' },
   { flag: 'foto_balcone',          icon: '📷', title: 'La Foto Venuta Male',         desc: 'La nebbia sbagliata, le mani mosse e vive. La preferita di sempre, proprio per questo.' },
+  { flag: 'orto_curato',           icon: '🌱', title: 'Da Giardiniera a Giardiniera', desc: 'La menta tagliata come la tagliava la madre di Ada. Le giardiniere si ringraziano lavorando.' },
+  { flag: 'benzinaio_sapeva',      icon: '⛽', title: 'L\'Uomo del Distributore',    desc: 'Cinque macchine contate in centoventicinque anni. E una frase sola per provarci: lasciate stare il pozzo.' },
 ];
 
 /* ---------- CRONACHE DEL BELVEDERE ----------
