@@ -831,6 +831,7 @@ Senza voltarsi, parla. La voce è un forno che parla:
 Sul muro, accanto al forno, una mensola: un barattolo di **SALE GROSSO** con l'etichetta *"1899 — PER LORO"*, e una bottiglia diversa da tutte, dritta, con scritto a mano: *"Da aprire solo per il Padrone"*.`,
     choices: [
       { text: '💇 Natalino fa un passo avanti: "Un ingrediente migliore? Ce l\'ho. Una ciocca di capelli TAGLIATA AD ARTE. Roba che non vedi dal 1899."', tag: 'Prova di Carisma — CD 12', check: { stat: 'CAR', dc: 12, success: 'k4_scambio', fail: 'k4_chef_fight' } },
+      { text: '📼 Mettere il NASTRO DEL \'74 sul tavolo da macellaio: nessuna mannaia ha mai vinto contro quella musica', requires: { item: 'nastro_1974' }, removeItem: 'nastro_1974', next: 'k4_nastro' },
       { text: '⚔ Non si tratta con chi ha una mannaia: attaccare PRIMA', next: 'k4_chef_fight' },
       { text: '🤫 Distrarlo e arraffare sale e bottiglia dalla mensola', tag: 'Prova di Destrezza — CD 13', check: { stat: 'DES', dc: 13, success: 'k4_furto', fail: 'k4_furto_ko' } },
     ],
@@ -850,6 +851,32 @@ Un silenzio lungo come una lievitazione. Poi lo Chef prende la ciocca con due di
 > Lo Chef: "...ricordo d'affetto. La signora Ada li faceva. Uno per ogni ospite. Li teneva nel medaglione, per non farli finire TUTTI nel vino." *(si scosta dalla mensola)* "Prendete il sale. Prendete la bottiglia del Padrone. E dite alla signora... che il suo forno lo tengo pulito."
 
 **(Ottenuti: SALE GROSSO e la BOTTIGLIA DEL 1899. Lo Chef vi lascia passare. Sangue freddo +2. Nodo della cantina sciolto senza sangue!)**`,
+    item: 'sale_grosso',
+    item2: 'vino_1899',
+    sets: { nodo_cantina: true, un_nodo_sciolto: true, chef_amico: true },
+    gold: 2,
+    choices: [{ text: 'Risalire. C\'è ancora tanta notte', next: 'h1' }],
+  },
+
+  k4_nastro: {
+    location: 'cantina',
+    npc: ['cuoco'],
+    caption: 'Il piatto del Settantaquattro',
+    text: `Federico appoggia il registratore sul tavolo da macellaio — piano, come si posa un documento importante — e preme PLAY.
+
+La voce del '74 riempie la cucina del 1899: chitarre scordate, risate sovrapposte, qualcuno che canta stonando con tutto il cuore. La mannaia si ferma **a metà colpo di cote.**
+
+Lo Chef non si volta. Ma le spalle — due metri di spalle sbagliate — si abbassano di un centimetro.
+
+> Lo Chef: "...il gruppo del Settantaquattro." *(la voce di forno, per la prima volta, tira fuori qualcosa che somiglia a un tono)* "Mangiavano TUTTO. Il coniglio alla cacciatora. La minestra maritata. Chiedevano il BIS. Ridevano a tavola e lodavano il cuoco, e uno di loro — quello coi capelli lunghi — scriveva le mie ricette su un quaderno."
+
+*(clic. il nastro finisce, e si spezza da solo, educatamente, come chi esce in punta di piedi.)*
+
+> Lo Chef: "Venticinque anni che cucino per gente che URLA invece di masticare." *(si volta. prende dalla mensola il sale del 1899 e la bottiglia del Padrone, e li mette sul tavolo, davanti a voi)* "Portata sostituita. Ai signori del Settantaquattro... non si dice di no. **Fuori dalla mia cucina. Siete ospiti, non ingredienti.**"
+
+> Natalino: *(sottovoce, mentre uscite carichi)* "Abbiamo appena pagato una cena con una cassetta. Federì, questo a un MEETING non ti riesce."
+
+**(Oggetti: SALE GROSSO e BOTTIGLIA DEL 1899. Il nastro si è spezzato per sempre. Nodo della cantina sciolto senza un graffio. Sangue freddo +2.)**`,
     item: 'sale_grosso',
     item2: 'vino_1899',
     sets: { nodo_cantina: true, un_nodo_sciolto: true, chef_amico: true },
@@ -1011,6 +1038,7 @@ Al centro, su una sedia a dondolo, la bambola più grande tiene in grembo un **m
 
 Il problema è che per prenderlo bisogna attraversare la stanza. E il valzer, da quando siete entrati, ha **smesso di saltare.** Sta suonando. Fluido. Come se la stanza si fosse svegliata e avesse voglia di ballare.`,
     choices: [
+      { text: '🏮 Alzare la LANTERNA DEL 1899: le bambole della nursery conoscono quella luce', requires: { item: 'lanterna_1899' }, next: 'u3_lanterna' },
       { text: '🩰 Attraversare la stanza A TEMPO DI VALZER: la casa ama chi sta al gioco', tag: 'Prova di Destrezza — CD 12', check: { stat: 'DES', dc: 12, success: 'u3_medaglione', fail: 'u3_bambole_fight' } },
       { text: '💨 Corsa e presa al volo: dentro e fuori in tre secondi', tag: 'Prova di Forza — CD 13', check: { stat: 'FOR', dc: 13, success: 'u3_medaglione', fail: 'u3_bambole_fight' } },
     ],
@@ -1031,6 +1059,32 @@ Mentre uscite, il grammofono ricomincia educatamente a saltare — *"per sempre.
 
 **(Oggetto: MEDAGLIONE DI ADA — al pozzo varrà una vita. Sangue freddo +2.)**`,
     sets: { medaglione: true },
+    gold: 2,
+    choices: [
+      { text: '🚪 La stanza 1899 — quella di Ada', next: 'u2_1899' },
+      { text: '🚨 La porta con la targhetta vuota, in fondo', next: 'u4_porta_vuota' },
+    ],
+  },
+
+  u3_lanterna: {
+    location: 'camera',
+    caption: 'La luce della buonanotte',
+    text: `Claudia alza la Lanterna del 1899 — quella dell'ossario, quella col vetro affumicato e la fiammella che non è mai morta davvero — e la stanza **cambia temperatura.**
+
+Trentadue teste di porcellana si voltano verso la luce. Non con il *crick* coordinato della caccia: piano, una alla volta, come bambini quando si apre la porta della cameretta.
+
+Perché è QUESTA la luce con cui qualcuno, nel 1899, faceva il giro della nursery a spegnere la giornata. La luce della buonanotte. L'ultima cosa gentile che questa stanza ricorda.
+
+> La bambola grande: *(e il sorriso dipinto, per una volta, sembra solo un sorriso)* "...la lampada... di mamma Ada..."
+
+Trentadue paia di palpebre di porcellana — che NON dovrebbero muoversi — scendono insieme, con un fruscio di ciglia dipinte. Le bambole dormono. La stanza russa piano, al ritmo del valzer.
+
+La bambola grande, gli occhi già chiusi, solleva il medaglione dal grembo e lo tende nel vuoto — a chiunque, a voi, alla luce.
+
+> Emanuela: *(prendendolo con due dita, in punta di piedi)* "Grazie. E... buonanotte, signorine."
+
+**(Oggetto: MEDAGLIONE DI ADA, senza un graffio e senza un dado. La lanterna resta con voi. Sangue freddo +2.)**`,
+    sets: { medaglione: true, bambole_addormentate: true },
     gold: 2,
     choices: [
       { text: '🚪 La stanza 1899 — quella di Ada', next: 'u2_1899' },
@@ -3336,12 +3390,12 @@ const WORLD_MAP = [
   { key: 'tornanti', label: 'I Tornanti',      x: 0.12, y: 0.80, scenes: ['a0', 'a0_benzina', 'a1', 'a1b', 'ft1', 'ft1_inseguiti', 'ft_cesoie', 'ft2_capito', 'ft2_notte'] },
   { key: 'relais',   label: 'Il Relais',       x: 0.40, y: 0.30, scenes: ['a2', 'a2_siepi', 'p4_fuga', 'gr1', 'gr2', 'gr3', 'gr3_ko'] },
   { key: 'hall',     label: 'La Hall',         x: 0.56, y: 0.48, scenes: ['a3', 'a3_registro', 'a3_registro_ko', 'a4_firma', 'a4_rinvio', 'a4_firma_forzata', 'p4_rientro'] },
-  { key: 'camere',   label: 'Le Camere',       x: 0.74, y: 0.32, scenes: ['a5', 'a5_pozzo', 'h1', 'h2', 'gv1', 'u1', 'u2_1999', 'u2_1924', 'u2_1899', 'u3_medaglione', 'u3_bambole_fight', 'u3_bambole_vinte', 'u5_specchio', 'u4_porta_vuota', 'sf1', 'sf2', 'sf3', 'sf4', 'sf5', 'sf6', 's49_1', 's49_2', 's49_3', 's49_3_ko', 's74_1', 's74_2', 's74_3', 'cuore_gc', 'cuore_fe', 'cuore_fe_esito', 'cuore_nat', 'cuore_nat_esito'] },
+  { key: 'camere',   label: 'Le Camere',       x: 0.74, y: 0.32, scenes: ['a5', 'a5_pozzo', 'h1', 'h2', 'gv1', 'u1', 'u2_1999', 'u2_1924', 'u2_1899', 'u3_medaglione', 'u3_lanterna', 'u3_bambole_fight', 'u3_bambole_vinte', 'u5_specchio', 'u4_porta_vuota', 'sf1', 'sf2', 'sf3', 'sf4', 'sf5', 'sf6', 's49_1', 's49_2', 's49_3', 's49_3_ko', 's74_1', 's74_2', 's74_3', 'cuore_gc', 'cuore_fe', 'cuore_fe_esito', 'cuore_nat', 'cuore_nat_esito'] },
   { key: 'pranzo',   label: 'Sala da Pranzo',  x: 0.46, y: 0.62, scenes: ['a6', 'a6_menu', 'a6_brindisi', 'a6_no_brindisi', 'a7', 'z1', 'z2_vino', 'z2_trattativa', 'z2_rituale', 'gvz', 'z2_strada', 'z3_boss', 'z3_boss_arrabbiato', 'z3_boss_indebolito', 'z4_fase2', 'z5_vittoria', 'z6_alba', 'e_alba', 'z_custode', 'e_custode', 'z_resa', 'e_ospiti', 'z_vespri', 'z_smemorati', 'e_smemorati'] },
   { key: 'riflesso', label: 'Il Riflesso',      x: 0.10, y: 0.28, scenes: ['w1_tuffo', 'w2_riflesso', 'w2_riflesso_ko', 'w3_giardino', 'w3_pattuglia_combat', 'w4_sofia', 'w5_racconto', 'w6_1924', 'w7_ronda', 'w7_ronda_combat', 'w8_direttore', 'w9_studio', 'w9_studio_combat', 'w10_orologio', 'w10_orologio_reso', 'w11_inventario', 'w12_tradimento', 'w12_sofia', 'w14_direttore_boss', 'w15_vittoria', 'w16_amaro', 'w17_fuga', 'w17_fuga_ko', 'w18_soglia', 'w_finale'] },
   { key: 'paese',    label: 'Pietrafonda',     x: 0.16, y: 0.90, scenes: ['pp1', 'pp2', 'pp2_bar', 'pp3', 'pp4_cripta', 'pp4', 'pp6', 'pp6_ko', 'pp7'] },
   { key: 'piscina',  label: 'La Piscina',      x: 0.22, y: 0.50, scenes: ['p1', 'p1_accappatoio', 'p1_accappatoio_ko', 'p2', 'p2_esperimento', 'p2_esperimento_ko', 'p3_fuori'] },
-  { key: 'cantina',  label: 'La Cantina',      x: 0.62, y: 0.78, scenes: ['k1', 'k2_sofia', 'k2_sofia_ko', 'k3', 'k4_scambio', 'k4_chef_fight', 'k4_furto', 'k4_furto_ko', 'k5_dopo_chef', 'x_celle', 'os1', 'os2', 'os3', 'os4', 'os5', 'os6'] },
+  { key: 'cantina',  label: 'La Cantina',      x: 0.62, y: 0.78, scenes: ['k1', 'k2_sofia', 'k2_sofia_ko', 'k3', 'k4_scambio', 'k4_nastro', 'k4_chef_fight', 'k4_furto', 'k4_furto_ko', 'k5_dopo_chef', 'x_celle', 'os1', 'os2', 'os3', 'os4', 'os5', 'os6'] },
   { key: 'pozzo',    label: 'Il Pozzo',        x: 0.86, y: 0.66, scenes: ['b1', 'b2_giardiniere_fight', 'b2_orto', 'b3_pozzo', 'b4_medaglione', 'b4_vino', 'b4_parole', 'b4_ira', 'b4_calata', 'b4_calata_ko'] },
 ];
 

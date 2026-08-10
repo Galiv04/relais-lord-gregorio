@@ -1118,6 +1118,35 @@ executeUntil('Candela del motore: recuperata in rimessa e scagliata contro lo Ch
     sequences: { h1: ['POZZO', 'CANTINA', 'barricarsi'] }, forceCombatItem: 'Candela del motore' },
   ['k4_chef_fight'], 20, r => r.log.usedForceItem === true);
 
+
+/* ---- ECHI INCROCIATI TRA LE PISTE ----
+   La Lanterna del 1899 (ossario, pista cantina) addormenta le bambole del 1924
+   (pista piano proibito); il Nastro del '74 (piano proibito) ammansisce lo Chef
+   (cantina). Ordine inverso delle piste in ciascuna run. */
+
+executeUntil('eco incrociato: la Lanterna del 1899 addormenta le bambole -> u3_lanterna (medaglione senza dado)',
+  ['claudia', 'emanuela'],
+  {
+    k3: '⚔ Non si tratta con chi ha una mannaia',
+    k5_dopo_chef: '🕳 Dietro la cella frigorifera',
+    os4: '🗣 Sedersi e basta',
+    u1: '🚪 1924 — la stanza del valzer',
+    u2_1924: '🏮 Alzare la LANTERNA DEL 1899',
+  },
+  { checkBias: 'best', seedBase: 880000, sequences: { h1: ['CANTINA', 'PIANO PROIBITO', 'barricarsi'] } },
+  ['os6', 'u3_lanterna'], 20,
+  r => !!(r.log.flags && r.log.flags.bambole_addormentate && r.log.flags.medaglione));
+
+executeUntil('eco incrociato: il Nastro del \'74 ammansisce lo Chef -> k4_nastro (cantina senza scontro)',
+  ['gaetano', 'federico'],
+  {
+    u1: '🚪 1949 — da dietro la porta',
+    k3: '📼 Mettere il NASTRO DEL',
+  },
+  { checkBias: 'best', seedBase: 885000, sequences: { h1: ['PIANO PROIBITO', 'CANTINA', 'barricarsi'] } },
+  ['s74_3', 'k4_nastro'], 20,
+  r => !!(r.log.flags && r.log.flags.chef_amico));
+
 const fatalRuns = results.filter(r => !r.ok);
 for (const r of fatalRuns) fail(`Partita "${r.scenario.name}" (seed ${r.scenario.seed}): ${r.error.split('\n')[0]}`);
 
@@ -1284,6 +1313,12 @@ coverageFlag('Strada che torna — flag di trama', ['strada_che_torna', 'casa_ri
 
 coverage('Gratta e Vinci — il gradino del corridoio e l\'ultimo biglietto al Banchetto', ['gv1', 'gvz']);
 coverageFlag('Gratta e Vinci — flag di trama', ['ultimo_biglietto', 'biglietto_strappato']);
+
+/* ---- ESPANSIONE: ECHI INCROCIATI ---- */
+
+coverage('Echi incrociati — lanterna sulle bambole e nastro sullo Chef', ['u3_lanterna', 'k4_nastro']);
+coverageFlag('Echi incrociati — flag di trama', ['bambole_addormentate', 'chef_amico']);
+
 
 
 
