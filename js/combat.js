@@ -394,6 +394,12 @@ const Combat = (() => {
           log(`✂️ <b>Mani di Fata!</b> Il polso di Natalino non sbaglia due volte: ritira il dado!`, 'log-crit');
           return heroAttack(hIdx, tIdx, opts);
         }
+        // il ferro di cavallo Made in China (esito di coppia): Federico ritira il primo 1 di ogni scontro
+        if (res.fumble && h.id === 'federico' && G.flags.cuore_fe && !h.luckUsed) {
+          h.luckUsed = true;
+          log(`🍀 Il ferro di cavallo <b>Made in China</b> appuntato al colletto VIBRA: "ridicolo e vivo" — Federico ritira il dado!`, 'log-crit');
+          return heroAttack(hIdx, tIdx, opts);
+        }
         if (res.success) {
           const dice = opts.dice || h.attack.dice;
           let dmgRoll = Dice.rollDice(dice[0], dice[1]);

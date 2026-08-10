@@ -1716,6 +1716,38 @@ function findHeroButton(box, heroName) {
   console.log(`  ✅ Sorpresa ${game.doc.getElementById('combat-banner').classList.contains('victory') ? 'spenta dopo la vittoria' : '(battaglia non conclusa nel budget: check saltato senza errori)'}`);
 })();
 
+
+(function testFerroDiCavallo() {
+  section('Verifica diretta: il ferro di cavallo Made in China (Federico ritira il primo 1)');
+  const game = buildGame(9911);
+  game.act(() => game.api.Engine.newGame([{ heroId: 'federico', player: '' }, { heroId: 'emanuela', player: '' }]));
+  const G = game.getG();
+  G.flags.cuore_fe = true;
+  game.act(() => game.api.Engine.gotoScene('u3_bambole_fight'));
+  game.act(() => matchButton(buttons(game.doc.getElementById('choices')), 'INIZIA IL COMBATTIMENTO').onclick());
+  const forzaFumble = new vm.Script('Math.__orig = Math.__orig || Math.random; Math.random = () => 0;');
+  const ripristina = new vm.Script('if (Math.__orig) Math.random = Math.__orig;');
+  let guard = 0, ritirato = false;
+  while (guard++ < 200 && !ritirato) {
+    const dice = game.doc.getElementById('btn-dice-continue');
+    if (!game.doc.getElementById('dice-overlay').classList.contains('hidden') && typeof dice.onclick === 'function') { game.act(() => dice.onclick()); continue; }
+    const acts = buttons(game.doc.getElementById('combat-actions'));
+    if (!acts.length) break;
+    const attacco = acts.find(b => /⚔/.test(b.innerHTML));
+    if (!attacco) { game.act(() => acts[0].onclick()); continue; }
+    forzaFumble.runInContext(game.context);
+    game.act(() => attacco.onclick());
+    const targets = buttons(game.doc.getElementById('combat-actions')).filter(b => /^🎯/.test(b.innerHTML));
+    if (targets.length) game.act(() => targets[0].onclick());
+    ripristina.runInContext(game.context);
+    const logTxt = game.doc.getElementById('combat-log').children.map(c => c.innerHTML).join('\n');
+    if (/Made in China/.test(logTxt)) { ritirato = true; break; }
+    if (/vittoria|VITTORIA/i.test(logTxt) && !acts.length) break;
+  }
+  if (!ritirato) fail('testFerroDiCavallo: il ritiro del ferro di cavallo non è mai scattato con fumble forzati');
+  else console.log('  ✅ Ferro di cavallo: il primo 1 di Federico viene ritirato, col log giusto');
+})();
+
 (function testEchiFaseDue() {
   section('Verifica diretta: mestolo dello Chef e sguardo delle signorine nella battaglia finale');
   const game = buildGame(9191);
