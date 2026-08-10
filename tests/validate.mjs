@@ -22,7 +22,7 @@ const src = ['js/sprites.js', 'js/characters.js', 'js/campaign.js']
   .join('\n;\n');
 
 const context = {};
-const loader = new Function(`${src}; return { Sprites, HEROES, BESTIARY, ITEMS, CAMPAIGN, CAMPAIGN_START, WORLD_MAP };`);
+const loader = new Function(`${src}; return { Sprites, HEROES, BESTIARY, ITEMS, CAMPAIGN, CAMPAIGN_START, WORLD_MAP, CHAPTERS: typeof CHAPTERS !== 'undefined' ? CHAPTERS : [] };`);
 let g;
 try {
   g = loader();
@@ -31,7 +31,7 @@ try {
   console.error('❌ ERRORE FATALE nel caricamento dei moduli:', e.message);
   process.exit(1);
 }
-const { Sprites, HEROES, BESTIARY, ITEMS, CAMPAIGN, CAMPAIGN_START, WORLD_MAP } = g;
+const { Sprites, HEROES, BESTIARY, ITEMS, CAMPAIGN, CAMPAIGN_START, WORLD_MAP, CHAPTERS } = g;
 
 /* ---------- 1. grafo delle scene ---------- */
 section('Grafo delle scene');
@@ -263,6 +263,21 @@ console.log(`  ✔ ${Object.keys(CAMPAIGN).length} scene, ~${words} parole di na
 if (words < 6000) warn('campagna forse corta per 2-4 ore');
 
 
+
+
+/* ---------- capitoli di "Rivivi la Notte": scene e oggetti devono esistere ---------- */
+section('Capitoli di Rivivi la Notte');
+
+let capitoliRotti = 0;
+for (const c of CHAPTERS) {
+  const dest = c.scene || c.id;
+  if (!CAMPAIGN[dest]) { fail(`capitolo "${c.label}": la scena di destinazione "${dest}" non esiste`); capitoliRotti++; }
+  for (const it of (c.items || [])) {
+    if (!ITEMS[it]) { fail(`capitolo "${c.label}": l'oggetto preparato "${it}" non esiste in ITEMS`); capitoliRotti++; }
+  }
+  if (!c.label || !c.desc) { fail(`capitolo "${dest}": manca label o desc`); capitoliRotti++; }
+}
+if (!capitoliRotti) { ok(); console.log(`  ✔ ${CHAPTERS.length} capitoli, tutte le destinazioni e gli zaini preparati esistono`); }
 
 /* ---------- stinger dichiarati dalle scene: devono esistere in sound.js ---------- */
 section('Stinger delle scene (nessun suono fantasma)');
