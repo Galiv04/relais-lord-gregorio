@@ -1147,6 +1147,34 @@ executeUntil('eco incrociato: il Nastro del \'74 ammansisce lo Chef -> k4_nastro
   ['s74_3', 'k4_nastro'], 20,
   r => !!(r.log.flags && r.log.flags.chef_amico));
 
+
+/* ---- GLI ALLEATI DEL BANCHETTO (chef_amico -> sciopero della cucina, bambole_addormentate -> cerchio di porcellana) ---- */
+
+executeUntil('Banchetto: lo Chef sciopera per voi -> z2_alleato + fase uno SENZA camerieri',
+  ['gaetano', 'federico'],
+  {
+    u1: '🚪 1949 — da dietro la porta',
+    k3: '📼 Mettere il NASTRO DEL',
+  },
+  { checkBias: 'best', seedBase: 890000,
+    sequences: { h1: ['PIANO PROIBITO', 'CANTINA', 'barricarsi'], z1: ['CHEF! La portata è cambiata'] } },
+  ['k4_nastro', 'z2_alleato', 'z3_boss_solo'], 20,
+  r => !!(r.log.flags && r.log.flags.cucina_in_sciopero));
+
+executeUntil('Banchetto: il cerchio di porcellana delle signorine del 1924 -> z2_bambole',
+  ['claudia', 'emanuela'],
+  {
+    k3: '⚔ Non si tratta con chi ha una mannaia',
+    k5_dopo_chef: '🕳 Dietro la cella frigorifera',
+    os4: '🗣 Sedersi e basta',
+    u1: '🚪 1924 — la stanza del valzer',
+    u2_1924: '🏮 Alzare la LANTERNA DEL 1899',
+  },
+  { checkBias: 'best', seedBase: 895000,
+    sequences: { h1: ['CANTINA', 'PIANO PROIBITO', 'barricarsi'], z1: ['fischia piano il valzer', 'VENIRSELO A PRENDERE'] } },
+  ['u3_lanterna', 'z2_bambole'], 20,
+  r => !!(r.log.flags && r.log.flags.cerchio_di_porcellana));
+
 const fatalRuns = results.filter(r => !r.ok);
 for (const r of fatalRuns) fail(`Partita "${r.scenario.name}" (seed ${r.scenario.seed}): ${r.error.split('\n')[0]}`);
 
@@ -1318,6 +1346,12 @@ coverageFlag('Gratta e Vinci — flag di trama', ['ultimo_biglietto', 'biglietto
 
 coverage('Echi incrociati — lanterna sulle bambole e nastro sullo Chef', ['u3_lanterna', 'k4_nastro']);
 coverageFlag('Echi incrociati — flag di trama', ['bambole_addormentate', 'chef_amico']);
+
+/* ---- ESPANSIONE: GLI ALLEATI DEL BANCHETTO ---- */
+
+coverage('Alleati del Banchetto — lo sciopero della cucina e il cerchio di porcellana', ['z2_alleato', 'z3_boss_solo', 'z2_bambole']);
+coverageFlag('Alleati del Banchetto — flag di trama', ['cucina_in_sciopero', 'cerchio_di_porcellana']);
+
 
 
 

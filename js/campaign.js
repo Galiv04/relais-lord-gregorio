@@ -2976,6 +2976,8 @@ E la casa — le pareti, i lampadari, i ritratti, il pavimento a scacchi — **r
       { text: '🧂💧 IL RITUALE: sale sulla firma, acqua di Ada sul registro, e restituire il nome', requires: { flag: 'rituale_noto' }, next: 'z2_rituale' },
       { text: '🛣 "Le strade TORNANO, Gregorio. Le abbiamo viste tornare. E un contratto firmato dentro una trappola... è NULLO."', requires: { flag: 'strada_che_torna' }, once: true, next: 'z2_strada' },
       { text: '🎫 Natalino mette i piedi sul tavolo del 1899 e gratta l\'ULTIMO Gratta e Vinci. Davanti a LUI.', requires: { flag: 'ultimo_biglietto' }, removeItem: 'gratta_vinci', once: true, next: 'gvz' },
+      { text: '🍽 "CHEF! La portata è cambiata — chiedi alla casa se se la sente di dire di no ai signori del \'74."', requires: { flag: 'chef_amico' }, once: true, next: 'z2_alleato' },
+      { text: '🧸 Emanuela fischia piano il valzer del 1924, verso il soffitto. E il soffitto... scricchiola di passini.', requires: { flag: 'bambole_addormentate' }, once: true, next: 'z2_bambole' },
       { text: '⚔ Il gruppo si mette in mezzo: se la casa vuole un nome, dovrà VENIRSELO A PRENDERE', next: 'z3_boss' },
       { text: '🗣 Federico chiede la parola: la trattativa della vita', tag: 'Prova di Carisma — CD 13', requires: { notFlag: 'casa_rispetta' }, check: { stat: 'CAR', dc: 13, success: 'z2_trattativa', fail: 'z3_boss_arrabbiato' } },
       { text: '🗣 Federico riprende la parola — e stavolta la casa ASCOLTA. Nessun dado: il tavolo è cambiato', requires: { flag: 'casa_rispetta' }, next: 'z2_trattativa' },
@@ -3162,6 +3164,74 @@ Silenzio. Poi la casa — le travi, i muri, i lampadari — emette un suono che 
 *(La casa URLA. I candelabri si spengono TUTTI. E nel buio, il Belvedere gioca l'ultima carta: se non può avere una firma... verrà a prendersi il banchetto con le mani.)*`,
     sets: { rituale_fatto: true },
     choices: [{ text: 'Nel buio, qualcosa di ENORME si alza da capotavola', next: 'z3_boss_indebolito' }],
+  },
+
+  z2_alleato: {
+    location: 'salaBanchetto',
+    npc: ['cuoco'],
+    caption: 'La cucina sciopera',
+    text: `Per tre secondi non succede niente. Poi la porta di servizio esce **dai cardini.**
+
+Lo Chef entra nella sala del Banchetto con la mannaia in pugno e centoventicinque anni di turni sulle spalle sbagliate, e per la prima volta da quando esiste questa casa... si mette **dalla vostra parte del tavolo.**
+
+> Lo Chef: "No."
+
+> La Fame: *(con la voce di Gregorio, gelida)* "Chef. Il menù—"
+
+> Lo Chef: "il menù lo scrive la CUCINA." *(e la mannaia cala sul tavolo del 1899 — CRACK — piantandosi a due dita dal registro)* "Questi hanno portato la musica del Settantaquattro nella MIA cucina. Sono OSPITI. Gli ospiti non si impiattano. E se la casa non è d'accordo..." *(si china verso la sedia a capotavola, e il forno che ha nella voce si apre tutto)* "...la casa stanotte cucina DA SOLA."
+
+Si volta. Attraversa la sala. E i due camerieri — che stavano già scivolando fuori dalle pareti, i vassoi in mano — si guardano, guardano lo Chef, e **rientrano nelle pareti.** La cucina sciopera. Tutta.
+
+> Natalino: "Emanuè... il cuoco di due metri e mezzo sta scioperando PER NOI. Io da domani lascio le mance TRIPLE, giuro sulla piastra."
+
+**(La Fame dovrà servire da sola: fase uno SENZA camerieri. Sangue freddo +2.)**`,
+    gold: 2,
+    sets: { cucina_in_sciopero: true },
+    choices: [
+      { text: '⚔ Adesso sì: se la casa vuole un nome, dovrà venirselo a prendere. DA SOLA.', next: 'z3_boss_solo' },
+    ],
+  },
+
+  z3_boss_solo: {
+    location: 'salaBanchetto',
+    caption: 'LA FAME — servita male',
+    text: `La casa smette di fingere, ma stavolta lo fa **in un silenzio sbagliato**: niente vassoi, niente passi di servizio, nessuno che sposti le sedie. La cucina è ferma. Il personale è fermo. La Fame si annoda il tovagliolo al collo **da sola** — e si vede che non le era mai successo.
+
+> La Fame: *(con la voce di Gregorio, rubata)* "Il Banchetto... è servito... comunque."
+
+> Gregorio: *(da qualche parte, debole ma quasi divertito)* "No, vecchia mia. Stanotte è servito MALE. Colpitela nel piatto: sale, phon, tutto ciò che è caldo e vivo!"
+
+**(BATTAGLIA FINALE — fase uno, senza camerieri: lo sciopero dello Chef vi ha apparecchiato la strada.)**`,
+    combat: {
+      enemies: ['gregorio'],
+      victory: 'z4_fase2',
+      defeat: 'x_celle',
+      bossPhase: true,
+    },
+  },
+
+  z2_bambole: {
+    location: 'salaBanchetto',
+    caption: 'Le signorine del 1924',
+    text: `Il valzer fischiato sale verso il soffitto, esile, un po' stonato — Emanuela non ha mai fischiato bene, e non è mai importato meno a nessuno.
+
+E il soffitto risponde. Passini. Decine di passini di porcellana giù per le scale che nessuno sta guardando, lungo il corridoio, fino alla porta della sala — e le **bambole del 1924** entrano al Banchetto in fila per due, in punta di piedini, gli occhi ancora mezzi chiusi di sonno.
+
+Trentadue. Sonnambule. Vengono al valzer come si viene a una ninna nanna cantata da qualcun altro, e si dispongono in cerchio **intorno a voi** — sedute per terra, composte, le mani in grembo. Un recinto di porcellana addormentata tra voi e la sedia a capotavola.
+
+> La bambola grande: *(gli occhi chiusi, il sorriso dipinto rivolto verso capotavola)* "...loro... hanno spento la luce... come mamma Ada... loro... NON si toccano..."
+
+E la casa — che può mangiare ospiti, camerieri, giardinieri e un secolo intero — esita davanti alle sue bambine addormentate. Il pavimento smette di inclinarsi. I candelabri si raddrizzano. Qualcosa, nel Belvedere, si vergogna.
+
+> Emanuela: *(sottovoce, sistemando il phon nella cintura come una fondina)* "Grazie, signorine. Il resto lo facciamo noi. Voi dormite."
+
+**(Un attimo di tregua nel cerchio di porcellana: +4 PV a tutti, Sangue freddo +2.)**`,
+    heal: 4,
+    gold: 2,
+    sets: { cerchio_di_porcellana: true },
+    choices: [
+      { text: '↩ Tornare al tavolo, dentro il recinto delle signorine', next: 'z1' },
+    ],
   },
 
   z3_boss: {
@@ -3391,7 +3461,7 @@ const WORLD_MAP = [
   { key: 'relais',   label: 'Il Relais',       x: 0.40, y: 0.30, scenes: ['a2', 'a2_siepi', 'p4_fuga', 'gr1', 'gr2', 'gr3', 'gr3_ko'] },
   { key: 'hall',     label: 'La Hall',         x: 0.56, y: 0.48, scenes: ['a3', 'a3_registro', 'a3_registro_ko', 'a4_firma', 'a4_rinvio', 'a4_firma_forzata', 'p4_rientro'] },
   { key: 'camere',   label: 'Le Camere',       x: 0.74, y: 0.32, scenes: ['a5', 'a5_pozzo', 'h1', 'h2', 'gv1', 'u1', 'u2_1999', 'u2_1924', 'u2_1899', 'u3_medaglione', 'u3_lanterna', 'u3_bambole_fight', 'u3_bambole_vinte', 'u5_specchio', 'u4_porta_vuota', 'sf1', 'sf2', 'sf3', 'sf4', 'sf5', 'sf6', 's49_1', 's49_2', 's49_3', 's49_3_ko', 's74_1', 's74_2', 's74_3', 'cuore_gc', 'cuore_fe', 'cuore_fe_esito', 'cuore_nat', 'cuore_nat_esito'] },
-  { key: 'pranzo',   label: 'Sala da Pranzo',  x: 0.46, y: 0.62, scenes: ['a6', 'a6_menu', 'a6_brindisi', 'a6_no_brindisi', 'a7', 'z1', 'z2_vino', 'z2_trattativa', 'z2_rituale', 'gvz', 'z2_strada', 'z3_boss', 'z3_boss_arrabbiato', 'z3_boss_indebolito', 'z4_fase2', 'z5_vittoria', 'z6_alba', 'e_alba', 'z_custode', 'e_custode', 'z_resa', 'e_ospiti', 'z_vespri', 'z_smemorati', 'e_smemorati'] },
+  { key: 'pranzo',   label: 'Sala da Pranzo',  x: 0.46, y: 0.62, scenes: ['a6', 'a6_menu', 'a6_brindisi', 'a6_no_brindisi', 'a7', 'z1', 'z2_vino', 'z2_trattativa', 'z2_rituale', 'gvz', 'z2_strada', 'z2_alleato', 'z2_bambole', 'z3_boss', 'z3_boss_solo', 'z3_boss_arrabbiato', 'z3_boss_indebolito', 'z4_fase2', 'z5_vittoria', 'z6_alba', 'e_alba', 'z_custode', 'e_custode', 'z_resa', 'e_ospiti', 'z_vespri', 'z_smemorati', 'e_smemorati'] },
   { key: 'riflesso', label: 'Il Riflesso',      x: 0.10, y: 0.28, scenes: ['w1_tuffo', 'w2_riflesso', 'w2_riflesso_ko', 'w3_giardino', 'w3_pattuglia_combat', 'w4_sofia', 'w5_racconto', 'w6_1924', 'w7_ronda', 'w7_ronda_combat', 'w8_direttore', 'w9_studio', 'w9_studio_combat', 'w10_orologio', 'w10_orologio_reso', 'w11_inventario', 'w12_tradimento', 'w12_sofia', 'w14_direttore_boss', 'w15_vittoria', 'w16_amaro', 'w17_fuga', 'w17_fuga_ko', 'w18_soglia', 'w_finale'] },
   { key: 'paese',    label: 'Pietrafonda',     x: 0.16, y: 0.90, scenes: ['pp1', 'pp2', 'pp2_bar', 'pp3', 'pp4_cripta', 'pp4', 'pp6', 'pp6_ko', 'pp7'] },
   { key: 'piscina',  label: 'La Piscina',      x: 0.22, y: 0.50, scenes: ['p1', 'p1_accappatoio', 'p1_accappatoio_ko', 'p2', 'p2_esperimento', 'p2_esperimento_ko', 'p3_fuori'] },
