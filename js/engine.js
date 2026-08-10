@@ -313,7 +313,7 @@ const Engine = (() => {
   let typeTimer = null;
 
   const MUSIC_BY_LOCATION = {
-    tornanti: 'viaggio', paese: 'viaggio', relais: 'villa', hall: 'villa', corridoio: 'villa',
+    tornanti: 'viaggio', tornantiPiedi: 'giardino', paese: 'viaggio', relais: 'villa', hall: 'villa', corridoio: 'villa',
     camera: 'carillon', salaDaPranzo: 'villa', piscina: 'piscina',
     cantina: 'cantina', pianoProibito: 'carillon', giardino: 'giardino',
     pozzo: 'pozzo', salaBanchetto: 'banchetto', albaRelais: 'alba',

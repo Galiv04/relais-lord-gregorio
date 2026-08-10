@@ -2187,7 +2187,7 @@ La candela, per fortuna, è già in tasca di Gaetano — tiepida, intatta — an
   /* ==================== LA STRADA CHE TORNA (percorso opzionale) ==================== */
 
   ft1: {
-    location: 'tornanti',
+    location: 'tornantiPiedi',
     caption: 'I tornanti a piedi — ore 3:40',
     text: `> Natalino: "Sentite. La macchina è appesa al muro come un salame, il pozzo parla, la casa respira. Io dico: STI CAZZI del pozzo. Sono ventisei tornanti. Li ho contati salendo. Due ore a piedi e siamo al bar di Baiano a bere il caffè PIÙ meritato della storia."
 
@@ -2205,7 +2205,7 @@ Vi incamminate. La notte fuori dalla proprietà è diversa — più fredda, più
   },
 
   ft1_inseguiti: {
-    location: 'tornanti',
+    location: 'tornantiPiedi',
     caption: 'La discesa col fiato dietro',
     text: `Uscite dalla rimessa che il fruscio è già più vicino, e la decisione la prende il corpo prima del cervello: **giù.** Per il cancello spalancato, sull'asfalto dei tornanti, di corsa, mentre dietro di voi la nebbia della proprietà si allunga oltre la siepe come un braccio.
 
@@ -2224,7 +2224,7 @@ I tornanti scendono nel buio tra gli ulivi. Basta staccarlo: le cose del Belvede
   },
 
   ft_cesoie: {
-    location: 'tornanti',
+    location: 'tornantiPiedi',
     caption: 'La potatura notturna',
     npc: [{ key: 'spaventapasseri', x: 0.62, y: 0.9, scale: 5 }],
     text: `Il filare era quello giusto. Il fosso in fondo al filare, no.
@@ -2247,7 +2247,7 @@ Le cesoie si aprono con lo scatto oliato della manutenzione fatta con amore. Dal
   },
 
   ft2_capito: {
-    location: 'tornanti',
+    location: 'tornantiPiedi',
     caption: 'Il terzo tornante — la geometria sbagliata',
     text: `Vi fermate al terzo tornante, dove la curva si apre sulla valle, e guardate GIÙ — davvero, per la prima volta, invece di limitarvi a scendere.
 
@@ -2270,7 +2270,7 @@ Nessuno parla per dieci secondi. Poi Natalino, piano: "Però il caffè a Baiano 
   },
 
   ft2_notte: {
-    location: 'tornanti',
+    location: 'tornantiPiedi',
     caption: 'Un\'ora di buio',
     text: `Camminate. Cinquanta minuti, forse un'ora: i telefoni sono morti tutti insieme alle 3:47, come spenti da un interruttore, e da allora il tempo lo tenete a bestemmie.
 

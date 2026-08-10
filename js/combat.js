@@ -89,7 +89,7 @@ const Combat = (() => {
     banner.classList.remove('hidden', 'victory');
     render();
 
-    const COMBAT_MUSIC = { camera: 'combat_carillon', pianoProibito: 'combat_carillon', giardino: 'combat_verde', pozzo: 'combat_verde', cantina: 'combat_forno', ossario: 'combat_forno', riflesso: 'combat_riflesso', riflesso_interno: 'combat_riflesso' };
+    const COMBAT_MUSIC = { camera: 'combat_carillon', pianoProibito: 'combat_carillon', giardino: 'combat_verde', tornantiPiedi: 'combat_verde', pozzo: 'combat_verde', cantina: 'combat_forno', ossario: 'combat_forno', riflesso: 'combat_riflesso', riflesso_interno: 'combat_riflesso' };
     const loc = (Engine.currentScene() || {}).location;
     if (typeof Sound !== 'undefined') { Sound.play('combat'); Sound.music(battle.isBoss ? 'boss' : (COMBAT_MUSIC[loc] || 'combat')); }
     log(`<b>Nemici:</b> ${battle.enemies.map(e => e.name).join(', ')}`, 'log-info');

@@ -429,6 +429,48 @@ const Scenes = (() => {
       }
     },
 
+    tornantiPiedi(ctx, W, H) {
+      // i tornanti di notte, A PIEDI: niente macchina, la luna rossa,
+      // e tre tornanti più in basso... cinque lucine in fila che siete voi
+      const r = rng(29);
+      skyGradient(ctx, W, H, '#140a14', '#3a1420', 10);
+      stars(ctx, W, H, r, 22);
+      moon(ctx, W * 0.84, 60, 22, '#b04038', false); // la luna rossa dell'eclissi
+      glow(ctx, W * 0.84, 60, 60, 40, '176,64,56');
+      hills(ctx, W, H * 0.44, 70, '#1a0f14', r, 40);
+      hills(ctx, W, H * 0.62, 90, '#120a0f', r, 34);
+      const g = H - 60;
+      hills(ctx, W, g + 8, 70, '#0d070a', r, 30);
+      ground(ctx, W, H, g, '#141a14', r, 12, 10);
+      // le corsie dei tornanti, più buie: nessun faro le accende
+      for (let i = 0; i < 4; i++) {
+        const y = H * 0.52 + i * H * 0.115;
+        blocks(ctx, W * (0.06 + (i % 2) * 0.16), y, W * 0.72, 15, '#2a2630', 12, r, 0.16);
+        const cx = (i % 2) ? W * 0.06 : W * 0.78;
+        blocks(ctx, cx, y, W * 0.16, H * 0.115 + 14, '#2a2630', 12, r, 0.16);
+        ctx.fillStyle = 'rgba(200,190,170,.10)';
+        for (let d = 0; d < 8; d++) ctx.fillRect(W * (0.10 + (i % 2) * 0.16) + d * W * 0.085, y + 6, 16, 3);
+      }
+      vineyard(ctx, W * 0.55, H * 0.47, W * 0.4, 3, r, true);
+      for (let i = 0; i < 3; i++) tree(ctx, 30 + i * (W / 2.6) + (r() * 30 - 15), g + 10, 66 + r() * 40, '#101a14', '#1f1610', r);
+      for (let i = 0; i < 3; i++) olive(ctx, 120 + i * (W / 2.8) + (r() * 24 - 12), g + 8, 46 + r() * 18, r, true);
+      ctx.fillStyle = '#4a4a55'; ctx.fillRect(W * 0.08, H * 0.755, W * 0.7, 4); // guardrail, vuoto
+      // TRE TORNANTI PIÙ SOTTO: cinque lucine in fila indiana. Sono le vostre torce.
+      const ly = H * 0.52 + 3 * H * 0.115 + 4;
+      for (let i = 0; i < 5; i++) {
+        const lx = W * 0.30 + i * 20;
+        glow(ctx, lx, ly, 14, 10, '232,216,160');
+        ctx.fillStyle = '#f0e0a0'; ctx.fillRect(lx - 1, ly - 1, 3, 3);
+        ctx.fillStyle = '#2a2230'; ctx.fillRect(lx - 2, ly + 2, 5, 7); // la sagoma minuscola sotto la torcia
+      }
+      // in fondo alla valle, dove dovrebbe esserci il paese: la facciata del Belvedere, in scala
+      const bx = W * 0.64, by = H - 46;
+      blocks(ctx, bx, by, 52, 26, '#5a2c24', 6, r, 0.10);
+      ctx.fillStyle = '#e8d8a0'; ctx.fillRect(bx + 8, by + 6, 8, 9); ctx.fillRect(bx + 36, by + 6, 8, 9); // due finestre accese
+      ctx.fillStyle = '#1a1014'; ctx.fillRect(bx + 22, by + 12, 9, 14); // e una porta
+      glow(ctx, bx + 12, by + 10, 16, 10, '232,216,160'); glow(ctx, bx + 40, by + 10, 16, 10, '232,216,160');
+    },
+
     relais(ctx, W, H) {
       const r = rng(11);
       skyGradient(ctx, W, H, '#120a12', '#331522', 10);
