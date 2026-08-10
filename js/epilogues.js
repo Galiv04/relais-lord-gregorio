@@ -94,6 +94,7 @@ const IMPRESE = [
   { flag: 'foto_balcone',          icon: '📷', title: 'La Foto Venuta Male',         desc: 'La nebbia sbagliata, le mani mosse e vive. La preferita di sempre, proprio per questo.' },
   { flag: 'orto_curato',           icon: '🌱', title: 'Da Giardiniera a Giardiniera', desc: 'La menta tagliata come la tagliava la madre di Ada. Le giardiniere si ringraziano lavorando.' },
   { flag: 'benzinaio_sapeva',      icon: '⛽', title: 'L\'Uomo del Distributore',    desc: 'Cinque macchine contate in centoventicinque anni. E una frase sola per provarci: lasciate stare il pozzo.' },
+  { flag: 'menu_dei_vivi',         icon: '🍳', title: 'Il Menù dei Vivi',            desc: 'Pancakes, crêpes, bruschette e grigliata contro un pasto solo. La casa ci sta ancora pensando.' },
 ];
 
 /* ---------- CRONACHE DEL BELVEDERE ----------
@@ -114,6 +115,7 @@ const CRONACA = [
   { flag: 'bambole_addormentate', text: 'Le trentadue signorine del 1924 dormono ancora, composte, le mani in grembo. Un restauratore le ha definite "pezzi unici in condizioni perfette". Nessuno osa svegliarle per venderle.' },
   { flag: 'paese_sa', text: 'La corriera azzurra è ripartita dal tornante undici con la benzina che aveva nel 1974. Alla guida, per l\'ultima tratta, un pensionato di nome Gennaro. In discesa. Cantando.' },
   { flag: 'fumata_di_gruppo', text: 'Sul balcone del primo piano, certe notti d\'estate, il fumo di chissà cosa sale dritto e poi si DISPONE — angoli retti, corridoi, stanze. I nuovi gestori l\'hanno visto. Hanno deciso, con saggezza irpina, di non farci domande.' },
+  { flag: 'menu_dei_vivi', text: 'Il menù del relais riaperto ha una pagina nuova, scritta a mano: "I Piatti degli Amici — si servono solo ad agosto, quando tornano loro." I fusilli della signora Margherita, per la prima volta in un secolo, hanno compagnia viva.' },
   { flag: 'benzinaio_sapeva', text: 'Al distributore di Baiano, il benzinaio ha visto riscendere la sesta macchina — piena, viva, coi finestrini aperti. Ha chiuso la pompa, spento la radiolina dell\'ippica, e per la prima volta in venticinque anni si è preso un giorno di ferie.' },
   { flag: 'cuore_nat', text: 'Sul bordo del pozzo, ogni estate, compare una cartolina di Capri — anche se il mittente, a Capri, non c\'è mai stato. La corda la tira giù piano, senza strappi. E per tutto il giovedì seguente, dal fondo, sale un profumo di lacca professionale.' },
   { flag: 'finale_penna', text: 'La stilografica spezzata riposa nella cripta di Pietrafonda, tra i registri parrocchiali, in una piccola teca. Il cartellino dice: "Non scrive più. Non deve."' },

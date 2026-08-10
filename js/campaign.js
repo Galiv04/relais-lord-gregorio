@@ -3276,6 +3276,7 @@ E la casa — le pareti, i lampadari, i ritratti, il pavimento a scacchi — **r
       { text: '🖋 "Non ti chiediamo di passare la penna, Gregorio. Ti chiediamo di ROMPERLA." (il segreto della cripta)', requires: { flag: 'segreto_custodi' }, once: true, next: 'z_penna' },
       { text: '🛣 "Le strade TORNANO, Gregorio. Le abbiamo viste tornare. E un contratto firmato dentro una trappola... è NULLO."', requires: { flag: 'strada_che_torna' }, once: true, next: 'z2_strada' },
       { text: '🎫 Natalino mette i piedi sul tavolo del 1899 e gratta l\'ULTIMO Gratta e Vinci. Davanti a LUI.', requires: { flag: 'ultimo_biglietto' }, removeItem: 'gratta_vinci', once: true, next: 'gvz' },
+      { text: '🍳 "Tu collezioni i piatti dei morti. Noi ti offriamo il MENÙ DEI VIVI." (la contro-offerta)', requires: { flag: 'menu_memoria' }, once: true, next: 'z2_menu_vivi' },
       { text: '🍽 "CHEF! La portata è cambiata — chiedi alla casa se se la sente di dire di no ai signori del \'74."', requires: { flag: 'chef_amico' }, once: true, next: 'z2_alleato' },
       { text: '🧸 Emanuela fischia piano il valzer del 1924, verso il soffitto. E il soffitto... scricchiola di passini.', requires: { flag: 'bambole_addormentate' }, once: true, next: 'z2_bambole' },
       { text: '📱 Claudia alza il telefono e INQUADRA la sedia a capotavola. In diretta. "Sorridi."', once: true, next: 'z2_claudia' },
@@ -3492,6 +3493,30 @@ Lo posa sul tavolo, piano, con due mani, come si posa una cosa che non si è pi�
     sets: { gregorio_umano: true },
     choices: [
       { text: '↩ Tornare al tavolo, con un maggiordomo in meno e un alleato in più', next: 'z1' },
+    ],
+  },
+
+  z2_menu_vivi: {
+    location: 'salaBanchetto',
+    npc: ['gregorio'],
+    caption: 'Il menù dei vivi',
+    text: `È un'idea di Emanuela, ed è così semplice che nessuno l'aveva vista.
+
+> Emanuela: "Gregorio. A cena ce l'hai spiegato tu: qui la memoria e il menù sono la stessa cosa. I fusilli della signora Margherita. L'arrosto di Ernesto. Il dolce di Sofia. Ricette di gente che NON ESCE." *(si alza, e conta sulle dita, col tono con cui detta la lista della spesa)* "Adesso ascolta la nostra offerta. Pancakes di Federico. Crêpes di Claudia — migliori, ma non diteglielo. La mia pasta zucchine e gamberi. Le bruschette di Natalino. E la grigliata stile Pasquetta di Gaetano, che da sola vale il viaggio."
+
+> Gregorio: *(immobile)* "...non comprendo la proposta, signora."
+
+> Emanuela: "Sì che la comprendi. Sono ricette che la casa può avere in UN SOLO modo: se usciamo vivi, e TORNIAMO. Ogni anno. Da ospiti paganti, che cucinano nella tua cucina e ti lasciano le ricette scritte. Il menù dei vivi cresce solo coi vivi, Gregorio. Quelli morti... li hai già tutti. E non ti hanno mai insegnato un piatto NUOVO in centoventicinque anni."
+
+Il silenzio che segue non è vuoto: è il silenzio di una casa che sta FACENDO I CONTI. Si sente — nelle assi, nei lampadari — il patto che rimastica l'idea: una collezione che cresce per sempre, contro un pasto solo.
+
+> Gregorio: *(piano, quasi a se stesso)* "...il forno. Il forno lo chiede da un secolo, un piatto nuovo." *(e a voi, con un inchino che stavolta sembra di ringraziamento)* "La proposta è agli atti, signori. La casa... ci sta pensando. E una casa che PENSA, stanotte, morde più piano."
+
+**(La contro-offerta è sul tavolo: Sangue freddo +2. Flag: menu_dei_vivi.)**`,
+    gold: 2,
+    sets: { menu_dei_vivi: true },
+    choices: [
+      { text: '↩ Tornare al tavolo, lasciando la casa a fare i conti', next: 'z1' },
     ],
   },
 
@@ -3916,6 +3941,7 @@ const DIARY_FLAGS = [
   ['un_nodo_sciolto',       'Almeno un nodo della casa è SCIOLTO: quando sarete pronti, ci si può barricare e aspettare il Banchetto.'],
   ['segreto_custodi',       'Il segreto della cripta: il patto è più VECCHIO di Gregorio — e un custode può RIFIUTARSI di passare la penna. O romperla.'],
   ['ada_perdono',           'Ada perdona Gregorio "a metà — la metà che serve". Parole da riferire: al Banchetto varranno un alleato.'],
+  ['menu_dei_vivi',         'La contro-offerta di Emanuela è agli atti: il menù dei VIVI — pancakes, crêpes, bruschette, la grigliata — che la casa può avere solo lasciandovi tornare. E una casa che pensa morde più piano.'],
   ['rituale_noto',          'Conoscete il RITUALE: sale sulla firma, acqua di Ada sul registro, e restituire il nome.'],
   ['orologio_reso',         'L\'orologio di Sofia è tornato al suo polso: il suo tempo, dopo venticinque anni, è ripartito.'],
   ['riflesso_fatto',        'Il Riflesso sotto la piscina ha un padrone di meno: gli ospiti trattenuti sono liberi.'],
@@ -3939,7 +3965,7 @@ const WORLD_MAP = [
   { key: 'relais',   label: 'Il Relais',       x: 0.40, y: 0.30, scenes: ['a2', 'a2_siepi', 'p4_fuga', 'gr1', 'gr2', 'gr3', 'gr3_ko'] },
   { key: 'hall',     label: 'La Hall',         x: 0.56, y: 0.48, scenes: ['a3', 'a3_registro', 'a3_registro_ko', 'a4_firma', 'a4_rinvio', 'a4_firma_forzata', 'p4_rientro'] },
   { key: 'camere',   label: 'Le Camere',       x: 0.74, y: 0.32, scenes: ['a5', 'a5_pozzo', 'h1', 'h2', 'gv1', 'nat_tronello', 'tronello_cerchio', 'ema_orto', 'u1', 'u2_1999', 'u2_1924', 'u2_1899', 'u3_medaglione', 'u3_lanterna', 'u3_bambole_fight', 'u3_bambole_vinte', 'u5_specchio', 'u4_porta_vuota', 'u4_intercapedine', 'sf1', 'sf2', 'sf3', 'sf4', 'sf5', 'sf6', 's49_1', 's49_2', 's49_3', 's49_3_ko', 's74_1', 's74_2', 's74_3', 'cuore_gc', 'cuore_gc_esito', 'cuore_fe', 'cuore_fe_esito', 'cuore_nat', 'cuore_nat_esito'] },
-  { key: 'pranzo',   label: 'Sala da Pranzo',  x: 0.46, y: 0.62, scenes: ['a6', 'a6_menu', 'a6_brindisi', 'a6_no_brindisi', 'a7', 'z1', 'z2_vino', 'z2_perdono', 'z2_trattativa', 'z2_rituale', 'gvz', 'z2_strada', 'z2_alleato', 'z2_bambole', 'z2_claudia', 'z3_boss', 'z3_boss_solo', 'z3_boss_arrabbiato', 'z3_boss_indebolito', 'z4_fase2', 'z5_vittoria', 'z6_alba', 'e_alba', 'z_penna', 'z_penna_no', 'e_penna', 'z_custode', 'e_custode', 'z_resa', 'e_ospiti', 'z_vespri', 'z_smemorati', 'e_smemorati'] },
+  { key: 'pranzo',   label: 'Sala da Pranzo',  x: 0.46, y: 0.62, scenes: ['a6', 'a6_menu', 'a6_brindisi', 'a6_no_brindisi', 'a7', 'z1', 'z2_vino', 'z2_perdono', 'z2_menu_vivi', 'z2_trattativa', 'z2_rituale', 'gvz', 'z2_strada', 'z2_alleato', 'z2_bambole', 'z2_claudia', 'z3_boss', 'z3_boss_solo', 'z3_boss_arrabbiato', 'z3_boss_indebolito', 'z4_fase2', 'z5_vittoria', 'z6_alba', 'e_alba', 'z_penna', 'z_penna_no', 'e_penna', 'z_custode', 'e_custode', 'z_resa', 'e_ospiti', 'z_vespri', 'z_smemorati', 'e_smemorati'] },
   { key: 'riflesso', label: 'Il Riflesso',      x: 0.10, y: 0.28, scenes: ['w1_tuffo', 'w2_riflesso', 'w2_riflesso_ko', 'w3_giardino', 'w3_pattuglia_combat', 'w4_sofia', 'w5_racconto', 'w6_1924', 'w7_ronda', 'w7_ronda_combat', 'w8_direttore', 'w9_studio', 'w9_studio_combat', 'w10_orologio', 'w10_orologio_reso', 'w11_inventario', 'w12_tradimento', 'w12_sofia', 'w14_direttore_boss', 'w15_vittoria', 'w16_amaro', 'w17_fuga', 'w17_fuga_ko', 'w18_soglia', 'w_finale'] },
   { key: 'paese',    label: 'Pietrafonda',     x: 0.16, y: 0.90, scenes: ['pp1', 'pp2', 'pp2_bar', 'pp3', 'pp_anello', 'pp4_cripta', 'pp4', 'pp6', 'pp6_ko', 'pp7'] },
   { key: 'piscina',  label: 'La Piscina',      x: 0.22, y: 0.50, scenes: ['p1', 'p1_accappatoio', 'p1_accappatoio_ko', 'p2', 'p2_esperimento', 'p2_esperimento_ko', 'p3_fuori'] },

@@ -1366,6 +1366,15 @@ executeUntil('Emanuela nell\'orto di Ada -> ema_orto (rametto d\'argento: cura v
   ['ema_orto'], 20,
   r => !!(r.log.flags && r.log.flags.orto_curato));
 
+
+executeUntil('il menù dei vivi: la contro-offerta di Emanuela al Banchetto -> z2_menu_vivi',
+  ['emanuela', 'federico'],
+  { a6: '🍝' },
+  { checkBias: 'best', seedBase: 980000,
+    sequences: { h1: ['POZZO', 'barricarsi'], z1: ['MENÙ DEI VIVI', 'VENIRSELO A PRENDERE'] } },
+  ['a6_menu', 'z2_menu_vivi'], 20,
+  r => !!(r.log.flags && r.log.flags.menu_dei_vivi));
+
 const fatalRuns = results.filter(r => !r.ok);
 for (const r of fatalRuns) fail(`Partita "${r.scenario.name}" (seed ${r.scenario.seed}): ${r.error.split('\n')[0]}`);
 
