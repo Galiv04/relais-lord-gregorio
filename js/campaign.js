@@ -28,7 +28,58 @@ const ITEMS = {
 
 const CAMPAIGN = {
 
-  /* ==================== PROLOGO — I TORNANTI ==================== */
+  /* ==================== PROLOGO — IL VIAGGIO ==================== */
+
+  a0: {
+    location: 'tornanti',
+    caption: 'Autogrill di Baiano — ore 17:50, l\'ultimo caffè normale',
+    text: `**Venerdì pomeriggio, autostrada per Avellino, poi su.**
+
+L'autogrill di Baiano è l'ultimo avamposto della civiltà: cinque caffè, due Camogli, un pacco di taralli "per il viaggio" che Emanuela ha già razionato con criteri militari, e Natalino che torna dalla cassa con l'aria di chi ha vinto qualcosa.
+
+> Natalino: "Ho preso i Gratta e Vinci. Cinque. Uno a testa. Se qualcuno vince, il weekend lo paga lui e Federico ci ridà l'anticipo."
+
+> Federico: "L'anticipo era un AFFARE, e comunque il relais è già pagato, quindi tecnicamente—"
+
+> Claudia: "Tecnicamente hai prenotato un posto che su Google Maps È UNA CHIAZZA VERDE. L'ho cercato stamattina: la foto satellitare si interrompe. C'è il bosco, c'è la strada, e poi c'è tipo... una sfocatura."
+
+> Gaetano: "Compressione dell'immagine. Le zone di montagna le aggiornano ogni dieci anni, non ci vive nessuno—"
+
+> Claudia: "Amore. La sfocatura è SOLO sul relais. Il bosco intorno è nitido che gli conti le foglie."
+
+Un silenzio da autogrill, con le tazzine a mezz'aria. Poi Natalino gratta il primo biglietto, perde, e la vita riparte.
+
+*(I Gratta e Vinci perdono tutti e cinque. Ovviamente. Ma questo lo scoprirete strada facendo.)*`,
+    choices: [
+      { text: '🚗 Si riparte: ultima ora di strada, poi i tornanti', next: 'a1' },
+      { text: '⛽ Prima, il pieno al distributore qui fuori — il serbatoio è a metà', next: 'a0_benzina' },
+    ],
+  },
+
+  a0_benzina: {
+    location: 'tornanti',
+    caption: 'Il distributore — l\'uomo che conosce la strada',
+    text: `Il distributore fuori dall'autogrill ha un benzinaio VERO, di quelli che esistono ancora solo in provincia: canottiera sotto la camicia aperta, radiolina che gracchia i risultati dell'ippica, e l'occhio lungo di chi vede passare tutti.
+
+> Il benzinaio: *(mentre il numeratore gira)* "Turisti? Dove andate di bello?"
+
+> Federico: "Relais Belvedere. Sopra Pietrafonda."
+
+La pompa si ferma. Non il numeratore: LA MANO del benzinaio, sull'impugnatura. Due secondi. Poi riprende, e lui non vi guarda più.
+
+> Il benzinaio: "Bel posto. Bella piscina, dicono." *(riattacca la pompa, pulisce le mani in uno straccio con estrema cura)* "Sentite a me: se stanotte vi dicono di rientrare a mezzanotte... rientrate a mezzanotte. Non per la nebbia. La nebbia non c'entra un cazzo. Rientrate e basta."
+
+> Natalino: "In che senso, scusi—"
+
+> Il benzinaio: "Trentaquattro e cinquanta di verde. Il POS non funziona, come al solito. E ragazzi..." *(e qui vi guarda, uno per uno, con due occhi che hanno visto passare CINQUE macchine come la vostra, una ogni venticinque anni)* "...lasciate stare il pozzo."
+
+**(Il serbatoio è pieno. Il silenzio in macchina, per i primi dieci minuti, anche. Sangue freddo +1: sapere di non sapere è già qualcosa.)**`,
+    gold: 1,
+    sets: { avviso_benzinaio: true },
+    choices: [
+      { text: '🚗 "Simpatico, il signore." Verso i tornanti.', next: 'a1' },
+    ],
+  },
 
   a1: {
     location: 'tornanti',
@@ -292,8 +343,36 @@ Ride, e ridete anche voi, e il vino è così buono che la frase scivola via. Qua
 
 C'è solo un dettaglio che Claudia registra senza volerlo, da professionista dell'osservazione: in tutta la sera, con cinque portate e sei brindisi, **Gregorio non ha mangiato né bevuto niente.** Nemmeno un'oliva.`,
     choices: [
+      { text: '🍝 "Gregorio, ci racconti il menù: questa pasta è ILLEGALE."', next: 'a6_menu', once: true },
       { text: '🍷 Chiedere a Gregorio di unirsi al brindisi: insistere, con simpatia', tag: 'Prova di Carisma — CD 12', check: { stat: 'CAR', dc: 12, success: 'a6_brindisi', fail: 'a6_no_brindisi' } },
       { text: '🏊 Buttarla sul programma: "Gregorio, la piscina si può usare di sera?"', next: 'a7' },
+    ],
+  },
+
+  a6_menu: {
+    location: 'salaDaPranzo',
+    npc: ['gregorio'],
+    caption: 'Il menù del Belvedere — una storia per portata',
+    text: `Gregorio si illumina — l'unico entusiasmo GENUINO che gli avete visto finora — e racconta il menù come si racconta una dinastia.
+
+> Gregorio: "I fusilli al ferretto: ricetta della valle, la pasta si arrotola attorno a un ferro da calza. Questa è del **1924**: la portò la signora Margherita, che li faceva ogni domenica. Il forno non ha mai smesso di farli da allora. In sua memoria."
+
+> Gregorio: "L'arrosto con le castagne: **1949**. Il signor Ernesto diceva che gli ricordava il rancio buono, quello delle domeniche in caserma. Ne mangiò tre porzioni, la sua prima sera. Anche l'ultima, a dire il vero."
+
+> Gregorio: "E il dolce di stasera — mele annurche e miele di castagno — è del **1999**. La signorina Sofia lo definì, cito testualmente, 'una roba da paura'." *(sorride, e per la prima volta il sorriso è più triste dell\'orario di chiusura di un luna park)* "Il linguaggio dei giovani. Sempre così... profetico."
+
+Emanuela posa la forchetta. Piano.
+
+> Emanuela: "Gregorio. Lei parla degli ospiti come... come se il menù fosse un CIMITERO."
+
+> Gregorio: *(riempiendole il bicchiere, gentilissimo)* "Signora mia. In ogni grande cucina, la memoria e il menù sono la stessa cosa. Qui al Belvedere... semplicemente non buttiamo via niente."
+
+**(Ogni piatto è un ospite. Ogni annata è un gruppo. Sangue freddo +1, appetito -100. Flag: il menù della memoria.)**`,
+    gold: 1,
+    sets: { menu_memoria: true },
+    choices: [
+      { text: '🍷 Cambiare aria: il brindisi. INSISTERE che beva anche lui.', tag: 'Prova di Carisma — CD 12', check: { stat: 'CAR', dc: 12, success: 'a6_brindisi', fail: 'a6_no_brindisi' } },
+      { text: '🏊 "Comunque buonissimo tutto, eh. La piscina si può usare di sera?"', next: 'a7' },
     ],
   },
 
@@ -1865,15 +1944,15 @@ La leggete insieme, ogni anno, tutti e cinque. E ogni anno, per un momento che n
 };
 
 /* Scena iniziale della campagna */
-const CAMPAIGN_START = 'a1';
+const CAMPAIGN_START = 'a0';
 
 /* Mappa del mondo: luoghi del Belvedere (per il canvas della mappa) */
 const WORLD_MAP = [
-  { key: 'tornanti', label: 'I Tornanti',      x: 0.12, y: 0.80, scenes: ['a1', 'a1b'] },
+  { key: 'tornanti', label: 'I Tornanti',      x: 0.12, y: 0.80, scenes: ['a0', 'a0_benzina', 'a1', 'a1b'] },
   { key: 'relais',   label: 'Il Relais',       x: 0.40, y: 0.30, scenes: ['a2', 'a2_siepi', 'p4_fuga'] },
   { key: 'hall',     label: 'La Hall',         x: 0.56, y: 0.48, scenes: ['a3', 'a3_registro', 'a3_registro_ko', 'a4_firma', 'a4_rinvio', 'a4_firma_forzata', 'p4_rientro'] },
   { key: 'camere',   label: 'Le Camere',       x: 0.74, y: 0.32, scenes: ['a5', 'a5_pozzo', 'h1', 'h2', 'u1', 'u2_1999', 'u2_1924', 'u2_1899', 'u3_medaglione', 'u3_bambole_fight', 'u3_bambole_vinte', 'u5_specchio', 'u4_porta_vuota'] },
-  { key: 'pranzo',   label: 'Sala da Pranzo',  x: 0.46, y: 0.62, scenes: ['a6', 'a6_brindisi', 'a6_no_brindisi', 'a7', 'z1', 'z2_vino', 'z2_trattativa', 'z2_rituale', 'z3_boss', 'z3_boss_arrabbiato', 'z3_boss_indebolito', 'z4_fase2', 'z5_vittoria', 'z6_alba', 'e_alba', 'z_custode', 'e_custode', 'z_resa', 'e_ospiti', 'z_vespri', 'z_smemorati', 'e_smemorati'] },
+  { key: 'pranzo',   label: 'Sala da Pranzo',  x: 0.46, y: 0.62, scenes: ['a6', 'a6_menu', 'a6_brindisi', 'a6_no_brindisi', 'a7', 'z1', 'z2_vino', 'z2_trattativa', 'z2_rituale', 'z3_boss', 'z3_boss_arrabbiato', 'z3_boss_indebolito', 'z4_fase2', 'z5_vittoria', 'z6_alba', 'e_alba', 'z_custode', 'e_custode', 'z_resa', 'e_ospiti', 'z_vespri', 'z_smemorati', 'e_smemorati'] },
   { key: 'paese',    label: 'Pietrafonda',     x: 0.16, y: 0.90, scenes: ['pp1', 'pp2', 'pp2_bar', 'pp3', 'pp4_cripta', 'pp4', 'pp6', 'pp6_ko', 'pp7'] },
   { key: 'piscina',  label: 'La Piscina',      x: 0.22, y: 0.50, scenes: ['p1', 'p1_accappatoio', 'p1_accappatoio_ko', 'p2', 'p2_esperimento', 'p2_esperimento_ko', 'p3_fuori'] },
   { key: 'cantina',  label: 'La Cantina',      x: 0.62, y: 0.78, scenes: ['k1', 'k2_sofia', 'k2_sofia_ko', 'k3', 'k4_scambio', 'k4_chef_fight', 'k4_furto', 'k4_furto_ko', 'k5_dopo_chef', 'x_celle'] },
