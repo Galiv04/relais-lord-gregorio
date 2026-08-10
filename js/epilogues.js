@@ -110,6 +110,7 @@ const CRONACA = [
   { flag: 'biglietto_strappato', text: 'Il tabaccaio di Baiano giura che un Gratta e Vinci strappato è ricomparso intero nel raccoglitore. Sul retro, in una grafia d\'altri tempi: "RITENTA TU."' },
   { flag: 'bambole_addormentate', text: 'Le trentadue signorine del 1924 dormono ancora, composte, le mani in grembo. Un restauratore le ha definite "pezzi unici in condizioni perfette". Nessuno osa svegliarle per venderle.' },
   { flag: 'paese_sa', text: 'La corriera azzurra è ripartita dal tornante undici con la benzina che aveva nel 1974. Alla guida, per l\'ultima tratta, un pensionato di nome Gennaro. In discesa. Cantando.' },
+  { flag: 'fumata_di_gruppo', text: 'Sul balcone del primo piano, certe notti d\'estate, il fumo di chissà cosa sale dritto e poi si DISPONE — angoli retti, corridoi, stanze. I nuovi gestori l\'hanno visto. Hanno deciso, con saggezza irpina, di non farci domande.' },
   { flag: 'finale_penna', text: 'La stilografica spezzata riposa nella cripta di Pietrafonda, tra i registri parrocchiali, in una piccola teca. Il cartellino dice: "Non scrive più. Non deve."' },
   { flag: 'ada_ride', text: 'Dal pozzo del giardino, certe sere d\'estate, sale un profumo d\'erba bruciata e una risata di donna, giovane e fuori orario. Gli ospiti pensano a una festa in valle. Il giardiniere nuovo, che ne sa più di loro, lascia sempre una foglia di fico sul secchio.' },
 ];
