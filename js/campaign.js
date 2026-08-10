@@ -2154,7 +2154,10 @@ Sulla targhetta d'ottone, ancora attaccata alla candela, la scritta resta leggib
 **(Oggetto: CANDELA DEL MOTORE. Sangue freddo +1.)**`,
     item: 'candela_motore',
     gold: 1,
-    choices: [{ text: 'Uscire dalla rimessa e tornare verso il pozzo', next: 'b3_pozzo' }],
+    choices: [
+      { text: 'Uscire dalla rimessa e tornare verso il pozzo', next: 'b3_pozzo' },
+      { text: '🏃 O al diavolo tutto: la macchina è morta, ma le GAMBE no. Scendere a piedi, ADESSO', next: 'ft1' },
+    ],
   },
 
   gr3_ko: {
@@ -2174,7 +2177,120 @@ La candela, per fortuna, è già in tasca di Gaetano — tiepida, intatta — an
     item: 'candela_motore',
     gold: -1,
     sets: { giardiniere_allertato: true },
-    choices: [{ text: 'Correre fuori dalla rimessa, verso il pozzo', next: 'b3_pozzo' }],
+    choices: [
+      { text: 'Correre fuori dalla rimessa, verso il pozzo', next: 'b3_pozzo' },
+      { text: '🏃 Col Giardiniere sveglio, restare è peggio: GIÙ per i tornanti, di corsa', next: 'ft1_inseguiti' },
+    ],
+  },
+
+
+  /* ==================== LA STRADA CHE TORNA (percorso opzionale) ==================== */
+
+  ft1: {
+    location: 'tornanti',
+    caption: 'I tornanti a piedi — ore 3:40',
+    text: `> Natalino: "Sentite. La macchina è appesa al muro come un salame, il pozzo parla, la casa respira. Io dico: STI CAZZI del pozzo. Sono ventisei tornanti. Li ho contati salendo. Due ore a piedi e siamo al bar di Baiano a bere il caffè PIÙ meritato della storia."
+
+Il cancello, di notte, non è chiuso: è **aperto**, spalancato sull'asfalto che scende nel buio tra gli ulivi. Ed è questa, forse, la cosa che dovrebbe insospettirvi di più: una casa che chiude a chiave anche le bacheche dei motori... lascia il portone sulla strada spalancato come un invito.
+
+Vi incamminate. La notte fuori dalla proprietà è diversa — più fredda, più onesta. I pali delle vigne sfilano ai lati come sentinelle che hanno giurato di non guardare. Da qualche parte sotto, molto sotto, ci sono le luci vere: Pietrafonda, la statale, il mondo dove i registri sono solo registri.
+
+> Claudia: *(piano, dopo il primo tornante)* "...qualcuno sta contando i tornanti? Perché io li sto contando. E c'è qualcosa che non mi torna."
+
+*(Prova di Saggezza — CD 12: capire COSA non torna, prima di scoprirlo nel modo peggiore.)*`,
+    choices: [
+      { text: '👁 Fermarsi e GUARDARE la strada: cosa non torna?', tag: 'Prova di Saggezza — CD 12', check: { stat: 'SAG', dc: 12, success: 'ft2_capito', fail: 'ft2_notte' } },
+      { text: '↩ Ripensarci: la notte è della casa, e la casa lo sa. Tornare al pozzo', next: 'b3_pozzo' },
+    ],
+  },
+
+  ft1_inseguiti: {
+    location: 'tornanti',
+    caption: 'La discesa col fiato dietro',
+    text: `Uscite dalla rimessa che il fruscio è già più vicino, e la decisione la prende il corpo prima del cervello: **giù.** Per il cancello spalancato, sull'asfalto dei tornanti, di corsa, mentre dietro di voi la nebbia della proprietà si allunga oltre la siepe come un braccio.
+
+*Clip.* — le cesoie. *Clip.* — più vicine. Le cose impagliate non pesano, non sudano, **non si stancano.**
+
+> Federico: *(correndo, il fiatone di chi paga vent'anni di riunioni sedute)* "Io—CAZZO—io da domani—mi iscrivo—in palestra—GIURO—"
+
+> Emanuela: "Se arrivi a domani ti ci porto IO. CORRI."
+
+I tornanti scendono nel buio tra gli ulivi. Basta staccarlo: le cose del Belvedere, fuori dal Belvedere, forse valgono meno. Forse.
+
+*(Prova di Destrezza — CD 13: seminare il Giardiniere tra i filari, nel buio.)*`,
+    choices: [
+      { text: '🌿 Tagliare per la vigna: i filari sono stretti, le cesoie no', tag: 'Prova di Destrezza — CD 13', check: { stat: 'DES', dc: 13, success: 'ft2_capito', fail: 'ft_cesoie' } },
+    ],
+  },
+
+  ft_cesoie: {
+    location: 'tornanti',
+    caption: 'La potatura notturna',
+    npc: [{ key: 'spaventapasseri', x: 0.62, y: 0.9, scale: 5 }],
+    text: `Il filare era quello giusto. Il fosso in fondo al filare, no.
+
+Claudia lo vede all'ultimo e grida, e chi la segue inchioda uno sull'altro come vagoni — e quando rialzate la testa dal groviglio, **lui è lì.** In mezzo al filare, fermo, il cappello di paglia inclinato di un grado. Non ha corso. Non ne ha avuto bisogno: le vigne sono SUE, le pota da centoventicinque anni, e conosce ogni fosso come voi conoscete le vostre tasche.
+
+> Il Giardiniere: *(voce di foglie secche)* "Fuori... dalla proprietà. Di notte. I tralci che scappano... si POTANO. È così che si fa il vino buono."
+
+Le cesoie si aprono con lo scatto oliato della manutenzione fatta con amore. Dalla nebbia dietro di lui, basso sul terreno, un ringhio che sa di cane e di niente.
+
+> Natalino: "La palestra, Federì. Te lo dico da ora: non ti servirà a un CAZZO. Prendi un palo della vigna e MENA."
+
+*(È una creatura della villa: phon e sale doppi. Qui non c'è nessun piano: solo voi, i pali delle vigne e la notte.)*`,
+    combat: {
+      enemies: ['spaventapasseri', 'lupo_nebbia'],
+      victory: 'ft2_notte',
+      defeat: 'x_celle',
+      loot: { gold: 1 },
+    },
+  },
+
+  ft2_capito: {
+    location: 'tornanti',
+    caption: 'Il terzo tornante — la geometria sbagliata',
+    text: `Vi fermate al terzo tornante, dove la curva si apre sulla valle, e guardate GIÙ — davvero, per la prima volta, invece di limitarvi a scendere.
+
+Sotto di voi, tre tornanti più in basso, ci sono **cinque luci.** Piccole, in fila indiana, che scendono piano lungo la strada. Cinque telefoni con la torcia accesa.
+
+> Claudia: *(lo zoom del telefono che trema)* "...quella è la mia giacca. Ragazzi. QUELLA È LA MIA GIACCA. Quelli siamo NOI, di spalle, tre tornanti più sotto. Ci sto zoommando addosso, porca puttana."
+
+E in fondo alla valle, dove dovrebbe esserci Pietrafonda, le luci del paese sono disposte in un modo che conoscete già: due finestre accese e una porta — la facciata del **Belvedere**, in scala, che vi aspetta in basso come vi aspetta in alto.
+
+> Gaetano: *(la calma piatta delle pessime notizie, di nuovo)* "La strada non scende. GIRA. È un anello — un nastro di Möbius con l'asfalto sopra. Chi scende, sta salendo. Ventisei tornanti e ti riconsegna al cancello, dall'altra parte. Non siamo MAI stati sulla strada per Baiano: siamo sempre stati sul vialetto di casa sua."
+
+Nessuno parla per dieci secondi. Poi Natalino, piano: "Però il caffè a Baiano me lo devi lo stesso."
+
+**(Adesso lo SAPETE: le strade tornano. E ciò che si sa, al Banchetto, si può mettere sul tavolo. Flag: strada_che_torna. Sangue freddo +1.)**`,
+    gold: 1,
+    sets: { strada_che_torna: true },
+    choices: [
+      { text: '⛰ Risalire con la risposta in tasca: se la strada è un anello, l\'uscita è nel CENTRO. La casa.', next: 'b3_pozzo' },
+    ],
+  },
+
+  ft2_notte: {
+    location: 'tornanti',
+    caption: 'Un\'ora di buio',
+    text: `Camminate. Cinquanta minuti, forse un'ora: i telefoni sono morti tutti insieme alle 3:47, come spenti da un interruttore, e da allora il tempo lo tenete a bestemmie.
+
+Il freddo di quassù non è freddo di montagna: è freddo di **cantina**, e vi entra nei vestiti come se vi conoscesse. I tornanti scendono, scendono, scendono — e le luci della valle non si avvicinano MAI, ferme laggiù come dipinte.
+
+Poi l'asfalto spiana, un cancello di ferro battuto esce dal buio, e le lanterne accese ai lati vi danno il bentornato.
+
+**Il cancello del Belvedere.** Dall'altra parte. Aperto, illuminato, con il vialetto rastrellato di fresco — una porta tenuta spalancata per gli ospiti in ritardo.
+
+> Emanuela: *(ferma, le braccia conserte, la voce di chi ha appena chiuso il registratore di cassa di una giornata orrenda)* "Abbiamo camminato un'ora. In discesa. Per arrivare più in ALTO di dove siamo partiti. Io non bestemmio mai, ragazzi. Mai. Ma stanotte il Padreterno mi deve una spiegazione e Gregorio DUE."
+
+Rientrate in fila, gelati, zitti. La casa non infierisce: le lanterne, al vostro passaggio, si abbassano appena — quasi un inchino.
+
+**(Un'ora persa, il gelo nelle ossa: -2 PV a tutti, -1 Sangue freddo. Ma adesso l'avete capito anche voi, nel modo peggiore.)**`,
+    damage: 2,
+    goldLoss: 1,
+    sets: { strada_che_torna: true },
+    choices: [
+      { text: '🚪 Rientrare. Gelati, zitti, e con una certezza in meno', next: 'b3_pozzo' },
+    ],
   },
 
   /* ==================== IL RIFLESSO — IL MONDO SOTTO ==================== */
@@ -2745,8 +2861,10 @@ E la casa — le pareti, i lampadari, i ritratti, il pavimento a scacchi — **r
 > Gregorio: "Le regole del Banchetto sono tre. Uno: si esce all'alba, o non si esce. Due: il patto vuole **una firma o un nome.** Tre..." *(e qui, per la prima volta, la voce del maggiordomo perfetto trema)* "...tre: il menù può ancora cambiare. Se avete sciolto i nodi... **è il momento di metterli sul tavolo.**"`,
     choices: [
       { text: '🧂💧 IL RITUALE: sale sulla firma, acqua di Ada sul registro, e restituire il nome', requires: { flag: 'rituale_noto' }, next: 'z2_rituale' },
+      { text: '🛣 "Le strade TORNANO, Gregorio. Le abbiamo viste tornare. E un contratto firmato dentro una trappola... è NULLO."', requires: { flag: 'strada_che_torna' }, once: true, next: 'z2_strada' },
       { text: '⚔ Il gruppo si mette in mezzo: se la casa vuole un nome, dovrà VENIRSELO A PRENDERE', next: 'z3_boss' },
-      { text: '🗣 Federico chiede la parola: la trattativa della vita', tag: 'Prova di Carisma — CD 13', check: { stat: 'CAR', dc: 13, success: 'z2_trattativa', fail: 'z3_boss_arrabbiato' } },
+      { text: '🗣 Federico chiede la parola: la trattativa della vita', tag: 'Prova di Carisma — CD 13', requires: { notFlag: 'casa_rispetta' }, check: { stat: 'CAR', dc: 13, success: 'z2_trattativa', fail: 'z3_boss_arrabbiato' } },
+      { text: '🗣 Federico riprende la parola — e stavolta la casa ASCOLTA. Nessun dado: il tavolo è cambiato', requires: { flag: 'casa_rispetta' }, next: 'z2_trattativa' },
       { text: '🍷 Prima di tutto: versare il vino del 1899 nel bicchiere di Gregorio', requires: { item: 'vino_1899' }, removeItem: 'vino_1899', next: 'z2_vino' },
       { text: '🔔 Suonare la campanella di Don Michele: "quando LEI si siede a tavola..."', requires: { item: 'campanella_1974' }, removeItem: 'campanella_1974', next: 'z_vespri' },
       { text: '🫙 L\'offerta impensabile: non UN nome. Un RICORDO a testa: questa notte, intera.', next: 'z_smemorati' },
@@ -2837,6 +2955,32 @@ La penna aspetta. La casa aspetta. L'alba, fuori, non aspetta.`,
     choices: [
       { text: '🖋 Qualcuno firma. Guardatevi negli occhi: la storia non sceglierà per voi.', next: 'e_custode' },
       { text: '↩ No. NESSUNO resta. Si torna a giocarsela tutti insieme.', next: 'z1' },
+    ],
+  },
+
+  z2_strada: {
+    location: 'salaBanchetto',
+    caption: 'La geometria denunciata',
+    npc: ['gregorio'],
+    text: `Gaetano si alza. Non tocca la penna, non tocca il registro: appoggia le mani sul tavolo e parla con la voce che usa nelle riunioni tecniche quando qualcuno ha sbagliato i conti e lo sa.
+
+> Gaetano: "Ventisei tornanti, Gregorio. Li abbiamo scesi. E da tre tornanti più in alto abbiamo visto NOI CAMMINARE là sotto — le nostre giacche, le nostre torce. La tua strada non porta via: RIPORTA. È un anello. E allora il tuo contratto è firmato da gente che non poteva andarsene nemmeno volendo. Si chiama vizio del consenso. È nullo dal 1899."
+
+E per la prima volta in tutta la notte — forse per la prima volta in centoventicinque anni — il sorriso di Gregorio **scivola.** Non cade: scivola, di un millimetro, come un quadro appeso male.
+
+I ritratti alle pareti si sporgono. Il gruppo del '49 ha smesso di fingere di guardare altrove. Sofia, dal 1999, ha gli occhi spalancati di chi assiste a una cosa mai vista.
+
+> Gregorio: *(piano, spolverando un'invisibile briciola dal frac)* "...in centoventicinque anni, signori, sono scappati in molti. Hanno corso, gridato, pianto, sparato — un signore del '24 aveva portato il fucile, pensate. Ma nessuno. Nessuno si era mai FERMATO. A guardare. La casa apprezza gli ospiti che leggono il contratto... fino in fondo."
+
+Si inchina, di un grado. E la casa — le pareti, i lampadari, il pavimento a scacchi — trattiene il respiro.
+
+> Gregorio: "Il menù, signori... può ancora cambiare. Ve l'avevo detto."
+
+**(La casa vi rispetta: Sangue freddo +2. La trattativa, adesso, parte da un altro tavolo.)**`,
+    gold: 2,
+    sets: { casa_rispetta: true },
+    choices: [
+      { text: '↩ Tornare al tavolo del Banchetto, con la casa che ora vi guarda in modo diverso', next: 'z1' },
     ],
   },
 
@@ -3129,11 +3273,11 @@ const CAMPAIGN_START = 'a0';
 
 /* Mappa del mondo: luoghi del Belvedere (per il canvas della mappa) */
 const WORLD_MAP = [
-  { key: 'tornanti', label: 'I Tornanti',      x: 0.12, y: 0.80, scenes: ['a0', 'a0_benzina', 'a1', 'a1b'] },
+  { key: 'tornanti', label: 'I Tornanti',      x: 0.12, y: 0.80, scenes: ['a0', 'a0_benzina', 'a1', 'a1b', 'ft1', 'ft1_inseguiti', 'ft_cesoie', 'ft2_capito', 'ft2_notte'] },
   { key: 'relais',   label: 'Il Relais',       x: 0.40, y: 0.30, scenes: ['a2', 'a2_siepi', 'p4_fuga', 'gr1', 'gr2', 'gr3', 'gr3_ko'] },
   { key: 'hall',     label: 'La Hall',         x: 0.56, y: 0.48, scenes: ['a3', 'a3_registro', 'a3_registro_ko', 'a4_firma', 'a4_rinvio', 'a4_firma_forzata', 'p4_rientro'] },
   { key: 'camere',   label: 'Le Camere',       x: 0.74, y: 0.32, scenes: ['a5', 'a5_pozzo', 'h1', 'h2', 'u1', 'u2_1999', 'u2_1924', 'u2_1899', 'u3_medaglione', 'u3_bambole_fight', 'u3_bambole_vinte', 'u5_specchio', 'u4_porta_vuota', 'sf1', 'sf2', 'sf3', 'sf4', 'sf5', 'sf6', 's49_1', 's49_2', 's49_3', 's49_3_ko', 's74_1', 's74_2', 's74_3', 'cuore_gc', 'cuore_fe', 'cuore_fe_esito', 'cuore_nat', 'cuore_nat_esito'] },
-  { key: 'pranzo',   label: 'Sala da Pranzo',  x: 0.46, y: 0.62, scenes: ['a6', 'a6_menu', 'a6_brindisi', 'a6_no_brindisi', 'a7', 'z1', 'z2_vino', 'z2_trattativa', 'z2_rituale', 'z3_boss', 'z3_boss_arrabbiato', 'z3_boss_indebolito', 'z4_fase2', 'z5_vittoria', 'z6_alba', 'e_alba', 'z_custode', 'e_custode', 'z_resa', 'e_ospiti', 'z_vespri', 'z_smemorati', 'e_smemorati'] },
+  { key: 'pranzo',   label: 'Sala da Pranzo',  x: 0.46, y: 0.62, scenes: ['a6', 'a6_menu', 'a6_brindisi', 'a6_no_brindisi', 'a7', 'z1', 'z2_vino', 'z2_trattativa', 'z2_rituale', 'z2_strada', 'z3_boss', 'z3_boss_arrabbiato', 'z3_boss_indebolito', 'z4_fase2', 'z5_vittoria', 'z6_alba', 'e_alba', 'z_custode', 'e_custode', 'z_resa', 'e_ospiti', 'z_vespri', 'z_smemorati', 'e_smemorati'] },
   { key: 'riflesso', label: 'Il Riflesso',      x: 0.10, y: 0.28, scenes: ['w1_tuffo', 'w2_riflesso', 'w2_riflesso_ko', 'w3_giardino', 'w3_pattuglia_combat', 'w4_sofia', 'w5_racconto', 'w6_1924', 'w7_ronda', 'w7_ronda_combat', 'w8_direttore', 'w9_studio', 'w9_studio_combat', 'w10_orologio', 'w10_orologio_reso', 'w11_inventario', 'w12_tradimento', 'w12_sofia', 'w14_direttore_boss', 'w15_vittoria', 'w16_amaro', 'w17_fuga', 'w17_fuga_ko', 'w18_soglia', 'w_finale'] },
   { key: 'paese',    label: 'Pietrafonda',     x: 0.16, y: 0.90, scenes: ['pp1', 'pp2', 'pp2_bar', 'pp3', 'pp4_cripta', 'pp4', 'pp6', 'pp6_ko', 'pp7'] },
   { key: 'piscina',  label: 'La Piscina',      x: 0.22, y: 0.50, scenes: ['p1', 'p1_accappatoio', 'p1_accappatoio_ko', 'p2', 'p2_esperimento', 'p2_esperimento_ko', 'p3_fuori'] },

@@ -1064,6 +1064,41 @@ executeUntil('pozzo: la rimessa — il domino di pezzi crolla (DES fallita) -> g
   { checkBias: 'worst', seedBase: 810000, sequences: { h1: ['POZZO', 'barricarsi'] } },
   ['gr3_ko'], 16);
 
+
+/* ---- LA STRADA CHE TORNA (fuga a piedi dai tornanti: gr3/gr3_ko -> ft*) ----
+   Tre varianti: la rivelazione dell'anello (SAG riuscita), la notte persa (SAG fallita)
+   e la fuga inseguiti col Giardiniere tra i filari (combattimento ft_cesoie). Poi l'eco
+   al Banchetto: la denuncia della geometria (z2_strada) sblocca la trattativa SENZA dado. */
+
+executeUntil('strada che torna: l\'anello VISTO dal terzo tornante (SAG) -> ft2_capito',
+  ['claudia', 'gaetano'],
+  { b1: '👁 Il piano di Gaetano', b2_orto: '🚗 Prima: la porta della rimessa',
+    gr3: 'al diavolo tutto', ft1: 'Fermarsi e GUARDARE' },
+  { checkBias: 'best', seedBase: 850000, sequences: { h1: ['POZZO', 'barricarsi'] } },
+  ['ft1', 'ft2_capito'], 16, r => !!(r.log.flags && r.log.flags.strada_che_torna));
+
+executeUntil('strada che torna: un\'ora di buio, il cancello dall\'altra parte -> ft2_notte',
+  ['claudia', 'gaetano'],
+  { b1: '👁 Il piano di Gaetano', b2_orto: '🚗 Prima: la porta della rimessa',
+    gr3: 'al diavolo tutto', ft1: 'Fermarsi e GUARDARE' },
+  { seedBase: 855000, sequences: { h1: ['POZZO', 'barricarsi'] } },
+  ['ft1', 'ft2_notte'], 20);
+
+executeUntil('strada che torna: inseguiti dal Giardiniere tra i filari -> ft_cesoie VINTO',
+  ['natalino', 'emanuela', 'gaetano'],
+  { b1: '👁 Il piano di Gaetano', b2_orto: '🚗 Prima: la porta della rimessa',
+    gr3_ko: 'GIÙ per i tornanti' },
+  { seedBase: 860000, sequences: { h1: ['POZZO', 'barricarsi'] } },
+  ['ft1_inseguiti', 'ft_cesoie', 'ft2_notte'], 24);
+
+executeUntil('Banchetto: la geometria denunciata -> z2_strada + trattativa SENZA dado',
+  ['gaetano', 'federico'],
+  { b1: '👁 Il piano di Gaetano', b2_orto: '🚗 Prima: la porta della rimessa',
+    gr3: 'al diavolo tutto', ft1: 'Fermarsi e GUARDARE' },
+  { checkBias: 'best', seedBase: 865000,
+    sequences: { h1: ['POZZO', 'barricarsi'], z1: ['strade TORNANO', 'la casa ASCOLTA'] } },
+  ['z2_strada', 'z2_trattativa'], 20, r => !!(r.log.flags && r.log.flags.casa_rispetta));
+
 const fatalRuns = results.filter(r => !r.ok);
 for (const r of fatalRuns) fail(`Partita "${r.scenario.name}" (seed ${r.scenario.seed}): ${r.error.split('\n')[0]}`);
 
@@ -1217,6 +1252,15 @@ coverage('Garage/rimessa — il motore smontato (candela recuperata pulita e con
   'gr1', 'gr2', 'gr3', 'gr3_ko',
 ]);
 coverageFlag('Garage — flag visita', ['garage_visto']);
+
+/* ---- ESPANSIONE: LA STRADA CHE TORNA ---- */
+
+coverage('Strada che torna — la discesa, la rivelazione e la notte persa', [
+  'ft1', 'ft2_capito', 'ft2_notte',
+]);
+coverage('Strada che torna — eco al Banchetto (denuncia della geometria)', ['z2_strada']);
+coverageFlag('Strada che torna — flag di trama', ['strada_che_torna', 'casa_rispetta']);
+
 
 /* ---- ESPANSIONE: NUOVI OGGETTI ---- */
 
