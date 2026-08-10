@@ -169,7 +169,7 @@ for (const [key, b] of Object.entries(BESTIARY)) {
   if (!Sprites.registry[b.sprite]) { fail(`nemico "${key}": sprite mancante "${b.sprite}"`); charProblems++; }
   if (!b.attack || !b.attack.dice || b.attack.bonus === undefined) { fail(`nemico "${key}": attacco malformato`); charProblems++; }
 }
-if (!charProblems) { ok(); console.log(`  ✔ 6 eroi completi (stats, abilità, backstory, sprite) e ${Object.keys(BESTIARY).length} nemici validi`); }
+if (!charProblems) { ok(); console.log(`  ✔ 5 protagonisti completi (stats, abilità, backstory, sprite) e ${Object.keys(BESTIARY).length} nemici validi`); }
 
 /* ---------- 5. sprite ---------- */
 section('Sprite pixel-art');

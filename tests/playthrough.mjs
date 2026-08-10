@@ -593,10 +593,8 @@ scenarios.push(scenario('prologo: registro sfogliato (INT) poi firma subito', ['
   a3_registro: '✍️ Firmate. Con gli occhi aperti',
 }, { checkBias: 'best' }));
 
-scenarios.push(scenario('prologo: registro sfogliato, poi FIRMA RINVIATA (CAR)', ['federico', 'natalino'], {
-  a3: '📖 Prima, sfogliare il registro',
-  a3_registro: '🗣 "Firmiamo domani con calma...',
-}, { checkBias: 'best' }));
+// (la copertura di a4_rinvio è affidata a un executeUntil più sotto: anche con Federico,
+// il migliore in Carisma, un 1 naturale fallisce sempre la prova CD 12.)
 
 scenarios.push(scenario('prologo: registro letto male (INT fallita) poi firma forzata', ['emanuela', 'natalino'], {
   a3: '📖 Prima, sfogliare il registro',
@@ -604,17 +602,9 @@ scenarios.push(scenario('prologo: registro letto male (INT fallita) poi firma fo
 
 /* ---- PISCINA: tutte le varianti richieste ---- */
 
-scenarios.push(scenario('piscina: accappatoio ispezionato con successo (SAG)', ['claudia', 'emanuela'], {
-  p1: '🔍 Uscire a controllare l\'accappatoio',
-}, { checkBias: 'best' }));
-
 scenarios.push(scenario('piscina: accappatoio ispezionato goffamente (SAG fallita)', ['federico', 'gaetano'], {
   p1: '🔍 Uscire a controllare l\'accappatoio',
 }, { checkBias: 'worst' }));
-
-scenarios.push(scenario('piscina: esperimento di Gaetano riuscito (INT) — vista la finestra', ['gaetano', 'claudia'], {
-  p2: '🔬 Gaetano vuole capire',
-}, { checkBias: 'best' }));
 
 /* ---- FUGA / RIENTRO: entrambi i rami dopo p3_fuori ---- */
 
@@ -639,21 +629,20 @@ scenarios.push(scenario('cantina: scambio con lo Chef riuscito (CAR) — nodo sc
   sequences: { h1: ['CANTINA', 'barricarsi'] },
 }, { checkBias: 'best', sequences: { h1: ['CANTINA', 'barricarsi'] } }));
 
-scenarios.push(scenario('cantina: furto dalla mensola riuscito (DES)', ['natalino', 'claudia'], {
-  k3: '🤫 Distrarlo e arraffare sale',
-}, { checkBias: 'best', sequences: { h1: ['CANTINA', 'barricarsi'] } }));
-
 scenarios.push(scenario('cantina: attacco diretto allo Chef, k4_chef_fight VINTO', ['natalino', 'federico'], {
   k3: '⚔ Non si tratta con chi ha una mannaia',
 }, { sequences: { h1: ['CANTINA', 'barricarsi'] } }));
 
-/* ---- PISTA PIANO PROIBITO: stanza 1999, valzer (vinto/perso), 1899, specchio ---- */
+/* ---- PISTA PIANO PROIBITO: stanza 1999, valzer (vinto/perso), 1899, specchio ----
+   (u3_medaglione E u3_bambole_vinte puntano ENTRAMBI verso la 1899: la copertura dello
+   specchio non deve dipendere dall'esito — imprevedibile — della prova di Destrezza.) */
 
-scenarios.push(scenario('piano: tour completo 1999 -> 1924 (valzer DES vinto) -> 1899 -> specchio', ['natalino', 'claudia'], {
+scenarios.push(scenario('piano: tour completo 1999 -> 1924 (valzer DES) -> 1899 -> specchio', ['natalino', 'claudia'], {
   u1: '🚪 1999 — l\'anno di Sofia',
   u2_1999: '🚪 Ancora una stanza: la 1924',
   u2_1924: 'Attraversare la stanza A TEMPO DI VALZER',
   u3_medaglione: '🚪 La stanza 1899',
+  u3_bambole_vinte: '🚪 La stanza 1899',
   u2_1899: 'Prima di uscire: scoprire lo specchio velato',
 }, { checkBias: 'best', sequences: { h1: ['PIANO PROIBITO', 'barricarsi'] } }));
 
@@ -814,6 +803,27 @@ executeUntil('pozzo: calata fallita (FOR) -> b4_calata_ko', ['claudia', 'emanuel
   { b1: '👁 Il piano di Gaetano', b3_pozzo: '🪢 Qualcuno si cala nel pozzo' },
   { checkBias: 'worst', seedBase: 630000, sequences: { h1: ['POZZO', 'barricarsi'] } }, ['b4_calata_ko']);
 
+// Piscina — accappatoio ispezionato con SUCCESSO (SAG, Claudia SAG 4+2=6, CD 11: quasi
+// certo, ma un 1 naturale fallisce sempre — un solo seed non basta a garantirlo).
+executeUntil('piscina: accappatoio ispezionato con successo (SAG)', ['claudia', 'emanuela'],
+  { p1: '🔍 Uscire a controllare l\'accappatoio' },
+  { checkBias: 'best', seedBase: 660000 }, ['p1_accappatoio']);
+
+// Piscina — esperimento di Gaetano RIUSCITO (INT, Gaetano INT 4+2=6, CD 12).
+executeUntil('piscina: esperimento di Gaetano riuscito (INT) — vista la finestra', ['gaetano', 'claudia'],
+  { p2: '🔬 Gaetano vuole capire' },
+  { checkBias: 'best', seedBase: 670000 }, ['p2_esperimento']);
+
+// Cantina — furto dalla mensola RIUSCITO (DES, Natalino DES 4, CD 13).
+executeUntil('cantina: furto dalla mensola riuscito (DES)', ['natalino', 'claudia'],
+  { k3: '🤫 Distrarlo e arraffare sale' },
+  { checkBias: 'best', seedBase: 680000, sequences: { h1: ['CANTINA', 'barricarsi'] } }, ['k4_furto']);
+
+// Prologo — firma RINVIATA (CAR, Federico CAR 4+2=6, CD 12).
+executeUntil('prologo: registro sfogliato, poi firma rinviata (CAR)', ['federico', 'natalino'],
+  { a3: '📖 Prima, sfogliare il registro', a3_registro: 'Firmiamo domani con calma' },
+  { checkBias: 'best', seedBase: 690000 }, ['a4_rinvio']);
+
 const fatalRuns = results.filter(r => !r.ok);
 for (const r of fatalRuns) fail(`Partita "${r.scenario.name}" (seed ${r.scenario.seed}): ${r.error.split('\n')[0]}`);
 
@@ -946,19 +956,25 @@ function findHeroButton(box, heroName) {
   G.inventory.push('antidoto');
   checkInvariants(G, 'prima della cura');
 
-  // useAntidote() apre la modale con un bottone per ogni eroe avvelenato; il bottone vero
-  // nel gioco ha `onclick="Engine.applyAntidote(...)"` scritto DENTRO l'HTML (non un vero
-  // handler JS) — nel browser funziona (l'HTML viene parsato ed eseguito), ma il nostro DOM
-  // finto non esegue attributi inline, quindi chiamiamo applyAntidote come farebbe il click.
+  // useAntidote() imposta modal-generic-content.innerHTML con un bottone per ogni eroe
+  // avvelenato, ma quel bottone ha `onclick="Engine.applyAntidote(...)"` scritto DENTRO
+  // la stringa HTML (non un vero handler JS assegnato via codice): nel browser funziona
+  // (l'HTML viene parsato ed eseguito), ma il nostro `innerHTML` finto è una stringa pura
+  // e NON genera child-node reali (coerente con come il resto del gioco usa innerHTML per
+  // le modali informative) — quindi non possiamo "cliccare" quel bottone, e verifichiamo
+  // solo che la modale si popoli con il nome dell'eroe avvelenato, poi chiamiamo
+  // applyAntidote() direttamente, esattamente come farebbe quel click.
   game.act(() => game.api.Engine.useAntidote('antidoto'));
   const box = game.doc.getElementById('modal-generic-content');
-  if (!buttons(box).length) fail('testAntidoto: useAntidote non ha mostrato alcun bottone per l\'eroe avvelenato');
+  if (!/Emanuela/.test(box.innerHTML)) fail('testAntidoto: useAntidote non ha mostrato Emanuela (l\'eroe avvelenato) nella modale');
 
   game.act(() => game.api.Engine.applyAntidote('antidoto', 0));
   checkInvariants(G, 'dopo la cura');
   if (G.party[0].veleno !== false) fail(`testAntidoto: applyAntidote non ha rimosso il veleno (veleno=${G.party[0].veleno})`);
   if (G.inventory.includes('antidoto')) fail('testAntidoto: applyAntidote non ha consumato l\'Antidoto dall\'inventario');
-  if (!G.party[0].veleno === false) console.log('  ✅ Engine.useAntidote/applyAntidote curano correttamente il veleno e consumano l\'oggetto');
+  if (G.party[0].veleno === false && !G.inventory.includes('antidoto')) {
+    console.log('  ✅ Engine.useAntidote/applyAntidote curano correttamente il veleno e consumano l\'oggetto');
+  }
 
   // useAntidote() su un gruppo senza nessun avvelenato non deve lanciare eccezioni
   const game2 = buildGame(51515);

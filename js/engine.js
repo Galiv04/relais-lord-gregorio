@@ -473,6 +473,7 @@ const Engine = (() => {
       b.className = 'choice-btn';
       b.innerHTML = `${h.name}${h.veleno ? ' ☠' : ''} <span class="choice-tag">${STAT_NAMES[check.stat]}: ${mod >= 0 ? '+' + mod : mod}${h.veleno ? ' (avvelenato dal freddo)' : ''}${h.player ? ' · giocato da ' + h.player : ''}</span>`;
       b.onclick = () => {
+        G.lastRoller = hIdx;   // il Belvedere ricorda chi ha osato tirare
         $('modal-generic').classList.add('hidden');
         const rollIt = (isReroll) => Dice.showRoll({
           title: `${h.name} ${isReroll ? 'RITIRA (Dado del Destino!)' : 'tenta'}:<br>${STAT_NAMES[check.stat]} — CD ${check.dc}`,
