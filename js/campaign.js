@@ -1413,6 +1413,7 @@ Il secchio risale da solo, pieno di un'acqua che riflette il cielo giusto. **(Ot
 
   b4_tronello: {
     location: 'pozzo',
+    stinger: 'risata',
     caption: 'La promessa mantenuta',
     text: `Natalino si avvicina al pozzo con la solennità di chi consegna le chiavi di casa, posa il mezzo tronello nel secchio — adagiato su una foglia di fico, "che fa presentazione" — e lo cala giù, piano, un giro di manovella alla volta.
 
@@ -3314,6 +3315,7 @@ Poi la casa **stringe.** Si sente: un giro di vite nelle fondamenta, i ritratti 
 
   e_penna: {
     location: 'albaRelais',
+    stinger: 'penna',
     caption: 'EPILOGO — La Penna Spezzata',
     text: `> Gregorio: "...il dispetto era amore."
 

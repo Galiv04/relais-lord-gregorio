@@ -62,6 +62,13 @@ const Sound = (() => {
     combat()  { blip(196, 0.1, 'sawtooth', 0.12); blip(196, 0.1, 'sawtooth', 0.12, 0.14); blip(233, 0.25, 'sawtooth', 0.13, 0.28); },
     jumpscare() { noise(0.3, 0.22); blip(880, 0.05, 'sawtooth', 0.2); blip(92, 0.5, 'sawtooth', 0.18, 0.05); blip(87, 0.6, 'sawtooth', 0.14, 0.2); },
     campana()  { for (let i = 0; i < 3; i++) { blip(220, 1.1, 'triangle', 0.16, i * 1.2); blip(331, 0.9, 'sine', 0.08, i * 1.2 + 0.02); } },
+    // la penna che si spezza: uno SCROCCO secco, poi il patto che si slega — una scala che scende e si apre
+    penna()    { noise(0.06, 0.2); blip(1200, 0.03, 'square', 0.14); blip(880, 0.04, 'square', 0.1, 0.04);
+                 [659, 523, 392, 330, 262].forEach((f, i) => blip(f, 0.22, 'triangle', 0.1, 0.15 + i * 0.13));
+                 blip(523, 1.4, 'sine', 0.07, 0.85); blip(659, 1.2, 'sine', 0.05, 0.9); },
+    // la risata di Ada: giovane, roca, fuori orario — terzine di campanelle che salgono e inciampano
+    risata()   { [523, 659, 587, 784, 698, 880, 1047].forEach((f, i) => blip(f, 0.09, 'triangle', 0.11, i * 0.09));
+                 blip(784, 0.3, 'sine', 0.08, 0.66); blip(392, 0.5, 'triangle', 0.06, 0.7); },
   };
 
   function play(name) {
