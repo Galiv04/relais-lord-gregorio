@@ -188,16 +188,17 @@ const Combat = (() => {
       Sprites.drawSprite(ctx, def.map, def.palette, x, y, eScale, true);
       ctx.globalAlpha = 1;
       if (!e.dead) {
-        // barra HP nemico
+        // barra HP nemico — targhette SFALSATE per indice, così i gruppi ravvicinati non si coprono
+        const lift = (i % 2) * 26;
         const bw = eSize, bh = 8;
-        ctx.fillStyle = '#000'; ctx.fillRect(x - 2, y - 16, bw + 4, bh + 4);
-        ctx.fillStyle = '#3a3045'; ctx.fillRect(x, y - 14, bw, bh);
+        ctx.fillStyle = '#000'; ctx.fillRect(x - 2, y - 16 - lift, bw + 4, bh + 4);
+        ctx.fillStyle = '#3a3045'; ctx.fillRect(x, y - 14 - lift, bw, bh);
         const frac = Math.max(0, e.hp / e.maxHp);
         ctx.fillStyle = frac > 0.5 ? '#5fca6a' : frac > 0.25 ? '#f5c542' : '#e05252';
-        ctx.fillRect(x, y - 14, Math.floor(bw * frac), bh);
+        ctx.fillRect(x, y - 14 - lift, Math.floor(bw * frac), bh);
         // nome
         ctx.fillStyle = '#fff'; ctx.font = "9px 'Press Start 2P'"; ctx.textAlign = 'center';
-        ctx.fillText(e.name.split(',')[0].slice(0, 16), x + eSize / 2, y - 22);
+        ctx.fillText(e.name.split(',')[0].slice(0, 16), x + eSize / 2, y - 22 - lift);
         ctx.textAlign = 'left';
         if (e.stunned) { ctx.font = "14px 'Press Start 2P'"; ctx.fillText('💫', x + eSize - 10, y + 4); }
       }
