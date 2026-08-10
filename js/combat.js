@@ -573,7 +573,7 @@ const Combat = (() => {
     if (doubled) dmg *= 2;
     e.hp -= dmg;
     let extra = '';
-    if (item.combat.distract && !e.dead) { e.distracted = true; extra = ' Il tanfo lo stordisce: svantaggio al prossimo attacco!'; }
+    if (item.combat.distract && !e.dead) { e.distracted = true; extra = item.combat.distractText || ' Il tanfo lo stordisce: svantaggio al prossimo attacco!'; }
     log(`${item.icon || '🎯'} ${G.party[hIdx].name} lancia ${item.name} su ${e.name}: <b>${dmg} danni</b>${doubled ? ' (DOPPI sul non-morto!)' : ''}.${extra}`, 'log-hit');
     if (e._x != null) floatText(e._x + e._size / 2, e._y, `-${dmg}`, 'float-dmg');
     if (typeof Sound !== 'undefined') Sound.play('hit');
