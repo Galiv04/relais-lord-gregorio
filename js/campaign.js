@@ -45,6 +45,11 @@ const ITEMS = {
     desc: 'Una candela d\'accensione, ancora TIEPIDA, targhetta d\'ottone: "Gruppo 2024". È la vostra. E da qualche parte, il motore che la aspetta gira ancora: scagliata contro una creatura, morde con la scintilla di un motore vivo (2d6). Un lancio solo — poi addio, macchina.',
     combat: { dice: [2, 6] }, icon: '⚡',
   },
+  taralli: {
+    name: 'Taralli razionati (scorta di Emanuela)',
+    desc: 'Il pacco dell\'autogrill, razionato con criteri militari. "UNO a testa nei momenti di crisi, e la crisi la certifico IO." +2 PV e un morale insospettabilmente migliore.',
+    usable: true, heal: 2,
+  },
   tronello: {
     name: 'Tronello di riserva',
     desc: 'Rollato da Natalino con la cura che mette nelle pieghe importanti. Rilassa i nervi come nient\'altro stanotte: +5 PV a chi lo fuma e un\'onestissima mezz\'ora di filosofia. "Non è vizio, è MANUTENZIONE."',
@@ -106,8 +111,8 @@ Un silenzio da autogrill, con le tazzine a mezz'aria. Poi Natalino gratta il pri
     item2: 'birra_limone',
     item: 'gratta_vinci',
     choices: [
-      { text: '🚗 Si riparte: ultima ora di strada, poi i tornanti', next: 'a1' },
-      { text: '⛽ Prima, il pieno al distributore qui fuori — il serbatoio è a metà', next: 'a0_benzina' },
+      { text: '🚗 Si riparte: ultima ora di strada, poi i tornanti', item: 'taralli', next: 'a1' },
+      { text: '⛽ Prima, il pieno al distributore qui fuori — il serbatoio è a metà', item: 'taralli', next: 'a0_benzina' },
     ],
   },
 

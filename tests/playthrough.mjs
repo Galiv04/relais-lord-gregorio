@@ -1549,7 +1549,7 @@ coverageFlag('Il tronello — flag', ['tronello_promesso', 'ada_ride']);
 /* ---- ESPANSIONE: NUOVI OGGETTI ---- */
 
 coverageItem('Nuovi oggetti — ottenuti almeno una volta nelle rispettive scene', [
-  'lanterna_1899', 'asso_di_denari', 'nastro_1974', 'candela_motore', 'gratta_vinci', 'torcia_led', 'accendino', 'birra_limone', 'anello_1999', 'orologio_sofia', 'inventario_riflesso', 'lettere_1899',
+  'lanterna_1899', 'asso_di_denari', 'nastro_1974', 'candela_motore', 'gratta_vinci', 'torcia_led', 'accendino', 'birra_limone', 'anello_1999', 'taralli', 'orologio_sofia', 'inventario_riflesso', 'lettere_1899',
 ]);
 
 console.log(`  ${allEndings.size >= 5 ? '✅' : '❌'} Finali raggiunti (${allEndings.size}/5): ${[...allEndings].join(', ') || '(nessuno)'}`);
@@ -1968,6 +1968,9 @@ function findHeroButton(box, heroName) {
 
 console.log('\n' + '═'.repeat(60));
 if (failures === 0) {
+  const celleRun = results.filter(r => r.ok).map(r => r.log.scenes.filter(sc => sc === 'x_celle').length).sort((a, b) => a - b);
+  const q = p => celleRun[Math.min(celleRun.length - 1, Math.floor(celleRun.length * p))];
+  console.log(`  ℹ️ Bilanciamento (sconfitte/partita del pilota automatico): mediana ${q(0.5)}, p90 ${q(0.9)}, max ${celleRun[celleRun.length - 1]} — le code lunghe sono i loop di ritentativo del pilota, non l'esperienza umana`);
   console.log(`✅ TUTTE LE PARTITE SIMULATE COMPLETATE SENZA ERRORI (${results.length} run, ${allScenesSeen.size} scene distinte visitate, ${allEndings.size}/5 finali)`);
   process.exit(0);
 } else {
