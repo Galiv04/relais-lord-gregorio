@@ -12,7 +12,7 @@ C'è solo un dettaglio: **il Belvedere prende un gruppo di ospiti ogni venticinq
 
 - 🎭 **5 protagonisti = voi**: ognuno interpreta sé stesso, con abilità nate dal proprio mestiere (le forbici professionali contano, in certe notti)
 - 🎙 **Narratore automatico**: racconta, propone scelte macabre, tira i dadi, arbitra gli scontri
-- 🗺 **Oltre 170 scene, ~35.000 parole**: l'autogrill di Baiano, il paese di Pietrafonda, la sera in piscina col riflesso sbagliato, tre piste nella notte (la cantina con l'ossario, il piano proibito fino alla soffitta, il pozzo e il garage), la **Strada che Torna** (i tornanti sono un anello — e vederlo cambia il finale), il mondo capovolto del **Riflesso** e il Banchetto dell'alba
+- 🗺 **Oltre 160 scene, ~35.000 parole**: l'autogrill di Baiano, il paese di Pietrafonda, la sera in piscina col riflesso sbagliato, tre piste nella notte (la cantina con l'ossario, il piano proibito fino alla soffitta, il pozzo e il garage), la **Strada che Torna** (i tornanti sono un anello — e vederlo cambia il finale), il mondo capovolto del **Riflesso** e il Banchetto dell'alba
 - 🌒 **5 finali**: uno si conquista, uno si sceglie (e non se ne parlerà mai più), uno si subisce, uno si dimentica... e uno non era nemmeno previsto dal Belvedere: lo scrivete voi
 - ☠ **Condizioni, non morti**: al Belvedere nessuno muore — si viene avvelenati dal freddo, presi dalla casa, appesi alle pareti. Gli amici possono salvarti. Di solito.
 - 🎒 **Oltre 30 oggetti**, metà con effetti veri: l'Asso di Denari dei reduci ritira una prova fallita, la Lanterna del 1899 fa esitare le creature (e addormenta le bambole), il Nastro del '74 le ferma ad ascoltare (o ammansisce lo Chef — scegliete voi)
