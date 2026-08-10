@@ -1150,7 +1150,7 @@ const Scenes = (() => {
     const ctx = canvas.getContext('2d');
     ctx.imageSmoothingEnabled = false;
     const W = canvas.width, H = canvas.height;
-    const painter = painters[locationKey] || painters.strada;
+    const painter = painters[locationKey] || painters.corridoio;
     painter(ctx, W, H);
     if (heroKeys && heroKeys.length) heroesRow(ctx, W, H - 8, heroKeys, 3);
     if (npcKeys && npcKeys.length) drawNpcs(ctx, W, H, npcKeys);

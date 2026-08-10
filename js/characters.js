@@ -156,6 +156,24 @@ const BESTIARY = {
     attack: { name: 'Mani dalla cornice', bonus: 3, dice: [1, 8], plus: 0 },
     flavor: 'Gli ospiti del 1974. Sorridono dalla parete. Vorrebbero compagnia.',
   },
+  cameriere_riflesso: {
+    name: 'Cameriere del Riflesso', sprite: 'cameriere',
+    maxHp: 16, ac: 13, ai: 'random', undead: true,
+    attack: { name: 'Vassoio Capovolto', bonus: 3, dice: [1, 8], plus: 1 },
+    flavor: 'Serve una cena che nessuno mangia da venticinque anni. Cammina all\'incontrario, ma arriva sempre prima.',
+  },
+  doppio: {
+    name: 'Il Doppio', sprite: 'doppio',
+    maxHp: 18, ac: 13, ai: 'smart', undead: true,
+    attack: { name: 'Le Sue Stesse Mani', bonus: 4, dice: [1, 8], plus: 1 },
+    flavor: 'Ha la faccia di chi lo guarda. Si muove un decimo di secondo prima, come un\'eco che non aspetta il suono.',
+  },
+  direttore: {
+    name: 'Il Direttore', sprite: 'direttore',
+    maxHp: 42, ac: 17, ai: 'smart', undead: true, boss: true, lifesteal: true,
+    attack: { name: 'Il Timbro del Catalogo', bonus: 6, dice: [2, 8], plus: 2 },
+    flavor: 'Ciò che Gregorio sarebbe diventato senza rimorso. Non urla mai. Non ne ha bisogno.',
+  },
   gregorio: {
     name: 'Lord Gregorio', sprite: 'gregorio',
     maxHp: 55, ac: 16, ai: 'smart', undead: true, boss: true, lifesteal: true,

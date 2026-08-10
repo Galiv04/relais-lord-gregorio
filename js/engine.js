@@ -705,6 +705,7 @@ const Engine = (() => {
     const path = (a, b) => { const [x1, y1] = pts(a), [x2, y2] = pts(b); ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); };
     path('tornanti', 'relais'); path('tornanti', 'paese'); path('relais', 'hall'); path('hall', 'pranzo'); path('hall', 'camere');
     path('pranzo', 'piscina'); path('camere', 'cantina'); path('camere', 'pozzo'); path('pranzo', 'cantina');
+    path('tornanti', 'paese'); path('piscina', 'riflesso');
     ctx.setLineDash([]);
 
     const cur = WORLD_MAP.find(w => w.scenes.includes(G.sceneId));
@@ -742,6 +743,22 @@ const Engine = (() => {
         ctx.fillStyle = '#e8e0d0'; ctx.fillRect(x - 14, y - 8, 28, 5);
         ctx.fillStyle = '#4a2a20'; ctx.fillRect(x - 12, y - 3, 4, 8); ctx.fillRect(x + 8, y - 3, 4, 8);
         ctx.fillStyle = '#e8b64c'; ctx.fillRect(x - 2, y - 14, 4, 5);
+      } else if (loc.key === 'paese') {
+        for (let i = 0; i < 3; i++) {
+          ctx.fillStyle = '#2a2228'; ctx.fillRect(x - 16 + i * 12, y - 8, 10, 10);
+          ctx.fillStyle = '#1a1418'; ctx.fillRect(x - 13 + i * 12, y - 5, 4, 5);
+        }
+        ctx.fillStyle = '#5a3038';
+        ctx.beginPath(); ctx.moveTo(x - 18, y - 8); ctx.lineTo(x, y - 18); ctx.lineTo(x + 18, y - 8); ctx.closePath(); ctx.fill();
+      } else if (loc.key === 'riflesso') {
+        // la piscina capovolta: un rettangolo d'acqua col cielo dentro
+        ctx.fillStyle = '#123040'; ctx.fillRect(x - 18, y - 12, 36, 20);
+        ctx.fillStyle = '#8a2432';
+        for (let dy = -5; dy <= 5; dy += 3) {
+          const hw = Math.floor(Math.sqrt(25 - dy * dy) / 3) * 3;
+          ctx.fillRect(x - hw, y - 2 + dy, hw * 2, 3);
+        }
+        ctx.fillStyle = 'rgba(200,220,235,.35)'; ctx.fillRect(x - 14, y - 9, 8, 2); ctx.fillRect(x + 4, y + 3, 9, 2);
       } else {
         ctx.fillStyle = '#c8a032'; ctx.fillRect(x - 8, y - 10, 16, 12);
       }

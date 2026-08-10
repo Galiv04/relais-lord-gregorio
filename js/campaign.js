@@ -20,6 +20,33 @@ const ITEMS = {
   accendino:        { name: 'Accendino di Federico', desc: '"Non fumo più, lo tengo per affezione." Stanotte vale oro.', usable: false },
   torcia_led:       { name: 'Torcia LED di Gaetano', desc: '1200 lumen, tre modalità. La terza non l\'avete mai provata.', usable: false },
   vino_1899:        { name: 'Bottiglia del 1899', desc: 'Il vino del primo Banchetto. L\'etichetta scritta a mano: "Da aprire solo per il Padrone".', usable: false },
+  lanterna_1899: {
+    name: 'Lanterna del 1899',
+    desc: 'Ottone annerito, vetro fumé. Il Contabile: "Le creature della casa la conoscono. Non la temono: la RISPETTANO. C\'è differenza." Portata in giro, fa esitare chi vi assale — un attimo, non di più.',
+    usable: false,
+  },
+  lettere_1899: {
+    name: 'Lettere di Gregorio e Ada',
+    desc: 'Un fascio legato con lo spago, grafia doppia — una elegante, una femminile e fitta. Parlano di un ampliamento del relais mai fatto: "per le famiglie", scriveva lui. Non c\'è mai stato tempo.',
+    usable: false,
+  },
+  asso_di_denari: {
+    name: 'Asso di Denari (portafortuna dei reduci)',
+    desc: 'Il portafortuna dei reduci del 1949: l\'hanno tenuto in tasca per settant\'anni, e adesso è in tasca a voi. UNA volta, permette di RITIRARE una prova fallita — il gioco ve lo proporrà al momento giusto.',
+    usable: false,
+  },
+  nastro_1974: {
+    name: 'Nastro del \'74',
+    desc: 'Una cassetta senza custodia, scritta a pennarello: "ULTIMA REGISTRAZIONE — L. + comune". Un\'accordatura strana, quasi stonata apposta. Chi la sente, si calma. Anche le cose che non dovrebbero calmarsi.',
+    usable: false,
+  },
+  candela_motore: {
+    name: 'Candela del motore (gruppo 2024)',
+    desc: 'Una candela d\'accensione, ancora tiepida, con una targhetta d\'ottone: "Gruppo 2024". Gaetano la riconosce: è la SUA.',
+    usable: false,
+  },
+  orologio_sofia:     { name: 'Orologio di Sofia', desc: 'Un modello economico da discount, cinturino di plastica scolorito. Fermo alle 23:58 del 31 luglio 1999 — due minuti prima che tutto cominciasse.', usable: false },
+  inventario_riflesso: { name: 'L\'Inventario del Riflesso', desc: 'Il registro dove il Belvedere capovolto catalogava i suoi ospiti come oggetti. Le pagine strappate, quelle rimaste, battono ancora piano — come un cuore che non vuole fermarsi del tutto.', usable: false },
   campanello:       { name: 'Campanello di Servizio', desc: 'Ottone lucido. Il cartellino dice: "Suonare in caso di bisogno. Verranno."', usable: false },
   moka:             { name: 'Moka di Don Michele', desc: 'Caffè del paese, nero come la notte e due volte più forte. Ricarica TUTTE le abilità di una persona.', usable: true, recharge: true },
   bengala:          { name: 'Bengala di Federico', desc: '"Per le emergenze", diceva. Da lancio: 2d6 danni a TUTTI i nemici, che restano accecati (svantaggio).', combat: { dice: [2, 6], all: true, distract: true }, icon: '🧨' },
@@ -674,6 +701,10 @@ E davvero: mentre lo dice, una ciocca dei suoi capelli diventa bianca.`,
       { text: '🌳 Uscire verso il POZZO — la cosa con cui Gregorio firmò', next: 'b1', once: true },
       { text: '❓ Trattenere Gregorio: ancora una domanda, gliela si legge in faccia', next: 'h2', once: true },
       { text: '🚶 Il cancello: chi non ha FIRMATO può ancora passare. Scendere a Pietrafonda', requires: { flag: 'firma_rinviata' }, next: 'pp1', once: true },
+      { text: '🌊 Tornare alla PISCINA: il riflesso è una PORTA, e voi ormai lo sapete', next: 'w1_tuffo', requires: { flag: 'un_nodo_sciolto' }, once: true },
+      { text: '💑 Gaetano e Claudia: due minuti, da soli, sul balcone', next: 'cuore_gc', once: true },
+      { text: '💑 Federico ed Emanuela: la porta della loro camera è socchiusa', next: 'cuore_fe', once: true },
+      { text: '🕯 Natalino: la finestra della Camera del Pozzo lo sta aspettando', next: 'cuore_nat', once: true },
       { text: '🌅 Basta così: barricarsi e aspettare l\'alba (verso il finale)', next: 'z1', requires: { flag: 'un_nodo_sciolto' } },
     ],
   },
@@ -894,7 +925,10 @@ Sulla mensola, il barattolo di **SALE GROSSO** e la **BOTTIGLIA DEL 1899** sono 
     item2: 'vino_1899',
     sets: { nodo_cantina: true, un_nodo_sciolto: true, ricetta_antidoto: true },
     gold: 1,
-    choices: [{ text: 'Risalire. La notte non è finita', next: 'h1' }],
+    choices: [
+      { text: '🕳 Dietro la cella frigorifera c\'è un pannello che NON dovrebbe muoversi...', next: 'os1', once: true },
+      { text: 'Risalire. La notte non è finita', next: 'h1' },
+    ],
   },
 
   /* ==================== PISTA 2 — IL PIANO PROIBITO ==================== */
@@ -921,6 +955,9 @@ Da dietro la porta del 1924, attutito, arriva un suono: **un grammofono.** Un va
       { text: '🚪 1999 — l\'anno di Sofia, il gruppo più vicino a voi', next: 'u2_1999' },
       { text: '🚪 1924 — la stanza del valzer', next: 'u2_1924' },
       { text: '🚪 1899 — la stanza dov\'è cominciato tutto', next: 'u2_1899' },
+      { text: '🚪 1949 — da dietro la porta, una radio gracchia un notiziario', next: 's49_1', once: true },
+      { text: '🚪 1974 — sotto la porta, un odore d\'incenso vecchio di mezzo secolo', next: 's74_1', once: true },
+      { text: '🪜 In fondo al corridoio, una scaletta a pioli sale verso una botola', next: 'sf1', once: true },
     ],
   },
 
@@ -1163,7 +1200,10 @@ Il cartellino dice: *"CONTRO IL FREDDO DI QUESTA CASA. Bollire finché l'acqua n
 **(Ottenuto: ANTIDOTO DI ERBE — chiunque sia AVVELENATO dal gelo del Belvedere può essere curato. Sangue freddo +1.)**`,
     item: 'antidoto',
     gold: 1,
-    choices: [{ text: 'Al pozzo. È il momento.', next: 'b3_pozzo' }],
+    choices: [
+      { text: '🚗 Prima: la porta della rimessa è socchiusa, e dentro c\'è la VOSTRA macchina', next: 'gr1', once: true },
+      { text: 'Al pozzo. È il momento.', next: 'b3_pozzo' },
+    ],
   },
 
   b3_pozzo: {
@@ -1544,6 +1584,1132 @@ Sulla soglia, senza voltarsi:
     fullHeal: true,
     freeAll: true,
     choices: [{ text: '↩ Tornare là fuori e riprovare', next: 'RETRY_COMBAT' }],
+  },
+
+  /* ==================== APPROFONDIMENTI OPZIONALI ==================== */
+
+
+  /* ==================== BLOCCO 1 — L'OSSARIO ====================
+     Sotto la cantina, dietro la cella frigorifera del Banchetto: la
+     sotto-cantina del 1899. Non ostile. Il Contabile è stanchissimo,
+     non famelico. Aggancio suggerito: k5_dopo_chef (vedi report). */
+
+  os1: {
+    location: 'ossario',
+    caption: 'Dietro il freezer del Banchetto',
+    text: `Il freezer a pozzetto della cucina del Banchetto ha un pannello sul retro che non dovrebbe muoversi.
+
+Si muove.
+
+Dietro, non c'è il muro che ci si aspetterebbe da una villa liberty del 1899: c'è pietra **più vecchia**, tagliata a mano, annerita da un fuoco che non è quello del forno a legna. Un corridoio in discesa, basso, dove Federico deve chinarsi e ne fa un dramma degno del suo miglior cliente scontento.
+
+> Federico: "Ok, informazione che nessuno mi aveva dato: sotto la cantina c'è un'ALTRA cantina. Chi lo sapeva? Perché non è nella brochure che ho corretto IO?"
+
+> Gaetano: *(illuminando le pareti col telefono)* "Questa muratura non è del 1899. È più antica. Il relais non ha costruito sopra il niente: ha costruito sopra qualcos'altro che già c'era."
+
+L'aria che sale dal basso non è fredda come sopra: è **ferma**, densa, con un odore di cera vecchia e carta ingiallita — un ufficio, non una tomba. In fondo al corridoio, il bagliore tremolante di una candela che nessuno, stasera, ha acceso.
+
+> Natalino: "Ragazzi, ho fatto la cresima, due diciottesimi di cugini e un funerale, ma questo è il colloquio di lavoro più assurdo della mia vita. E ci vengo comunque, perché sono un cretino curioso."
+
+**(Sangue freddo +1: siete scesi comunque. Flag: sceso nell'ossario.)**`,
+    gold: 1,
+    sets: { sceso_ossario: true },
+    choices: [{ text: 'Scendere fino in fondo', next: 'os2' }],
+  },
+
+  os2: {
+    location: 'ossario',
+    caption: 'Le tacche originali del 1899',
+    text: `Il corridoio finisce in una stanza tonda, bassa, con la pietra incisa dal pavimento al soffitto: **tacche.** Migliaia. A gruppi di cinque, come al pozzo — ma qui sono più profonde, irregolari, fatte con qualcosa che non era uno scalpello. Un'unghia. Un coltello da cucina. La disperazione, quando ci si mette, **taglia la pietra.**
+
+Sono le tacche originali. Quelle del pozzo, capite guardando queste, non hanno inventato niente: hanno solo copiato il metodo di chi lo inventò la prima notte, nel 1899, per non perdere il conto di quanti mancavano.
+
+> Claudia: *(la torcia che trema appena)* "Contiamole. Il primo gruppo. Quello di Gregorio."
+
+Sei tacche, in alto, più vecchie di tutte le altre. Cinque sono attraversate da un taglio netto, come si fa quando un conto è chiuso. La sesta no. La sesta è ancora **aperta**, netta, in attesa, esattamente come una firma che manca.
+
+> Emanuela: *(piano)* "Centoventicinque anni e la sua tacca è ancora lì. Aperta. Gregorio non ha mai chiuso il conto — nemmeno il SUO."
+
+Nessuno ha una battuta pronta per questa. Perfino Natalino resta zitto un secondo di più del solito.
+
+**(Flag: la tacca di Gregorio, ancora aperta. Sangue freddo +1.)**`,
+    gold: 1,
+    sets: { tacca_di_gregorio: true },
+    choices: [{ text: 'Proseguire nella sotto-cantina', next: 'os3' }],
+  },
+
+  os3: {
+    location: 'ossario',
+    caption: 'I bagagli mai ritirati',
+    text: `La stanza successiva è un deposito bagagli che nessun hotel al mondo dovrebbe avere: valigie impilate per epoca, ognuna con un cartellino di riconsegna mai staccato.
+
+**1924:** bauli di cuoio con adesivi sbiaditi — Capri, Positano, un Grand Tour da signori. **1949:** una valigia di cartone rigido legata con lo spago, un mazzo di carte incastrato nella fibbia. **1974:** uno zaino tie-dye con le toppe cucite a mano, un fiore di stoffa ancora appuntato. **1999:** uno zaino Invicta, quello con la sagoma dell'alpinista, identico a uno che qualcuno di voi ha ancora in soffitta a casa.
+
+> Claudia: *(la voce che si incrina per un attimo)* "Quello zaino ce l'avevo anch'io. Quello ESATTO."
+
+E poi, vicino alla porta, in un angolo tenuto libero apposta, **cinque valigie nuove.** Pulite. Etichette moderne. Della marca che avete voi, tutti e cinque, parcheggiata al piano di sopra nelle vostre camere.
+
+> Natalino: *(la voce piatta, per una volta senza battute)* "Ragazzi. Quelle sono un modello uscito quest'anno. La casa non le ha rubate. La casa se le è... **preparate.**"
+
+Nessuno tocca niente. Si esce da quella stanza come si esce da un funerale: in silenzio, senza girarsi.
+
+**(Flag: visti i bagagli mai ritirati. -1 Sangue freddo — sapere fa male.)**`,
+    gold: -1,
+    sets: { bagagli_visti: true },
+    choices: [{ text: 'Avanti, verso la luce della candela', next: 'os4' }],
+  },
+
+  os4: {
+    location: 'ossario',
+    caption: 'Il Contabile',
+    text: `L'ultima stanza è un ufficio. Un tavolo di legno scuro, una candela vera (questa sì, accesa da qualcuno), e dietro il tavolo, in maniche di camicia, con le bretelle ancora allacciate e il colletto slacciato come chi ha finito il turno e non è mai più riuscito ad alzarsi: **uno scheletro.** Seduto composto. Una penna d'oca in una mano d'ossa, un librone apertissimo davanti.
+
+Non si volta di scatto. Non ha bisogno di scatti: alza gli occhi (che non ha, ma il gesto è quello) e vi guarda con una stanchezza che attraversa il vestito, le ossa, il secolo.
+
+> Il Contabile: "Ah. Ospiti. Fate presto, se potete: sono indietro con la contabilità da... be', da centoventicinque anni, a essere sinceri. Cinque presi nel '99, cinque nel '74... i conti non tornano MAI, e io sono quello che deve farli tornare." *(intinge la penna, senza scrivere)* "Lo Chef, di sopra, è mio fratello minore. Fa più rumore di me perché lavora ancora con le mani. Io lavoro solo con la testa. È peggio."
+
+Sul tavolo, tra le carte, un **Libro Mastro** rilegato in pelle scura, chiuso con un lucchetto piccolo, ridicolo, quasi domestico.
+
+> Il Contabile: "Non ve lo mostro gratis. Non per malizia: per ABITUDINE. Centoventicinque anni di 'niente gratis' lasciano il segno anche su chi non ha più pelle."`,
+    choices: [
+      { text: '☕ Offrirgli la moka di Don Michele, ancora calda', requires: { item: 'moka' }, removeItem: 'moka', next: 'os5' },
+      { text: '🗣 Sedersi e basta: parlargli, senza doni, come si fa con un collega a fine turno', next: 'os6' },
+    ],
+  },
+
+  os5: {
+    location: 'ossario',
+    caption: 'Il Libro Mastro',
+    text: `Il Contabile guarda la moka come un uomo affogato guarda una corda. La prende con due dita d'osso, quasi tremando, e se la porta a un naso che non ha — e ANNUSA. Davvero, annusa.
+
+> Il Contabile: "Caffè. Vero. Da centoventicinque anni mi offrono solo vino che non voglio bere e sale che non mi serve." *(posa la moka con una cura assurda, come una reliquia)* "Per questo, vi mostro il Libro."
+
+Il lucchetto si apre da solo, come tutto in questa casa. Le pagine sono colonne di numeri: presi, mancanti, saldi, deficit. Nell'ultima colonna, sotto una data di stasera già scritta, il totale è in rosso.
+
+> Il Contabile: "Il patto è in PERDITA. Da generazioni. Ogni venticinque anni la casa prende cinque persone e ne riceve, in cambio, solo PAURA — che si consuma in una notte e non nutre niente. Nessuno, capite, l'ha mai nutrita di quello che vuole VERAMENTE: presenze felici. Gente che resta perché VUOLE, non perché è stata contata." *(richiude il libro, piano)* "Ve lo dico perché siete i primi, in centoventicinque anni di colonne, a offrirmi un caffè invece di un'offerta. Prendete questa." *(spinge sul tavolo una lanterna d'ottone annerita)* "Le creature di sopra la rispettano. Non chiedetemi perché contabile e rispetto vadano insieme: è l'unica cosa bella che ho imparato qui sotto."
+
+**(Segreto: il patto è in perdita — la casa ha fame perché nessuno l'ha mai nutrita di gioia vera. Flag: segreto_contabile. Sangue freddo +3.)**`,
+    item: 'lanterna_1899',
+    gold: 3,
+    sets: { segreto_contabile: true, contabile_visto: true },
+    choices: [{ text: 'Salutarlo con rispetto e risalire', next: 'os6' }],
+  },
+
+  os6: {
+    location: 'ossario',
+    caption: 'Il saluto del Contabile',
+    text: `Che abbiate portato il caffè o solo la vostra compagnia, il Contabile a un certo punto smette di scrivere e resta fermo, la penna appoggiata, come chi si concede una pausa che aspettava da un secolo.
+
+> Il Contabile: "Sapete qual è la cosa più strana di questo lavoro? Nessuno viene MAI a salutarmi. Vengono presi, o vengono a prendere qualcosa. Voi siete i primi che si sono seduti."
+
+Con un gesto lento — le ossa che scricchiolano, ma con garbo, come articolazioni che si scusano — apre un cassetto e ne tira fuori una **lanterna d'ottone**, annerita, il vetro fumé.
+
+> Il Contabile: "Prendetela. Le creature di sopra la conoscono da centoventicinque anni: non la temono, la RISPETTANO. C'è una bella differenza, in questa casa, tra le due cose. E se incontrate mio fratello di nuovo... ditegli che il caffè, quaggiù, un giorno arriva anche a lui."
+
+Vi accompagna fino al corridoio in salita con la candela in mano, e sulla soglia, prima di tornare al suo tavolo e ai suoi conti eterni, aggiunge una cosa che nessuno di voi si aspettava da uno scheletro seduto:
+
+> Il Contabile: "Buona fortuna, ragazzi. Fatemi tornare i conti in positivo, per una volta."
+
+**(Oggetto: LANTERNA DEL 1899. Sangue freddo +1.)**`,
+    gold: 1,
+    sets: { ossario_visitato: true },
+    choices: [{ text: 'Su, verso il corridoio delle tre porte', next: 'h1' }],
+  },
+
+  /* ==================== BLOCCO 2 — LA SOFFITTA ====================
+     Sopra il piano proibito: il telescopio puntato sulla piscina, le
+     casse di Gregorio e Ada, il nido dei ritratti vuoti. 1 scontro
+     evitabile con 'ritratto'. Aggancio suggerito: una quarta scelta
+     in u1 (vedi report). */
+
+  sf1: {
+    location: 'soffitta',
+    caption: 'La botola della soffitta',
+    text: `In fondo al corridoio del piano proibito, oltre l'ultima porta con targhetta, il soffitto ha una botola che nessuno aveva notato entrando — perché, giurereste, non c'era.
+
+Una scaletta a pioli arrugginita scende (sale?) da lì. Claudia, che nota tutto, nota anche questo:
+
+> Claudia: "La polvere sui pioli è mossa. Qualcuno ci è salito. Di recente. O qualcuno ci scende. Spesso."
+
+Su, l'aria cambia ancora: meno "casa vecchia sotto la casa nuova" e più semplicemente **soffitta**, con quell'odore secco di legno e stoffa che hanno tutte le soffitte del mondo, ovunque siano. Una finestra rotonda, tipo occhio di bue, lascia entrare la luce lunare a fette. Casse impilate, coperte da lenzuoli, e in mezzo alla stanza, montato su un treppiede d'ottone lucidissimo — **lucidissimo, mentre tutto il resto è polvere** — un telescopio.
+
+Puntato non verso il tetto, non verso il cielo. Punta **giù**, attraverso un'asola tagliata apposta nel pavimento, verso qualcosa al piano di sotto.
+
+> Gaetano: *(gli occhi già accesi di curiosità scientifica pura, la paura per un attimo in secondo piano)* "Un telescopio puntato IN BASSO. Questo è il primo dato di stasera che mi fa venire voglia di prendere appunti invece che scappare."
+
+**(Sangue freddo +1: la curiosità, stasera, è anche coraggio.)**`,
+    gold: 1,
+    choices: [{ text: 'Guardare dentro il telescopio', next: 'sf2' }],
+  },
+
+  sf2: {
+    location: 'soffitta',
+    caption: 'Il telescopio puntato sulla piscina',
+    text: `Gaetano si china sull'oculare con la concentrazione di chi calibra un satellite, e per una volta nessuno lo interrompe: persino Natalino capisce che questo non è il momento delle battute.
+
+L'asola nel pavimento inquadra, con una precisione impossibile per un tubo d'ottone del secolo scorso, la **piscina**, due piani più in basso, turchese e fumante nella notte.
+
+> Gaetano: "È a fuoco perfetto. Troppo perfetto. Questo strumento non dovrebbe... okay, non pensiamoci. Guardate qua: si vede il riflesso della luna sull'acqua."
+
+Il riflesso è rosso. Non del rosso caldo di una luna basso sull'orizzonte: di un rosso **umido**, che pulsa piano, con un ritmo che non è quello delle onde.
+
+> Claudia: *(che si è fatta passare l'oculare senza chiedere il permesso, da brava fotografa che non si fida di occhi non suoi)* "Gaetano. Quella non è la luna."
+
+Non lo è. Guardando meglio — e nessuno di voi vorrebbe guardare meglio, ma lo fate — il riflesso rosso ha un contorno. Una pupilla verticale, stretta, che nell'increspatura dell'acqua sembra **muoversi**, orientarsi, come qualcosa che sta cercando la messa a fuoco esattamente come avete fatto voi.
+
+Sta guardando in alto. Verso il telescopio. Verso voi.
+
+**(Rivelazione: la luna rossa nella piscina non è una luna. È un occhio. Flag: visto_occhio. Sangue freddo +2.)**`,
+    gold: 2,
+    sets: { visto_occhio: true },
+    choices: [{ text: 'Staccarsi dall\'oculare e continuare a esplorare la soffitta', next: 'sf3' }],
+  },
+
+  sf3: {
+    location: 'soffitta',
+    caption: 'Le casse di Gregorio e Ada',
+    text: `Sotto i lenzuoli, le casse custodiscono una vita che nessuno di voi immaginava per un uomo in completo di lino color tortora: la vita **prima** del 1899.
+
+Un abito da sposa, ingiallito ma piegato con una cura che ha resistito a un secolo, la seta ancora profumata di qualcosa di floreale che il tempo non è riuscito a portare via del tutto. Un fascio di lettere legate con lo spago: due grafie, una elegante e maschile, una femminile e fitta — la grafia di Ada, la stessa del registro, la stessa dei cartellini dell'orto.
+
+E sotto tutto, un rotolo di disegni tecnici ingialliti: il progetto, mai realizzato, di un **ampliamento del Belvedere.** Una manica nuova, più stanze, un disegno a matita di bambini che giocano in un prato che nel 1899 non esisteva ancora.
+
+In cima al foglio, la scritta di Gregorio: *"Per le famiglie. Quando avremo tempo."*
+
+> Emanuela: *(le lettere in mano, la voce che si spezza appena)* "Non hanno mai avuto tempo. Hanno firmato il patto tre mesi dopo questo disegno."
+
+> Federico: *(per una volta, senza una battuta pronta)* "...cazzo."
+
+Nessun'altra parola sembra adatta. Le lettere finiscono nello zaino con un rispetto che la notte, finora, non aveva ancora richiesto.
+
+**(Oggetto: LETTERE DI GREGORIO E ADA. Sangue freddo +1.)**`,
+    item: 'lettere_1899',
+    gold: 1,
+    sets: { lettere_lette: true },
+    choices: [{ text: 'In fondo alla soffitta c\'è ancora un angolo buio da controllare', next: 'sf4' }],
+  },
+
+  sf4: {
+    location: 'soffitta',
+    caption: 'Il nido dei ritratti vuoti',
+    text: `L'angolo più buio della soffitta non è buio per caso: qualcosa ci ha ammassato, in centoventicinque anni, decine di **cornici vuote.** Tele bianche, senza un pennello che le abbia mai toccate, impilate in cerchio come un nido — un nido costruito da chi aspetta ancora di essere dipinto dentro.
+
+Al centro del nido, tre cornici sono leggermente diverse: la tela dentro non è bianca. È **quasi** un dipinto — un'ombra di colore, un accenno di forma umana, come una fotografia che si sta sviluppando da un secolo e non finisce mai.
+
+> Gaetano: *(sottovoce)* "Sono i ritratti del '74. Quelli mancanti. Il quadro finale non l'hanno mai finito perché... perché non li avevano ancora presi tutti."
+
+Le cornici, ad un tratto, **tremano.** Non per il vento — in soffitta non c'è vento — ma per qualcosa dentro che, sentendosi osservato, si sveglia.
+
+*(Chi si muove con attenzione, senza far scricchiolare le assi, può ritirarsi prima che le cornici finiscano di svegliarsi.)*`,
+    choices: [
+      { text: '🤫 Ritirarsi con calma assoluta, un passo alla volta', tag: 'Prova di Destrezza — CD 12', check: { stat: 'DES', dc: 12, success: 'sf6', fail: 'sf5' } },
+      { text: '👁 Restare a guardare: forse capiscono che non siete nemici', tag: 'Prova di Saggezza — CD 12', check: { stat: 'SAG', dc: 12, success: 'sf6', fail: 'sf5' } },
+    ],
+  },
+
+  sf5: {
+    location: 'soffitta',
+    caption: 'I ritratti si svegliano — SCONTRO',
+    text: `Non funziona. Un'asse scricchiola, o forse è solo che questa casa aspettava una scusa: le cornici si aprono con un suono di tela che si strappa dal proprio stesso quadro, e ne escono forme umane fatte di colore ancora fresco, gli occhi due macchie scure che non hanno ancora deciso dove guardare.
+
+> Uno dei ritratti: *(una voce impastata, come pittura che parla)* "...compagnia. FINALMENTE."
+
+*(Sono creature della villa: Colpo di Phon e sale fanno danni doppi. Sono lente ma tenaci — non lasciatevi circondare tra le casse.)*`,
+    combat: {
+      enemies: ['ritratto', 'ritratto'],
+      victory: 'sf6',
+      defeat: 'x_celle',
+      loot: { gold: 1 },
+    },
+  },
+
+  sf6: {
+    location: 'soffitta',
+    caption: 'Giù dalla soffitta',
+    text: `Che siate riusciti a ritirarvi in silenzio o che abbiate appena finito di respingere due tele con troppa voglia di compagnia, la soffitta torna quieta nello stesso modo in cui era quieta prima: **in attesa.**
+
+Scendendo, l'ultima cosa che si vede, voltandosi, è il telescopio d'ottone — ancora puntato giù, verso l'asola nel pavimento, verso la piscina, verso quell'occhio rosso che, per quanto ne sapete, non ha MAI smesso di guardare in su.
+
+> Natalino: *(richiudendo la botola con un tonfo un po' più forte del necessario)* "Ok. Da stasera, quando faccio il bagno, mi vesto anche in acqua. Punto."
+
+Nessuno ride, ma tutti, per un secondo, immaginano di farlo.
+
+**(La soffitta non ha più segreti. Meglio tornare al corridoio del piano proibito.)**`,
+    choices: [{ text: 'Giù, al corridoio delle tre porte', next: 'h1' }],
+  },
+
+  /* ==================== BLOCCO 3 — STANZA 1949 ====================
+     Piano proibito, porta con targhetta "1949": i reduci, la radio a
+     valvole, la mano di scopa interrotta. Aggancio: quinta scelta in
+     u1 (porta "1949"). */
+
+  s49_1: {
+    location: 'camera',
+    caption: 'Stanza 1949 — il notiziario in loop',
+    text: `La porta con la targhetta "1949" si apre su una stanza in penombra color seppia, e la prima cosa che arriva non è un'immagine: è un **suono.** Una radio a valvole, sul comò, trasmette un notiziario con la voce impostata di un altro secolo — e lo trasmette in loop, sempre lo stesso, da settantacinque anni.
+
+*"...12 agosto 1949. Il Presidente ha ricevuto... si segnalano temporali sull'Appennino... la ricostruzione procede..."* Poi un fruscio, e ricomincia da capo.
+
+Attorno a un tavolino rotondo, cinque sedie. Su quattro, seduti in giacca e camicia come reduci in libera uscita, ci sono **quattro uomini fermi**, immobili, con le carte in mano e gli occhi chiusi — non morti, capite guardando bene: **in pausa.** Come un film fermato a metà fotogramma.
+
+Sul tavolo, davanti alla quinta sedia vuota, una mano di scopa **interrotta a metà.** Le carte sono ancora scoperte, in attesa di chi le completi.
+
+> Emanuela: *(piano, con la delicatezza che riserva ai clienti anziani)* "Sono i reduci del '49. Il gruppo dopo Gregorio. Sembra... malinconico, più che spaventoso."
+
+> Federico: "Fino a prova contraria. Diamo tempo alla serata."`,
+    choices: [{ text: 'Sedersi al posto vuoto e finire la mano', next: 's49_2' }],
+  },
+
+  s49_2: {
+    location: 'camera',
+    caption: 'La mano interrotta',
+    text: `Chi si siede al posto vuoto sente il legno della sedia ancora tiepido — settantacinque anni, e ancora tiepido — e la mano di scopa, guardata da vicino, è più complicata di quanto sembrasse: bisogna contare i denari già calati, ricordare chi ha preso l'ultima presa, capire quale carta chiude il conto senza rubare la scopa a chi, tra i quattro fermi, l'aveva già quasi in mano.
+
+I quattro reduci non si muovono. Ma **aspettano.** Si sente, nell'aria, la stessa tensione di un tavolo vero, di un bar vero, di un venerdì sera vero.
+
+> La radio, sotto: *"...si segnalano temporali sull'Appennino..."*
+
+*(Prova di Intelligenza — CD 12: contare bene le carte residue e chiudere la mano nel modo giusto.)*`,
+    choices: [
+      { text: '🃏 Calcolare la mano con attenzione: contare, ricordare, chiudere', tag: 'Prova di Intelligenza — CD 12', check: { stat: 'INT', dc: 12, success: 's49_3', fail: 's49_3_ko' } },
+    ],
+  },
+
+  s49_3: {
+    location: 'camera',
+    caption: 'Scopa!',
+    text: `La carta giusta scende sul tavolo con un colpetto secco, e per un istante — un istante solo — i quattro reduci **aprono gli occhi insieme** e sorridono, non di un sorriso dipinto o storto: di un sorriso vero, da tavolo di bar, da partita vinta bene.
+
+> Uno dei reduci: *(la voce che arriva da lontano, come da una radio tra due stazioni)* "Bella mano, ragazzo. Bella mano, ragazza. Non ci giocava nessuno con noi da... be'. Da un bel po'."
+
+Poi richiudono gli occhi, tornano fermi, e la radio, sotto, per un secondo — UN secondo — cambia notiziario: *"...e i migliori auguri a chi gioca ancora onestamente."* Poi torna al 12 agosto 1949 come se niente fosse.
+
+Sul tavolo, dove prima c'erano le carte, resta un solo asso, appoggiato in bella vista.
+
+> Natalino: *(intascandolo con la delicatezza di chi ha appena vinto una scommessa che non sapeva di aver fatto)* "Un asso di denari da un morto che gioca bene a scopa. Se questa non è la serata più napoletana della mia vita, non so cosa lo sia."
+
+**(Oggetto: ASSO DI DENARI. Sangue freddo +2.)**`,
+    item: 'asso_di_denari',
+    gold: 2,
+    sets: { carte_1949_vinte: true },
+    choices: [{ text: 'Chiudere la porta con rispetto e tornare al corridoio', next: 's74_1' }],
+  },
+
+  s49_3_ko: {
+    location: 'camera',
+    caption: 'Mano sbagliata',
+    text: `La carta scelta è quasi giusta — quasi — e "quasi giusta", a scopa, vuol dire che si prende la presa sbagliata. I quattro reduci non si arrabbiano: semplicemente, per un istante, **scuotono la testa**, tutti insieme, con la delusione paziente di chi ha visto perdere generazioni di nipoti alle carte.
+
+> Uno dei reduci: *(la voce lontana, quasi tenera)* "Ci vuole più attenzione, ragazzo. Ma la volontà c'era. Va bene lo stesso."
+
+La radio, sotto, non cambia notiziario. Continua il suo 12 agosto 1949, indifferente, eterna. I quattro tornano fermi, immobili, in attesa del prossimo che si sederà a quel tavolo — chissà quando, chissà chi.
+
+Non c'è nessun regalo, stavolta. Solo la sedia che torna a raffreddarsi, e una strana malinconia che nessuno del gruppo si aspettava di sentire per quattro sconosciuti morti da settantacinque anni.
+
+> Claudia: *(uscendo, la voce bassa)* "Speravo tanto vincessimo. Per loro, dico. Più che per noi."
+
+**(Nessun oggetto — ma la partita l'avete giocata con onore. Sangue freddo +1.)**`,
+    gold: 1,
+    sets: { carte_1949_perse: true },
+    choices: [{ text: 'Chiudere la porta con rispetto e tornare al corridoio', next: 's74_1' }],
+  },
+
+  /* ==================== BLOCCO 3b — STANZA 1974 ====================
+     Piano proibito, porta con targhetta "1974": la comune hippy, il
+     nastro dell'ultima registrazione. Aggancio: sesta scelta in u1
+     (porta "1974") — qui collegata anche in coda a s49_3/s49_3_ko
+     per comodità di sequenza, il flusso reale lo decide chi cabla. */
+
+  s74_1: {
+    location: 'camera',
+    caption: 'Stanza 1974 — la comune',
+    text: `Se la stanza del '49 è malinconica, quella del '74 è **psichedelica e inquietante insieme**, il che è un tono che nessuno di voi aveva ancora provato stasera. Manifesti alle pareti — pace, fiori, un sole con la faccia sorridente che a guardarlo bene sorride un po' troppo largo. Una chitarra acustica appoggiata a una poltrona a sacco sgonfia. L'odore di incenso, ancora acceso da qualche parte, dolciastro e vecchio.
+
+Il gruppo del '74, capite dai poster e dagli appunti sparsi, non era un gruppo di amici in vacanza come gli altri: era una **comune**, arrivata al Belvedere apposta, convinta di poter "liberare la casa con l'amore". C'è un manifesto scritto a mano, tra i fiori disegnati: *"L'AMORE SCIOGLIE OGNI PATTO — venite a liberare Villa Belvedere, 10-25 agosto 1974."*
+
+> Gaetano: "Sono venuti apposta. Non in vacanza: in missione."
+
+> Natalino: "E hanno prenotato comunque cinque notti. Ottimisti fino alla fine, questi."
+
+In un angolo, su un mangianastri a pile ancora inserite, una cassetta senza custodia aspetta di essere premuta.
+
+**(Sangue freddo +1: la curiosità, anche qui, vince sulla paura.)**`,
+    gold: 1,
+    choices: [{ text: 'Premere PLAY sul mangianastri', next: 's74_2' }],
+  },
+
+  s74_2: {
+    location: 'camera',
+    caption: 'L\'ultima registrazione',
+    text: `Il nastro parte con un fruscio, poi delle voci — giovani, allegre, sicure di sé in un modo che solo il 1974 sapeva essere sicuro di sé — che intonano un canto sull'accordatura più strana che abbiate sentito: non stonata per errore, stonata **apposta**, come se qualcuno avesse cercato una frequenza che le orecchie umane non userebbero mai per cantare, ma che qualcos'altro, in questa casa, avrebbe ascoltato volentieri.
+
+> Voce dal nastro (una ragazza, ridendo): *"Ok, ok, registriamo l'ultima. Se funziona, domani la casa è libera e noi siamo gli eroi di Woodstock d'Irpinia."*
+
+> Voce dal nastro (un ragazzo): *"E se non funziona?"*
+
+> Voce dal nastro (la ragazza, dopo una pausa che il nastro conserva fedelmente): *"...allora almeno abbiamo cantato bene."*
+
+Il canto continua per un altro minuto, poi si interrompe di netto — non un fruscio, non un finale: un **taglio secco**, come una forbice sul nastro stesso. Silenzio.
+
+> Emanuela: *(spegnendo il mangianastri con rispetto)* "Non hanno mai finito di registrare il ritornello."
+
+> Claudia: "Ma l'accordatura... l'hanno trovata. Si sente. È strana, ma... calma. Anche a me, e sto tremando da un'ora."
+
+**(Flag: sentita l'ultima registrazione del '74. Sangue freddo +2.)**`,
+    gold: 2,
+    sets: { nastro_1974_ascoltato: true },
+    choices: [{ text: 'Prendere la cassetta e portarla con voi', next: 's74_3' }],
+  },
+
+  s74_3: {
+    location: 'camera',
+    caption: 'La cassetta',
+    text: `La cassetta esce dal mangianastri con un clic che suona quasi come un permesso concesso. Sull'etichetta, la stessa grafia allegra della ragazza che rideva nella registrazione: *"ULTIMA — se qualcuno la trova, suonatela a chi ha paura. Funziona anche per quello."*
+
+Nessuno del gruppo del '74 è mai uscito da questa stanza per l'ultima volta a piedi propri, questo lo sapete già senza bisogno che ve lo dica nessuno. Ma quell'accordatura strana, quasi stonata apposta, l'hanno trovata DAVVERO — si sente ancora nell'aria, un ronzio bassissimo che il corpo registra prima delle orecchie, e che lascia, invece di paura, una calma innaturale ma benvenuta.
+
+> Federico: *(intascando la cassetta con più cura di quanta metta di solito nei suoi contratti)* "Cinque hippy che hanno provato a fregare una casa maledetta con una canzone. Sapete cosa? Rispetto assoluto. Anche se ha funzionato a metà."
+
+> Natalino: "A metà è meglio di niente, stronzo mio. Stanotte prendiamo anche la metà."
+
+**(Oggetto: NASTRO DEL '74. Sangue freddo +1.)**`,
+    item: 'nastro_1974',
+    gold: 1,
+    sets: { stanza_1974_visitata: true },
+    choices: [{ text: 'Chiudere la porta e tornare al corridoio', next: 'h1' }],
+  },
+
+  /* ==================== BLOCCO 4 — SCENE DEL CUORE ====================
+     Momenti 1-a-1, opzionali, durante la notte. Aggancio: tre scelte
+     "once" in h1, che Gali aggiungerà a mano (vedi report). */
+
+  cuore_gc: {
+    location: 'giardino',
+    caption: 'Gaetano e Claudia — il balcone',
+    text: `Si allontanano dal gruppo con la scusa più debole del mondo — "controlliamo se da qui c'è campo" — e nessuno li ferma, perché a volte una scusa debole è solo un modo educato di chiedere due minuti da soli.
+
+Il balcone della Camera dei Melograni guarda la valle, la nebbia ferma al confine come una promessa che qualcuno, chissà chi, ha deciso di mantenere. Gaetano si appoggia alla ringhiera con le braccia incrociate, la faccia di chi sta elaborando dati che non gli tornano.
+
+> Gaetano: "Claudia. Stanotte la scienza non basta. Ho passato un'ora a cercare una spiegazione razionale per un maggiordomo che perde ciocche di capelli come un orologio che scarica la batteria, e non ce l'ho. Non c'è. E questo... questo mi fa più paura del mostro."
+
+> Claudia: *(prendendogli la mano, senza il minimo sarcasmo, per la prima volta stasera)* "Lo so. Ti ho visto la faccia mentre lo dicevi."
+
+> Gaetano: "Ho paura, Claudia. Vera. Non 'gestita', non 'analizzata'. Paura."
+
+Lei non risponde con una battuta. Alza il telefono — la fotocamera, non i social, tanto qui non c'è campo comunque — e scatta.
+
+> Claudia: "Così, quando saremo vecchi, ti ricordo che una volta hai avuto torto. E che ti è andata bene lo stesso avermi vicino."
+
+Non dice altro. Non ce n'è bisogno: si tengono per mano guardando la nebbia che non entra, per un minuto intero, prima di tornare dagli altri.
+
+**(Sangue freddo +2: la paura condivisa pesa meno. Flag: cuore_gc.)**`,
+    gold: 2,
+    sets: { cuore_gc: true },
+    choices: [{ text: 'Tornare dagli altri', next: 'h1' }],
+  },
+
+  cuore_fe: {
+    location: 'camera',
+    caption: 'Federico e Emanuela — la Camera del Glicine',
+    text: `Federico si siede sul bordo del letto con la faccia di chi ha finalmente smesso di vendere qualcosa — nemmeno a se stesso.
+
+> Federico: "Emanuela. Scusami. Ho prenotato IO questo posto. 'Cinque stelle, un affare', ho detto. Ho pure scritto la brochure, cazzo. Se stanotte finisce male, la colpa è tutta—"
+
+> Emanuela: *(interrompendolo, senza alzare la voce)* "Fede. Se avessi saputo che questo posto era pieno di gente morta, sarei venuta lo stesso. Con te vado ovunque, anche in un posto orribile con le cinque stelle finte. Soprattutto lì, forse."
+
+Lui la guarda come se non si aspettasse una risposta così semplice a una colpa che si stava costruendo così complicata. Emanuela, intanto, ha già la borsa in grembo — quella infinita, quella di cui nessuno ha mai visto il fondo — e ne tira fuori, con la naturalezza di chi pesca le chiavi di casa, **la cosa più assurda e perfetta della serata.**
+
+> Emanuela: "Ecco. L'avevo presa per scherzo, in tabaccheria, prima di partire."
+
+Nella sua mano, un piccolo ferro di cavallo di plastica dorata, di quelli da portachiavi da due euro, con scritto: *"PORTA FORTUNA — Made in China".*
+
+> Federico: *(scoppiando a ridere, la prima risata vera da ore)* "Emanuela. Amore mio. Questo ci salverà la vita."
+
+> Emanuela: "Non lo so. Ma intanto ci ha fatto ridere due minuti. Stanotte, prendiamo pure quello."
+
+**(Sangue freddo +2. Flag: cuore_fe.)**`,
+    gold: 2,
+    sets: { cuore_fe: true },
+    choices: [{ text: 'Restare ancora un momento così', next: 'cuore_fe_esito' }],
+  },
+
+  cuore_fe_esito: {
+    location: 'camera',
+    caption: 'Il ferro di cavallo',
+    text: `Restano un momento in silenzio, il ferro di cavallo di plastica appoggiato sul comodino come un trofeo assurdo, e per la prima volta da quando sono arrivati al Belvedere nessuno dei due ha bisogno di dire niente di intelligente, di rassicurante, di professionale.
+
+> Emanuela: *(appuntandoglielo al collo della camicia, come una spilla)* "Tienilo addosso. Ti dà un'aria ridicola che ti serviva."
+
+> Federico: "Ridicolo e vivo è il mio nuovo obiettivo di carriera."
+
+Si baciano, brevemente, senza tragedia — solo due persone che si vogliono bene e per un minuto hanno deciso che la casa maledetta può aspettare fuori dalla porta. Poi Emanuela richiude la borsa con uno scatto secco, professionale, e torna la donna che tiene in piedi il gruppo.
+
+> Emanuela: "Ok. Basta romanticismo, dobbiamo tornare dagli altri prima che Natalino inventi una teoria assurda senza di noi."
+
+Escono mano nella mano, il ferro di cavallo che tintinna piano a ogni passo — l'unico rumore ridicolo e vivo in una casa che di rumori ridicoli non ne fa mai.
+
+**(Il momento è passato, ma resta. Nessun altro effetto: solo cuore.)**`,
+    choices: [{ text: 'Tornare dagli altri', next: 'h1' }],
+  },
+
+  cuore_nat: {
+    location: 'camera',
+    caption: 'Natalino, solo, alla finestra del Pozzo',
+    text: `Natalino torna nella sua camera — quella "singolare", quella con la finestra sul pozzo — con la scusa di andare a prendere un cambio, e invece si ferma alla finestra e ci resta.
+
+La corda del pozzo, di sotto, è tesa come sempre. Ma stasera, per la prima volta, Natalino non ha paura di parlarle.
+
+> Natalino: "Ehi. Tu. La signora del pozzo. Lo so che mi senti, la casa sente sempre tutto." *(si siede sul davanzale, le gambe fuori, la sigaretta che non fuma da anni tenuta in mano solo per il gesto)* "Volevo dirti una cosa da uomo a... a quello che sei. Tu almeno c'hai un pozzo tuo. Un posto che ti aspetta, che ti tiene il posto, che nessuno ti toglie mai. Io c'ho un bilocale in affitto a Napoli e un coinquilino che lascia sempre i piatti sporchi. Fai un po' il conto di chi sta peggio."
+
+Nessuna risposta, per un lungo momento. Poi, dal fondo del giardino, un suono piccolo: la corda che si tende una volta, poi si allenta — come una risata trattenuta.
+
+> Natalino: *(sorridendo, da solo, nel buio)* "Ecco. Vedi che ci capiamo."
+
+Due che la solitudine la conoscono davvero, per una volta, non hanno bisogno di spiegarsela a vicenda.
+
+**(Sangue freddo +2. Flag: cuore_nat.)**`,
+    gold: 2,
+    sets: { cuore_nat: true },
+    choices: [{ text: 'Restare un altro minuto alla finestra', next: 'cuore_nat_esito' }],
+  },
+
+  cuore_nat_esito: {
+    location: 'camera',
+    caption: 'La risposta del pozzo',
+    text: `Natalino sta per rientrare quando la corda, di sotto, si muove ancora — non a strappi, questa volta: **piano**, dolce, come una mano che accarezza una testa senza volerla svegliare.
+
+E poi, chiarissima, arriva una voce. Non dal pozzo: **da vicino**, come se qualcuno si fosse seduto sul davanzale accanto a lui senza far rumore.
+
+> La voce di Ada: *"...single per scelta, hai detto a Gregorio. Anche io, alla fine, l'ho scelto. O forse me l'hanno fatto scegliere. Non fa differenza, dopo un po'."* *(una pausa, quasi affettuosa)* *"Tienilo, il bilocale. Coi piatti sporchi. È più di quello che ho io."*
+
+Natalino non risponde subito. Quando lo fa, la voce gli trema solo un pochino — il minimo indispensabile per un uomo che ha fatto della battuta pronta un mestiere.
+
+> Natalino: "Se un giorno usciamo da qui vive, ti giuro che ti mando una cartolina. Con la faccia di Capri sopra, pure se sono stato solo qui."
+
+Nessuna risposta, ma la corda, scendendo verso il buio, per un attimo sembra **salutare.**
+
+**(Nessun altro effetto meccanico. Solo un pezzo di notte che resterà.)**`,
+    choices: [{ text: 'Tornare dagli altri, con gli occhi un po\' lucidi', next: 'h1' }],
+  },
+
+  /* ==================== BLOCCO 5 — IL GARAGE ====================
+     La rimessa dell'auto, motore appeso al muro come un trofeo.
+     Prova DES per recuperare pezzi senza far cadere tutto. Aggancio
+     suggerito: una scelta in b2_orto, prima del pozzo (vedi report). */
+
+  gr1: {
+    location: 'garage',
+    caption: 'La rimessa — il motore in bacheca',
+    text: `Oltre l'orto di Ada, una porta di legno tarlato che nel pomeriggio nessuno aveva notato conduce a una rimessa di pietra — fresca, ordinata, con un odore di olio motore e cera per mobili che non dovrebbero mai stare nella stessa frase.
+
+Dentro, la vostra macchina non è parcheggiata. È **smontata.** Il motore è appeso al muro come un trofeo di caccia, i pezzi separati e disposti con la precisione di un museo, ognuno su una targhetta d'ottone incisa a mano: *"Carburatore — gruppo 2024." "Testata — gruppo 2024." "Candela n°3 — gruppo 2024."*
+
+> Gaetano: *(la voce che sale di un'ottava, tra l'orrore e l'indignazione tecnica)* "Quella... quella è la MIA macchina. È il MIO motore. L'ho smontato IO, una volta, per un tagliando. So esattamente come deve stare quella guarnizione, e non sta così!"
+
+Accanto, altre due bacheche più vecchie: un motore di **Bianchina** targato "gruppo 1974" e uno di **Panda** targato "gruppo 1999", entrambi smontati con la stessa cura museale, entrambi immobili da decenni sotto un velo di polvere che il resto della casa non permette a niente.
+
+> Natalino: "Ok, ADESSO ho paura. Prima gli scheletri, va bene, ci sto. Ma un museo dell'auto tenuto da un pazzo con la passione della meccanica mi mette DAVVERO a disagio."
+
+**(Sangue freddo +1: l'assurdo, stanotte, fa quasi ridere. Flag: garage_visto.)**`,
+    gold: 1,
+    sets: { garage_visto: true },
+    choices: [{ text: 'Gaetano vuole recuperare un pezzo del SUO motore', next: 'gr2' }],
+  },
+
+  gr2: {
+    location: 'garage',
+    caption: 'Il recupero',
+    text: `Gaetano si avvicina alla bacheca del 2024 con la determinazione di un ingegnere che rivuole ciò che è suo, e con la delicatezza di chi capisce, guardando bene, che ogni pezzo è appeso a un gancio sottile, collegato al successivo con un fil di ferro quasi invisibile — un domino perfetto, pronto a crollare tutto insieme al primo errore.
+
+> Gaetano: "Se tiro il pezzo sbagliato nell'ordine sbagliato, cade TUTTO. Centinaia di componenti. Sulla pietra. Con un rumore che sveglierebbe pure lo Chef due piani più giù."
+
+*(Prova di Destrezza — CD 13: staccare la candela senza far cadere il resto della bacheca.)*`,
+    choices: [
+      { text: '🔧 Sfilarla con calma millimetrica', tag: 'Prova di Destrezza — CD 13', check: { stat: 'DES', dc: 13, success: 'gr3', fail: 'gr3_ko' } },
+    ],
+  },
+
+  gr3: {
+    location: 'garage',
+    caption: 'La candela recuperata',
+    text: `La candela esce dal suo gancio con un piccolo *clic* pulito, e nient'altro si muove: il domino resta in equilibrio, silenzioso, come se anche la bacheca fosse sollevata di non dover crollare.
+
+> Gaetano: *(la candela in mano, ancora tiepida come se il motore fosse stato spento un minuto fa, non anni)* "È tiepida. Cazzo, è TIEPIDA. Questa macchina, da qualche parte, sta ancora girando."
+
+> Federico: "Non pensarci. Metti in tasca e andiamo, prima che decida di volerla indietro."
+
+Sulla targhetta d'ottone, ancora attaccata alla candela, la scritta resta leggibile: *"Candela n°3 — gruppo 2024."* Il proprio gruppo. La propria auto. Il proprio nome, quasi, se la casa avesse deciso di scriverlo lì invece che nel registro.
+
+**(Oggetto: CANDELA DEL MOTORE. Sangue freddo +1.)**`,
+    item: 'candela_motore',
+    gold: 1,
+    choices: [{ text: 'Uscire dalla rimessa e tornare verso il pozzo', next: 'b3_pozzo' }],
+  },
+
+  gr3_ko: {
+    location: 'garage',
+    caption: 'Il crollo',
+    text: `La candela si stacca, ma il fil di ferro accanto si impiglia in un polsino, e in un secondo l'intero domino di pezzi ordinatissimi crolla dal muro con un frastuono di ottone e metallo che sembra durare un minuto intero, anche se saranno stati tre secondi.
+
+> Gaetano: *(tra i pezzi sparsi, la faccia di chi ha rovinato il proprio lavoro con le proprie mani)* "...ho ricreato il rumore esatto di un incidente. Nella rimessa. Di notte."
+
+Da fuori, lontano ma non abbastanza, un fruscio di foglie secche si muove — lento, curioso, **sveglio.** Le cesoie del Giardiniere, da qualche parte nella nebbia, si aprono con un piccolo scatto oliato.
+
+> Natalino: "Ok, direi che qualcuno ha sentito. Prendiamo il pezzo e ANDIAMO, prima che arrivi a fare la potatura anche a noi."
+
+La candela, per fortuna, è già in tasca di Gaetano — tiepida, intatta — anche in mezzo al disastro.
+
+**(Oggetto: CANDELA DEL MOTORE, ottenuta col fracasso. Flag: giardiniere_allertato. -1 Sangue freddo.)**`,
+    item: 'candela_motore',
+    gold: -1,
+    sets: { giardiniere_allertato: true },
+    choices: [{ text: 'Correre fuori dalla rimessa, verso il pozzo', next: 'b3_pozzo' }],
+  },
+
+  /* ==================== IL RIFLESSO — IL MONDO SOTTO ==================== */
+
+
+  /* ==================== INGRESSO ==================== */
+
+  w1_tuffo: {
+    location: 'piscina',
+    caption: 'La piscina, di nuovo — poco dopo mezzanotte',
+    text: `Tra un nodo e l'altro, il gruppo si ritrova per un attimo davanti alla portafinestra che dà sulla piscina — nessuno l'aveva programmato, ma i piedi ci hanno portato tutti nello stesso punto, alla stessa ora.
+
+Il riflesso, stanotte, non aspetta più: la luna rossa che nel primo bagno saliva pigra adesso è quasi allo zenit dell'acqua, enorme, immobile un istante prima di ogni battito — come un cuore che si prepara.
+
+Claudia la fissa col telefono spento in mano, senza inquadrare niente: non le serve più una prova, le serve solo guardare.
+
+> Claudia: "Se quella luna arriva al centro esatto della piscina... io un'idea la ho. E non mi piace."
+
+> Gaetano: "Nemmeno a me piace, ma è la stessa idea: la finestra si apre quando le due lune si allineano. Prima non erano allineate. Ora quasi."
+
+> Natalino: "Quindi mi state dicendo che il momento buono per fare una cazzata enorme... è ADESSO."
+
+> Emanuela: "Ragazzi. Se di là ci sono altri come noi — altri gruppi, altri venticinquenni — forse è per QUESTO che la casa non ci ha ancora presi tutti. Forse manca un pezzo, dall'altra parte."
+
+Federico guarda l'acqua, il riflesso, la luna che sale nell'ultimo tratto.
+
+> Federico: "Va bene. Ma se qualcuno dice 'tanto è solo una piscina', lo tengo IO per la caviglia mentre affonda."
+
+La luna rossa, nell'acqua, tocca il centro esatto.`,
+    choices: [
+      { text: '🏊 Tuffo di gruppo: mani intrecciate, tre, due, uno', tag: 'Prova di Costituzione — CD 12', check: { stat: 'COS', dc: 12, success: 'w2_riflesso', fail: 'w2_riflesso_ko' } },
+      { text: '🔬 Gaetano frena tutti un secondo: vuole calcolare il PUNTO esatto d\'ingresso', tag: 'Prova di Intelligenza — CD 11', check: { stat: 'INT', dc: 11, success: 'w2_riflesso', fail: 'w2_riflesso_ko' } },
+    ],
+  },
+
+  w2_riflesso: {
+    location: 'riflesso',
+    caption: 'Il tuffo — dall\'altra parte',
+    text: `L'acqua si chiude sopra le teste e non è acqua: è un momento senza consistenza, come attraversare una fotografia. Nessuno si bagna. Nessuno respira, per un secondo che dura esattamente quanto serve a far paura, e poi —
+
+— la superficie li restituisce. Stessa piscina. Stesso bordo di travertino. Stessi cinque corpi che riemergono tossendo un'aria che non hanno mai smesso di avere nei polmoni.
+
+Ma sopra, nel cielo, la luna rossa non è più un riflesso: è LÌ, piena, enorme, al centro esatto della notte, e non ce n'è un'altra bianca a fare da controprova. Le finestre del Belvedere sono tutte accese — ma di una luce fredda, bianco-azzurra, che non scalda niente, nemmeno l'idea di calore.
+
+E i lettini, in semicerchio, hanno gli accappatoi appesi. Cinque. Non sei.
+
+> Natalino: "Aspetta aspetta aspetta. Di QUA ce n'erano sei. Di LÀ..."
+
+> Claudia: "Di là ce n'erano sei perché il sesto eravamo noi. Qui il conto torna diverso. Il sesto siamo ancora noi. Solo che stavolta ci contano da questa parte."
+
+Gaetano si volta verso il Belvedere: le persiane sono tutte aperte, per la prima volta da quando sono arrivati — di qua o di là che sia. E da una finestra al primo piano, controluce, si vede una sagoma che li osserva. Non si muove. Non si nasconde nemmeno.
+
+> Federico: "Ok. Piano nuovo: usciamo dall'acqua, restiamo vivi, e qualcuno mi spiega PERCHÉ ho ancora l'accappatoio dell'altra parte addosso."
+
+**(Flag: attraversata la finestra. Sangue freddo +1.)**`,
+    sets: { riflesso_attraversato: true },
+    gold: 1,
+    choices: [{ text: 'Uscire dall\'acqua e avvicinarsi al Belvedere capovolto', next: 'w3_giardino' }],
+  },
+
+  w2_riflesso_ko: {
+    location: 'riflesso',
+    caption: 'Il tuffo — un ingresso più duro',
+    text: `Il calcolo di Gaetano — o la stretta di mano di tutti — funziona lo stesso, ma funziona MALE: a metà del tuffo, l'acqua si accorge che qualcuno, dentro, ha ancora paura, e la paura, qui, PESA.
+
+Per un istante che sembra un minuto, qualcuno resta sospeso a mezz'acqua, né di qua né di là, con i polmoni vuoti e la luna rossa che si allarga sopra la testa come una bocca. Le mani degli altri lo tirano dall'altra parte — letteralmente dall'ALTRA parte — e il Riflesso li sputa fuori tutti insieme, in un colpo, sul bordo della piscina capovolta.
+
+Chi è rimasto sospeso più a lungo ha la pelle bianca dov'era rimasta a contatto col nulla tra i due mondi, e un freddo che non è di questa notte: gli entra nelle ossa e ci resta, un ospite che non hanno invitato.
+
+> Emanuela: *(già con le mani sul polso di chi trema)* "Fermo. Fermo, respira. Questo non è il freddo della piscina."
+
+Sopra, le finestre del Belvedere — capovolto, acceso di luce bianco-azzurra — restano tutte aperte. Cinque accappatoi ai lettini, non sei.
+
+> Federico: "Porca puttana. Siamo appena entrati in una fotocopia più fredda di questa casa."
+
+**(-1 Sangue freddo. Chi ha attraversato per ultimo resta AVVELENATO dal gelo del Riflesso: serve l'Antidoto.)**`,
+    sets: { riflesso_attraversato: true },
+    gold: -1,
+    poisonRoller: true,
+    choices: [{ text: 'Uscire dall\'acqua. Il Belvedere capovolto aspetta', next: 'w3_giardino' }],
+  },
+
+  /* ==================== IL MONDO ==================== */
+
+  w3_giardino: {
+    location: 'riflesso',
+    npc: [{ key: 'cameriere', x: 0.55, y: 0.62, scale: 2.5 }],
+    caption: 'Il giardino capovolto',
+    text: `Il giardino, di qua, cammina all'incontrario: la ghiaia bianca si muove sotto i piedi in senso contrario a ogni passo, come un tapis roulant che non vuole collaborare. Le siepi sono le stesse forme di sempre, ma qui sono FINITE: il cervo ha ancora gli occhi, e stavolta li tiene chiusi, come se dormisse in piedi.
+
+Tra le siepi, un **Cameriere del Riflesso** fa il suo giro — livrea bianco-ghiaccio invece che nera, passi troppo regolari, un vassoio vuoto in mano che porta avanti e indietro come fosse sempre in servizio e mai a un tavolo vero.
+
+> Gaetano: *(sottovoce)* "Non guarda mai nella stessa direzione due volte di fila. C'è un pattern. Datemi dieci secondi e vi dico quando muoversi."
+
+> Claudia: "Abbiamo dieci secondi, Gaetà, non un semestre."
+
+Muoversi qui significa contare i suoi giri, sincronizzare i passi, e sperare che il giardino capovolto non decida di raccontare al padrone di casa quello che vede.`,
+    choices: [
+      { text: '👁 Contare i giri del cameriere e attraversare tra un passo e l\'altro', tag: 'Prova di Saggezza — CD 12', check: { stat: 'SAG', dc: 12, success: 'w4_sofia', fail: 'w3_pattuglia_combat' } },
+      { text: '🏃 Rischiare lo scatto, da un\'ombra all\'altra', tag: 'Prova di Destrezza — CD 13', check: { stat: 'DES', dc: 13, success: 'w4_sofia', fail: 'w3_pattuglia_combat' } },
+    ],
+  },
+
+  w3_pattuglia_combat: {
+    location: 'riflesso',
+    caption: 'Il cameriere si accorge di voi',
+    text: `Il piede sbaglia il tempo di un decimo di secondo — basta. Il vassoio vuoto del Cameriere si gira verso di voi con uno scatto troppo rapido per essere meccanico, e la livrea bianco-ghiaccio si gonfia come se dentro non ci fosse un corpo ma una corrente d'aria arrabbiata.
+
+> Il Cameriere: *(voce che è un sussurro moltiplicato)* "Ospiti... fuori turno. Il servizio... non è stato ordinato."
+
+Da dietro le siepi finite, un secondo cameriere si stacca dall'ombra come un abito che scende dalla grucce da solo. Il giardino capovolto smette di far muovere la ghiaia: vuole guardare.
+
+*(Sono creature del Riflesso: sale e Colpo di Phon fanno danni doppi, come dall'altra parte della casa. Attenti ai vassoi: fanno male come mazze.)*`,
+    combat: {
+      enemies: ['cameriere_riflesso', 'cameriere_riflesso'],
+      victory: 'w4_sofia',
+      defeat: 'x_celle',
+      loot: { gold: 1 },
+    },
+  },
+
+  w4_sofia: {
+    location: 'riflesso',
+    npc: ['sofia'],
+    caption: 'Sofia',
+    text: `Una voce li ferma a pochi passi dalla portafinestra della sala da pranzo capovolta — femminile, un accento che sa di Napoli anni '90, e una sicurezza che venticinque anni chiusa in un posto così non dovrebbero permettersi a nessuno, eppure.
+
+> Sofia: "Fermi. FERMI, dico. Se entrate da quella porta con quella faccia da 'siamo-vivi-e-non-lo-sappiamo-ancora', vi beccano in due minuti."
+
+Esce dall'ombra di una siepe finita: venticinque anni portati addosso, jeans a vita alta, un giubbotto sopra un top che ha smesso di essere di moda ventidue anni fa e in qualche modo è tornato di moda proprio adesso, occhiali da sole sui capelli anche di notte — per abitudine, non per bisogno.
+
+> Sofia: "Sofia. Millenovecentonovantanove, se vi interessa l'annata." *(li conta col dito, due volte, esattamente come Gregorio all'arrivo)* "Cinque. Nuovi. Vivi vivi, non vivi-però. Madonna, quanto tempo che non vedo qualcuno con la faccia che avete voi."
+
+> Natalino: "Che faccia abbiamo?"
+
+> Sofia: "Quella di chi crede ancora che si possa vincere. Bella faccia. La tenevo anch'io, nel '99."
+
+Si guarda intorno, poi torna a guardarli, e per un attimo la sicurezza scricchiola:
+
+> Sofia: "Venticinque anni che mappo questa casa capovolta a memoria. Venticinque anni che aspetto qualcuno da fuori che non sia stato ancora catalogato. Voi siete la cosa più bella che mi sia capitata da quando il Grande Fratello non esisteva ancora — e per la cronaca, di qua non esiste ANCORA, ve lo dico prima che me lo chiediate."
+
+**(Flag: Sofia incontrata. Sangue freddo +1.)**`,
+    sets: { sofia_incontrata: true },
+    gold: 1,
+    choices: [{ text: 'Seguirla: ha l\'aria di sapere esattamente dove state per andare', next: 'w5_racconto' }],
+  },
+
+  w5_racconto: {
+    location: 'riflesso_interno',
+    npc: ['sofia'],
+    caption: 'Il racconto di Sofia — l\'Inventario',
+    text: `Sofia li porta dentro per un corridoio di servizio, tenendo tutti bassi sotto le finestre — "la casa VEDE, se state dritti in piedi davanti a una finestra è come squillare un citofono" — e mentre camminano, racconta, veloce, come chi ha ripetuto la stessa storia mille volte nella propria testa e mai a nessuno.
+
+> Sofia: "Non siamo fantasmi. Vorrei tanto. I fantasmi almeno hanno FINITO qualcosa. Noi siamo — aspettate la parola giusta — OSTAGGI. Presi la notte del nostro venticinquennio, portati di qua, e da allora... fermi. Non invecchiamo. Non moriamo. Non usciamo. Io sono ancora la Sofia del 31 luglio 1999, per sempre, a meno che qualcuno non rompa l'Inventario."
+
+> Claudia: "L'Inventario."
+
+> Sofia: "Il registro di QUA. Dall'altra parte tenete un registro con i nomi degli ospiti, no? Qui è uguale, solo che non scrivono i nomi. Catalogano gli OGGETTI. 'Sofia — servizio da tè, 1999.' Io sono una voce di catalogo, gente. Come un piatto. Come un cucchiaio."
+
+Lo dice ridendo, ma è la risata di chi ha smesso di piangerci sopra da vent'anni per pura decisione strategica.
+
+> Sofia: "I camerieri pattugliano. Il Direttore governa. E la casa — ATTENZIONE, questo è importante — vede tutto quello che si muove senza prudenza. Muovetevi come se ogni finestra fosse un occhio, perché lo è."
+
+> Federico: "E il Direttore chi è?"
+
+Sofia si ferma un secondo, e per la prima volta da quando l'hanno incontrata, la battuta pronta le manca.
+
+> Sofia: "Il Direttore è quello che Gregorio sarebbe diventato, se non avesse mai avuto il coraggio di dispiacersi per niente. Non ridete con lui. Non trattate con lui senza un piano. E se vi offre qualcosa... contate le dita di chi ve lo offre. Non sono mai il numero giusto."`,
+    sets: { inventario_scoperto: true, regole_casa_note: true },
+    choices: [{ text: 'Chiedere il percorso più sicuro verso il cuore della casa', next: 'w6_1924' }],
+  },
+
+  w6_1924: {
+    location: 'riflesso_interno',
+    npc: ['sofia'],
+    caption: 'La stanza del 1924, di qua',
+    text: `Sofia li guida in una sala da ballo capovolta, illuminata da lampadari che pendono verso l'alto invece che verso il basso — la luce cola dal soffitto come acqua controcorrente — e lì, fermi in una figura di ballo che non finisce mai, ci sono **sei ragazzi del 1924.**
+
+Non sono statue. Respirano, piano, a un ritmo di un respiro ogni trenta secondi. Hanno gli occhi aperti e vitrei, fissi sul punto dove il ballo li ha sorpresi cent'anni fa: un uomo con la mano tesa verso una donna che non l'ha mai presa, un altro che ride di una battuta che nessuno finirà mai di dire.
+
+> Sofia: "Li chiamo i Ballerini. Sono qui da prima di me, di parecchio. A volte, se passi vicino, ti sussurrano una parola. Una sola. Sempre la stessa, per ognuno. La mia è... be'. Non ve la dico. È mia."
+
+> Emanuela: *(la voce che le trema, per la prima volta stanotte)* "Possiamo... svegliarli?"
+
+> Sofia: "Non stanotte. Svegliarli uno a uno richiede tempo che non abbiamo, e la casa se ne accorgerebbe prima che arriviamo a tre. Ma se strappiamo l'Inventario — TUTTO l'Inventario — si svegliano tutti insieme, di colpo, come un allarme che finalmente smette di suonare."
+
+Natalino si ferma davanti al ragazzo che ride della battuta eterna, e per un secondo, invece di una battuta sua, sceglie il silenzio — la prima volta di tutta la notte.
+
+> Natalino: "Ok. Andiamo a rompere quel cazzo di catalogo."
+
+**(Flag: visto il gruppo del 1924.)**`,
+    sets: { gruppo_1924_visto: true },
+    choices: [{ text: 'Proseguire verso il cuore della casa capovolta', next: 'w7_ronda' }],
+  },
+
+  w7_ronda: {
+    location: 'riflesso_interno',
+    caption: 'Il corridoio dei venticinquenni, di qua',
+    text: `Il corridoio di qua è identico a quello di sopra — le porte con le targhette degli anni, 1899, 1924, 1949, 1974, 1999 — ma le porte sono AL CONTRARIO: si aprono verso l'interno del muro, in stanze che dall'altra parte non esistono.
+
+Sofia si blocca con un braccio alzato, ferma tutti in un solo gesto imparato in venticinque anni.
+
+> Sofia: "Due camerieri. Fine turno, cambio guardia. È il momento più scomodo della notte per farsi vedere e il più comodo per passare — si distraggono uno con l'altro per un attimo, tipo colleghi che si passano le consegne."
+
+Il cambio di guardia dura pochi secondi: un cameriere consegna il vassoio vuoto a un altro cameriere vuoto, con un inchino identico, meccanico, ripetuto uguale da un secolo.
+
+> Sofia: "Ora o mai più."`,
+    choices: [
+      { text: '🤫 Scivolare lungo il muro, nell\'attimo del cambio di guardia', tag: 'Prova di Destrezza — CD 13', check: { stat: 'DES', dc: 13, success: 'w8_direttore', fail: 'w7_ronda_combat' } },
+      { text: '🗣 Federico prova a farsi passare per un ospite "nuovo assunto": un bluff totale', tag: 'Prova di Carisma — CD 13', check: { stat: 'CAR', dc: 13, success: 'w8_direttore', fail: 'w7_ronda_combat' } },
+    ],
+  },
+
+  w7_ronda_combat: {
+    location: 'riflesso_interno',
+    caption: 'Il cambio di guardia va storto',
+    text: `Il bluff, il passo, il timing — qualcosa si spezza a metà, e i due camerieri si voltano ENTRAMBI nello stesso istante, con la sincronia di chi non ha mai smesso di lavorare in coppia.
+
+> I Camerieri: *(insieme, la stessa frase, la stessa voce raddoppiata)* "Ospiti... non registrati. Si procede... alla catalogazione."
+
+Il vassoio vuoto del primo diventa, nelle sue mani, qualcosa con un bordo molto più affilato di un vassoio da colazione.
+
+*(Sale e Colpo di Phon fanno danni doppi. Sono in due, coordinati: non lasciate nessuno isolato.)*`,
+    combat: {
+      enemies: ['cameriere_riflesso', 'cameriere_riflesso'],
+      victory: 'w8_direttore',
+      defeat: 'x_celle',
+    },
+  },
+
+  w8_direttore: {
+    location: 'riflesso_interno',
+    npc: ['direttore'],
+    caption: 'Il Direttore',
+    text: `La porta in fondo al corridoio si apre da sola, senza corrente d'aria, esattamente come faceva quella di Gregorio dall'altra parte — e dietro, in un ufficio che sembra la reception della hall vista attraverso il gelo di un vetro, c'è un uomo.
+
+Elegantissimo. Completo di lino, come Gregorio, ma il colore non è tortora: è un grigio senza calore, il colore delle cose che non hanno mai preso il sole. Mani curatissime, unite davanti a sé. Non si alza. Sorride sempre, con la bocca sola: gli occhi restano altrove, come se il resto della faccia stesse ancora aspettando l'ordine di partecipare.
+
+> Il Direttore: "Cinque nuovi articoli non catalogati, in giro per la casa fuori orario. E con loro, la signorina Sofia — servizio da tè, 1999 — che sa perfettamente che le uscite non autorizzate si segnano sul registro." *(sposta un dito, senza fretta)* "Buonasera. Sono il Direttore. Gregorio, di là, vi accoglie con il calore. Io vi accolgo con l'ordine. È più efficiente, e con tutto il rispetto per il collega... dura più a lungo."
+
+> Gaetano: *(la voce ferma, ma le mani no)* "Lei è cosa, esattamente?"
+
+> Il Direttore: "Sono ciò che resta quando si smette di dispiacersi. Gregorio si dispiace ancora — è la sua debolezza, e la ragione per cui questa casa, di là, perde ancora ospiti. Io non mi dispiaccio da molto tempo. Funziona meglio."
+
+Si alza, con un movimento troppo fluido per essere del tutto umano, e per un istante la luce fredda della stanza gli attraversa il petto come se non ci fosse niente, dentro il completo di lino, a fermarla.
+
+> Il Direttore: "Vi lascio andare. Stanotte. È più divertente vedere cosa farete con il tempo che vi resta prima che l'Inventario decida come catalogarvi."
+
+**(Flag: il Direttore incontrato.)**`,
+    sets: { direttore_incontrato: true },
+    choices: [{ text: 'Uscire dall\'ufficio prima che cambi idea', next: 'w9_studio' }],
+  },
+
+  w9_studio: {
+    location: 'riflesso_interno',
+    npc: ['sofia'],
+    caption: 'Lo studio privato — l\'orologio',
+    text: `Sofia li porta in una stanza laterale che, dall'altra parte, corrisponde più o meno al bugigattolo dove Gregorio tiene le chiavi di scorta. Di qua, è una vetrina: pareti di vetro smerigliato, e dentro, su mensole numerate, **oggetti con targhette** — spazzole, occhiali da sole, una polaroid gemella di quella che forse avete già in tasca, un pettine, una cintura.
+
+> Sofia: *(la voce che si fa piccola, per la prima volta stanotte)* "Questa è la vetrina dei pezzi pregiati. Le cose che il Direttore tiene 'per affetto', dice lui. Il mio orologio è lì. Terzo scaffale. Fermo alle 23:58 del 31 luglio 1999 — l'ultimo minuto in cui è stato MIO."
+
+Il terzo scaffale è a un'altezza scomoda, dietro un vetro che non sembra chiuso a chiave ma sembra, in qualche modo, GUARDATO. Qualcosa, dentro l'ombra oltre la vetrina, si muove appena — o forse è solo il riflesso di uno di voi, un po' storto.
+
+> Natalino: "Sofì. Quel qualcosa nell'ombra ha la tua faccia."
+
+> Sofia: *(senza voltarsi a guardare)* "Lo so. Non guardatelo negli occhi. È un pezzo di me che è rimasto qui troppo a lungo e ha smesso di stare dalla mia parte."`,
+    choices: [
+      { text: '🕰 Muoversi piano, senza fretta, senza rumore, verso il terzo scaffale', tag: 'Prova di Saggezza — CD 13', check: { stat: 'SAG', dc: 13, success: 'w10_orologio', fail: 'w9_studio_combat' } },
+      { text: '🔧 Gaetano prova a forzare il meccanismo della vetrina con metodo', tag: 'Prova di Intelligenza — CD 13', check: { stat: 'INT', dc: 13, success: 'w10_orologio', fail: 'w9_studio_combat' } },
+    ],
+  },
+
+  w9_studio_combat: {
+    location: 'riflesso_interno',
+    caption: 'Il Doppio di Sofia',
+    text: `Il rumore — un vetro che vibra, un passo di troppo — basta. L'ombra oltre la vetrina si stacca dal vetro come una condensa che prende forma, e ha esattamente la faccia di Sofia. Stessi occhiali sui capelli. Stesso giubbotto. Ma gli occhi sono vuoti come quelli dei camerieri, e la bocca, quando si apre, non dice niente di suo:
+
+> Il Doppio: *(con la voce di Sofia, ma sfasata, come un'eco che arriva prima del suono)* "Non... si... TOCCA. L'Inventario... decide. Non... voi."
+
+> Sofia: *(la voce spezzata, ma ferma)* "Quello non sono io. Quello è quello che resta quando smetti di lottare per abitudine. Colpitelo. Per me."
+
+*(Sale e Colpo di Phon doppi. Il Doppio imita: se qualcuno cura, potrebbe puntare proprio chi cura.)*`,
+    combat: {
+      enemies: ['doppio'],
+      victory: 'w10_orologio',
+      defeat: 'x_celle',
+    },
+  },
+
+  w10_orologio: {
+    location: 'riflesso_interno',
+    npc: ['sofia'],
+    caption: 'L\'orologio ritrovato',
+    text: `Il terzo scaffale si apre — con la prudenza vincente o con il fragore della lotta appena vinta, non importa più — e l'orologio di Sofia è lì: cinturino di plastica scolorito, vetro incrinato a mezzaluna. Le lancette sono ferme sulle 23:58.
+
+Sofia lo guarda come si guarda una fotografia di sé bambini: con tenerezza e un imbarazzo che non c'entra niente con la vergogna.
+
+> Sofia: "Costava dodicimila lire. L'avevo comprato PROPRIO quella settimana, per il viaggio. Mi sembrava il colmo del lusso." *(ride, una risata vera, la prima)* "Venticinque anni, e sono ancora le 23:58 di quella sera. Due minuti prima di mezzanotte. Due minuti prima che tutto questo cominciasse."
+
+Lo tiene in mano come si tiene una decisione che non si è ancora presa. Il gruppo si guarda: non serve dirselo, qualcuno dovrà scegliere cosa farne, e non c'è molto tempo per pensarci.
+
+**(Ottenuto: OROLOGIO DI SOFIA.)**`,
+    item: 'orologio_sofia',
+    choices: [
+      { text: '💗 Restituirlo a Sofia, subito, senza aspettare l\'alba di nessuno', next: 'w10_orologio_reso' },
+      { text: '⏳ "Non ora, Sofì: prima usciamo tutti di qui." Rimandare il momento', next: 'w11_inventario' },
+    ],
+  },
+
+  w10_orologio_reso: {
+    location: 'riflesso_interno',
+    npc: ['sofia'],
+    caption: 'L\'orologio torna a casa',
+    text: `Emanuela fa un passo avanti e prende delicatamente il polso di Sofia.
+
+> Emanuela: "Sofì. Posso?"
+
+Il cinturino di plastica si allaccia intorno al polso con un click piccolissimo — e per un decimo di secondo, nell'aria della stanza capovolta, si sente un TIC. Un solo tic. Il primo movimento di un orologio fermo da venticinque anni.
+
+Sofia chiude gli occhi, e quando li riapre sono più vecchi di un secondo. Solo di un secondo. Ma è un secondo che le appartiene di nuovo, e non alla casa.
+
+> Sofia: *(la voce che trema, per la prima volta senza sarcasmo a proteggerla)* "Non... non pensavo che ci sarebbe importato a qualcuno. Venticinque anni e nessuno che si fosse mai chiesto che ORA fosse, per me."
+
+> Natalino: "Amore, ti sei fermata a un venerdì sera di fine estate col vetro rotto e la battuta pronta. Ci importava DA SUBITO."
+
+Sofia si asciuga gli occhi con il dorso della mano, veloce, come chi non vuole che si veda, e poi torna a essere la Sofia di prima — solo un po' più leggera.
+
+> Sofia: "Ok. Basta piagnucolare. C'è un catalogo da rompere."
+
+**(Flag: l'orologio restituito. Sangue freddo +2.)**`,
+    sets: { orologio_reso: true },
+    removeItem: 'orologio_sofia',
+    gold: 2,
+    choices: [{ text: 'Verso il cuore della casa: la Sala dell\'Inventario', next: 'w11_inventario' }],
+  },
+
+  /* ==================== LA QUEST — L'INVENTARIO ==================== */
+
+  w11_inventario: {
+    location: 'riflesso_interno',
+    npc: ['sofia', 'direttore'],
+    caption: 'La Sala dell\'Inventario',
+    text: `Sofia li guida per l'ultimo tratto con la sicurezza di chi lo ha percorso mille volte nella propria testa e mai una nella realtà, e la porta in fondo — doppia, di legno scuro, con una maniglia a forma di penna d'oca — si apre su una sala che non ha equivalente dall'altra parte della casa.
+
+Scaffali fino al soffitto. Migliaia di **schede**, numerate, ognuna con un piccolo oggetto appoggiato sopra come un fermacarte: uno specchietto da borsetta, un paio di occhiali, una spazzola, un accendino senza gas. Sotto ogni oggetto, la scheda dice cosa — non CHI — è: *"Sofia — servizio da tè, 1999." "Margherita — ninnolo da comò, 1924." "Ernesto — posacenere, 1949."*
+
+Al centro, su un leggio, il registro madre: **l'Inventario.** Aperto. E davanti, ad aspettarli come se li avesse invitati a cena, c'è il Direttore.
+
+> Il Direttore: "Siete arrivati fin qui. Complimenti sinceri — e i miei complimenti, di questi tempi, sono la cosa più rara della casa." *(chiude piano l'Inventario, senza fretta)* "Vi propongo un affare da gentiluomini. Un pezzo nuovo, di buona qualità, catalogato con tutti gli onori — al posto di TUTTI i pezzi vecchi qui dentro. Uno di voi resta. Gli altri quattro, con la signorina Sofia, escono all'alba, liberi, con la mia firma di garanzia."
+
+Il silenzio che segue è quello vero, quello che nessuna battuta di Natalino riesce a rompere per una volta.
+
+> Sofia: *(sottovoce, urgentissima)* "NON. Contate le dita, ve l'ho detto. Contate le dita di chi offre."
+
+Il Direttore stende le mani, sul leggio, come per mostrare che sono pulite. Sono dieci. Esattamente dieci. E questo, in qualche modo, è la cosa più inquietante che abbiano visto stanotte.`,
+    choices: [
+      { text: '🖋 Accettare: qualcuno del gruppo si offre davvero, per salvare tutti gli altri', next: 'w12_tradimento' },
+      { text: '🕯 Fermarsi: "La decisione tocca a Sofia. È la sua casa da venticinque anni."', next: 'w12_sofia' },
+      { text: '⚔ Rifiutare in blocco: "Nessuno resta. Si combatte."', next: 'w14_direttore_boss' },
+    ],
+  },
+
+  w12_tradimento: {
+    location: 'riflesso_interno',
+    npc: ['direttore'],
+    caption: 'Il patto tradito',
+    text: `Il volontario fa un passo avanti — non importa chi, in questo momento è tutti e cinque insieme, perché nessuno lascia che sia solo — e il Direttore annuisce, quasi commosso, ed estrae dal taschino una penna che assomiglia esattamente troppo alla stilografica di Gregorio.
+
+> Il Direttore: "Ammirevole. Genuinamente." *(intinge la penna in un calamaio che non c'era un secondo fa)* "Peccato che io non abbia mai detto CHE COSA avrei catalogato. Voi avete offerto un pezzo. Io prendo... l'intero SET."
+
+Il pavimento della sala si chiude come una trappola per topi elegantissima: le porte scompaiono, gli scaffali scivolano a incastrarsi, e l'Inventario, sul leggio, comincia a scrivere DA SOLO, velocissimo, cinque righe che nessuno ha dettato.
+
+> Sofia: "VE L'AVEVO DETTO. Le dita. Erano DIECI, ma non ha detto quante MANI—"
+
+Il Direttore si toglie, con un gesto elegantissimo, la giacca — e sotto non c'è una camicia: c'è lo stesso buio compresso della Fame, dall'altra parte della casa, solo più ORDINATO, più freddo, catalogato pure lui.
+
+*(È una creatura del Riflesso: sale e phon fanno danni doppi. È un boss vero: tenete le cure per dopo.)*`,
+    sets: { tentato_sacrificio: true },
+    combat: {
+      enemies: ['direttore', 'cameriere_riflesso'],
+      victory: 'w15_vittoria',
+      defeat: 'x_celle',
+      loot: { gold: 2 },
+    },
+  },
+
+  w12_sofia: {
+    location: 'riflesso_interno',
+    npc: ['sofia', 'direttore'],
+    caption: 'L\'offerta di Sofia',
+    text: `Sofia fa un passo avanti prima che qualcuno del gruppo possa anche solo aprire la bocca, e si mette esattamente al centro, tra loro e il Direttore, come chi ha già fatto questo calcolo mille volte in venticinque anni di notti identiche.
+
+> Sofia: "Resto io."
+
+> Emanuela: "Sofia, NO—"
+
+> Sofia: "Fatemi FINIRE. Resto io, perché sono già catalogata, perché conosco questa casa meglio di chiunque altro l'abbia mai conosciuta, e perché — ditemi che ho torto — voi cinque avete ancora una vita intera di là che io non ho più da venticinque anni. Non è eroismo. È matematica. Sono la scelta più economica per tutti."
+
+Il Direttore, per la prima volta, sembra genuinamente interessato — non alla vittoria, ma alla PROPOSTA.
+
+> Il Direttore: "Un pezzo già catalogato, offerto volontariamente, in cambio della liberazione di tutti gli altri. È... elegante. Accetto immediatamente, e per una volta senza trucchi: la signorina resta, tutti gli altri sono liberi all'alba."
+
+Sofia si volta verso il gruppo, e per un momento — solo un momento — non ha più venticinque anni di sarcasmo addosso: ne ha solo venticinque, punto, di età vera, con tutta la paura che si porta dietro.
+
+> Sofia: "È casa mia, ormai. Che cazzo di casa, lo so. Ma casa. Fatemi questo regalo: fatemi scegliere IO, per una volta, cosa mi succede."`,
+    sets: { sofia_si_offre: true },
+    choices: [
+      { text: '🤝 Rispettare la sua scelta: "Sofia, se è questo che vuoi... grazie."', next: 'w16_amaro' },
+      { text: '⚔ Rifiutare: "No. Nessuno resta. Combattiamo TUTTI insieme, e usciamo TUTTI insieme."', next: 'w14_direttore_boss' },
+      { text: '⏰ "Sofì. Il tuo tempo è ripartito. Non devi restare per nessuno, nemmeno per noi."', requires: { flag: 'orologio_reso' }, sets: { sorpresa: true }, next: 'w14_direttore_boss' },
+    ],
+  },
+
+  w14_direttore_boss: {
+    location: 'riflesso_interno',
+    npc: ['direttore', 'sofia'],
+    caption: 'Lo scontro con il Direttore',
+    text: `Non c'è più spazio per trattative, e in un certo senso è un sollievo: dopo una notte intera a misurare ogni parola, finalmente si può smettere di scegliere quella giusta.
+
+Il Direttore posa la penna sul leggio con la cura di chi mette in ordine la scrivania prima di licenziare qualcuno.
+
+> Il Direttore: "Peccato. Avrei preferito l'ordine al disordine. Ma va bene lo stesso: anche il disordine, alla fine, si CATALOGA."
+
+Si toglie la giacca. Sotto, il buio compresso che ricorda la Fame dall'altra parte della casa — ma più freddo, più ordinato, senza un briciolo della fame disperata di Gregorio: questo è un mostro che LAVORA, non che soffre.
+
+Sofia si mette in fila con voi, i pugni chiusi, il vecchio orologio da dodicimila lire — fermo o ripartito, non conta più — che le batte sul polso come un timer.
+
+> Sofia: "Venticinque anni che aspettavo questa rissa. Colpitelo nel catalogo."
+
+*(È una creatura del Riflesso: sale e Colpo di Phon fanno danni doppi. Attenti al Timbro: intrappola chi colpisce di più.)*`,
+    combat: {
+      enemies: ['direttore', 'cameriere_riflesso'],
+      victory: 'w15_vittoria',
+      defeat: 'x_celle',
+      loot: { gold: 2 },
+    },
+  },
+
+  w15_vittoria: {
+    location: 'riflesso_interno',
+    caption: 'L\'Inventario si strappa',
+    text: `Il Direttore cade in ginocchio davanti al proprio leggio con un rumore di carta che si accartoccia — non di corpo che cede: di PAGINA. E mentre crolla, l'Inventario si apre da solo, tutte le pagine insieme, e comincia a **sfogliarsi all'incontrario**, velocissimo, come un film riavvolto.
+
+> Il Direttore: *(una voce sempre più sottile, sempre più simile a carta che si liscia)* "Non potete... l'ordine è... l'unica cosa che..."
+
+Qualcuno — non importa chi, in questo momento è di nuovo tutti e cinque insieme, più Sofia — afferra l'Inventario a due mani e comincia a **strapparne le pagine.** Una. Poi un'altra. Poi tutte, a manciate, mentre la casa capovolta intorno a loro URLA — un urlo di travi e di intonaco, di lampadari che cadono verso l'alto, di finestre che si aprono e si chiudono come denti.
+
+Ogni pagina strappata vola verso l'alto e, a mezz'aria, **prende fuoco senza fiamma**, e nel punto dove brucia, da qualche parte nella casa, una porta con una targhetta d'anno si spalanca.
+
+> Sofia: *(ridendo e piangendo nello stesso respiro)* "Stanno svegliandosi. Li SENTITE? Si stanno svegliando TUTTI!"
+
+Quando l'ultima pagina si strappa, il Direttore non c'è più: resta solo il completo di lino grigio, vuoto, piegato su una sedia con la cura ossessiva di chi lo ha sempre stirato da solo.
+
+**(Ottenuto: l'INVENTARIO DEL RIFLESSO, ormai vuoto. Sofia è LIBERA. Sangue freddo +3.)**`,
+    sets: { direttore_sconfitto: true, ostaggi_liberati: true, sofia_libera: true },
+    item: 'inventario_riflesso',
+    gold: 3,
+    choices: [{ text: 'La casa continua a urlare: bisogna USCIRE, ora', next: 'w17_fuga' }],
+  },
+
+  w16_amaro: {
+    location: 'riflesso_interno',
+    npc: ['direttore', 'sofia'],
+    caption: 'Il prezzo pagato da Sofia',
+    text: `Il Direttore intinge di nuovo la penna, e stavolta — è la prima volta in tutta la notte che succede — la usa esattamente come ha promesso.
+
+> Il Direttore: "La signorina Sofia — servizio da tè, 1999 — CONFERMATA in catalogo, permanente, per volontà propria." *(la penna scorre con un suono che è quasi un sospiro)* "Tutti gli altri articoli: DECLASSIFICATI. Liberi. Con effetto immediato."
+
+In tutta la casa capovolta, contemporaneamente, si sente lo stesso suono: porte che si spalancano, sei voci del 1924 che finalmente smettono di ballare la stessa figura, gente che non parlava da decenni che ricomincia a farlo tutta insieme, in un brusio che sale dai piani come una marea.
+
+Il Direttore strappa, con gesto quasi cerimonioso, le pagine di TUTTI tranne una — la sua, Sofia, servizio da tè — e le porge al gruppo, come un maggiordomo che consegna la fattura.
+
+> Il Direttore: "Un accordo pulito. Ne ho pochi, di questi. Godetevelo."
+
+Sofia li abbraccia uno per uno, veloce, feroce, come chi non ha tempo per farlo con calma.
+
+> Sofia: "Andate. E se vedete Gregorio, di là, ditegli che ha ragione LUI: dispiacersi è la cosa più stupida e più giusta che esista. Ditegli che una di noi, almeno, ha scelto di restare per amore e non per fame. Fa differenza. Ditegliela, la differenza."
+
+**(Ottenuto: le PAGINE STRAPPATE dell'Inventario. Ostaggi liberati — tranne una. Sangue freddo +2, amarissimo.)**`,
+    sets: { patto_riflesso_chiuso: true, ostaggi_liberati: true, sofia_resta: true },
+    item: 'inventario_riflesso',
+    gold: 2,
+    choices: [{ text: 'Andare. Prima che la casa cambi idea su tutto il resto', next: 'w17_fuga' }],
+  },
+
+  /* ==================== USCITA ==================== */
+
+  w17_fuga: {
+    location: 'riflesso',
+    caption: 'La casa capovolta crolla su se stessa',
+    text: `Che abbiate vinto lo scontro a mani nude o strappato un compromesso amarissimo, il risultato per la casa è lo stesso: le hanno portato via dei pezzi, e una casa che si nutre di ordine, privata dell'ordine, **crolla su se stessa** come un castello di carte in una stanza dove qualcuno ha aperto la finestra.
+
+I corridoi si accorciano. Le porte con le targhette degli anni sbattono tutte insieme, in sequenza, come domino. Il cielo capovolto, fuori, comincia a girare — la luna rossa che scivola verso l'orizzonte troppo in fretta, come un orologio che qualcuno ha finalmente rimesso in moto a tutta velocità.
+
+> Sofia *(o il ricordo della sua voce, se è rimasta indietro)*: "La piscina! Correte alla piscina, è l'unica porta che questa casa non può chiudere dall'interno!"
+
+Il giardino capovolto, che all'andata camminava all'incontrario sotto i piedi, ora si muove semplicemente TROPPO, come un tappeto tirato da sotto. Bisogna correre dritti, in linea, senza guardare le siepi che si sciolgono in ombra dietro le spalle.`,
+    choices: [
+      { text: '🏃 Correre in linea retta, tenendosi per le giacche, senza voltarsi MAI', tag: 'Prova di Costituzione — CD 13', check: { stat: 'COS', dc: 13, success: 'w18_soglia', fail: 'w17_fuga_ko' } },
+    ],
+  },
+
+  w17_fuga_ko: {
+    location: 'riflesso',
+    caption: 'La casa cerca di trattenervi',
+    text: `Un piede sbaglia l'appoggio sulla ghiaia che ancora si muove all'incontrario, e per un secondo un braccio di siepe sciolta — non più forma, solo ombra liquida — si stringe intorno a una caviglia con la forza di una casa che non vuole lasciare andare l'ultimo pezzo che le resta.
+
+Le mani degli altri strappano via chi è caduto con la solita disperazione coordinata delle famiglie vere, e la siepe-ombra si scioglie in un gorgoglio frustrato, troppo lenta ormai per la casa che crolla intorno a lei.
+
+Chi è stato preso porta il freddo del Riflesso nelle ossa, l'ennesima volta stanotte.
+
+**(-1 Sangue freddo. Chi è caduto resta AVVELENATO: serve l'Antidoto, appena possibile.)**`,
+    gold: -1,
+    poisonRoller: true,
+    choices: [{ text: 'Alla piscina. ADESSO.', next: 'w18_soglia' }],
+  },
+
+  w18_soglia: {
+    location: 'riflesso',
+    caption: 'La soglia della piscina capovolta',
+    text: `La piscina, in questo angolo di mondo che sta collassando, è l'unica cosa che resta ferma: un rettangolo d'acqua immobile mentre tutto intorno crolla verso l'alto.
+
+Sopra, la luna rossa è arrivata quasi al bordo dell'orizzonte capovolto — e più scende, più sembra CONTARVI, una per una le teste, esattamente come ha sempre fatto Gregorio dalla soglia del Belvedere vero.
+
+> Gaetano: "Se quella luna finisce di contare prima che saltiamo dentro... non so cosa succede. E stavolta non voglio scoprirlo per scienza."
+
+L'acqua, da qui, non riflette più il cielo giusto né quello sbagliato: riflette semplicemente **casa** — la piscina vera, quella di sopra, che aspetta dall'altra parte come una porta tenuta aperta da qualcuno con il piede.
+
+Bisogna saltare tutti insieme, un'ultima volta, prima che il conto finisca.`,
+    choices: [{ text: '🌊 Saltare. Tutti insieme. Senza guardare la luna che conta.', next: 'w_finale' }],
+  },
+
+  w_finale: {
+    location: 'piscina',
+    caption: 'Il ritorno — la piscina vera',
+    text: `L'acqua si richiude sopra le teste una seconda volta stanotte, e stavolta è acqua vera: bagna, scalda, sa di cloro e di piscina vera, la più bella sensazione della notte.
+
+Risalgono in cinque — sei, contando Sofia se ha scelto di venire con loro, o cinque e un vuoto pieno di gratitudine se ha scelto di restare — sul bordo della piscina VERA, quella di sopra, quella con la luna bianca sottile e normale nel cielo giusto.
+
+Il Belvedere, qui, è ancora quello di sempre: caldo, elegante, in attesa. Ma qualcosa, nell'aria, è diverso — più leggero, come una casa che ha appena smesso di reggere un peso enorme senza saperlo dire.
+
+L'**Inventario del Riflesso** — vuoto o quasi, a seconda di quanto sia costato stanotte — pesa in mano come un libro qualunque, adesso. Nessuna pagina sussurra più.
+
+Da qualche parte nella villa, una porta verde in fondo a un corridoio aspetta ancora, e ci sono ancora ore prima dell'alba. Ma qualcosa, stanotte, è cambiato per sempre: **il Riflesso, sotto la piscina, ha un padrone di meno.**`,
+    sets: { riflesso_fatto: true, ostaggi_liberati: true },
+    choices: [{ text: 'Tornare al corridoio delle tre porte: la notte, di qua, non è ancora finita', next: 'h1' }],
   },
 
   /* ==================== L'ALBA — IL BANCHETTO ==================== */
@@ -1949,13 +3115,14 @@ const CAMPAIGN_START = 'a0';
 /* Mappa del mondo: luoghi del Belvedere (per il canvas della mappa) */
 const WORLD_MAP = [
   { key: 'tornanti', label: 'I Tornanti',      x: 0.12, y: 0.80, scenes: ['a0', 'a0_benzina', 'a1', 'a1b'] },
-  { key: 'relais',   label: 'Il Relais',       x: 0.40, y: 0.30, scenes: ['a2', 'a2_siepi', 'p4_fuga'] },
+  { key: 'relais',   label: 'Il Relais',       x: 0.40, y: 0.30, scenes: ['a2', 'a2_siepi', 'p4_fuga', 'gr1', 'gr2', 'gr3', 'gr3_ko'] },
   { key: 'hall',     label: 'La Hall',         x: 0.56, y: 0.48, scenes: ['a3', 'a3_registro', 'a3_registro_ko', 'a4_firma', 'a4_rinvio', 'a4_firma_forzata', 'p4_rientro'] },
-  { key: 'camere',   label: 'Le Camere',       x: 0.74, y: 0.32, scenes: ['a5', 'a5_pozzo', 'h1', 'h2', 'u1', 'u2_1999', 'u2_1924', 'u2_1899', 'u3_medaglione', 'u3_bambole_fight', 'u3_bambole_vinte', 'u5_specchio', 'u4_porta_vuota'] },
+  { key: 'camere',   label: 'Le Camere',       x: 0.74, y: 0.32, scenes: ['a5', 'a5_pozzo', 'h1', 'h2', 'u1', 'u2_1999', 'u2_1924', 'u2_1899', 'u3_medaglione', 'u3_bambole_fight', 'u3_bambole_vinte', 'u5_specchio', 'u4_porta_vuota', 'sf1', 'sf2', 'sf3', 'sf4', 'sf5', 'sf6', 's49_1', 's49_2', 's49_3', 's49_3_ko', 's74_1', 's74_2', 's74_3', 'cuore_gc', 'cuore_fe', 'cuore_fe_esito', 'cuore_nat', 'cuore_nat_esito'] },
   { key: 'pranzo',   label: 'Sala da Pranzo',  x: 0.46, y: 0.62, scenes: ['a6', 'a6_menu', 'a6_brindisi', 'a6_no_brindisi', 'a7', 'z1', 'z2_vino', 'z2_trattativa', 'z2_rituale', 'z3_boss', 'z3_boss_arrabbiato', 'z3_boss_indebolito', 'z4_fase2', 'z5_vittoria', 'z6_alba', 'e_alba', 'z_custode', 'e_custode', 'z_resa', 'e_ospiti', 'z_vespri', 'z_smemorati', 'e_smemorati'] },
+  { key: 'riflesso', label: 'Il Riflesso',      x: 0.10, y: 0.28, scenes: ['w1_tuffo', 'w2_riflesso', 'w2_riflesso_ko', 'w3_giardino', 'w3_pattuglia_combat', 'w4_sofia', 'w5_racconto', 'w6_1924', 'w7_ronda', 'w7_ronda_combat', 'w8_direttore', 'w9_studio', 'w9_studio_combat', 'w10_orologio', 'w10_orologio_reso', 'w11_inventario', 'w12_tradimento', 'w12_sofia', 'w14_direttore_boss', 'w15_vittoria', 'w16_amaro', 'w17_fuga', 'w17_fuga_ko', 'w18_soglia', 'w_finale'] },
   { key: 'paese',    label: 'Pietrafonda',     x: 0.16, y: 0.90, scenes: ['pp1', 'pp2', 'pp2_bar', 'pp3', 'pp4_cripta', 'pp4', 'pp6', 'pp6_ko', 'pp7'] },
   { key: 'piscina',  label: 'La Piscina',      x: 0.22, y: 0.50, scenes: ['p1', 'p1_accappatoio', 'p1_accappatoio_ko', 'p2', 'p2_esperimento', 'p2_esperimento_ko', 'p3_fuori'] },
-  { key: 'cantina',  label: 'La Cantina',      x: 0.62, y: 0.78, scenes: ['k1', 'k2_sofia', 'k2_sofia_ko', 'k3', 'k4_scambio', 'k4_chef_fight', 'k4_furto', 'k4_furto_ko', 'k5_dopo_chef', 'x_celle'] },
+  { key: 'cantina',  label: 'La Cantina',      x: 0.62, y: 0.78, scenes: ['k1', 'k2_sofia', 'k2_sofia_ko', 'k3', 'k4_scambio', 'k4_chef_fight', 'k4_furto', 'k4_furto_ko', 'k5_dopo_chef', 'x_celle', 'os1', 'os2', 'os3', 'os4', 'os5', 'os6'] },
   { key: 'pozzo',    label: 'Il Pozzo',        x: 0.86, y: 0.66, scenes: ['b1', 'b2_giardiniere_fight', 'b2_orto', 'b3_pozzo', 'b4_medaglione', 'b4_vino', 'b4_parole', 'b4_ira', 'b4_calata', 'b4_calata_ko'] },
 ];
 

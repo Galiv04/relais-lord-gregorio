@@ -1027,15 +1027,9 @@ if (allEndings.size < 4) {
 }
 
 /* ==================== VERIFICHE DIRETTE: VELENO, MALUS -2, ANTIDOTO, MOKA ====================
-   Nota importante (vedi report finale): G.lastRoller — da cui dipendono sia `poisonRoller`
-   che `captureRoller` in engine.js (gotoScene) — non viene MAI assegnato da nessuna parte
-   nel codice di gioco (grep su js/*.js non trova alcuna assegnazione). Di conseguenza,
-   scene come p2_esperimento_ko, b4_ira, b4_calata_ko E la nuova pp6_ko — che narrativamente
-   "avvelenano chi ha tirato" — non impostano MAI h.veleno=true nella pratica: la condizione
-   `G.lastRoller != null` in gotoScene è sempre falsa. Qui sotto verifichiamo perciò il
-   MECCANISMO del veleno/malus/antidoto forzando lo stato direttamente (bypassando il
-   trigger narrativo rotto), per assicurarci che — SE mai venisse impostato correttamente —
-   funzionerebbe. Il bug del trigger è riportato separatamente, non viene "corretto" qui. */
+   Nota storica: il bug "G.lastRoller mai assegnato" è stato CORRETTO in engine.js
+   (pickHeroForCheck ora registra chi tira prima del gotoScene). Le verifiche dirette
+   qui sotto restano: controllano il meccanismo del malus e dell'antidoto in isolamento. */
 
 section('Verifiche dirette: malus -2 da veleno e cura con l\'Antidoto');
 
@@ -1047,7 +1041,7 @@ function findHeroButton(box, heroName) {
   // baseline: Claudia (SAG 4 + passiva Scroll Infinito +2 = +6) SENZA veleno
   const gameA = buildGame(31337);
   gameA.act(() => gameA.api.Engine.newGame([{ heroId: 'claudia', player: '' }, { heroId: 'federico', player: '' }]));
-  gameA.act(() => matchButton(buttons(gameA.doc.getElementById('choices')), 'Siamo arrivati').onclick());
+  gameA.act(() => gameA.api.Engine.gotoScene('a2'));
   gameA.act(() => matchButton(buttons(gameA.doc.getElementById('choices')), 'occhiata alle siepi').onclick());
   const boxA = gameA.doc.getElementById('modal-generic-content');
   const btnA = findHeroButton(boxA, 'Claudia');
@@ -1060,7 +1054,7 @@ function findHeroButton(box, heroName) {
   const gameB = buildGame(31337);
   gameB.act(() => gameB.api.Engine.newGame([{ heroId: 'claudia', player: '' }, { heroId: 'federico', player: '' }]));
   gameB.act(() => { gameB.getG().party[0].veleno = true; });
-  gameB.act(() => matchButton(buttons(gameB.doc.getElementById('choices')), 'Siamo arrivati').onclick());
+  gameB.act(() => gameB.api.Engine.gotoScene('a2'));
   gameB.act(() => matchButton(buttons(gameB.doc.getElementById('choices')), 'occhiata alle siepi').onclick());
   const boxB = gameB.doc.getElementById('modal-generic-content');
   const btnB = findHeroButton(boxB, 'Claudia');
