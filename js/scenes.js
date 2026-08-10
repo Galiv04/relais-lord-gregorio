@@ -387,7 +387,7 @@ const Scenes = (() => {
       const r = rng(7);
       skyGradient(ctx, W, H, '#1a0f1d', '#4a2030', 10);
       stars(ctx, W, H, r, 26);
-      moon(ctx, W * 0.84, 60, 22, '#c8b8c0', false);
+      moon(ctx, W * 0.84, 60, 22, '#c8b8c0', true);
       // profilo dei monti su più piani
       hills(ctx, W, H * 0.44, 70, '#1d1218', r, 40);
       hills(ctx, W, H * 0.62, 90, '#150d12', r, 34);
@@ -475,7 +475,7 @@ const Scenes = (() => {
       const r = rng(11);
       skyGradient(ctx, W, H, '#120a12', '#331522', 10);
       stars(ctx, W, H, r, 34);
-      moon(ctx, W * 0.10, 58, 24, '#c8b8c0', false);
+      moon(ctx, W * 0.10, 58, 24, '#c8b8c0', true);
       const g = H - 70;
       hills(ctx, W, g - 40, 46, '#150d12', r, 34);
       // la villa gemella color ocra, più indietro a sinistra
@@ -740,7 +740,7 @@ const Scenes = (() => {
       ctx.fillStyle = 'rgba(138,36,50,.10)'; ctx.fillRect(px + pw * 0.44, py + 8, pw * 0.38, ph - 16);
       ctx.fillStyle = 'rgba(138,36,50,.14)'; ctx.fillRect(px + pw * 0.52, py + 8, pw * 0.22, ph - 16);
       const moonY = py + ph * (0.8 - eclipsePhase * 0.55);
-      moon(ctx, px + pw * 0.62, moonY, 22, '#8a2432', false);
+      moon(ctx, px + pw * 0.62, moonY, 22, '#8a2432', true);
       ctx.fillStyle = 'rgba(170,50,64,.5)';
       for (let i = 0; i < 6; i++) ctx.fillRect(px + pw * 0.54 + r() * pw * 0.18, py + 12 + r() * (ph - 24), 10 + r() * 14, 3);
       // costellazioni sbagliate, fitte, nell'acqua
