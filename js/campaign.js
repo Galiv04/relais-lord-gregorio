@@ -3455,6 +3455,33 @@ La leggete insieme, ogni anno, tutti e cinque. E ogni anno, per un momento che n
 /* Scena iniziale della campagna */
 const CAMPAIGN_START = 'a0';
 
+
+/* Il Diario della Notte: le conoscenze acquisite, in chiaro, per chi gioca 4-6 ore
+   e non deve ricordare tutto a memoria. Ordine = ordine di visualizzazione. */
+const DIARY_FLAGS = [
+  ['firma_rinviata',        'Federico ha RINVIATO la firma: chi non ha firmato può ancora varcare il cancello verso Pietrafonda.'],
+  ['garage_visto',          'Nella rimessa: la vostra auto è smontata in bacheca, pezzo per pezzo. E la candela era ancora tiepida.'],
+  ['giardiniere_allertato', 'Il Giardiniere sa che girate di notte: le cesoie, da qualche parte nella nebbia, tengono il conto.'],
+  ['strada_che_torna',      'Le strade TORNANO: i ventisei tornanti sono un anello. L\'uscita non è fuori — è nel centro. La casa.'],
+  ['storia_ada',            'Conoscete la storia di Gregorio e di Ada: la ciocca bianca, il patto, i centoventicinque anni.'],
+  ['medaglione',            'Il MEDAGLIONE DI ADA è vostro: sei ciocche intrecciate. Al pozzo vale una vita.'],
+  ['bambole_addormentate',  'Le signorine del 1924 DORMONO, grate alla luce di mamma Ada. Un valzer fischiato può chiamarle, se servisse.'],
+  ['chef_amico',            'Lo Chef vi considera OSPITI: ai signori del \'74 non si dice di no. E gli ospiti non si impiattano.'],
+  ['sceso_ossario',         'Siete scesi nell\'ossario dietro la cella frigorifera: i bagagli mai ritirati, le tacche sul muro.'],
+  ['segreto_contabile',     'Il Contabile vi ha confidato il suo segreto: anche la casa tiene una contabilità. E i conti non tornano.'],
+  ['pista_paese',           'Pietrafonda vi conosce: Don Michele, il bar del 1999, la cripta dei custodi.'],
+  ['visto_occhio',          'Dal telescopio della soffitta l\'avete visto: c\'è un OCCHIO nella piscina. Il riflesso guarda.'],
+  ['un_nodo_sciolto',       'Almeno un nodo della casa è SCIOLTO: quando sarete pronti, ci si può barricare e aspettare il Banchetto.'],
+  ['rituale_noto',          'Conoscete il RITUALE: sale sulla firma, acqua di Ada sul registro, e restituire il nome.'],
+  ['orologio_reso',         'L\'orologio di Sofia è tornato al suo polso: il suo tempo, dopo venticinque anni, è ripartito.'],
+  ['riflesso_fatto',        'Il Riflesso sotto la piscina ha un padrone di meno: gli ospiti trattenuti sono liberi.'],
+  ['ultimo_biglietto',      'Natalino conserva l\'ULTIMO Gratta e Vinci: "lo gratto quando usciamo, con l\'alba in faccia". È una promessa.'],
+  ['biglietto_strappato',   'Il quinto biglietto aveva vinto "una notte, ospite della casa, per sempre". Natalino l\'ha strappato: RITENTA.'],
+  ['casa_rispetta',         'Avete denunciato la trappola in faccia a Gregorio, e il suo sorriso è scivolato: la casa vi RISPETTA.'],
+  ['cucina_in_sciopero',    'La cucina SCIOPERA per voi: la Fame, stanotte, serve da sola.'],
+  ['cerchio_di_porcellana', 'Trentadue signorine di porcellana fanno cerchio intorno a voi. La casa, davanti a loro, si vergogna.'],
+];
+
 /* Mappa del mondo: luoghi del Belvedere (per il canvas della mappa) */
 const WORLD_MAP = [
   { key: 'tornanti', label: 'I Tornanti',      x: 0.12, y: 0.80, scenes: ['a0', 'a0_benzina', 'a1', 'a1b', 'ft1', 'ft1_inseguiti', 'ft_cesoie', 'ft2_capito', 'ft2_notte'] },

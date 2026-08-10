@@ -800,9 +800,17 @@ const Engine = (() => {
     const box = $('modal-generic-content');
     const beats = (G.history || []).map((c, i) => `<div class="ability-box" style="border-left-color:var(--gold)"><div class="ability-desc">${i + 1}. ${c}</div></div>`).join('') ||
       '<p style="color:var(--text-dim)">Il diario è ancora bianco. Le grandi storie iniziano così.</p>';
+    let sapete = '';
+    if (typeof DIARY_FLAGS !== 'undefined') {
+      const note = DIARY_FLAGS.filter(([f]) => G.flags && G.flags[f])
+        .map(([, t]) => `<div class="ability-box" style="border-left-color:var(--purple)"><div class="ability-desc">🕯 ${t}</div></div>`).join('');
+      sapete = `<h2 style="margin-top:16px">🕯 Cose che la notte vi ha insegnato</h2>
+        ${note || '<p style="color:var(--text-dim)">Ancora niente. Ma la notte è lunga, e il Belvedere insegna volentieri.</p>'}`;
+    }
     box.innerHTML = `<h2>📔 Diario di Viaggio</h2>
       <p style="color:var(--text-dim);margin-bottom:10px">Le tappe della vostra impresa, in ordine:</p>
       ${beats}
+      ${sapete}
       <button class="btn" style="margin-top:12px" onclick="Engine.showMenu()">↩ Menu</button>`;
   }
 

@@ -1379,6 +1379,23 @@ function findHeroButton(box, heroName) {
   return buttons(box).find(b => b.innerHTML.startsWith(heroName));
 }
 
+
+(function testDiarioDellaNotte() {
+  section('Verifica diretta: il Diario della Notte elenca le conoscenze acquisite');
+  const game = buildGame(4242);
+  game.act(() => game.api.Engine.newGame([{ heroId: 'gaetano', player: '' }, { heroId: 'claudia', player: '' }]));
+  const G = game.getG();
+  G.flags.strada_che_torna = true; G.flags.chef_amico = true; G.flags.rituale_noto = true;
+  game.act(() => game.api.Engine.showDiary());
+  const html = game.doc.getElementById('modal-generic-content').innerHTML;
+  if (!/Cose che la notte vi ha insegnato/.test(html)) fail('testDiarioDellaNotte: sezione delle conoscenze assente dal diario');
+  if (!/tornanti sono un anello/.test(html)) fail('testDiarioDellaNotte: la voce strada_che_torna non compare');
+  if (!/ospiti non si impiattano/.test(html)) fail('testDiarioDellaNotte: la voce chef_amico non compare');
+  if (!/sale sulla firma/.test(html)) fail('testDiarioDellaNotte: la voce rituale_noto non compare');
+  if (/valzer fischiato/.test(html)) fail('testDiarioDellaNotte: compare una voce per un flag NON impostato (bambole_addormentate)');
+  console.log('  ✅ Il Diario della Notte mostra solo le conoscenze davvero acquisite (3 voci attese, flag spenti esclusi)');
+})();
+
 (function testVelenoMalus() {
   // baseline: Claudia (SAG 4 + passiva Scroll Infinito +2 = +6) SENZA veleno
   const gameA = buildGame(31337);
