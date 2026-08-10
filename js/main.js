@@ -309,7 +309,7 @@ const Main = (() => {
 
   function updateSetupBar() {
     const count = Object.values(selection).filter(s => s.selected).length;
-    $('setup-count').textContent = `Eroi selezionati: ${count} / 6` +
+    $('setup-count').textContent = `Eroi selezionati: ${count} / ${HEROES.length}` +
       (count === 0 ? ' (minimo 1)' : count === 1 ? ' — 🌟 Eroe Solitario!' : '');
     $('btn-start-adventure').disabled = count < 1;
   }
