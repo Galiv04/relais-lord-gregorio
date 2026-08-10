@@ -879,6 +879,7 @@ const Engine = (() => {
           Sopravvissuti: ${G.party.map(h => h.name.split(' ')[0]).join(', ')}<br>
           Scontri vinti: ${G.stats.combats} · Prove superate: ${G.stats.checksPassed} · Prove fallite: ${G.stats.checksFailed} (le più memorabili)<br>
           Sangue Freddo finale: 🕯 ${G.gold} · Durata: circa ${mins} minuti<br>
+          Esplorazione del Belvedere: ${Math.round(Object.keys(G.enteredScenes || {}).length / Object.keys(CAMPAIGN).length * 100)}% (${Object.keys(G.enteredScenes || {}).length} luoghi su ${Object.keys(CAMPAIGN).length})<br>
           Nodi sciolti: ${['nodo_cantina','nodo_piano','nodo_pozzo'].filter(n => G.flags[n]).length}/3 ${G.flags.gregorio_umano ? '· 🍷 Gregorio è tornato umano' : ''} ${G.flags.ada_alleata ? '· 💍 Ada è vostra alleata' : ''}
         </div>
       </div>`;

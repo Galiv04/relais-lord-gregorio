@@ -997,7 +997,7 @@ const Scenes = (() => {
       const floorY = H - 50;
       blocks(ctx, 0, floorY, W, H - floorY, '#100a0e', 14, r, 0.16);
       // le tacche del 1899: pareti INTERE di conti a gruppi di cinque
-      ctx.fillStyle = '#2e2426';
+      ctx.fillStyle = '#6e6258';
       for (let row = 0; row < 8; row++) for (let i = 0; i < 30; i++) {
         const x = 20 + i * ((W - 40) / 30), y = 24 + row * ((floorY - 60) / 8);
         ctx.fillRect(x, y, 2, 12);
@@ -1013,9 +1013,11 @@ const Scenes = (() => {
       // il tavolo del Contabile: lume verde, libro mastro, pile di monete
       blocks(ctx, W * 0.38, floorY - 60, W * 0.24, 14, '#3a2c20', 8, r, 0.1);
       ctx.fillStyle = '#2a1d14'; ctx.fillRect(W * 0.40, floorY - 46, 10, 46); ctx.fillRect(W * 0.58, floorY - 46, 10, 46);
-      glow(ctx, W * 0.42 + 6, floorY - 74, 22, 18, '95,224,138');
+      glow(ctx, W * 0.42 + 6, floorY - 74, 60, 46, '95,224,138');
       ctx.fillStyle = '#3d5a50'; ctx.fillRect(W * 0.42, floorY - 76, 12, 16);
-      ctx.fillStyle = '#e8e0d0'; ctx.fillRect(W * 0.47, floorY - 68, 26, 9);
+      ctx.fillStyle = '#8ae0a8'; ctx.fillRect(W * 0.425, floorY - 80, 9, 6);
+      ctx.fillStyle = '#e8e0d0'; ctx.fillRect(W * 0.465, floorY - 70, 30, 11);
+      ctx.fillStyle = '#8a1a2a'; ctx.fillRect(W * 0.478, floorY - 70, 3, 11);
       ctx.fillStyle = '#c8a032';
       for (let i = 0; i < 4; i++) ctx.fillRect(W * 0.55 + i * 7, floorY - 66 - (i % 2) * 3, 5, 6);
     },
@@ -1025,16 +1027,14 @@ const Scenes = (() => {
       blocks(ctx, 0, 0, W, H, '#241a14', 16, r, 0.16);
       const floorY = H - 58;
       blocks(ctx, 0, floorY, W, H - floorY, '#1d140e', 12, r, 0.14);
-      // le falde del tetto: travi a vista che convergono
+      // le falde del tetto: due spioventi di travi a vista
       ctx.fillStyle = '#3a2a1d';
-      for (let i = 0; i < 7; i++) {
-        const t = i / 6;
-        ctx.save();
-        ctx.translate(W * 0.5, 10);
-        ctx.rotate(-0.9 + t * 1.8);
-        ctx.fillRect(-6, 0, 12, H * 0.7);
-        ctx.restore();
+      for (let i = 0; i < 5; i++) {
+        const bx = i * W * 0.115;
+        ctx.save(); ctx.translate(bx, 0); ctx.rotate(0.5); ctx.fillRect(0, -20, 11, H * 0.62); ctx.restore();
+        ctx.save(); ctx.translate(W - bx, 0); ctx.rotate(-0.5); ctx.fillRect(-11, -20, 11, H * 0.62); ctx.restore();
       }
+      ctx.fillStyle = '#2e2115'; ctx.fillRect(0, 8, W, 10); // trave di colmo
       // l'abbaino con la luna
       ctx.fillStyle = '#3a2620'; ctx.fillRect(W * 0.44, 26, 110, 82);
       ctx.fillStyle = '#100a14'; ctx.fillRect(W * 0.45, 34, 92, 66);
@@ -1053,11 +1053,14 @@ const Scenes = (() => {
         blocks(ctx, W * bx, floorY - bh, bw, bh, '#4a3826', 8, r, 0.14);
         ctx.fillStyle = '#2e2115'; ctx.fillRect(W * bx, floorY - bh + 6, bw, 4);
       }
-      // l'abito da sposa appeso, spettrale nel buio
-      ctx.fillStyle = '#8a8478'; ctx.fillRect(W * 0.12, 40, 3, 20);
+      // l'abito da sposa di Ada, appeso a una trave: bianco nel buio, quasi una figura
+      glow(ctx, W * 0.135, H * 0.4, 50, 70, '232,228,220');
+      ctx.fillStyle = '#8a8478'; ctx.fillRect(W * 0.132, 36, 4, 18);
+      ctx.fillStyle = '#c8c2b4'; ctx.fillRect(W * 0.118, 52, 34, 6);  // gruccia/spalle
       ctx.fillStyle = '#e8e4dc';
-      ctx.fillRect(W * 0.095, 60, 40, 14);
-      for (let i = 0; i < 5; i++) ctx.fillRect(W * 0.10 + i * 2, 74, 34 - i * 3, 12);
+      ctx.fillRect(W * 0.122, 58, 26, 34);                            // corpetto
+      for (let i = 0; i < 7; i++) ctx.fillRect(W * 0.114 - i * 2, 92 + i * 9, 42 + i * 4, 9); // gonna che si allarga
+      ctx.fillStyle = '#c8c2b4'; ctx.fillRect(W * 0.128, 66, 3, 18); ctx.fillRect(W * 0.145, 66, 3, 18);
       // ragnatele
       ctx.strokeStyle = 'rgba(200,200,220,.2)'; ctx.lineWidth = 2;
       ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(50, 40); ctx.moveTo(24, 0); ctx.lineTo(50, 40); ctx.stroke();
