@@ -19,7 +19,7 @@ C'è solo un dettaglio: **il Belvedere prende un gruppo di ospiti ogni venticinq
 - 🔗 **Le piste si parlano**: ciò che scoprite in una apre strade nelle altre, e le gentilezze seminate nella notte tornano come alleati al Banchetto. Un 📔 Diario della Notte tiene il conto di ciò che sapete
 - ⚖ **Tre difficoltà** (Tranquilla / Normale / Incubo) e **porzioni ridotte** in 1-2 giocatori — giocabile anche in solitaria
 - 🗝 **Rivivi la Notte**: dopo il primo finale, 11 capitoli d'ingresso per giocare piste, segreti e finali che vi siete persi — con zaino e conoscenze già pronti
-- 🏆 **43 imprese con collezione persistente** per profilo: il Belvedere tiene il registro degli ospiti, voi tenete il suo
+- 🏆 **42 imprese con collezione persistente** per profilo: il Belvedere tiene il registro degli ospiti, voi tenete il suo
 - ⚔ Combattimenti a turni in stile D&D, con **musica di battaglia diversa per luogo** · 📖 regole in un click · 💾 salvataggio automatico su 3 slot con profili + codici di esportazione tra dispositivi · 🎵 colonna sonora chiptune che cambia con la scena (dal carillon al valzer marcio del Banchetto) · 🕹 pixel art via canvas ispirata al vero relais irpino · zero dipendenze
 
 ## Come si gioca
