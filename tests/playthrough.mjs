@@ -1338,6 +1338,15 @@ executeUntil('il perdono di Ada riferito al Banchetto -> z2_perdono (gregorio_um
   ['b4_vino', 'z2_perdono'], 20,
   r => !!(r.log.flags && r.log.flags.gregorio_umano) && !r.log.scenes.includes('z2_vino'));
 
+
+executeUntil('chef ALLERTATO (bottiglia di Ernesto spaccata): il furto passa a CD 15 ma resta possibile',
+  ['natalino', 'claudia'],
+  { k1: '🍷 Ascoltare le bottiglie', k3: 'Provarci comunque' },
+  { checkBias: 'best', seedBase: 965000,
+    sequences: { h1: ['CANTINA', 'barricarsi'] } },
+  ['k2_sofia_ko', 'k4_furto'], 30,
+  r => !!(r.log.flags && r.log.flags.chef_allertato));
+
 const fatalRuns = results.filter(r => !r.ok);
 for (const r of fatalRuns) fail(`Partita "${r.scenario.name}" (seed ${r.scenario.seed}): ${r.error.split('\n')[0]}`);
 

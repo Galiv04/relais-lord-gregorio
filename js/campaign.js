@@ -875,7 +875,8 @@ Sul muro, accanto al forno, una mensola: un barattolo di **SALE GROSSO** con l'e
       { text: '💇 Natalino fa un passo avanti: "Un ingrediente migliore? Ce l\'ho. Una ciocca di capelli TAGLIATA AD ARTE. Roba che non vedi dal 1899."', tag: 'Prova di Carisma — CD 12', check: { stat: 'CAR', dc: 12, success: 'k4_scambio', fail: 'k4_chef_fight' } },
       { text: '📼 Mettere il NASTRO DEL \'74 sul tavolo da macellaio: nessuna mannaia ha mai vinto contro quella musica', requires: { item: 'nastro_1974' }, removeItem: 'nastro_1974', next: 'k4_nastro' },
       { text: '⚔ Non si tratta con chi ha una mannaia: attaccare PRIMA', next: 'k4_chef_fight' },
-      { text: '🤫 Distrarlo e arraffare sale e bottiglia dalla mensola', tag: 'Prova di Destrezza — CD 13', check: { stat: 'DES', dc: 13, success: 'k4_furto', fail: 'k4_furto_ko' } },
+      { text: '🤫 Distrarlo e arraffare sale e bottiglia dalla mensola', tag: 'Prova di Destrezza — CD 13', requires: { notFlag: 'chef_allertato' }, check: { stat: 'DES', dc: 13, success: 'k4_furto', fail: 'k4_furto_ko' } },
+      { text: '🤫 Provarci comunque — ma lo Chef è GIÀ sveglio, e la mannaia è già in mano: mani di velluto o niente', tag: 'Prova di Destrezza — CD 15', requires: { flag: 'chef_allertato' }, check: { stat: 'DES', dc: 15, success: 'k4_furto', fail: 'k4_furto_ko' } },
     ],
   },
 
@@ -3821,6 +3822,7 @@ const DIARY_FLAGS = [
   ['medaglione',            'Il MEDAGLIONE DI ADA è vostro: sei ciocche intrecciate. Al pozzo vale una vita.'],
   ['bambole_addormentate',  'Le signorine del 1924 DORMONO, grate alla luce di mamma Ada. Un valzer fischiato può chiamarle, se servisse.'],
   ['chef_amico',            'Lo Chef vi considera OSPITI: ai signori del \'74 non si dice di no. E gli ospiti non si impiattano.'],
+  ['chef_allertato',        'La bottiglia di Ernesto si è spaccata e lo Chef si è SVEGLIATO: in cucina, adesso, rubare è molto più difficile.'],
   ['sceso_ossario',         'Siete scesi nell\'ossario dietro la cella frigorifera: i bagagli mai ritirati, le tacche sul muro.'],
   ['segreto_contabile',     'Il Contabile vi ha confidato il suo segreto: anche la casa tiene una contabilità. E i conti non tornano.'],
   ['pista_paese',           'Pietrafonda vi conosce: Don Michele, il bar del 1999, la cripta dei custodi.'],
