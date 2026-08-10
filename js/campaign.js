@@ -3033,6 +3033,7 @@ E la casa — le pareti, i lampadari, i ritratti, il pavimento a scacchi — **r
 > Gregorio: "Le regole del Banchetto sono tre. Uno: si esce all'alba, o non si esce. Due: il patto vuole **una firma o un nome.** Tre..." *(e qui, per la prima volta, la voce del maggiordomo perfetto trema)* "...tre: il menù può ancora cambiare. Se avete sciolto i nodi... **è il momento di metterli sul tavolo.**"`,
     choices: [
       { text: '🧂💧 IL RITUALE: sale sulla firma, acqua di Ada sul registro, e restituire il nome', requires: { flag: 'rituale_noto' }, next: 'z2_rituale' },
+      { text: '🖋 "Non ti chiediamo di passare la penna, Gregorio. Ti chiediamo di ROMPERLA." (il segreto della cripta)', requires: { flag: 'segreto_custodi' }, once: true, next: 'z_penna' },
       { text: '🛣 "Le strade TORNANO, Gregorio. Le abbiamo viste tornare. E un contratto firmato dentro una trappola... è NULLO."', requires: { flag: 'strada_che_torna' }, once: true, next: 'z2_strada' },
       { text: '🎫 Natalino mette i piedi sul tavolo del 1899 e gratta l\'ULTIMO Gratta e Vinci. Davanti a LUI.', requires: { flag: 'ultimo_biglietto' }, removeItem: 'gratta_vinci', once: true, next: 'gvz' },
       { text: '🍽 "CHEF! La portata è cambiata — chiedi alla casa se se la sente di dire di no ai signori del \'74."', requires: { flag: 'chef_amico' }, once: true, next: 'z2_alleato' },
@@ -3114,6 +3115,73 @@ I ritratti alle pareti hanno smesso di sbattere nelle cornici. Adesso vi guardan
       { text: '🪑 Restare seduti. La cena è servita. Il Belvedere ha vinto.', next: 'e_ospiti' },
       { text: '🔥 ALZARSI. Rovesciare la sedia, rovesciare il tavolo, TORNARE A COMBATTERE', next: 'z1', gold: 2 },
     ],
+  },
+
+  z_penna: {
+    location: 'salaBanchetto',
+    npc: ['gregorio'],
+    caption: 'La proposta impensabile',
+    text: `È Federico che si alza — ma stavolta non è un pitch. Parla piano, guardando Gregorio, e mette sul tavolo l'unica cosa che nessun gruppo in centoventicinque anni ha mai portato al Banchetto: **i registri parrocchiali di Pietrafonda.**
+
+> Federico: "Dodici parroci, due secoli di annotazioni. 'Sale il custode nuovo.' Ogni venticinque anni, da PRIMA di te. Lo sappiamo, Gregorio. Sappiamo che il patto è più vecchio di te. E sappiamo l'altra cosa..." *(si china sul tavolo)* "...che un custode può RIFIUTARSI di passare la penna. Tu lo fai da centoventicinque anni. Per dispetto, dice Don Michele. Il sesto del Settantaquattro. Quello che ti suona i vespri OGNI SERA."
+
+Gregorio non si muove. Ma la penna, accanto al registro, comincia a rotolare piano — avanti e indietro — come una cosa che ha sentito il proprio nome.
+
+> Federico: "E allora ecco la proposta. Non ti chiediamo di passarla. Non ti chiediamo di tenerla. **Ti chiediamo di ROMPERLA.** Nessun custode nuovo. Nessun custode VECCHIO. Il ciclo non si passa: si CHIUDE. Tu hai retto questa casa per dispetto — adesso falla cadere per lo stesso identico motivo."
+
+E la casa smette di respirare. Tutta. Anche i ritratti trattengono il fiato dentro le cornici.
+
+> Gregorio: *(dopo un silenzio di venticinque anni)* "...e di me... cosa resta, signori? Centoventicinque anni. È l'unica cosa che sono."
+
+*(È la trattativa più difficile della notte: Prova di Carisma — CD 14. Ditegli cosa resta.)*`,
+    choices: [
+      { text: '🗣 "Resta l\'uomo che ha tenuto chiusa questa porta per 125 anni. Il DISPETTO era amore, Gregorio."', tag: 'Prova di Carisma — CD 14', check: { stat: 'CAR', dc: 14, success: 'e_penna', fail: 'z_penna_no' } },
+      { text: '↩ Non ancora: la parola pesa troppo. Tornare al tavolo', next: 'z1' },
+    ],
+  },
+
+  z_penna_no: {
+    location: 'salaBanchetto',
+    npc: ['gregorio'],
+    caption: 'La penna resta intera',
+    text: `Gregorio ascolta fino in fondo. E per un momento — un momento intero — le dita guantate si posano sulla penna.
+
+Poi la casa **stringe.** Si sente: un giro di vite nelle fondamenta, i ritratti che sbattono, il lampadario che scende di un centimetro come un pugno che si chiude. E Gregorio ritira la mano, piano, con la faccia di chi ha appena ricordato dov'è e COSA lo tiene.
+
+> Gregorio: "...no. Non così. Non stanotte, non ancora. La casa ha sentito, signori — e ciò che la casa sente, la casa se lo LEGA. Vi ho dato l'unica cosa che potevo: il momento in cui ci ho PENSATO." *(si raddrizza, torna maggiordomo, ma la voce non torna del tutto)* "Fate presto, adesso. Qualunque cosa scegliate... fatela PRESTO."
+
+> Emanuela: *(sottovoce)* "Ci ha pensato. Avete visto tutti che ci ha pensato, sì?"
+
+**(La casa è allertata ma Gregorio ha vacillato: Sangue freddo +1. La penna può ancora rompersi — un'altra notte, un altro gruppo. Stanotte servono le altre strade.)**`,
+    gold: 1,
+    choices: [
+      { text: '↩ Al tavolo: la notte non aspetta', next: 'z1' },
+    ],
+  },
+
+  e_penna: {
+    location: 'albaRelais',
+    caption: 'EPILOGO — La Penna Spezzata',
+    text: `> Gregorio: "...il dispetto era amore."
+
+Lo dice piano, assaggiando le parole come un vino del 1899. Poi prende la penna — la stilografica che ha firmato centoventicinque anni di soggiorni — e la guarda per l'ultima volta.
+
+> Gregorio: "Ada. Amore mio. Il banchetto è finito: **si sparecchia.**"
+
+**CRACK.**
+
+Il suono è piccolo. Quello che segue no: è il suono di una casa che perde la spina dorsale — ogni trave, ogni specchio, ogni firma nel registro che si SLEGA in un solo istante. I ritratti si svuotano come finestre aperte: il gruppo del '24 esce ridendo, quelli del '49 si tolgono il cappello passando, i ragazzi del '74 se ne vanno cantando stonati, e Sofia — Sofia saluta con la mano, e all'improvviso ha di nuovo VENT'ANNI e nessuna fretta.
+
+E il Belvedere... il Belvedere non crolla. Fa una cosa molto peggiore, per una casa: **diventa una casa.** Vecchia, bella, con l'intonaco da rifare e la piscina da svuotare. Mortale.
+
+Sulla soglia, nel primo sole, Gregorio invecchia centoventicinque anni in un minuto — e li porta benissimo. L'ultima cosa che fa, prima di diventare polvere educata che il vento del mattino si porta via piano, è un inchino. Perfetto. Da maggiordomo.
+
+> La voce di Ada, dal pozzo, chiara come una campana: "Grazie, ragazzi. **Chiudete il cancello quando uscite.** Ma non a chiave: chissà che un giorno non torni utile, una casa così."
+
+Scendete i ventisei tornanti a piedi, nel sole. La strada, stavolta, **scende e basta.** E al tornante undici, parcheggiata di traverso, trovate una corriera azzurra col motore acceso e un autista che non fa domande: a Pietrafonda, Don Michele ha smesso di suonare i vespri. Non servono più. Adesso suona — dice lui — "a festa, e MALE, che è più onesto."
+
+**🖋 FINE — Nessun custode nuovo. Nessun custode vecchio. Avete convinto un maggiordomo di 125 anni a rompere la penna, e una casa a tornare mortale. Questo non era nemmeno un finale previsto dal Belvedere: l'avete scritto voi.**`,
+    ending: true,
   },
 
   z_custode: {
@@ -3555,6 +3623,7 @@ const DIARY_FLAGS = [
   ['pista_paese',           'Pietrafonda vi conosce: Don Michele, il bar del 1999, la cripta dei custodi.'],
   ['visto_occhio',          'Dal telescopio della soffitta l\'avete visto: c\'è un OCCHIO nella piscina. Il riflesso guarda.'],
   ['un_nodo_sciolto',       'Almeno un nodo della casa è SCIOLTO: quando sarete pronti, ci si può barricare e aspettare il Banchetto.'],
+  ['segreto_custodi',       'Il segreto della cripta: il patto è più VECCHIO di Gregorio — e un custode può RIFIUTARSI di passare la penna. O romperla.'],
   ['rituale_noto',          'Conoscete il RITUALE: sale sulla firma, acqua di Ada sul registro, e restituire il nome.'],
   ['orologio_reso',         'L\'orologio di Sofia è tornato al suo polso: il suo tempo, dopo venticinque anni, è ripartito.'],
   ['riflesso_fatto',        'Il Riflesso sotto la piscina ha un padrone di meno: gli ospiti trattenuti sono liberi.'],
@@ -3572,7 +3641,7 @@ const WORLD_MAP = [
   { key: 'relais',   label: 'Il Relais',       x: 0.40, y: 0.30, scenes: ['a2', 'a2_siepi', 'p4_fuga', 'gr1', 'gr2', 'gr3', 'gr3_ko'] },
   { key: 'hall',     label: 'La Hall',         x: 0.56, y: 0.48, scenes: ['a3', 'a3_registro', 'a3_registro_ko', 'a4_firma', 'a4_rinvio', 'a4_firma_forzata', 'p4_rientro'] },
   { key: 'camere',   label: 'Le Camere',       x: 0.74, y: 0.32, scenes: ['a5', 'a5_pozzo', 'h1', 'h2', 'gv1', 'u1', 'u2_1999', 'u2_1924', 'u2_1899', 'u3_medaglione', 'u3_lanterna', 'u3_bambole_fight', 'u3_bambole_vinte', 'u5_specchio', 'u4_porta_vuota', 'sf1', 'sf2', 'sf3', 'sf4', 'sf5', 'sf6', 's49_1', 's49_2', 's49_3', 's49_3_ko', 's74_1', 's74_2', 's74_3', 'cuore_gc', 'cuore_fe', 'cuore_fe_esito', 'cuore_nat', 'cuore_nat_esito'] },
-  { key: 'pranzo',   label: 'Sala da Pranzo',  x: 0.46, y: 0.62, scenes: ['a6', 'a6_menu', 'a6_brindisi', 'a6_no_brindisi', 'a7', 'z1', 'z2_vino', 'z2_trattativa', 'z2_rituale', 'gvz', 'z2_strada', 'z2_alleato', 'z2_bambole', 'z2_claudia', 'z3_boss', 'z3_boss_solo', 'z3_boss_arrabbiato', 'z3_boss_indebolito', 'z4_fase2', 'z5_vittoria', 'z6_alba', 'e_alba', 'z_custode', 'e_custode', 'z_resa', 'e_ospiti', 'z_vespri', 'z_smemorati', 'e_smemorati'] },
+  { key: 'pranzo',   label: 'Sala da Pranzo',  x: 0.46, y: 0.62, scenes: ['a6', 'a6_menu', 'a6_brindisi', 'a6_no_brindisi', 'a7', 'z1', 'z2_vino', 'z2_trattativa', 'z2_rituale', 'gvz', 'z2_strada', 'z2_alleato', 'z2_bambole', 'z2_claudia', 'z3_boss', 'z3_boss_solo', 'z3_boss_arrabbiato', 'z3_boss_indebolito', 'z4_fase2', 'z5_vittoria', 'z6_alba', 'e_alba', 'z_penna', 'z_penna_no', 'e_penna', 'z_custode', 'e_custode', 'z_resa', 'e_ospiti', 'z_vespri', 'z_smemorati', 'e_smemorati'] },
   { key: 'riflesso', label: 'Il Riflesso',      x: 0.10, y: 0.28, scenes: ['w1_tuffo', 'w2_riflesso', 'w2_riflesso_ko', 'w3_giardino', 'w3_pattuglia_combat', 'w4_sofia', 'w5_racconto', 'w6_1924', 'w7_ronda', 'w7_ronda_combat', 'w8_direttore', 'w9_studio', 'w9_studio_combat', 'w10_orologio', 'w10_orologio_reso', 'w11_inventario', 'w12_tradimento', 'w12_sofia', 'w14_direttore_boss', 'w15_vittoria', 'w16_amaro', 'w17_fuga', 'w17_fuga_ko', 'w18_soglia', 'w_finale'] },
   { key: 'paese',    label: 'Pietrafonda',     x: 0.16, y: 0.90, scenes: ['pp1', 'pp2', 'pp2_bar', 'pp3', 'pp_anello', 'pp4_cripta', 'pp4', 'pp6', 'pp6_ko', 'pp7'] },
   { key: 'piscina',  label: 'La Piscina',      x: 0.22, y: 0.50, scenes: ['p1', 'p1_accappatoio', 'p1_accappatoio_ko', 'p2', 'p2_esperimento', 'p2_esperimento_ko', 'p3_fuori'] },

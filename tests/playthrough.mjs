@@ -1217,6 +1217,36 @@ executeUntil('Pietrafonda sa dell\'anello: pozzo+garage+tornanti PRIMA, poi la d
   ['ft2_capito', 'pp_anello'], 24,
   r => !!(r.log.flags && r.log.flags.paese_sa));
 
+
+/* ---- IL QUINTO FINALE: LA PENNA SPEZZATA (cripta -> segreto_custodi -> z_penna, CAR 14) ---- */
+
+executeUntil('quinto finale: il segreto della cripta convince Gregorio a ROMPERE la penna -> e_penna',
+  ['federico', 'claudia'],
+  {
+    a3: '📖 Prima, sfogliare il registro',
+    a3_registro: 'Firmiamo domani con calma',
+    pp2: '🚪 Bussare alla canonica',
+    pp3: '⛪ Prima: chiedergli della cripta',
+    z_penna: 'Resta l\'uomo',
+  },
+  { checkBias: 'best', seedBase: 915000,
+    sequences: { h1: ['Pietrafonda', 'CANTINA', 'barricarsi'], z1: ['ROMPERLA'] } },
+  ['pp4_cripta', 'z_penna', 'e_penna'], 24,
+  r => r.log.ending === 'e_penna');
+
+executeUntil('quinto finale: Gregorio VACILLA ma la casa stringe (CAR fallita) -> z_penna_no e si torna al tavolo',
+  ['federico', 'gaetano'],
+  {
+    a3: '📖 Prima, sfogliare il registro',
+    a3_registro: 'Firmiamo domani con calma',
+    pp2: '🚪 Bussare alla canonica',
+    pp3: '⛪ Prima: chiedergli della cripta',
+    z_penna: 'Resta l\'uomo',
+  },
+  { seedBase: 920000,
+    sequences: { h1: ['Pietrafonda', 'CANTINA', 'barricarsi'], z1: ['ROMPERLA'] } },
+  ['z_penna', 'z_penna_no'], 40);
+
 const fatalRuns = results.filter(r => !r.ok);
 for (const r of fatalRuns) fail(`Partita "${r.scenario.name}" (seed ${r.scenario.seed}): ${r.error.split('\n')[0]}`);
 
@@ -1398,6 +1428,8 @@ coverage('Coerenza del Giardiniere — vittoria nell\'orto ricordata dai filari'
 coverageFlag('Coerenza del Giardiniere — flag', ['giardiniere_potato']);
 coverage('Eco a Pietrafonda — la corriera del \'74', ['pp_anello']);
 coverageFlag('Eco a Pietrafonda — flag', ['paese_sa']);
+coverage('Il quinto finale — la proposta, il rifiuto e la penna spezzata', ['z_penna', 'z_penna_no', 'e_penna']);
+
 
 
 
@@ -1412,9 +1444,9 @@ coverageItem('Nuovi oggetti — ottenuti almeno una volta nelle rispettive scene
   'lanterna_1899', 'asso_di_denari', 'nastro_1974', 'candela_motore', 'gratta_vinci', 'orologio_sofia', 'inventario_riflesso', 'lettere_1899',
 ]);
 
-console.log(`  ${allEndings.size >= 4 ? '✅' : '❌'} Finali raggiunti (${allEndings.size}/4): ${[...allEndings].join(', ') || '(nessuno)'}`);
-if (allEndings.size < 4) {
-  const missing = ['e_alba', 'e_custode', 'e_ospiti', 'e_smemorati'].filter(e => !allEndings.has(e));
+console.log(`  ${allEndings.size >= 5 ? '✅' : '❌'} Finali raggiunti (${allEndings.size}/5): ${[...allEndings].join(', ') || '(nessuno)'}`);
+if (allEndings.size < 5) {
+  const missing = ['e_alba', 'e_custode', 'e_ospiti', 'e_smemorati', 'e_penna'].filter(e => !allEndings.has(e));
   fail(`Finali non raggiunti in nessuna delle ${scenarios.length} run: ${missing.join(', ')}`);
 }
 
@@ -1697,7 +1729,7 @@ function findHeroButton(box, heroName) {
 
 console.log('\n' + '═'.repeat(60));
 if (failures === 0) {
-  console.log(`✅ TUTTE LE PARTITE SIMULATE COMPLETATE SENZA ERRORI (${results.length} run, ${allScenesSeen.size} scene distinte visitate, ${allEndings.size}/4 finali)`);
+  console.log(`✅ TUTTE LE PARTITE SIMULATE COMPLETATE SENZA ERRORI (${results.length} run, ${allScenesSeen.size} scene distinte visitate, ${allEndings.size}/5 finali)`);
   process.exit(0);
 } else {
   console.log(`❌ ${failures} PROBLEMI RILEVATI su ${results.length} partite simulate`);

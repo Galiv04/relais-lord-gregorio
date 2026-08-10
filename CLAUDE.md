@@ -14,7 +14,7 @@ Horror interattivo in italiano per 1-5 giocatori. **Riusa il motore de "La Coron
 | Valuta | `G.gold` = **Sangue Freddo** 🕯 (coraggio del gruppo), non oro |
 | Condizioni | `h.veleno` (−2 a prove e attacchi, si cura con `antidoto`) e `h.preso` (fuori gioco finché non liberato; `freeAll: true` nelle scene libera tutti). Effetti scena: `poisonRoller` / `captureRoller` colpiscono `G.lastRoller` (mai l'ultimo attivo) |
 | Nemici | `undead: true` = creatura della villa → Colpo di Phon e sale = danni doppi |
-| Finali | `e_alba` (rituale/vittoria), `e_custode` (uno resta — scelta), `e_ospiti` (resa — subìto) |
+| Finali | `e_alba` (rituale/vittoria), `e_custode` (uno resta — scelta), `e_ospiti` (resa — subìto), `e_smemorati` (un ricordo a testa), `e_penna` (il segreto della cripta: Gregorio rompe la penna — CAR 14) |
 | Struttura | Prologo → piscina → hub `h1` con TRE piste NON esclusive (cantina `k*`, piano `u*`, pozzo `b*`) → Banchetto `z*` |
 | Localizzazione | Pietrafonda e il Belvedere sono inventati; la geografia è irpina generica |
 
