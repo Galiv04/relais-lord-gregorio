@@ -3967,6 +3967,7 @@ const DIARY_FLAGS = [
   ['sceso_ossario',         'Siete scesi nell\'ossario dietro la cella frigorifera: i bagagli mai ritirati, le tacche sul muro.'],
   ['segreto_contabile',     'Il Contabile vi ha confidato il suo segreto: anche la casa tiene una contabilità. E i conti non tornano.'],
   ['pista_paese',           'Pietrafonda vi conosce: Don Michele, il bar del 1999, la cripta dei custodi.'],
+  ['cerchio_rosso',         'Nella polaroid del 1999, uno dei cinque ragazzi è cerchiato in rosso. La grafia del cerchio è di Sofia. E il ragazzo cerchiato è l\'unico che nei ritratti della hall NON c\'è.'],
   ['visto_occhio',          'Dal telescopio della soffitta l\'avete visto: c\'è un OCCHIO nella piscina. Il riflesso guarda.'],
   ['regole_casa_note',      'Le tre regole del Belvedere, imparate sulla pelle: la casa sente tutto, la casa non dimentica, la casa RISPETTA chi gioca bene.'],
   ['un_nodo_sciolto',       'Almeno un nodo della casa è SCIOLTO: quando sarete pronti, ci si può barricare e aspettare il Banchetto.'],

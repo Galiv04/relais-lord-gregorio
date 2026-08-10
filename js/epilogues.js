@@ -100,6 +100,8 @@ const IMPRESE = [
   { flag: 'carte_1949_perse',      icon: '🂠', title: 'Ritenta, Reduce',             desc: 'La mano del \'49 persa di nuovo, 75 anni dopo. I reduci hanno riso: valeva la sconfitta.' },
   { flag: 'lettere_lette',         icon: '💌', title: 'Prima del Patto',             desc: 'Le lettere della soffitta: Gregorio e Ada quando erano solo due persone che si scrivevano.' },
   { flag: 'direttore_sconfitto',   icon: '👔', title: 'Il Colloquio Finale',         desc: 'Il Direttore del Riflesso ha ricevuto il suo primo licenziamento in centoventicinque anni.' },
+  { flag: 'tentato_sacrificio',    icon: '🖋', title: 'Quasi',                       desc: 'Qualcuno di voi ha preso in mano la penna del Riflesso. L\'ha posata. Ma l\'ha presa.' },
+  { flag: 'doni_don_michele',      icon: '☕', title: 'L\'Armeria del Parroco',      desc: 'Moka e campanella del \'74: l\'equipaggiamento completo del sesto che non ha mai smesso di combattere.' },
 ];
 
 /* ---------- CRONACHE DEL BELVEDERE ----------
@@ -120,6 +122,7 @@ const CRONACA = [
   { flag: 'bambole_addormentate', text: 'Le trentadue signorine del 1924 dormono ancora, composte, le mani in grembo. Un restauratore le ha definite "pezzi unici in condizioni perfette". Nessuno osa svegliarle per venderle.' },
   { flag: 'paese_sa', text: 'La corriera azzurra è ripartita dal tornante undici con la benzina che aveva nel 1974. Alla guida, per l\'ultima tratta, un pensionato di nome Gennaro. In discesa. Cantando.' },
   { flag: 'fumata_di_gruppo', text: 'Sul balcone del primo piano, certe notti d\'estate, il fumo di chissà cosa sale dritto e poi si DISPONE — angoli retti, corridoi, stanze. I nuovi gestori l\'hanno visto. Hanno deciso, con saggezza irpina, di non farci domande.' },
+  { flag: 'ostaggi_liberati', text: 'Tra settembre e Natale, in giro per la Campania, ventisei famiglie hanno sentito bussare alla porta. Nessuno, sulla soglia, sapeva bene come spiegare dov\'era stato. Tutti hanno chiesto la stessa cosa: "che anno è?" — e poi, subito dopo: "c\'è ancora la mamma?"' },
   { flag: 'sofia_resta', text: 'Il Riflesso ha una direzione nuova. Le cornici sono aperte dall\'interno, il tè si serve alle cinque e gli ospiti — per regolamento firmato S. — SI SERVONO DA SOLI. Nessuno ha mai visto la direttrice: ma il carrello, ogni tanto, cigola come una risata.' },
   { flag: 'sofia_libera', text: 'A Napoli, una donna che dimostra venticinque anni da cinquanta ha rifatto la patente, ha pianto davanti a uno smartphone ("nel 1999 questi non c\'erano") e ha prenotato — testuale — "una vacanza in un posto di MERDA, che quelli belli mi hanno stufato".' },
   { flag: 'capitolazione', text: 'Nel registro del Belvedere, alla pagina del 2024, non c\'è nessuna firma. C\'è scritto, nella grafia elegante di Gregorio: "Banchetto annullato per mancanza di portata principale. La direzione ringrazia e RIAPRE." È incorniciata alla reception.' },
