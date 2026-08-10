@@ -263,6 +263,23 @@ console.log(`  ✔ ${Object.keys(CAMPAIGN).length} scene, ~${words} parole di na
 if (words < 6000) warn('campagna forse corta per 2-4 ore');
 
 
+
+/* ---------- stinger dichiarati dalle scene: devono esistere in sound.js ---------- */
+section('Stinger delle scene (nessun suono fantasma)');
+
+const soundSrc = readFileSync(join(root, 'js/sound.js'), 'utf8');
+const effectsBlock = soundSrc.slice(soundSrc.indexOf('const effects = {'), soundSrc.indexOf('function play('));
+const effectNames = new Set([...effectsBlock.matchAll(/^\s{4}([a-z_0-9]+)\(\)/gm)].map(m => m[1]));
+let stingerMorti = 0;
+for (const [id, scene] of Object.entries(CAMPAIGN)) {
+  if (scene.stinger && !effectNames.has(scene.stinger)) {
+    fail(`scena "${id}": stinger "${scene.stinger}" non esiste in sound.js (suono fantasma silenzioso)`);
+    stingerMorti++;
+  }
+}
+const conStinger = Object.values(CAMPAIGN).filter(sc => sc.stinger).length;
+if (!stingerMorti) { ok(); console.log(`  ✔ ${conStinger} scene con stinger, tutti esistenti in sound.js (${effectNames.size} effetti nel catalogo)`); }
+
 /* ---------- flag morti: imprese/cronache/diario devono poter scattare ---------- */
 section('Flag di imprese, cronache e diario (nessun flag morto)');
 
