@@ -1294,8 +1294,30 @@ Troppo in ordine. La ghiaia rastrellata a onde. Le siepi potate a forme che cont
 
 Il pozzo è a quaranta metri, oltre lo spaventapasseri, oltre l'orto recintato delle erbe. La corda, anche da qui, si vede: **tesa.** Qualcosa, giù, aspetta compagnia.`,
     choices: [
+      { text: '⛽ Fermarsi un secondo: "LASCIATE STARE IL POZZO." Il benzinaio. Lo sapeva.', requires: { flag: 'avviso_benzinaio' }, once: true, next: 'b1_avviso' },
       { text: '👁 Il piano di Gaetano: attraversare il prato A TURNI DI SGUARDO, senza mai perderlo di vista', tag: 'Prova di Saggezza — CD 12', check: { stat: 'SAG', dc: 12, success: 'b2_orto', fail: 'b2_giardiniere_fight' } },
       { text: '🏃 Il piano di Natalino: di corsa lungo le siepi, fuori dalla sua vista', tag: 'Prova di Destrezza — CD 12', check: { stat: 'DES', dc: 12, success: 'b2_orto', fail: 'b2_giardiniere_fight' } },
+    ],
+  },
+
+  b1_avviso: {
+    location: 'giardino',
+    caption: 'Le parole del benzinaio',
+    text: `È Natalino a dirlo, fermo sulla ghiaia rastrellata, con la voce di chi sta riavvolgendo un nastro.
+
+> Natalino: "Ragazzi. Il benzinaio. 'Lasciate stare il pozzo', ha detto. Non 'attenti al pozzo', non 'c'è un pozzo pericoloso'. LASCIATE STARE. Come si dice di una persona."
+
+E adesso che siete qui, davanti alla corda tesa che tira piano verso il basso, le altre cose tornano su tutte insieme: la mano ferma sulla pompa quando Federico ha detto "Belvedere". Lo straccio passato sulle mani con TROPPA cura. E quegli occhi — Claudia lo dice a voce alta, piano — *"che hanno visto passare cinque macchine come la nostra, una ogni venticinque anni."*
+
+> Claudia: "Le ha CONTATE. Sta laggiù da una vita a contare le macchine che salgono. E secondo voi... quante ne ha viste riscendere?"
+
+Nessuno risponde. Ma da stanotte, se mai rivedrete quel distributore, avete una domanda da fargli — e il sospetto, che scalda più della paura, che lui stia lì APPOSTA: l'uomo che non può salire, che non può fermarvi, ma che a ogni giro ci prova. Con una frase sola, buttata lì tra il resto e la verde.
+
+**(Il benzinaio SAPEVA. E vegliava. Sangue freddo +1. Flag: benzinaio_sapeva.)**`,
+    gold: 1,
+    sets: { benzinaio_sapeva: true },
+    choices: [
+      { text: '↩ Tornare a guardare lo spaventapasseri. Con più rispetto per chi avvisa.', next: 'b1' },
     ],
   },
 
@@ -3844,6 +3866,7 @@ const CHAPTERS = [
    e non deve ricordare tutto a memoria. Ordine = ordine di visualizzazione. */
 const DIARY_FLAGS = [
   ['firma_rinviata',        'Federico ha RINVIATO la firma: chi non ha firmato può ancora varcare il cancello verso Pietrafonda.'],
+  ['benzinaio_sapeva',      'Il benzinaio di Baiano ha contato cinque macchine, una ogni 25 anni. Sta laggiù APPOSTA. E ha una frase sola per provarci: "lasciate stare il pozzo."'],
   ['garage_visto',          'Nella rimessa: la vostra auto è smontata in bacheca, pezzo per pezzo. E la candela era ancora tiepida.'],
   ['giardiniere_potato',    'Il Giardiniere è PAGLIA SPARSA nei filari: si sta rifacendo, ma stanotte il giardino non ha turno di notte.'],
   ['giardiniere_allertato', 'Il Giardiniere sa che girate di notte: le cesoie, da qualche parte nella nebbia, tengono il conto.'],
@@ -3888,6 +3911,6 @@ const WORLD_MAP = [
   { key: 'paese',    label: 'Pietrafonda',     x: 0.16, y: 0.90, scenes: ['pp1', 'pp2', 'pp2_bar', 'pp3', 'pp_anello', 'pp4_cripta', 'pp4', 'pp6', 'pp6_ko', 'pp7'] },
   { key: 'piscina',  label: 'La Piscina',      x: 0.22, y: 0.50, scenes: ['p1', 'p1_accappatoio', 'p1_accappatoio_ko', 'p2', 'p2_esperimento', 'p2_esperimento_ko', 'p3_fuori'] },
   { key: 'cantina',  label: 'La Cantina',      x: 0.62, y: 0.78, scenes: ['k1', 'k2_sofia', 'k2_sofia_ko', 'k3', 'k4_scambio', 'k4_nastro', 'k4_chef_fight', 'k4_furto', 'k4_furto_ko', 'k5_dopo_chef', 'x_celle', 'os1', 'os2', 'os3', 'os4', 'os5', 'os6'] },
-  { key: 'pozzo',    label: 'Il Pozzo',        x: 0.86, y: 0.66, scenes: ['b1', 'b2_giardiniere_fight', 'b2_vinto', 'b2_orto', 'b3_pozzo', 'b4_medaglione', 'b4_tronello', 'b4_vino', 'b4_parole', 'b4_ira', 'b4_calata', 'b4_calata_ko'] },
+  { key: 'pozzo',    label: 'Il Pozzo',        x: 0.86, y: 0.66, scenes: ['b1', 'b1_avviso', 'b2_giardiniere_fight', 'b2_vinto', 'b2_orto', 'b3_pozzo', 'b4_medaglione', 'b4_tronello', 'b4_vino', 'b4_parole', 'b4_ira', 'b4_calata', 'b4_calata_ko'] },
 ];
 

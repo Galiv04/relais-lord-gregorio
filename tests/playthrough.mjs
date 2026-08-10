@@ -1348,6 +1348,15 @@ executeUntil('chef ALLERTATO (bottiglia di Ernesto spaccata): il furto passa a C
   ['k2_sofia_ko', 'k4_furto'], 30,
   r => !!(r.log.flags && r.log.flags.chef_allertato));
 
+
+executeUntil('l\'avviso del benzinaio si capisce al pozzo -> b1_avviso (benzinaio_sapeva)',
+  ['natalino', 'claudia'],
+  { a0: '⛽ Prima, il pieno al distributore', b1: '⛽ Fermarsi un secondo' },
+  { checkBias: 'best', seedBase: 970000,
+    sequences: { h1: ['POZZO', 'barricarsi'] } },
+  ['a0_benzina', 'b1_avviso'], 20,
+  r => !!(r.log.flags && r.log.flags.benzinaio_sapeva));
+
 const fatalRuns = results.filter(r => !r.ok);
 for (const r of fatalRuns) fail(`Partita "${r.scenario.name}" (seed ${r.scenario.seed}): ${r.error.split('\n')[0]}`);
 
