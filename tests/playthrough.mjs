@@ -358,6 +358,13 @@ function runCombat(game, scenario, state) {
       chosen = pickWeakestTarget(btns);
     } else if (kind === 'ally') {
       chosen = pickAllyForHealing(btns);
+    } else if (scenario.forceCombatItem && !state.forceCombatItemUsed) {
+      // Forza l'uso di un oggetto da lancio specifico (es. il Bengala) almeno una volta,
+      // per garantirne la copertura: il bersaglio scelto poi non conta per gli oggetti
+      // "colpiscono tutti" (combat.all), ma pickTarget lo richiede comunque a schermo.
+      const itemBtn = enabledButtons(box).find(b => b.innerHTML.includes(scenario.forceCombatItem));
+      if (itemBtn) { chosen = itemBtn; state.forceCombatItemUsed = true; }
+      else chosen = pickMainCombatAction(btns, turnCounter++, game.getG());
     } else {
       chosen = pickMainCombatAction(btns, turnCounter++, game.getG());
     }
@@ -493,6 +500,8 @@ function runGame(scenario) {
   if (game.consoleErrors.length) {
     return { ok: false, scenario, error: `console.error catturati durante la partita: ${game.consoleErrors.join(' | ')}`, log };
   }
+  log.flags = { ...(getG().flags || {}) };
+  log.usedForceItem = !!state.forceCombatItemUsed;
   return { ok: true, scenario, log };
 }
 
@@ -565,6 +574,16 @@ const BASE_CHOICES = {
   z_resa: '🔥 ALZARSI. Rovesciare la sedia',
   z5_vittoria: 'Guardare l\'alba.',
   z6_alba: '☕ Il caffè, l\'abbraccio',
+  // ---- Pista Pietrafonda (solo se firma_rinviata) e nuove offerte al Banchetto ----
+  pp2: '🚪 Bussare alla canonica',
+  pp3: '📖 Raccontargli tutto',
+  pp4_cripta: 'Su, da Don Michele',
+  pp4: '⬆ Risalire',
+  pp6: '🚶 Testa bassa e passo costante',
+  pp6_ko: 'Dentro. Con quel che resta della dignità',
+  pp7: 'Al corridoio delle tre porte',
+  z_vespri: '⚔ Adesso la battaglia',
+  z_smemorati: '↩ No. Questa notte è NOSTRA',
 };
 
 function scenario(name, heroes, choices, opts = {}) {
@@ -576,6 +595,7 @@ function scenario(name, heroes, choices, opts = {}) {
     sequences: opts.sequences || DEFAULT_SEQUENCES,
     checkBias: opts.checkBias || 'best',
     forceFirstCombatLoss: !!opts.forceFirstCombatLoss,
+    forceCombatItem: opts.forceCombatItem || null,
     difficulty: opts.difficulty || 'normale',
   };
 }
@@ -736,6 +756,20 @@ scenarios.push(scenario('modalità Sopravvissuto: Emanuela SOLA, rituale -> alba
   z1: '🧂💧 IL RITUALE',
 }, { checkBias: 'best', sequences: { h1: ['PIANO PROIBITO', 'barricarsi'] }, difficulty: 'facile' }));
 
+/* ---- PISTA SEGRETA DI PIETRAFONDA + nuove offerte al Banchetto ----
+   Pietrafonda esiste SOLO se a3_registro -> il check di Carisma per rinviare la firma è
+   RIUSCITO (a4_rinvio, flag firma_rinviata): quella prova dipende dal dado, quindi le
+   varianti che la richiedono sono degli executeUntil (vedi sezione di esecuzione più sotto).
+   L'offerta impensabile ACCETTATA, invece, non richiede alcuna pista (la scelta è sempre
+   disponibile al Banchetto): è il quarto finale e_smemorati, quasi del tutto deterministico. */
+
+scenarios.push(scenario('Banchetto: offerta impensabile ACCETTATA -> e_smemorati (quarto finale)',
+  ['gaetano', 'emanuela'], {
+    u1: '🚪 1899 — la stanza dov\'è cominciato tutto',
+    z1: '🫙 L\'offerta impensabile',
+    z_smemorati: '🫙 Sì. Offrire i ricordi',
+  }, { sequences: { h1: ['PIANO PROIBITO', 'barricarsi'] } }));
+
 /* ---- Round-robin extra per varietà (coppie diverse, seed diversi, bias misti) ---- */
 
 const heroPairs = [
@@ -773,12 +807,15 @@ function execute(sc) {
   return r;
 }
 
-function executeUntil(name, heroes, choices, opts, targetScenes, maxAttempts = 14) {
+// extraCheck(result): predicato opzionale aggiuntivo oltre alle scene richieste — utile per
+// verificare un FLAG (result.log.flags) o che un'azione specifica sia avvenuta davvero
+// (es. result.log.usedForceItem), non solo che una certa scena sia stata visitata.
+function executeUntil(name, heroes, choices, opts, targetScenes, maxAttempts = 14, extraCheck = () => true) {
   let last = null;
   for (let i = 0; i < maxAttempts; i++) {
     const sc = scenario(`${name} (tentativo ${i + 1}/${maxAttempts})`, heroes, choices, { ...opts, seed: (opts.seedBase || 555000) + i * 131 });
     last = execute(sc);
-    if (last.ok && targetScenes.every(id => last.log.scenes.includes(id))) return true;
+    if (last.ok && targetScenes.every(id => last.log.scenes.includes(id)) && extraCheck(last)) return true;
   }
   console.error(`      ↳ ⚠ non raggiunto dopo ${maxAttempts} tentativi: ${targetScenes.join(', ')} (dipende da un tiro di dado — vedi copertura sotto)`);
   return false;
@@ -824,6 +861,68 @@ executeUntil('prologo: registro sfogliato, poi firma rinviata (CAR)', ['federico
   { a3: '📖 Prima, sfogliare il registro', a3_registro: 'Firmiamo domani con calma' },
   { checkBias: 'best', seedBase: 690000 }, ['a4_rinvio']);
 
+/* ---- PISTA SEGRETA DI PIETRAFONDA (richiede a4_rinvio, dipendente dal dado) + le nuove
+   offerte al Banchetto che dipendono dalla pista (campanella_1974 -> z_vespri) ---- */
+
+// Bengala usato DAVVERO in combattimento: si scende a Pietrafonda per prenderlo (pp1), poi
+// si va dritti allo scontro deterministico contro lo Chef (k3 -> attacco diretto) e lo si
+// lancia lì (verificato con log.usedForceItem, non solo con la scena raggiunta). Copre anche
+// l'intera pista pp1..pp7 (percorso diretto, senza le due prove opzionali del bar/cripta).
+executeUntil('Pietrafonda (pista completa) + Bengala usato in combattimento (k4_chef_fight)',
+  ['claudia', 'federico'],
+  {
+    a3: '📖 Prima, sfogliare il registro',
+    a3_registro: 'Firmiamo domani con calma',
+    k3: '⚔ Non si tratta con chi ha una mannaia',
+  },
+  { checkBias: 'best', seedBase: 700000, sequences: { h1: ['Pietrafonda', 'CANTINA', 'barricarsi'] }, forceCombatItem: 'Bengala' },
+  ['pp1', 'pp2', 'pp3', 'pp4', 'pp6', 'pp7', 'k4_chef_fight'], 20,
+  r => r.log.usedForceItem === true);
+
+// Giro turistico completo di Pietrafonda: entrambe le prove opzionali (bar del 1999 SAG,
+// cripta dei custodi INT) riuscite, oltre alla firma rinviata (CAR) necessaria per scendere.
+executeUntil('Pietrafonda: bar del 1999 (SAG) e cripta dei custodi (INT) riuscite',
+  ['claudia', 'federico'],
+  {
+    a3: '📖 Prima, sfogliare il registro',
+    a3_registro: 'Firmiamo domani con calma',
+    pp2: '🔦 Prima, una torcia dentro al bar',
+    pp3: '⛪ Prima: chiedergli della cripta',
+  },
+  { checkBias: 'best', seedBase: 710000, sequences: { h1: ['Pietrafonda', 'barricarsi'] } },
+  ['pp2_bar', 'pp4_cripta'], 24,
+  r => !!(r.log.flags && r.log.flags.segreto_custodi));
+
+// La nebbia della risalita "assaggia" chi tira (SAG fallita): stesso bug narrativo del
+// veleno già documentato più sotto (G.lastRoller non viene mai assegnato), ma la scena e il
+// -1 Sangue Freddo sono comunque raggiunti e verificati.
+executeUntil('Pietrafonda: la nebbia della risalita assaggia (SAG fallita) -> pp6_ko',
+  ['federico', 'natalino'],
+  {
+    a3: '📖 Prima, sfogliare il registro',
+    a3_registro: 'Firmiamo domani con calma',
+  },
+  { checkBias: 'best', seedBase: 720000, sequences: { h1: ['Pietrafonda', 'barricarsi'] } },
+  ['pp6_ko'], 20);
+
+// I vespri di Don Michele (richiede la campanella_1974, ottenuta a Pietrafonda): si scende,
+// si prende la campanella, si rifiuta prima l'offerta impensabile (solo per toccare anche
+// z_smemorati senza chiudere la partita lì), poi si suonano i vespri e si va alla vittoria.
+executeUntil('Banchetto: i vespri di Don Michele (richiede campanella_1974) -> vittoria',
+  ['claudia', 'federico'],
+  {
+    a3: '📖 Prima, sfogliare il registro',
+    a3_registro: 'Firmiamo domani con calma',
+    z1: '🫙 L\'offerta impensabile', // primo giro: solo per toccare z_smemorati
+    z_smemorati: '↩ No. Questa notte è NOSTRA',
+  },
+  {
+    checkBias: 'best', seedBase: 730000,
+    sequences: { h1: ['Pietrafonda', 'barricarsi'], z1: ['offerta impensabile', 'Suonare la campanella'] },
+  },
+  ['pp7', 'z_smemorati', 'z_vespri', 'z3_boss', 'z5_vittoria', 'e_alba'], 24,
+  r => !!(r.log.flags && r.log.flags.pista_paese && r.log.flags.vespri_suonati));
+
 const fatalRuns = results.filter(r => !r.ok);
 for (const r of fatalRuns) fail(`Partita "${r.scenario.name}" (seed ${r.scenario.seed}): ${r.error.split('\n')[0]}`);
 
@@ -839,6 +938,18 @@ function coverage(label, sceneIds) {
   const ok = seen.length === sceneIds.length;
   console.log(`  ${ok ? '✅' : '❌'} ${label}: ${seen.join(', ') || '(nessuna)'}`);
   if (!ok) fail(`${label}: mancano ${sceneIds.filter(id => !allScenesSeen.has(id)).join(', ')}`);
+}
+
+// Come coverage(), ma controlla dei FLAG (G.flags) effettivamente impostati alla fine di
+// almeno una run riuscita, non solo l'aver visitato la scena che dovrebbe impostarli.
+const allFlagsSeen = new Set(
+  results.filter(r => r.ok && r.log.flags).flatMap(r => Object.keys(r.log.flags).filter(k => r.log.flags[k]))
+);
+function coverageFlag(label, flagNames) {
+  const seen = flagNames.filter(f => allFlagsSeen.has(f));
+  const ok = seen.length === flagNames.length;
+  console.log(`  ${ok ? '✅' : '❌'} ${label}: ${seen.join(', ') || '(nessuno)'}`);
+  if (!ok) fail(`${label}: mancano i flag ${flagNames.filter(f => !allFlagsSeen.has(f)).join(', ')}`);
 }
 
 coverage('Prologo — registro sfogliato', ['a3_registro']);
@@ -892,18 +1003,35 @@ coverage('Finale — sconfitta contro il boss -> celle', ['x_celle']);
 coverage('Finale — z_custode', ['z_custode']);
 coverage('Finale — z_resa', ['z_resa']);
 
-console.log(`  ${allEndings.size >= 3 ? '✅' : '❌'} Finali raggiunti (${allEndings.size}/3): ${[...allEndings].join(', ') || '(nessuno)'}`);
-if (allEndings.size < 3) {
-  const missing = ['e_alba', 'e_custode', 'e_ospiti'].filter(e => !allEndings.has(e));
+coverage('Pietrafonda — pista completa (pp1..pp7)', ['pp1', 'pp2', 'pp3', 'pp4', 'pp6', 'pp7']);
+coverage('Pietrafonda — bar del 1999 (SAG successo)', ['pp2_bar']);
+coverage('Pietrafonda — cripta dei custodi (INT successo)', ['pp4_cripta']);
+coverage('Pietrafonda — nebbia della risalita (SAG fallita, avvelenamento narrativo)', ['pp6_ko']);
+coverageFlag('Pietrafonda — flag pista_paese', ['pista_paese']);
+coverageFlag('Pietrafonda — flag segreto_custodi', ['segreto_custodi']);
+coverage('Banchetto — Bengala usato in combattimento (k4_chef_fight)', ['k4_chef_fight']);
+{
+  const bengalaRun = results.find(r => r.ok && r.log.usedForceItem);
+  console.log(`  ${bengalaRun ? '✅' : '❌'} Bengala effettivamente LANCIATO in almeno un combattimento`);
+  if (!bengalaRun) fail('Bengala: nessuna run ha registrato log.usedForceItem=true (mai lanciato davvero in combattimento)');
+}
+coverage('Banchetto — i vespri di Don Michele (richiede campanella_1974)', ['z_vespri']);
+coverageFlag('Banchetto — flag vespri_suonati', ['vespri_suonati']);
+coverage('Banchetto — l\'offerta impensabile (toccata, non necessariamente accettata)', ['z_smemorati']);
+coverage('Banchetto — l\'offerta impensabile ACCETTATA (quarto finale)', ['e_smemorati']);
+
+console.log(`  ${allEndings.size >= 4 ? '✅' : '❌'} Finali raggiunti (${allEndings.size}/4): ${[...allEndings].join(', ') || '(nessuno)'}`);
+if (allEndings.size < 4) {
+  const missing = ['e_alba', 'e_custode', 'e_ospiti', 'e_smemorati'].filter(e => !allEndings.has(e));
   fail(`Finali non raggiunti in nessuna delle ${scenarios.length} run: ${missing.join(', ')}`);
 }
 
-/* ==================== VERIFICHE DIRETTE: VELENO, MALUS -2, ANTIDOTO ====================
+/* ==================== VERIFICHE DIRETTE: VELENO, MALUS -2, ANTIDOTO, MOKA ====================
    Nota importante (vedi report finale): G.lastRoller — da cui dipendono sia `poisonRoller`
    che `captureRoller` in engine.js (gotoScene) — non viene MAI assegnato da nessuna parte
    nel codice di gioco (grep su js/*.js non trova alcuna assegnazione). Di conseguenza,
-   scene come p2_esperimento_ko, b4_ira e b4_calata_ko — che narrativamente "avvelenano chi
-   ha tirato" — non impostano MAI h.veleno=true nella pratica: la condizione
+   scene come p2_esperimento_ko, b4_ira, b4_calata_ko E la nuova pp6_ko — che narrativamente
+   "avvelenano chi ha tirato" — non impostano MAI h.veleno=true nella pratica: la condizione
    `G.lastRoller != null` in gotoScene è sempre falsa. Qui sotto verifichiamo perciò il
    MECCANISMO del veleno/malus/antidoto forzando lo stato direttamente (bypassando il
    trigger narrativo rotto), per assicurarci che — SE mai venisse impostato correttamente —
@@ -987,11 +1115,50 @@ function findHeroButton(box, heroName) {
   }
 })();
 
+(function testMoka() {
+  // La Moka di Don Michele (ITEMS.moka: usable + recharge) ricarica TUTTI gli usi delle
+  // abilità di UNA persona. Stesso limite del test dell'Antidoto: il bottone reale nel
+  // gioco ha `onclick="Engine.applyPotion(...)"` scritto dentro l'HTML (innerHTML puro nel
+  // nostro DOM finto, niente child-node reali), quindi chiamiamo applyPotion() come farebbe
+  // quel click, dopo aver verificato che usePotionOutside() abbia popolato la modale.
+  const game = buildGame(63636);
+  game.act(() => game.api.Engine.newGame([{ heroId: 'natalino', player: '' }, { heroId: 'claudia', player: '' }]));
+  const G = game.getG();
+  const natalino = G.party[0];
+  if (natalino.id !== 'natalino') { fail('testMoka: ordine del party inatteso, il test presume party[0]=natalino'); return; }
+
+  // "consuma" gli usi delle abilità di Natalino, come farebbe un combattimento vero
+  for (const ab of natalino.abilities) G.uses[natalino.id][ab.id] = 0;
+  G.inventory.push('moka');
+  checkInvariants(G, 'prima della moka');
+
+  game.act(() => game.api.Engine.usePotionOutside('moka'));
+  const box = game.doc.getElementById('modal-generic-content');
+  if (!/Natalino/.test(box.innerHTML)) fail('testMoka: usePotionOutside non ha mostrato Natalino nella modale di scelta');
+
+  game.act(() => game.api.Engine.applyPotion('moka', 0));
+  checkInvariants(G, 'dopo la moka');
+  const usesAfter = natalino.abilities.map(ab => G.uses[natalino.id][ab.id]);
+  const usesExpected = natalino.abilities.map(ab => ab.uses);
+  const rechargedOk = usesAfter.every((v, i) => v === usesExpected[i]);
+  if (!rechargedOk) {
+    fail(`testMoka: applyPotion('moka', ...) non ha ricaricato tutti gli usi delle abilità di Natalino (attesi ${JSON.stringify(usesExpected)}, trovati ${JSON.stringify(usesAfter)})`);
+  } else {
+    console.log(`  ✅ Engine.applyPotion con item recharge ricarica correttamente tutti gli usi delle abilità (Natalino: ${JSON.stringify(usesAfter)})`);
+  }
+  if (G.inventory.includes('moka')) fail('testMoka: applyPotion non ha consumato la Moka dall\'inventario');
+
+  // la moka NON deve toccare gli usi di ALTRI eroi del party (solo la persona scelta)
+  const claudia = G.party[1];
+  const claudiaUsesOk = claudia.abilities.every(ab => G.uses[claudia.id][ab.id] === ab.uses);
+  if (!claudiaUsesOk) fail('testMoka: la moka ha alterato gli usi di un eroe diverso da quello scelto');
+})();
+
 /* ==================== ESITO FINALE ==================== */
 
 console.log('\n' + '═'.repeat(60));
 if (failures === 0) {
-  console.log(`✅ TUTTE LE PARTITE SIMULATE COMPLETATE SENZA ERRORI (${results.length} run, ${allScenesSeen.size} scene distinte visitate, ${allEndings.size}/3 finali)`);
+  console.log(`✅ TUTTE LE PARTITE SIMULATE COMPLETATE SENZA ERRORI (${results.length} run, ${allScenesSeen.size} scene distinte visitate, ${allEndings.size}/4 finali)`);
   process.exit(0);
 } else {
   console.log(`❌ ${failures} PROBLEMI RILEVATI su ${results.length} partite simulate`);
