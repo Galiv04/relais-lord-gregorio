@@ -675,84 +675,78 @@ const Engine = (() => {
     const W = canvas.width, H = canvas.height;
     const r = Scenes.rng(500);
 
-    // sfondo pergamena notturna
-    Scenes.blocks(ctx, 0, 0, W, H, '#1d1a2e', 20, r, 0.12);
-    // montagne a nord
-    for (let i = 0; i < 6; i++) {
-      const x = W * 0.1 + i * W * 0.15, s = 40 + r() * 30;
-      ctx.fillStyle = '#2e2a3d';
-      ctx.beginPath(); ctx.moveTo(x, H * 0.18); ctx.lineTo(x + s, H * 0.18 - s); ctx.lineTo(x + s * 2, H * 0.18); ctx.closePath(); ctx.fill();
-      ctx.fillStyle = '#4a4560';
-      ctx.beginPath(); ctx.moveTo(x + s * 0.6, H * 0.18 - s * 0.6); ctx.lineTo(x + s, H * 0.18 - s); ctx.lineTo(x + s * 1.4, H * 0.18 - s * 0.6); ctx.closePath(); ctx.fill();
+    // notte sui monti d'Irpinia
+    Scenes.blocks(ctx, 0, 0, W, H, '#171019', 20, r, 0.12);
+    // il crinale della montagna
+    Scenes.hills(ctx, W, H * 0.2, 40, '#241a26', r, 36);
+    // il muro di nebbia tutto intorno alla proprietà
+    for (let i = 0; i < 5; i++) {
+      ctx.fillStyle = `rgba(190,180,195,${0.03 + i * 0.012})`;
+      ctx.fillRect(0, 0, W, 12 - i * 2);
+      ctx.fillRect(0, H - 12 + i * 2, W, 12 - i * 2);
+      ctx.fillRect(0, 0, 12 - i * 2, H);
+      ctx.fillRect(W - 12 + i * 2, 0, 12 - i * 2, H);
     }
-    // bosco a ovest
-    for (let i = 0; i < 14; i++) {
-      const x = W * (0.12 + r() * 0.25), y = H * (0.22 + r() * 0.2);
-      ctx.fillStyle = '#1d3a25'; ctx.fillRect(x, y, 14, 14);
-      ctx.fillStyle = '#2a4d33'; ctx.fillRect(x + 2, y - 6, 10, 10);
-    }
-    // fiume
-    ctx.strokeStyle = '#2a4a6e'; ctx.lineWidth = 8;
-    ctx.beginPath(); ctx.moveTo(W * 0.05, H * 0.85);
-    ctx.quadraticCurveTo(W * 0.4, H * 0.75, W * 0.55, H * 0.45);
-    ctx.quadraticCurveTo(W * 0.65, H * 0.28, W * 0.9, H * 0.2); ctx.stroke();
 
-    // strade tra i luoghi
+    // vialetti tra i luoghi
     ctx.strokeStyle = '#6e5a42'; ctx.lineWidth = 4; ctx.setLineDash([8, 6]);
-    const pts = k => { const l = WORLD_MAP.find(w => w.key === k); return [l.x * W, l.y * H]; };
+    const pts = k => { const l = WORLD_MAP.find(w => w.key === k); return l ? [l.x * W, l.y * H] : [W / 2, H / 2]; };
     const path = (a, b) => { const [x1, y1] = pts(a), [x2, y2] = pts(b); ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); };
-    path('brindolo', 'ponte'); path('ponte', 'bivio'); path('bivio', 'bosco'); path('bivio', 'miniere');
-    path('bosco', 'castello'); path('miniere', 'castello');
-    path('bivio', 'molo'); path('molo', 'castello');
+    path('tornanti', 'relais'); path('relais', 'hall'); path('hall', 'pranzo'); path('hall', 'camere');
+    path('pranzo', 'piscina'); path('camere', 'cantina'); path('camere', 'pozzo'); path('pranzo', 'cantina');
     ctx.setLineDash([]);
 
-    // luogo corrente
     const cur = WORLD_MAP.find(w => w.scenes.includes(G.sceneId));
 
     for (const loc of WORLD_MAP) {
       const x = loc.x * W, y = loc.y * H;
-      // icona
-      if (loc.key === 'castello') {
-        ctx.fillStyle = '#3a3045'; ctx.fillRect(x - 14, y - 20, 28, 20);
-        ctx.fillRect(x - 20, y - 30, 10, 30); ctx.fillRect(x + 10, y - 30, 10, 30);
-        ctx.fillStyle = '#e84a5a'; ctx.fillRect(x - 3, y - 16, 6, 8);
-      } else if (loc.key === 'bosco') {
-        ctx.fillStyle = '#2a4d33'; ctx.fillRect(x - 12, y - 16, 24, 16);
-        ctx.fillStyle = '#1d3a25'; ctx.fillRect(x - 6, y - 24, 12, 12);
-      } else if (loc.key === 'miniere') {
-        ctx.fillStyle = '#4a3524'; ctx.fillRect(x - 14, y - 14, 28, 14);
-        ctx.fillStyle = '#1a1a22'; ctx.fillRect(x - 6, y - 10, 12, 10);
-      } else if (loc.key === 'molo') {
-        // barcone sul fiume
-        ctx.fillStyle = '#3a2a18'; ctx.fillRect(x - 16, y - 8, 32, 8);
-        ctx.fillRect(x - 2, y - 24, 4, 16);
-        ctx.fillStyle = '#e8e0d0';
-        ctx.beginPath(); ctx.moveTo(x + 2, y - 24); ctx.lineTo(x + 14, y - 12); ctx.lineTo(x + 2, y - 12); ctx.closePath(); ctx.fill();
-        ctx.fillStyle = '#2a4a6e'; ctx.fillRect(x - 20, y, 40, 4);
-      } else if (loc.key === 'ponte') {
-        ctx.fillStyle = '#6e5238'; ctx.fillRect(x - 16, y - 6, 32, 8);
-        ctx.fillStyle = '#4a3524'; ctx.fillRect(x - 16, y + 2, 6, 8); ctx.fillRect(x + 10, y + 2, 6, 8);
+      if (loc.key === 'relais') {
+        Scenes.blocks(ctx, x - 22, y - 20, 44, 22, '#c8bca8', 6, r, 0.08);
+        ctx.fillStyle = '#5a3038';
+        ctx.beginPath(); ctx.moveTo(x - 26, y - 20); ctx.lineTo(x, y - 34); ctx.lineTo(x + 26, y - 20); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = '#e8b64c'; ctx.fillRect(x - 12, y - 14, 6, 6); ctx.fillRect(x + 6, y - 14, 6, 6);
+      } else if (loc.key === 'piscina') {
+        ctx.fillStyle = '#2492ac'; ctx.fillRect(x - 18, y - 12, 36, 20);
+        ctx.fillStyle = 'rgba(200,240,255,.4)'; ctx.fillRect(x - 12, y - 6, 12, 2); ctx.fillRect(x + 2, y + 2, 10, 2);
+      } else if (loc.key === 'pozzo') {
+        ctx.fillStyle = '#2e2a35'; ctx.fillRect(x - 10, y - 8, 20, 14);
+        ctx.fillStyle = '#5a3038';
+        ctx.beginPath(); ctx.moveTo(x - 14, y - 8); ctx.lineTo(x, y - 20); ctx.lineTo(x + 14, y - 8); ctx.closePath(); ctx.fill();
+      } else if (loc.key === 'cantina') {
+        ctx.fillStyle = '#243828'; ctx.fillRect(x - 12, y - 14, 24, 18);
+        ctx.fillStyle = '#0d0a0c'; ctx.fillRect(x - 6, y - 9, 12, 13);
+      } else if (loc.key === 'tornanti') {
+        ctx.strokeStyle = '#332e3a'; ctx.lineWidth = 5;
+        ctx.beginPath(); ctx.moveTo(x - 20, y + 12); ctx.quadraticCurveTo(x + 16, y + 4, x - 12, y - 4);
+        ctx.quadraticCurveTo(x - 30, y - 10, x + 10, y - 16); ctx.stroke();
+      } else if (loc.key === 'camere') {
+        ctx.fillStyle = '#3a2620'; ctx.fillRect(x - 12, y - 14, 24, 18);
+        ctx.fillStyle = '#e8b64c'; ctx.fillRect(x - 6, y - 9, 5, 6); ctx.fillRect(x + 2, y - 9, 5, 6);
+      } else if (loc.key === 'pranzo') {
+        ctx.fillStyle = '#e8e0d0'; ctx.fillRect(x - 14, y - 8, 28, 5);
+        ctx.fillStyle = '#4a2a20'; ctx.fillRect(x - 12, y - 3, 4, 8); ctx.fillRect(x + 8, y - 3, 4, 8);
+        ctx.fillStyle = '#e8b64c'; ctx.fillRect(x - 2, y - 14, 4, 5);
       } else {
-        ctx.fillStyle = '#8a6a45'; ctx.fillRect(x - 10, y - 12, 20, 12);
-        ctx.fillStyle = '#7a3025';
-        ctx.beginPath(); ctx.moveTo(x - 14, y - 12); ctx.lineTo(x, y - 24); ctx.lineTo(x + 14, y - 12); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = '#c8a032'; ctx.fillRect(x - 8, y - 10, 16, 12);
       }
-      // etichetta
-      ctx.fillStyle = cur && cur.key === loc.key ? '#f5c542' : '#a89cc8';
+      ctx.fillStyle = cur && cur.key === loc.key ? '#e8b64c' : '#b09a9c';
       ctx.font = "10px 'Press Start 2P'";
       ctx.textAlign = 'center';
-      ctx.fillText(loc.label, x, y + 22);
+      ctx.fillText(loc.label, x, y + 26);
       if (cur && cur.key === loc.key) {
-        ctx.fillStyle = '#f5c542';
-        ctx.font = "18px 'Press Start 2P'";
-        ctx.fillText('⭐', x, y - 34);
+        ctx.fillStyle = '#e8b64c';
+        ctx.font = "16px 'Press Start 2P'";
+        ctx.fillText('⭐', x, y - 30);
       }
       ctx.textAlign = 'left';
     }
 
-    // eclissi nell'angolo
-    ctx.fillStyle = '#0d0a1a'; ctx.beginPath(); ctx.arc(W - 50, 46, 26, 0, Math.PI * 2); ctx.fill();
-    ctx.strokeStyle = '#e84a5a'; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(W - 50, 46, 26, 0, Math.PI * 2); ctx.stroke();
+    // la luna rossa in un angolo
+    ctx.fillStyle = '#8a2432';
+    for (let dy = -14; dy <= 14; dy += 3) {
+      const hw = Math.floor(Math.sqrt(196 - dy * dy) / 3) * 3;
+      ctx.fillRect(W - 44 - hw, 40 + dy, hw * 2, 3);
+    }
   }
 
   /* ---------- menu ---------- */
