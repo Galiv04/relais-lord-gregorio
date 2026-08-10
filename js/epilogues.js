@@ -102,6 +102,7 @@ const IMPRESE = [
   { flag: 'direttore_sconfitto',   icon: '👔', title: 'Il Colloquio Finale',         desc: 'Il Direttore del Riflesso ha ricevuto il suo primo licenziamento in centoventicinque anni.' },
   { flag: 'tentato_sacrificio',    icon: '🖋', title: 'Quasi',                       desc: 'Qualcuno di voi ha preso in mano la penna del Riflesso. L\'ha posata. Ma l\'ha presa.' },
   { flag: 'doni_don_michele',      icon: '☕', title: 'L\'Armeria del Parroco',      desc: 'Moka e campanella del \'74: l\'equipaggiamento completo del sesto che non ha mai smesso di combattere.' },
+  { flag: 'firma_messa',           icon: '✍️', title: 'Firmato',                     desc: 'Avete messo la firma sul registro, alla cena. Come tutti. Prima di voi.' },
 ];
 
 /* ---------- CRONACHE DEL BELVEDERE ----------
