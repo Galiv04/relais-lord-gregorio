@@ -125,6 +125,18 @@ const Combat = (() => {
 
     if (battle.isBoss && G.flags.sorpresa) log(`⚡ <b>Sorpresa!</b> Primo giro con VANTAGGIO agli attacchi!`, 'log-heal');
     if (battle.isBoss && G.flags.rituale_fatto) log(`🧂 Il rituale di Ada ha già inciso la casa: sentite la sua presa più DEBOLE.`, 'log-heal');
+    if (battle.isBoss && G.flags.cucina_in_sciopero) {
+      // lo sciopero dello Chef continua: un mestolo di ghisa vola dalla porta di servizio
+      const bersaglio = battle.enemies.find(e => e.boss && !e.dead) || battle.enemies[0];
+      if (bersaglio) {
+        bersaglio.hp = Math.max(1, bersaglio.hp - 5);
+        log(`🍳 Dalla porta di servizio, un MESTOLO DI GHISA del 1899 attraversa la sala e colpisce ${bersaglio.name} in piena fronte: <b>-5 PV</b>. La voce di forno, da lontano: "IN QUESTA CASA NON SI MANGIA NESSUNO."`, 'log-crit');
+      }
+    }
+    if (battle.isBoss && G.flags.cerchio_di_porcellana) {
+      battle.enemies.forEach(e => { if (!e.dead) e.distracted = true; });
+      log(`🧸 Trentadue signorine di porcellana fissano la Fame senza sbattere le palpebre. La Fame, a disagio, colpisce PEGGIO (primo attacco con svantaggio).`, 'log-heal');
+    }
     if (battle.isBoss && G.flags.gregorio_umano) log(`🍷 Gregorio, umano e furioso, vi copre le spalle: <b>+1 a tutti i vostri tiri!</b>`, 'log-heal');
 
     setTimeout(() => { banner.classList.add('hidden'); nextTurn(); }, 1600);

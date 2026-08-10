@@ -2978,6 +2978,7 @@ E la casa — le pareti, i lampadari, i ritratti, il pavimento a scacchi — **r
       { text: '🎫 Natalino mette i piedi sul tavolo del 1899 e gratta l\'ULTIMO Gratta e Vinci. Davanti a LUI.', requires: { flag: 'ultimo_biglietto' }, removeItem: 'gratta_vinci', once: true, next: 'gvz' },
       { text: '🍽 "CHEF! La portata è cambiata — chiedi alla casa se se la sente di dire di no ai signori del \'74."', requires: { flag: 'chef_amico' }, once: true, next: 'z2_alleato' },
       { text: '🧸 Emanuela fischia piano il valzer del 1924, verso il soffitto. E il soffitto... scricchiola di passini.', requires: { flag: 'bambole_addormentate' }, once: true, next: 'z2_bambole' },
+      { text: '📱 Claudia alza il telefono e INQUADRA la sedia a capotavola. In diretta. "Sorridi."', once: true, next: 'z2_claudia' },
       { text: '⚔ Il gruppo si mette in mezzo: se la casa vuole un nome, dovrà VENIRSELO A PRENDERE', next: 'z3_boss' },
       { text: '🗣 Federico chiede la parola: la trattativa della vita', tag: 'Prova di Carisma — CD 13', requires: { notFlag: 'casa_rispetta' }, check: { stat: 'CAR', dc: 13, success: 'z2_trattativa', fail: 'z3_boss_arrabbiato' } },
       { text: '🗣 Federico riprende la parola — e stavolta la casa ASCOLTA. Nessun dado: il tavolo è cambiato', requires: { flag: 'casa_rispetta' }, next: 'z2_trattativa' },
@@ -3164,6 +3165,27 @@ Silenzio. Poi la casa — le travi, i muri, i lampadari — emette un suono che 
 *(La casa URLA. I candelabri si spengono TUTTI. E nel buio, il Belvedere gioca l'ultima carta: se non può avere una firma... verrà a prendersi il banchetto con le mani.)*`,
     sets: { rituale_fatto: true },
     choices: [{ text: 'Nel buio, qualcosa di ENORME si alza da capotavola', next: 'z3_boss_indebolito' }],
+  },
+
+  z2_claudia: {
+    location: 'salaBanchetto',
+    caption: 'La diretta',
+    text: `Claudia si alza. Non prende il sale, non prende la penna: prende il **telefono**, lo gira in orizzontale con il gesto automatico di dieci anni di mestiere, e INQUADRA la sedia a capotavola.
+
+> Claudia: "Allora. Io di lavoro faccio una cosa sola: decido COME si viene visti. Ci ho costruito una carriera. E tu—" *(il pallino rosso si accende)* "—tu sono centoventicinque anni che scegli l'inquadratura: i ritratti, il registro, il riflesso della piscina. Sempre TU a decidere l'immagine. Bene. **Adesso l'obiettivo è mio.**"
+
+E la casa — che possiede ogni specchio, ogni ritratto, ogni superficie che riflette da centoventicinque anni — scopre in diretta cosa si prova a essere **guardata da un occhio che non è suo.**
+
+I candelabri sfarfallano. Il registro si richiude piano, come chi si tira il lenzuolo fin sotto il naso. La sedia a capotavola scricchiola all'indietro di un centimetro.
+
+> Claudia: *(al gruppo, senza abbassare il telefono)* "Non so quanto regge. Ma per il primo assalto... la stronza è in imbarazzo."
+
+**(La casa è stata COLTA DI SORPRESA: primo giro di battaglia con VANTAGGIO. Sangue freddo +1.)**`,
+    gold: 1,
+    sets: { sorpresa: true },
+    choices: [
+      { text: '↩ Tornare al tavolo, col pallino rosso ancora acceso', next: 'z1' },
+    ],
   },
 
   z2_alleato: {
@@ -3479,6 +3501,7 @@ const DIARY_FLAGS = [
   ['biglietto_strappato',   'Il quinto biglietto aveva vinto "una notte, ospite della casa, per sempre". Natalino l\'ha strappato: RITENTA.'],
   ['casa_rispetta',         'Avete denunciato la trappola in faccia a Gregorio, e il suo sorriso è scivolato: la casa vi RISPETTA.'],
   ['cucina_in_sciopero',    'La cucina SCIOPERA per voi: la Fame, stanotte, serve da sola.'],
+  ['sorpresa',              'Il pallino rosso è acceso: la casa è INQUADRATA, e non le piace. Il primo assalto è vostro.'],
   ['cerchio_di_porcellana', 'Trentadue signorine di porcellana fanno cerchio intorno a voi. La casa, davanti a loro, si vergogna.'],
 ];
 
@@ -3488,7 +3511,7 @@ const WORLD_MAP = [
   { key: 'relais',   label: 'Il Relais',       x: 0.40, y: 0.30, scenes: ['a2', 'a2_siepi', 'p4_fuga', 'gr1', 'gr2', 'gr3', 'gr3_ko'] },
   { key: 'hall',     label: 'La Hall',         x: 0.56, y: 0.48, scenes: ['a3', 'a3_registro', 'a3_registro_ko', 'a4_firma', 'a4_rinvio', 'a4_firma_forzata', 'p4_rientro'] },
   { key: 'camere',   label: 'Le Camere',       x: 0.74, y: 0.32, scenes: ['a5', 'a5_pozzo', 'h1', 'h2', 'gv1', 'u1', 'u2_1999', 'u2_1924', 'u2_1899', 'u3_medaglione', 'u3_lanterna', 'u3_bambole_fight', 'u3_bambole_vinte', 'u5_specchio', 'u4_porta_vuota', 'sf1', 'sf2', 'sf3', 'sf4', 'sf5', 'sf6', 's49_1', 's49_2', 's49_3', 's49_3_ko', 's74_1', 's74_2', 's74_3', 'cuore_gc', 'cuore_fe', 'cuore_fe_esito', 'cuore_nat', 'cuore_nat_esito'] },
-  { key: 'pranzo',   label: 'Sala da Pranzo',  x: 0.46, y: 0.62, scenes: ['a6', 'a6_menu', 'a6_brindisi', 'a6_no_brindisi', 'a7', 'z1', 'z2_vino', 'z2_trattativa', 'z2_rituale', 'gvz', 'z2_strada', 'z2_alleato', 'z2_bambole', 'z3_boss', 'z3_boss_solo', 'z3_boss_arrabbiato', 'z3_boss_indebolito', 'z4_fase2', 'z5_vittoria', 'z6_alba', 'e_alba', 'z_custode', 'e_custode', 'z_resa', 'e_ospiti', 'z_vespri', 'z_smemorati', 'e_smemorati'] },
+  { key: 'pranzo',   label: 'Sala da Pranzo',  x: 0.46, y: 0.62, scenes: ['a6', 'a6_menu', 'a6_brindisi', 'a6_no_brindisi', 'a7', 'z1', 'z2_vino', 'z2_trattativa', 'z2_rituale', 'gvz', 'z2_strada', 'z2_alleato', 'z2_bambole', 'z2_claudia', 'z3_boss', 'z3_boss_solo', 'z3_boss_arrabbiato', 'z3_boss_indebolito', 'z4_fase2', 'z5_vittoria', 'z6_alba', 'e_alba', 'z_custode', 'e_custode', 'z_resa', 'e_ospiti', 'z_vespri', 'z_smemorati', 'e_smemorati'] },
   { key: 'riflesso', label: 'Il Riflesso',      x: 0.10, y: 0.28, scenes: ['w1_tuffo', 'w2_riflesso', 'w2_riflesso_ko', 'w3_giardino', 'w3_pattuglia_combat', 'w4_sofia', 'w5_racconto', 'w6_1924', 'w7_ronda', 'w7_ronda_combat', 'w8_direttore', 'w9_studio', 'w9_studio_combat', 'w10_orologio', 'w10_orologio_reso', 'w11_inventario', 'w12_tradimento', 'w12_sofia', 'w14_direttore_boss', 'w15_vittoria', 'w16_amaro', 'w17_fuga', 'w17_fuga_ko', 'w18_soglia', 'w_finale'] },
   { key: 'paese',    label: 'Pietrafonda',     x: 0.16, y: 0.90, scenes: ['pp1', 'pp2', 'pp2_bar', 'pp3', 'pp4_cripta', 'pp4', 'pp6', 'pp6_ko', 'pp7'] },
   { key: 'piscina',  label: 'La Piscina',      x: 0.22, y: 0.50, scenes: ['p1', 'p1_accappatoio', 'p1_accappatoio_ko', 'p2', 'p2_esperimento', 'p2_esperimento_ko', 'p3_fuori'] },

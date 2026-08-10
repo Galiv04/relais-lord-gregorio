@@ -1180,6 +1180,15 @@ executeUntil('Banchetto: il cerchio di porcellana delle signorine del 1924 -> z2
   ['u3_lanterna', 'z2_bambole'], 20,
   r => !!(r.log.flags && r.log.flags.cerchio_di_porcellana));
 
+
+executeUntil('Banchetto: la diretta di Claudia -> z2_claudia (sorpresa: primo giro con vantaggio)',
+  ['claudia', 'gaetano'],
+  {},
+  { checkBias: 'best', seedBase: 900000,
+    sequences: { h1: ['POZZO', 'barricarsi'], z1: ['INQUADRA la sedia', 'VENIRSELO A PRENDERE'] } },
+  ['z2_claudia', 'z3_boss'], 20,
+  r => !!(r.log.flags && r.log.flags.sorpresa));
+
 const fatalRuns = results.filter(r => !r.ok);
 for (const r of fatalRuns) fail(`Partita "${r.scenario.name}" (seed ${r.scenario.seed}): ${r.error.split('\n')[0]}`);
 
@@ -1356,6 +1365,8 @@ coverageFlag('Echi incrociati — flag di trama', ['bambole_addormentate', 'chef
 
 coverage('Alleati del Banchetto — lo sciopero della cucina e il cerchio di porcellana', ['z2_alleato', 'z3_boss_solo', 'z2_bambole']);
 coverageFlag('Alleati del Banchetto — flag di trama', ['cucina_in_sciopero', 'cerchio_di_porcellana']);
+coverage('La diretta di Claudia', ['z2_claudia']);
+
 
 
 
@@ -1385,6 +1396,21 @@ function findHeroButton(box, heroName) {
 }
 
 
+
+
+(function testEchiFaseDue() {
+  section('Verifica diretta: mestolo dello Chef e sguardo delle signorine nella battaglia finale');
+  const game = buildGame(9191);
+  game.act(() => game.api.Engine.newGame([{ heroId: 'gaetano', player: '' }, { heroId: 'claudia', player: '' }, { heroId: 'natalino', player: '' }]));
+  const G = game.getG();
+  G.flags.cucina_in_sciopero = true; G.flags.cerchio_di_porcellana = true;
+  game.act(() => game.api.Engine.gotoScene('z4_fase2'));
+  game.act(() => matchButton(buttons(game.doc.getElementById('choices')), 'INIZIA IL COMBATTIMENTO').onclick());
+  const log = game.doc.getElementById('combat-log').children.map(c => c.innerHTML).join('\n');
+  if (!/MESTOLO DI GHISA/.test(log)) fail('testEchiFaseDue: il mestolo dello Chef non è volato (cucina_in_sciopero senza effetto in fase due)');
+  if (!/signorine di porcellana fissano/.test(log)) fail('testEchiFaseDue: lo sguardo delle signorine non è scattato (cerchio_di_porcellana senza effetto in fase due)');
+  console.log('  ✅ Fase due: mestolo (-5 PV al boss) e sguardo di porcellana (svantaggio) attivi con i rispettivi flag');
+})();
 
 (function testPorzioniRidotte() {
   section('Verifica diretta: porzioni ridotte per gruppi da 1-2 (scaling dei nemici)');
