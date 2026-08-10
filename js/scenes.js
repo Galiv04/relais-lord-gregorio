@@ -168,6 +168,55 @@ const Scenes = (() => {
     }
   }
 
+  // Ulivo: chioma argentata e tronco contorto — siamo in Irpinia
+  function olive(ctx, x, groundY, size, rand, dark = false) {
+    const trunk = dark ? '#3a2f22' : '#5a4a35';
+    const leaf1 = dark ? '#3d4a38' : '#6a7a62';
+    const leaf2 = dark ? '#4a5a44' : '#8a9a80';
+    blocks(ctx, x - 4, groundY - size * 0.55, 8, size * 0.55, trunk, 5, rand, 0.3);
+    blocks(ctx, x - 2 + (rand() > 0.5 ? 6 : -8), groundY - size * 0.7, 6, size * 0.3, trunk, 5, rand, 0.3);
+    blocks(ctx, x - size * 0.42, groundY - size * 0.95, size * 0.84, size * 0.42, leaf1, 6, rand, 0.3);
+    blocks(ctx, x - size * 0.3, groundY - size * 1.1, size * 0.6, size * 0.3, leaf2, 6, rand, 0.3);
+  }
+
+  // Filare di vigna in prospettiva: pali, fili e fogliame
+  function vineyard(ctx, x, y, w, rows, rand, dark = false) {
+    const leaf = dark ? '#243a26' : '#3d5a3a';
+    const pole = dark ? '#33281c' : '#4a3a28';
+    for (let rIdx = 0; rIdx < rows; rIdx++) {
+      const ry = y + rIdx * 14;
+      const rw = w * (1 - rIdx * 0.06);
+      const rx = x + (w - rw) / 2;
+      ctx.fillStyle = pole;
+      for (let px = rx; px < rx + rw; px += 34) ctx.fillRect(px, ry - 12, 3, 14);
+      ctx.fillStyle = dark ? '#4a4038' : '#6a5a45';
+      ctx.fillRect(rx, ry - 10, rw, 1);
+      blocks(ctx, rx, ry - 8, rw, 7, leaf, 6, rand, 0.3);
+    }
+  }
+
+  // Ombrellone da piscina (bianco/tortora)
+  function umbrella(ctx, x, groundY, size, rand) {
+    ctx.fillStyle = '#8a8478'; ctx.fillRect(x - 1, groundY - size, 3, size);
+    const uw = size * 0.9;
+    ctx.fillStyle = '#e8e4da';
+    for (let i = 0; i < 3; i++) {
+      const t = i / 3;
+      ctx.fillRect(x - uw / 2 + t * uw / 2, groundY - size - 8 + i * 4, uw - t * uw, 5);
+    }
+    ctx.fillStyle = '#c8c2b4';
+    ctx.fillRect(x - uw / 2 + 4, groundY - size - 1, 6, 3); ctx.fillRect(x + uw / 2 - 10, groundY - size - 1, 6, 3);
+  }
+
+  // Lampioncino da giardino con globo caldo
+  function globeLamp(ctx, x, groundY, h, rgb = '232,182,76') {
+    ctx.fillStyle = '#2a2a30'; ctx.fillRect(x - 2, groundY - h, 4, h);
+    ctx.fillRect(x - 5, groundY - 2, 10, 3);
+    glow(ctx, x, groundY - h - 5, 18, 16, rgb);
+    ctx.fillStyle = '#f0d8a0'; ctx.fillRect(x - 4, groundY - h - 9, 9, 9);
+    ctx.fillStyle = '#fff'; ctx.fillRect(x - 2, groundY - h - 7, 3, 3);
+  }
+
   function bush(ctx, x, groundY, size, color, rand) {
     blocks(ctx, x - size / 2, groundY - size * 0.6, size, size * 0.6, color, 6, rand, 0.3);
     blocks(ctx, x - size * 0.3, groundY - size * 0.85, size * 0.6, size * 0.3, color, 6, rand, 0.3);
@@ -306,7 +355,7 @@ const Scenes = (() => {
       const g = H * 0.84;
       hills(ctx, W, g, 60, '#120a0e', r, 36);
       // la villa in silhouette sul crinale
-      blocks(ctx, W * 0.30, g - 96, W * 0.40, 96, '#1a1014', 8, r, 0.1);
+      blocks(ctx, W * 0.30, g - 96, W * 0.40, 96, '#241009', 8, r, 0.1);
       // ali laterali
       blocks(ctx, W * 0.24, g - 64, W * 0.10, 64, '#150c10', 8, r, 0.1);
       blocks(ctx, W * 0.66, g - 64, W * 0.10, 64, '#150c10', 8, r, 0.1);
@@ -316,7 +365,7 @@ const Scenes = (() => {
         blocks(ctx, W * 0.28 + (W * 0.44 - rw) / 2, g - 96 - 10 - i * 9, rw, 10, '#0f0a0c', 8, r, 0.1);
       }
       // torretta liberty
-      blocks(ctx, W * 0.46, g - 150, W * 0.08, 60, '#1d1216', 8, r, 0.1);
+      blocks(ctx, W * 0.46, g - 150, W * 0.08, 60, '#2a1610', 8, r, 0.1);
       for (let i = 0; i < 4; i++) blocks(ctx, W * 0.455 + i * 4, g - 150 - 8 - i * 8, W * 0.09 - i * 8, 9, '#0f0a0c', 6, r, 0.1);
       // finestre accese color miele: TUTTE, e una alla volta ti accorgi che ti guardano
       ctx.fillStyle = '#e8b64c';
@@ -356,8 +405,11 @@ const Scenes = (() => {
         ctx.fillStyle = 'rgba(200,190,170,.16)';
         for (let d = 0; d < 8; d++) ctx.fillRect(W * (0.10 + (i % 2) * 0.16) + d * W * 0.085, y + 6, 16, 3);
       }
-      // castagni scuri DOPO la strada: la costeggiano
-      for (let i = 0; i < 6; i++) tree(ctx, 30 + i * (W / 5.5) + (r() * 30 - 15), g + 10, 66 + r() * 40, '#14201a', '#241a14', r);
+      // vigneto in pendenza sotto la strada (Aglianico, dicono i cartelli)
+      vineyard(ctx, W * 0.55, H * 0.47, W * 0.4, 3, r, true);
+      // castagni e ULIVI lungo la strada: siamo in Irpinia
+      for (let i = 0; i < 3; i++) tree(ctx, 30 + i * (W / 2.6) + (r() * 30 - 15), g + 10, 66 + r() * 40, '#14201a', '#241a14', r);
+      for (let i = 0; i < 3; i++) olive(ctx, 120 + i * (W / 2.8) + (r() * 24 - 12), g + 8, 46 + r() * 18, r, true);
       // il guardrail e la macchina piena come un uovo
       ctx.fillStyle = '#5a5a66'; ctx.fillRect(W * 0.08, H * 0.755, W * 0.7, 4);
       const cx = W * 0.34, cy = H * 0.652;
@@ -381,40 +433,58 @@ const Scenes = (() => {
       const r = rng(11);
       skyGradient(ctx, W, H, '#120a12', '#331522', 10);
       stars(ctx, W, H, r, 34);
-      moon(ctx, W * 0.12, 58, 24, '#c8b8c0', false);
+      moon(ctx, W * 0.10, 58, 24, '#c8b8c0', false);
       const g = H - 70;
       hills(ctx, W, g - 40, 46, '#150d12', r, 34);
-      // la villa liberty color osso
-      const vx = W * 0.22, vw = W * 0.56, vh = 150;
-      blocks(ctx, vx, g - vh, vw, vh, '#c8bca8', 10, r, 0.08);
-      // marcapiano e cornici
-      blocks(ctx, vx - 6, g - vh + 66, vw + 12, 8, '#a89878', 8, r, 0.06);
-      // tetto
-      for (let i = 0; i < 6; i++) {
-        const rw = (vw + 30) * (1 - i / 7);
-        blocks(ctx, vx - 15 + ((vw + 30) - rw) / 2, g - vh - 8 - i * 9, rw, 10, '#5a3038', 8, r, 0.12);
+      // la villa gemella color ocra, più indietro a sinistra
+      const twx = W * 0.06, tww = W * 0.17, twh = 92;
+      blocks(ctx, twx, g - 24 - twh, tww, twh, '#7a5c26', 8, r, 0.1);
+      for (let i = 0; i < 4; i++) {
+        const rw = (tww + 16) * (1 - i / 5);
+        blocks(ctx, twx - 8 + ((tww + 16) - rw) / 2, g - 24 - twh - 6 - i * 7, rw, 8, '#6e3a28', 7, r, 0.12);
       }
-      // torretta
-      blocks(ctx, vx + vw * 0.42, g - vh - 66, vw * 0.16, 66, '#c0b49e', 8, r, 0.08);
-      for (let i = 0; i < 4; i++) blocks(ctx, vx + vw * 0.41 + i * 5, g - vh - 74 - i * 8, vw * 0.18 - i * 10, 9, '#5a3038', 6, r, 0.1);
-      // finestre color miele con la vignetta calda
-      for (let fx = 0; fx < 5; fx++) {
-        const wx = vx + 16 + fx * (vw - 40) / 4;
-        glow(ctx, wx + 8, g - vh + 34, 22, 26, '232,182,76');
-        ctx.fillStyle = '#e8b64c'; ctx.fillRect(wx, g - vh + 22, 16, 24);
-        ctx.fillStyle = '#8a6a2d'; ctx.fillRect(wx + 7, g - vh + 22, 2, 24);
-        ctx.fillStyle = '#e8b64c'; ctx.fillRect(wx, g - 58, 16, 24);
-        ctx.fillStyle = '#8a6a2d'; ctx.fillRect(wx + 7, g - 58, 2, 24);
+      ctx.fillStyle = '#e8b64c';
+      ctx.fillRect(twx + 12, g - 24 - twh + 22, 10, 14); ctx.fillRect(twx + tww - 24, g - 24 - twh + 22, 10, 14);
+      // camino-torretta della gemella (come nella foto)
+      blocks(ctx, twx + tww * 0.6, g - 24 - twh - 34, 16, 34, '#6e5226', 6, r, 0.1);
+      blocks(ctx, twx + tww * 0.58, g - 24 - twh - 42, 22, 9, '#5a3020', 6, r, 0.1);
+      // LA VILLA: terracotta con cornicioni chiari
+      const vx = W * 0.30, vw = W * 0.52, vh = 150;
+      blocks(ctx, vx, g - vh, vw, vh, '#8a4038', 10, r, 0.1);
+      blocks(ctx, vx - 6, g - vh + 68, vw + 12, 8, '#d8ccb8', 8, r, 0.05);   // marcapiano chiaro
+      blocks(ctx, vx - 6, g - vh - 4, vw + 12, 7, '#d8ccb8', 8, r, 0.05);    // cornicione
+      // tetto a coppi
+      for (let i = 0; i < 5; i++) {
+        const rw = (vw + 28) * (1 - i / 6);
+        blocks(ctx, vx - 14 + ((vw + 28) - rw) / 2, g - vh - 12 - i * 9, rw, 10, '#6e3a28', 8, r, 0.16);
       }
-      // pensilina liberty sull'ingresso
-      ctx.fillStyle = '#3a3440';
-      ctx.fillRect(vx + vw / 2 - 30, g - 96, 60, 6);
-      ctx.fillRect(vx + vw / 2 - 28, g - 92, 4, 34); ctx.fillRect(vx + vw / 2 + 24, g - 92, 4, 34);
-      ctx.fillStyle = '#241a1e'; ctx.fillRect(vx + vw / 2 - 14, g - 88, 28, 30);
-      ctx.fillStyle = '#3a2a20'; ctx.fillRect(vx + vw / 2 - 16, g - 60, 32, 4);
-      blocks(ctx, vx + vw / 2 - 20, g - 56, 40, 8, '#a89878', 8, r, 0.08);
-      ctx.fillStyle = '#c8a032'; ctx.fillRect(vx + vw / 2 + 6, g - 76, 3, 3);
-      // viale di ghiaia in prospettiva, rastrellato a onde rade
+      ctx.fillStyle = '#8a8478'; ctx.fillRect(vx + vw * 0.72, g - vh - 52, 3, 40); // l'antenna, dettaglio vero
+      ctx.fillRect(vx + vw * 0.70, g - vh - 50, 9, 2);
+      // finestre con PERSIANE A DOGHE chiare, luce color miele
+      for (let fx = 0; fx < 4; fx++) {
+        const wx = vx + 20 + fx * (vw - 52) / 3;
+        for (const wy of [g - vh + 18, g - 62]) {
+          // persiane ai lati
+          ctx.fillStyle = '#c8c2b4'; ctx.fillRect(wx - 10, wy, 9, 26); ctx.fillRect(wx + 17, wy, 9, 26);
+          ctx.fillStyle = '#a8a294';
+          for (let d = 0; d < 5; d++) { ctx.fillRect(wx - 9, wy + 3 + d * 5, 7, 2); ctx.fillRect(wx + 18, wy + 3 + d * 5, 7, 2); }
+          glow(ctx, wx + 8, wy + 13, 20, 24, '232,182,76');
+          ctx.fillStyle = '#e8b64c'; ctx.fillRect(wx, wy, 16, 26);
+          ctx.fillStyle = '#8a6a2d'; ctx.fillRect(wx + 7, wy, 2, 26);
+        }
+      }
+      // ingresso con pensilina
+      ctx.fillStyle = '#d8ccb8'; ctx.fillRect(vx + vw / 2 - 26, g - 96, 52, 6);
+      ctx.fillStyle = '#3a3440'; ctx.fillRect(vx + vw / 2 - 24, g - 90, 4, 32); ctx.fillRect(vx + vw / 2 + 20, g - 90, 4, 32);
+      ctx.fillStyle = '#241a1e'; ctx.fillRect(vx + vw / 2 - 13, g - 86, 26, 28);
+      blocks(ctx, vx + vw / 2 - 20, g - 58, 40, 8, '#c8bca8', 8, r, 0.06);
+      ctx.fillStyle = '#c8a032'; ctx.fillRect(vx + vw / 2 + 6, g - 74, 3, 3);
+      // muro di cinta BIANCO (come nella foto), con la nebbia che preme oltre
+      blocks(ctx, 0, g - 30, W * 0.055, 34, '#b0a89a', 8, r, 0.08);
+      blocks(ctx, W * 0.87, g - 30, W * 0.13, 34, '#b0a89a', 8, r, 0.08);
+      ctx.fillStyle = 'rgba(190,180,195,.14)';
+      for (let i = 0; i < 6; i++) { ctx.fillRect(0, g - 44 - i * 5, W * 0.05, 5); ctx.fillRect(W * 0.875, g - 44 - i * 5, W * 0.125, 5); }
+      // viale di ghiaia in prospettiva
       ground(ctx, W, H, g, '#1d1418', r, 12, 8);
       for (let i = 0; i < 7; i++) {
         const t = i / 7;
@@ -427,13 +497,16 @@ const Scenes = (() => {
         const vw2 = W * (0.15 + t * 0.28);
         ctx.fillRect(W * 0.5 - vw2 / 2, g + 10 + i * ((H - g - 10) / 6), vw2, 2);
       }
-      // siepi a forme che non vuoi riguardare
-      for (const [bx, bw] of [[0.06, 0.10], [0.82, 0.12]]) {
-        blocks(ctx, W * bx, g - 40, W * bw, 44, '#1a2e1d', 8, r, 0.2);
-        blocks(ctx, W * bx + 10, g - 58, W * bw - 24, 22, '#16281a', 8, r, 0.2);
-        // due buchi della misura esatta di due occhi
+      // lampioncini a globo lungo il viale
+      globeLamp(ctx, W * 0.34, g + 26, 34);
+      globeLamp(ctx, W * 0.66, g + 26, 34);
+      // ulivi e siepi coi buchi-occhi
+      olive(ctx, W * 0.135, g + 2, 52, r, true);
+      olive(ctx, W * 0.91, g + 4, 44, r, true);
+      for (const [bx, bw] of [[0.17, 0.08], [0.845, 0.05]]) {
+        blocks(ctx, W * bx, g - 34, W * bw, 38, '#1a2e1d', 8, r, 0.2);
         ctx.fillStyle = '#0a0f0a';
-        ctx.fillRect(W * bx + 16, g - 50, 5, 5); ctx.fillRect(W * bx + 28, g - 50, 5, 5);
+        ctx.fillRect(W * bx + 12, g - 26, 5, 5); ctx.fillRect(W * bx + 24, g - 26, 5, 5);
       }
     },
 
@@ -634,6 +707,15 @@ const Scenes = (() => {
       // increspature
       ctx.fillStyle = 'rgba(230,250,255,.22)';
       for (let i = 0; i < 9; i++) ctx.fillRect(px + 10 + r() * (pw - 40), py + 8 + r() * (ph - 16), 18 + r() * 26, 2);
+      // il muro di cinta bianco sul fondo, oltre i lettini
+      blocks(ctx, 0, deck - 26, W, 14, '#8a8478', 8, r, 0.08);
+      // lo spigolo della villa terracotta che si affaccia a destra
+      blocks(ctx, W * 0.86, deck - 96, W * 0.14, 72, '#8a4038', 8, r, 0.1);
+      blocks(ctx, W * 0.85, deck - 102, W * 0.15, 8, '#6e3a28', 8, r, 0.12);
+      ctx.fillStyle = '#c8c2b4'; ctx.fillRect(W * 0.885, deck - 82, 8, 22);
+      ctx.fillStyle = '#a8a294'; for (let d = 0; d < 4; d++) ctx.fillRect(W * 0.886, deck - 79 + d * 5, 6, 2);
+      glow(ctx, W * 0.925 + 7, deck - 70, 18, 20, '232,182,76');
+      ctx.fillStyle = '#e8b64c'; ctx.fillRect(W * 0.92, deck - 82, 14, 22);
       // SEI lettini con SEI accappatoi
       for (let i = 0; i < 6; i++) {
         const lx = W * 0.055 + i * W * 0.155, ly = deck + 4;
@@ -647,6 +729,7 @@ const Scenes = (() => {
         ctx.fillStyle = i === 5 ? '#b0aca2' : '#d8d2c6';
         ctx.fillRect(lx + 20, ly - 29, 2, 18);
         ctx.fillStyle = '#7a2432'; ctx.fillRect(lx + 14, ly - 25, 5, 4);
+        if (i % 2 === 0) umbrella(ctx, lx + 36, ly - 6, 40, r);
       }
       // le luci sott'acqua
       for (const fx of [0.22, 0.5, 0.78]) {
@@ -1107,16 +1190,30 @@ const Scenes = (() => {
       hills(ctx, W, H * 0.62, 70, '#2d3a48', r, 32);
       const g = H - 70;
       hills(ctx, W, g, 60, '#243444', r, 30);
-      // la villa, di giorno: solo una bella villa un po' stanca
+      // la villa, di giorno: terracotta al sole, com'è davvero
       const vx = W * 0.58, vw = W * 0.30, vh = 96;
-      blocks(ctx, vx, g - vh, vw, vh, '#d8ccb4', 8, r, 0.06);
+      blocks(ctx, vx, g - vh, vw, vh, '#c05a48', 8, r, 0.08);
+      blocks(ctx, vx - 5, g - vh - 3, vw + 10, 6, '#e8dcc8', 7, r, 0.04);
       for (let i = 0; i < 5; i++) {
         const rw = (vw + 20) * (1 - i / 6);
-        blocks(ctx, vx - 10 + ((vw + 20) - rw) / 2, g - vh - 6 - i * 8, rw, 9, '#7a4048', 8, r, 0.1);
+        blocks(ctx, vx - 10 + ((vw + 20) - rw) / 2, g - vh - 8 - i * 8, rw, 9, '#8a4a34', 8, r, 0.14);
       }
-      ctx.fillStyle = '#6a86a0';
-      for (let i = 0; i < 4; i++) ctx.fillRect(vx + 12 + i * (vw - 30) / 3, g - vh + 20, 13, 18);
+      // persiane a doghe chiare, aperte sul mattino
+      for (let i = 0; i < 4; i++) {
+        const wx = vx + 12 + i * (vw - 30) / 3;
+        ctx.fillStyle = '#e8e4da'; ctx.fillRect(wx - 5, g - vh + 20, 5, 18); ctx.fillRect(wx + 13, g - vh + 20, 5, 18);
+        ctx.fillStyle = '#6a86a0'; ctx.fillRect(wx, g - vh + 20, 13, 18);
+      }
       ctx.fillStyle = '#3a2620'; ctx.fillRect(vx + vw / 2 - 9, g - 26, 18, 26);
+      // la gemella ocra, dietro
+      blocks(ctx, W * 0.40, g - 58, W * 0.13, 58, '#c8963e', 7, r, 0.08);
+      for (let i = 0; i < 4; i++) {
+        const rw2 = (W * 0.13 + 12) * (1 - i / 5);
+        blocks(ctx, W * 0.40 - 6 + ((W * 0.13 + 12) - rw2) / 2, g - 58 - 5 - i * 6, rw2, 7, '#8a4a34', 6, r, 0.12);
+      }
+      // ulivi nel giardino del mattino
+      olive(ctx, W * 0.34, g + 4, 40, r);
+      olive(ctx, W * 0.96, g + 2, 44, r);
       ground(ctx, W, H, g, '#3a5a44', r, 12, 8);
       // la piscina, tranquilla, coi CINQUE accappatoi al sole
       blocks(ctx, W * 0.06, g + 8, W * 0.34, H - g - 14, '#4aa0b8', 10, r, 0.1);
