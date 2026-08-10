@@ -1780,12 +1780,13 @@ function findHeroButton(box, heroName) {
   const game = buildGame(9191);
   game.act(() => game.api.Engine.newGame([{ heroId: 'gaetano', player: '' }, { heroId: 'claudia', player: '' }, { heroId: 'natalino', player: '' }]));
   const G = game.getG();
-  G.flags.cucina_in_sciopero = true; G.flags.cerchio_di_porcellana = true;
+  G.flags.cucina_in_sciopero = true; G.flags.cerchio_di_porcellana = true; G.flags.menu_dei_vivi = true;
   game.act(() => game.api.Engine.gotoScene('z4_fase2'));
   game.act(() => matchButton(buttons(game.doc.getElementById('choices')), 'INIZIA IL COMBATTIMENTO').onclick());
   const log = game.doc.getElementById('combat-log').children.map(c => c.innerHTML).join('\n');
   if (!/MESTOLO DI GHISA/.test(log)) fail('testEchiFaseDue: il mestolo dello Chef non è volato (cucina_in_sciopero senza effetto in fase due)');
   if (!/signorine di porcellana fissano/.test(log)) fail('testEchiFaseDue: lo sguardo delle signorine non è scattato (cerchio_di_porcellana senza effetto in fase due)');
+  if (!/morde più piano/.test(log)) fail('testEchiFaseDue: il menù dei vivi non ha rallentato il morso della casa');
   console.log('  ✅ Fase due: mestolo (-5 PV al boss) e sguardo di porcellana (svantaggio) attivi con i rispettivi flag');
 })();
 

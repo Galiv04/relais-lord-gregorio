@@ -138,6 +138,10 @@ const Combat = (() => {
         log(`🍳 Dalla porta di servizio, un MESTOLO DI GHISA del 1899 attraversa la sala e colpisce ${bersaglio.name} in piena fronte: <b>-5 PV</b>. La voce di forno, da lontano: "IN QUESTA CASA NON SI MANGIA NESSUNO."`, 'log-crit');
       }
     }
+    if (battle.isBoss && G.flags.menu_dei_vivi) {
+      battle.enemies.forEach(e => { if (!e.dead) e.attack.bonus = Math.max(0, e.attack.bonus - 1); });
+      log(`🍳 La casa sta ancora FACENDO I CONTI col menù dei vivi: morde più piano (<b>-1 ai suoi colpi</b>).`, 'log-heal');
+    }
     if (battle.isBoss && G.flags.cerchio_di_porcellana) {
       battle.enemies.forEach(e => { if (!e.dead) e.distracted = true; });
       log(`🧸 Trentadue signorine di porcellana fissano la Fame senza sbattere le palpebre. La Fame, a disagio, colpisce PEGGIO (primo attacco con svantaggio).`, 'log-heal');
