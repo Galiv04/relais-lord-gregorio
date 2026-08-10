@@ -18,6 +18,19 @@ Horror interattivo in italiano per 1-5 giocatori. **Riusa il motore de "La Coron
 | Struttura | Prologo → piscina → hub `h1` con TRE piste NON esclusive (cantina `k*`, piano `u*`, pozzo `b*`) → Banchetto `z*` |
 | Localizzazione | Pietrafonda e il Belvedere sono inventati; la geografia è irpina generica |
 
+## Capacità del motore aggiunte in questo gioco (non presenti nella Corona)
+
+Per le prossime campagne, il motore di QUESTO repo è il più avanzato. Novità utilizzabili:
+
+- **Scelte**: `requires: { flag, notFlag, item, item2, notItem }` (tutte in AND) · `removeItem` + `removeItem2` · `once: true` (sparisce dopo l'uso)
+- **Oggetti da combattimento**: `combat: { dice, holy, distract, all, calm }` + `distractText` (testo di stordimento per oggetto) · `usable+heal` = pozione
+- **Scene**: `stinger: '<nome>'` suona un effetto alla prima visita (VALIDATO: deve esistere in sound.js) · `damage`/`heal`/`freeAll`/`fullHeal`/`recharge` · `poisonRoller`/`captureRoller` su `G.lastRoller`
+- **Sprite**: mappe 16x16 **o 32x32** (stesso ingombro, `drawSprite` normalizza) · uno sprite può riusare la mappa di un altro con palette diversa (vedi `donmichele`)
+- **Scaling**: "porzioni ridotte" per gruppi 1-2 (auto) · difficoltà `facile`/`normale`/`incubo`
+- **Meta-progressione**: `DIARY_FLAGS` (conoscenze nel diario) · `IMPRESE` con collezione persistente per profilo · `CRONACA` (epiloghi mondiali per flag) · `HERO_EPILOGUES` con un set per TIPO di finale · `CHAPTERS` + `Engine.showRevive()` ("Rivivi la Notte", sbloccato al primo finale)
+- **Eclissi**: `moon(..., eclipse=true)` usa la fase di `Engine.eclipsePhaseFor(sceneId)` — la luna cresce e si arrossa con l'orologio della notte
+- **Validatori di coerenza** (tests/validate.mjs): flag di imprese/cronache/diario impostabili, stinger esistenti, sprite/palette coerenti — tenerli verdi previene le classi di bug trovate durante la produzione
+
 ## Comandi
 
 ```bash
