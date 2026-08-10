@@ -1247,6 +1247,21 @@ executeUntil('quinto finale: Gregorio VACILLA ma la casa stringe (CAR fallita) -
     sequences: { h1: ['Pietrafonda', 'CANTINA', 'barricarsi'], z1: ['ROMPERLA'] } },
   ['z_penna', 'z_penna_no'], 40);
 
+
+/* ---- LE PROMESSE PAGATE: la terza modalità della torcia e l'accendino di Federico ---- */
+
+executeUntil('torcia LED: lo strobo tattico usato DAVVERO in combattimento (acceca tutti)',
+  ['gaetano', 'emanuela'],
+  { k3: '⚔ Non si tratta con chi ha una mannaia' },
+  { checkBias: 'best', seedBase: 925000, sequences: { h1: ['CANTINA', 'barricarsi'] }, forceCombatItem: 'Torcia LED' },
+  ['k4_chef_fight'], 20, r => r.log.usedForceItem === true);
+
+executeUntil('accendino di Federico: la fiamma vera scagliata sullo Chef (2d4, doppi alla casa)',
+  ['federico', 'natalino'],
+  { k3: '⚔ Non si tratta con chi ha una mannaia' },
+  { checkBias: 'best', seedBase: 930000, sequences: { h1: ['CANTINA', 'barricarsi'] }, forceCombatItem: 'Accendino' },
+  ['k4_chef_fight'], 20, r => r.log.usedForceItem === true);
+
 const fatalRuns = results.filter(r => !r.ok);
 for (const r of fatalRuns) fail(`Partita "${r.scenario.name}" (seed ${r.scenario.seed}): ${r.error.split('\n')[0]}`);
 
@@ -1441,7 +1456,7 @@ coverage('Il quinto finale — la proposta, il rifiuto e la penna spezzata', ['z
 /* ---- ESPANSIONE: NUOVI OGGETTI ---- */
 
 coverageItem('Nuovi oggetti — ottenuti almeno una volta nelle rispettive scene', [
-  'lanterna_1899', 'asso_di_denari', 'nastro_1974', 'candela_motore', 'gratta_vinci', 'orologio_sofia', 'inventario_riflesso', 'lettere_1899',
+  'lanterna_1899', 'asso_di_denari', 'nastro_1974', 'candela_motore', 'gratta_vinci', 'torcia_led', 'accendino', 'orologio_sofia', 'inventario_riflesso', 'lettere_1899',
 ]);
 
 console.log(`  ${allEndings.size >= 5 ? '✅' : '❌'} Finali raggiunti (${allEndings.size}/5): ${[...allEndings].join(', ') || '(nessuno)'}`);

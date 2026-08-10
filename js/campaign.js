@@ -17,8 +17,8 @@ const ITEMS = {
   anello_1999:      { name: 'Anello del 1999', desc: 'Trovato sul fondo della piscina. Dentro è inciso: "A Sofia — per sempre qui".', usable: false },
   polaroid:         { name: 'Polaroid degli Ospiti', desc: 'Cinque ragazzi in piscina, datata 1999, uno cerchiato in rosso. La macchina ha ancora UNO scatto: il flash a bruciapelo ACCECA una creatura (svantaggio al prossimo attacco). La foto che esce, meglio non guardarla.', combat: { distract: true, dice: [1, 2], distractText: ' Il FLASH a bruciapelo lo acceca: svantaggio al prossimo attacco!' }, icon: '📸' },
   registro:         { name: 'Registro degli Ospiti', desc: '1899, 1924, 1949, 1974, 1999... e l\'ultima riga: i VOSTRI nomi, già scritti.', usable: false },
-  accendino:        { name: 'Accendino di Federico', desc: '"Non fumo più, lo tengo per affezione." Stanotte vale oro.', usable: false },
-  torcia_led:       { name: 'Torcia LED di Gaetano', desc: '1200 lumen, tre modalità. La terza non l\'avete mai provata.', usable: false },
+  accendino:        { name: 'Accendino di Federico', desc: '"Non fumo più, lo tengo per affezione." Stanotte vale oro: una fiamma vera, CALDA E VIVA — le cose della villa la odiano (2d4, danni DOPPI alle creature della casa). Il gas basta per un colpo solo.', combat: { dice: [2, 4], holy: true }, icon: '🔥' },
+  torcia_led:       { name: 'Torcia LED di Gaetano', desc: '1200 lumen, tre modalità. La terza — lo strobo tattico — non l\'avete mai provata: acceca TUTTI i nemici insieme (svantaggio al prossimo attacco). Tre secondi a 1200 lumen, poi la batteria muore per sempre.', combat: { all: true, distract: true, dice: [1, 2], distractText: ' accecato dallo strobo!' }, icon: '🔦' },
   vino_1899:        { name: 'Bottiglia del 1899', desc: 'Il vino del primo Banchetto. L\'etichetta scritta a mano: "Da aprire solo per il Padrone".', usable: false },
   lanterna_1899: {
     name: 'Lanterna del 1899',
@@ -326,7 +326,13 @@ Il registro è di nuovo aperto. Sulla pagina di oggi.
 
 Le camere sono perfette: lini freschi, fiori tagliati stasera, acqua e frutta. Su ogni cuscino, un cioccolatino artigianale e un biglietto scritto a mano: *"Il Belvedere vi aspettava."*
 
+Mentre si disfano i bagagli, due oggetti finiscono — per abitudine, o per istinto — nelle tasche di chi li possiede: la **torcia LED** di Gaetano ("milleduecento lumen, non si sa mai") e l'**accendino** di Federico ("non fumo più, lo tengo per affezione"). Nessuno dei due sa ancora perché l'ha fatto. Lo sapranno.
+
+**(Oggetti: TORCIA LED e ACCENDINO.)**
+
 Non "vi aspetta". **Vi aspettava.**`,
+    item: 'torcia_led',
+    item2: 'accendino',
     choices: [
       { text: '🧳 Disfare le valigie e prepararsi per cena', next: 'a6' },
       { text: '🪟 Natalino apre le tende della Camera del Pozzo. Ovviamente.', next: 'a5_pozzo' },
