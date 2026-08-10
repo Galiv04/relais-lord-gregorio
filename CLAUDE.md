@@ -22,7 +22,7 @@ Horror interattivo in italiano per 1-5 giocatori. **Riusa il motore de "La Coron
 
 Per le prossime campagne, il motore di QUESTO repo è il più avanzato. Novità utilizzabili:
 
-- **Scelte**: `requires: { flag, notFlag, item, item2, notItem }` (tutte in AND) · `removeItem` + `removeItem2` · `once: true` (sparisce dopo l'uso)
+- **Scelte**: `requires: { flag, flag2, notFlag, item, item2, notItem }` (tutte in AND — flag2 nato per la capitolazione: due conquiste insieme) · `removeItem` + `removeItem2` · `once: true` (sparisce dopo l'uso)
 - **Oggetti da combattimento**: `combat: { dice, holy, distract, all, calm }` + `distractText` (testo di stordimento per oggetto) · `usable+heal` = pozione
 - **Scene**: `stinger: '<nome>'` suona un effetto alla prima visita (VALIDATO: deve esistere in sound.js) · `damage`/`heal`/`freeAll`/`fullHeal`/`recharge` · `poisonRoller`/`captureRoller` su `G.lastRoller`
 - **Sprite**: mappe 16x16 **o 32x32** (stesso ingombro, `drawSprite` normalizza) · uno sprite può riusare la mappa di un altro con palette diversa (vedi `donmichele`)
