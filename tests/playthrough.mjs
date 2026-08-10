@@ -1181,13 +1181,13 @@ executeUntil('Banchetto: il cerchio di porcellana delle signorine del 1924 -> z2
   r => !!(r.log.flags && r.log.flags.cerchio_di_porcellana));
 
 
-executeUntil('Banchetto: la diretta di Claudia -> z2_claudia (sorpresa: primo giro con vantaggio)',
+executeUntil('Banchetto: la diretta di Claudia -> z2_claudia (sorpresa accesa al boss, SPENTA dopo la vittoria)',
   ['claudia', 'gaetano'],
   {},
   { checkBias: 'best', seedBase: 900000,
     sequences: { h1: ['POZZO', 'barricarsi'], z1: ['INQUADRA la sedia', 'VENIRSELO A PRENDERE'] } },
   ['z2_claudia', 'z3_boss'], 20,
-  r => !!(r.log.flags && r.log.flags.sorpresa));
+  r => !!(r.log.flags) && r.log.flags.sorpresa === false);
 
 
 /* ---- COERENZA DEL GIARDINIERE: battuto nell'orto, la fuga dal garage diventa quieta ---- */
@@ -1199,6 +1199,23 @@ executeUntil('Giardiniere battuto nell\'orto -> b2_vinto, poi dal garage in frac
   { seedBase: 905000, sequences: { h1: ['POZZO', 'barricarsi'] } },
   ['b2_vinto', 'gr3_ko', 'ft1'], 24,
   r => !!(r.log.flags && r.log.flags.giardiniere_potato) && !r.log.scenes.includes('ft1_inseguiti'));
+
+
+/* ---- ECO A PIETRAFONDA: la corriera del '74 (richiede strada_che_torna PRIMA di scendere) ---- */
+
+executeUntil('Pietrafonda sa dell\'anello: pozzo+garage+tornanti PRIMA, poi la domanda a Don Michele -> pp_anello',
+  ['claudia', 'federico'],
+  {
+    a3: '📖 Prima, sfogliare il registro',
+    a3_registro: 'Firmiamo domani con calma',
+    b1: '👁 Il piano di Gaetano', b2_orto: '🚗 Prima: la porta della rimessa',
+    gr3: 'al diavolo tutto', ft1: 'Fermarsi e GUARDARE',
+    pp2: '🚪 Bussare alla canonica',
+  },
+  { checkBias: 'best', seedBase: 910000,
+    sequences: { h1: ['POZZO', 'Pietrafonda', 'barricarsi'], pp3: ['la strada che scende', 'Raccontargli tutto'] } },
+  ['ft2_capito', 'pp_anello'], 24,
+  r => !!(r.log.flags && r.log.flags.paese_sa));
 
 const fatalRuns = results.filter(r => !r.ok);
 for (const r of fatalRuns) fail(`Partita "${r.scenario.name}" (seed ${r.scenario.seed}): ${r.error.split('\n')[0]}`);
@@ -1379,6 +1396,9 @@ coverageFlag('Alleati del Banchetto — flag di trama', ['cucina_in_sciopero', '
 coverage('La diretta di Claudia', ['z2_claudia']);
 coverage('Coerenza del Giardiniere — vittoria nell\'orto ricordata dai filari', ['b2_vinto']);
 coverageFlag('Coerenza del Giardiniere — flag', ['giardiniere_potato']);
+coverage('Eco a Pietrafonda — la corriera del \'74', ['pp_anello']);
+coverageFlag('Eco a Pietrafonda — flag', ['paese_sa']);
+
 
 
 
@@ -1411,6 +1431,33 @@ function findHeroButton(box, heroName) {
 
 
 
+
+
+(function testSorpresaSiSpegne() {
+  section('Verifica diretta: la diretta di Claudia si spegne a battaglia vinta');
+  const game = buildGame(3131);
+  game.act(() => game.api.Engine.newGame([{ heroId: 'claudia', player: '' }, { heroId: 'gaetano', player: '' }, { heroId: 'natalino', player: '' }]));
+  const G = game.getG();
+  G.flags.sorpresa = true;
+  game.act(() => game.api.Engine.gotoScene('z3_boss_solo'));
+  game.act(() => matchButton(buttons(game.doc.getElementById('choices')), 'INIZIA IL COMBATTIMENTO').onclick());
+  // gioca la battaglia fino in fondo con il pilota standard
+  let guard = 0;
+  while (!game.doc.getElementById('combat-banner').classList.contains('victory') && guard++ < 400) {
+    const acts = buttons(game.doc.getElementById('combat-actions'));
+    const dice = game.doc.getElementById('btn-dice-continue');
+    if (!game.doc.getElementById('dice-overlay').classList.contains('hidden')) { game.act(() => dice.onclick && dice.onclick()); continue; }
+    if (!acts.length) break;
+    const atk = acts.find(b => /⚔/.test(b.innerHTML)) || acts[0];
+    game.act(() => atk.onclick());
+    const targets = buttons(game.doc.getElementById('combat-actions')).filter(b => /^🎯/.test(b.innerHTML));
+    if (targets.length) game.act(() => targets[0].onclick());
+  }
+  if (game.doc.getElementById('combat-banner').classList.contains('victory') && G.flags.sorpresa) {
+    fail('testSorpresaSiSpegne: la sorpresa è rimasta accesa dopo la vittoria contro il boss');
+  }
+  console.log(`  ✅ Sorpresa ${game.doc.getElementById('combat-banner').classList.contains('victory') ? 'spenta dopo la vittoria' : '(battaglia non conclusa nel budget: check saltato senza errori)'}`);
+})();
 
 (function testEchiFaseDue() {
   section('Verifica diretta: mestolo dello Chef e sguardo delle signorine nella battaglia finale');

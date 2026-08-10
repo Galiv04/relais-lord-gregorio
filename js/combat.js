@@ -704,6 +704,7 @@ const Combat = (() => {
     $('combat-actions').innerHTML = '';
 
     G.stats.combats++;
+    if (battle.isBoss && G.flags.sorpresa) G.flags.sorpresa = false; // la diretta ha fatto il suo: il pallino rosso si spegne
     // gli eroi a terra si rialzano con 1 PV
     for (const h of G.party) if (h.down) { h.down = false; h.hp = 1; }
 

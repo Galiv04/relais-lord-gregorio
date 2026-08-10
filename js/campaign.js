@@ -1539,8 +1539,29 @@ Si versa un altro caffè. Le mani, per la prima volta, gli tremano.
 > Don Michele: "Stanotte è il venticinquennio. E voi siete scesi a bussare alla MIA porta. Ditemi tutto. E poi vediamo cosa vi do."`,
     sets: { storia_1974: true },
     choices: [
+      { text: '🛣 "Don Michè... la strada che scende. Noi l\'abbiamo vista TORNARE. Il paese lo sa?"', requires: { flag: 'strada_che_torna' }, once: true, next: 'pp_anello' },
       { text: '📖 Raccontargli tutto: il registro, il pozzo, i nodi, il Banchetto', next: 'pp4' },
       { text: '⛪ Prima: chiedergli della cripta dei registri parrocchiali', tag: 'Prova di Intelligenza — CD 12', check: { stat: 'INT', dc: 12, success: 'pp4_cripta', fail: 'pp4' } },
+    ],
+  },
+
+  pp_anello: {
+    location: 'paese',
+    caption: 'La corriera del Settantaquattro',
+    npc: ['donmichele'],
+    text: `Don Michele posa la tazza. Con cura. Come si posa una cosa che altrimenti tremerebbe.
+
+> Don Michele: "Il paese lo sa dal 1899, figlio mio. Solo che a Pietrafonda le cose che si sanno non si DICONO: si chiudono le persiane e basta." *(va alla parete delle foto, ne stacca una: una corriera azzurra, anni Settanta, gente che saluta dai finestrini)* "La corriera. Fino al Settantaquattro saliva due volte a settimana. Poi gli autisti cominciarono a rifiutare la tratta. Dicevano che al tornante undici il paesaggio si RIPETEVA. Che l'ago della benzina non calava. Uno, Gennaro si chiamava, arrivò giù piangendo: disse che aveva guidato quaranta minuti in discesa e che il chilometraggio segnava ZERO."
+
+Si risiede. Vi guarda uno per uno.
+
+> Don Michele: "Io al mercato in valle ci scendo A PIEDI, ogni giovedì, da cinquant'anni. La strada ME lo lascia fare. Sapete perché? Perché io sono il SESTO. Non ho firmato. La strada non mi conta: per lei sono un errore di arrotondamento." *(e per la prima volta, il sorriso gli riesce storto)* "Voi l'avete VISTA tornare e siete ancora lucidi. Bene. Vuol dire che quando lassù vi diranno 'potete andarvene quando volete'... saprete esattamente quanto vale quella frase."
+
+**(Il paese lo sa dal 1899. Adesso lo sapete con le parole giuste. Flag: paese_sa. Sangue freddo +1.)**`,
+    gold: 1,
+    sets: { paese_sa: true },
+    choices: [
+      { text: '↩ Al tavolo di Don Michele: c\'è ancora tutto da raccontare', next: 'pp3' },
     ],
   },
 
@@ -3524,6 +3545,7 @@ const DIARY_FLAGS = [
   ['giardiniere_potato',    'Il Giardiniere è PAGLIA SPARSA nei filari: si sta rifacendo, ma stanotte il giardino non ha turno di notte.'],
   ['giardiniere_allertato', 'Il Giardiniere sa che girate di notte: le cesoie, da qualche parte nella nebbia, tengono il conto.'],
   ['strada_che_torna',      'Le strade TORNANO: i ventisei tornanti sono un anello. L\'uscita non è fuori — è nel centro. La casa.'],
+  ['paese_sa',              'Pietrafonda lo sa dal 1899: la corriera smise di salire nel \'74. La strada conta chi ha firmato — e Don Michele è un errore di arrotondamento.'],
   ['storia_ada',            'Conoscete la storia di Gregorio e di Ada: la ciocca bianca, il patto, i centoventicinque anni.'],
   ['medaglione',            'Il MEDAGLIONE DI ADA è vostro: sei ciocche intrecciate. Al pozzo vale una vita.'],
   ['bambole_addormentate',  'Le signorine del 1924 DORMONO, grate alla luce di mamma Ada. Un valzer fischiato può chiamarle, se servisse.'],
@@ -3552,7 +3574,7 @@ const WORLD_MAP = [
   { key: 'camere',   label: 'Le Camere',       x: 0.74, y: 0.32, scenes: ['a5', 'a5_pozzo', 'h1', 'h2', 'gv1', 'u1', 'u2_1999', 'u2_1924', 'u2_1899', 'u3_medaglione', 'u3_lanterna', 'u3_bambole_fight', 'u3_bambole_vinte', 'u5_specchio', 'u4_porta_vuota', 'sf1', 'sf2', 'sf3', 'sf4', 'sf5', 'sf6', 's49_1', 's49_2', 's49_3', 's49_3_ko', 's74_1', 's74_2', 's74_3', 'cuore_gc', 'cuore_fe', 'cuore_fe_esito', 'cuore_nat', 'cuore_nat_esito'] },
   { key: 'pranzo',   label: 'Sala da Pranzo',  x: 0.46, y: 0.62, scenes: ['a6', 'a6_menu', 'a6_brindisi', 'a6_no_brindisi', 'a7', 'z1', 'z2_vino', 'z2_trattativa', 'z2_rituale', 'gvz', 'z2_strada', 'z2_alleato', 'z2_bambole', 'z2_claudia', 'z3_boss', 'z3_boss_solo', 'z3_boss_arrabbiato', 'z3_boss_indebolito', 'z4_fase2', 'z5_vittoria', 'z6_alba', 'e_alba', 'z_custode', 'e_custode', 'z_resa', 'e_ospiti', 'z_vespri', 'z_smemorati', 'e_smemorati'] },
   { key: 'riflesso', label: 'Il Riflesso',      x: 0.10, y: 0.28, scenes: ['w1_tuffo', 'w2_riflesso', 'w2_riflesso_ko', 'w3_giardino', 'w3_pattuglia_combat', 'w4_sofia', 'w5_racconto', 'w6_1924', 'w7_ronda', 'w7_ronda_combat', 'w8_direttore', 'w9_studio', 'w9_studio_combat', 'w10_orologio', 'w10_orologio_reso', 'w11_inventario', 'w12_tradimento', 'w12_sofia', 'w14_direttore_boss', 'w15_vittoria', 'w16_amaro', 'w17_fuga', 'w17_fuga_ko', 'w18_soglia', 'w_finale'] },
-  { key: 'paese',    label: 'Pietrafonda',     x: 0.16, y: 0.90, scenes: ['pp1', 'pp2', 'pp2_bar', 'pp3', 'pp4_cripta', 'pp4', 'pp6', 'pp6_ko', 'pp7'] },
+  { key: 'paese',    label: 'Pietrafonda',     x: 0.16, y: 0.90, scenes: ['pp1', 'pp2', 'pp2_bar', 'pp3', 'pp_anello', 'pp4_cripta', 'pp4', 'pp6', 'pp6_ko', 'pp7'] },
   { key: 'piscina',  label: 'La Piscina',      x: 0.22, y: 0.50, scenes: ['p1', 'p1_accappatoio', 'p1_accappatoio_ko', 'p2', 'p2_esperimento', 'p2_esperimento_ko', 'p3_fuori'] },
   { key: 'cantina',  label: 'La Cantina',      x: 0.62, y: 0.78, scenes: ['k1', 'k2_sofia', 'k2_sofia_ko', 'k3', 'k4_scambio', 'k4_nastro', 'k4_chef_fight', 'k4_furto', 'k4_furto_ko', 'k5_dopo_chef', 'x_celle', 'os1', 'os2', 'os3', 'os4', 'os5', 'os6'] },
   { key: 'pozzo',    label: 'Il Pozzo',        x: 0.86, y: 0.66, scenes: ['b1', 'b2_giardiniere_fight', 'b2_vinto', 'b2_orto', 'b3_pozzo', 'b4_medaglione', 'b4_vino', 'b4_parole', 'b4_ira', 'b4_calata', 'b4_calata_ko'] },
