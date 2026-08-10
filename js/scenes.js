@@ -456,7 +456,7 @@ const Scenes = (() => {
       for (let i = 0; i < 3; i++) olive(ctx, 120 + i * (W / 2.8) + (r() * 24 - 12), g + 8, 46 + r() * 18, r, true);
       ctx.fillStyle = '#4a4a55'; ctx.fillRect(W * 0.08, H * 0.755, W * 0.7, 4); // guardrail, vuoto
       // TRE TORNANTI PIÙ SOTTO: cinque lucine in fila indiana. Sono le vostre torce.
-      const ly = H * 0.52 + 3 * H * 0.115 + 4;
+      const ly = H * 0.52 + 2 * H * 0.115 + 5;
       for (let i = 0; i < 5; i++) {
         const lx = W * 0.30 + i * 20;
         glow(ctx, lx, ly, 14, 10, '232,216,160');
@@ -464,7 +464,7 @@ const Scenes = (() => {
         ctx.fillStyle = '#2a2230'; ctx.fillRect(lx - 2, ly + 2, 5, 7); // la sagoma minuscola sotto la torcia
       }
       // in fondo alla valle, dove dovrebbe esserci il paese: la facciata del Belvedere, in scala
-      const bx = W * 0.64, by = H - 46;
+      const bx = W * 0.64, by = H - 60;
       blocks(ctx, bx, by, 52, 26, '#5a2c24', 6, r, 0.10);
       ctx.fillStyle = '#e8d8a0'; ctx.fillRect(bx + 8, by + 6, 8, 9); ctx.fillRect(bx + 36, by + 6, 8, 9); // due finestre accese
       ctx.fillStyle = '#1a1014'; ctx.fillRect(bx + 22, by + 12, 9, 14); // e una porta
