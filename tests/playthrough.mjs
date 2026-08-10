@@ -708,15 +708,18 @@ scenarios.push(scenario('pozzo: parola sbagliata su Gregorio (CAR fallita, richi
 
 /* ---- FINALE: rituale completo, boss pieno, vino di Gregorio, trattativa, sconfitta+retry, z_custode/z_resa ---- */
 
-scenarios.push(scenario('finale: rituale completo (rituale_noto da u2_1899) -> boss indebolito -> vittoria', ['claudia', 'emanuela'], {
+scenarios.push(scenario('finale: rituale completo (sale dallo Chef, acqua da Ada, nome da u2_1899) -> boss indebolito -> vittoria', ['claudia', 'emanuela'], {
   u1: '🚪 1899 — la stanza dov\'è cominciato tutto',
+  k3: '💇 Natalino fa un passo avanti',
+  b1: '👁 Il piano di Gaetano',
+  b3_pozzo: '🍷 Calare nel secchio la BOTTIGLIA',
   z1: '🧂💧 IL RITUALE',
-}, { checkBias: 'best', sequences: { h1: ['PIANO PROIBITO', 'barricarsi'] } }));
+}, { checkBias: 'best', sequences: { h1: ['CANTINA', 'POZZO', 'PIANO PROIBITO', 'barricarsi'] } }));
 
 scenarios.push(scenario('finale: boss PIENO (z3_boss -> z4_fase2 -> vittoria), party di 5', HEROES_ALL(), {
   u1: '🚪 1899 — la stanza dov\'è cominciato tutto',
   z1: '⚔ Il gruppo si mette in mezzo',
-}, { checkBias: 'best', sequences: { h1: ['PIANO PROIBITO', 'barricarsi'] }, difficulty: 'facile' }));
+}, { checkBias: 'best', sequences: { h1: ['CANTINA', 'POZZO', 'PIANO PROIBITO', 'barricarsi'] }, difficulty: 'facile' }));
 
 scenarios.push(scenario('finale: il vino di Gregorio (z2_vino, richiede vino_1899)', ['natalino', 'federico'], {
   k3: '💇 Natalino fa un passo avanti',
@@ -726,7 +729,7 @@ scenarios.push(scenario('finale: il vino di Gregorio (z2_vino, richiede vino_189
 scenarios.push(scenario('finale: trattativa di Federico RIUSCITA (CAR) -> z2_trattativa', ['federico', 'emanuela'], {
   u1: '🚪 1899 — la stanza dov\'è cominciato tutto',
   z1: '🗣 Federico chiede la parola',
-}, { checkBias: 'best', sequences: { h1: ['PIANO PROIBITO', 'barricarsi'] }, difficulty: 'facile' }));
+}, { checkBias: 'best', sequences: { h1: ['CANTINA', 'POZZO', 'PIANO PROIBITO', 'barricarsi'] }, difficulty: 'facile' }));
 
 scenarios.push(scenario('finale: trattativa di Federico FALLITA (CAR) -> z3_boss_arrabbiato', ['gaetano', 'natalino'], {
   u1: '🚪 1899 — la stanza dov\'è cominciato tutto',
@@ -754,13 +757,19 @@ scenarios.push(scenario('finale: z_resa -> restare seduti -> e_ospiti', ['gaetan
 
 scenarios.push(scenario('modalità Sopravvissuto: Natalino SOLO a difficoltà NORMALE (porzioni ridotte)', ['natalino'], {
   u1: '🚪 1899 — la stanza dov\'è cominciato tutto',
+  k3: '💇 Natalino fa un passo avanti',
+  b1: '👁 Il piano di Gaetano',
+  b3_pozzo: '🍷 Calare nel secchio la BOTTIGLIA',
   z1: '🧂💧 IL RITUALE',
-}, { checkBias: 'best', sequences: { h1: ['PIANO PROIBITO', 'barricarsi'] } }));
+}, { checkBias: 'best', sequences: { h1: ['CANTINA', 'POZZO', 'PIANO PROIBITO', 'barricarsi'] } }));
 
 scenarios.push(scenario('modalità Sopravvissuto: Emanuela SOLA, rituale -> alba', ['emanuela'], {
   u1: '🚪 1899 — la stanza dov\'è cominciato tutto',
+  k3: '💇 Natalino fa un passo avanti',
+  b1: '👁 Il piano di Gaetano',
+  b3_pozzo: '🍷 Calare nel secchio la BOTTIGLIA',
   z1: '🧂💧 IL RITUALE',
-}, { checkBias: 'best', sequences: { h1: ['PIANO PROIBITO', 'barricarsi'] }, difficulty: 'facile' }));
+}, { checkBias: 'best', sequences: { h1: ['CANTINA', 'POZZO', 'PIANO PROIBITO', 'barricarsi'] }, difficulty: 'facile' }));
 
 /* ---- PISTA SEGRETA DI PIETRAFONDA + nuove offerte al Banchetto ----
    Pietrafonda esiste SOLO se a3_registro -> il check di Carisma per rinviare la firma è
@@ -1496,6 +1505,29 @@ function findHeroButton(box, heroName) {
 
 
 
+
+
+(function testRitualeServeSaleEAcqua() {
+  section('Verifica diretta: il rituale esige sale e acqua IN INVENTARIO (e li consuma)');
+  const game = buildGame(7474);
+  game.act(() => game.api.Engine.newGame([{ heroId: 'claudia', player: '' }, { heroId: 'gaetano', player: '' }]));
+  const G = game.getG();
+  G.flags.rituale_noto = true; G.flags.un_nodo_sciolto = true;
+  game.act(() => game.api.Engine.gotoScene('z1'));
+  let btns = buttons(game.doc.getElementById('choices'));
+  if (matchButton(btns, 'IL RITUALE')) fail('testRitualeServeSaleEAcqua: il rituale è offerto SENZA sale e acqua in inventario');
+  G.inventory.push('sale_grosso', 'acqua_pozzo');
+  game.act(() => game.api.Engine.gotoScene('h2'));
+  game.act(() => game.api.Engine.gotoScene('z1'));
+  btns = buttons(game.doc.getElementById('choices'));
+  const rit = matchButton(btns, 'IL RITUALE');
+  if (!rit) { fail('testRitualeServeSaleEAcqua: il rituale NON è offerto nemmeno con gli oggetti'); return; }
+  game.act(() => rit.onclick());
+  if (G.inventory.includes('sale_grosso') || G.inventory.includes('acqua_pozzo')) {
+    fail('testRitualeServeSaleEAcqua: sale o acqua non consumati dal rituale');
+  }
+  console.log('  ✅ Rituale: nascosto senza ingredienti, offerto e CONSUMANTE con sale e acqua in zaino');
+})();
 
 (function testEpiloghiSmemorati() {
   section('Verifica diretta: gli Smemorati NON ricordano (epiloghi coerenti con l\'amnesia)');

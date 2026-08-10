@@ -3116,7 +3116,7 @@ E la casa — le pareti, i lampadari, i ritratti, il pavimento a scacchi — **r
 
 > Gregorio: "Le regole del Banchetto sono tre. Uno: si esce all'alba, o non si esce. Due: il patto vuole **una firma o un nome.** Tre..." *(e qui, per la prima volta, la voce del maggiordomo perfetto trema)* "...tre: il menù può ancora cambiare. Se avete sciolto i nodi... **è il momento di metterli sul tavolo.**"`,
     choices: [
-      { text: '🧂💧 IL RITUALE: sale sulla firma, acqua di Ada sul registro, e restituire il nome', requires: { flag: 'rituale_noto' }, next: 'z2_rituale' },
+      { text: '🧂💧 IL RITUALE: sale sulla firma, acqua di Ada sul registro, e restituire il nome', requires: { flag: 'rituale_noto', item: 'sale_grosso', item2: 'acqua_pozzo' }, removeItem: 'sale_grosso', removeItem2: 'acqua_pozzo', next: 'z2_rituale' },
       { text: '🖋 "Non ti chiediamo di passare la penna, Gregorio. Ti chiediamo di ROMPERLA." (il segreto della cripta)', requires: { flag: 'segreto_custodi' }, once: true, next: 'z_penna' },
       { text: '🛣 "Le strade TORNANO, Gregorio. Le abbiamo viste tornare. E un contratto firmato dentro una trappola... è NULLO."', requires: { flag: 'strada_che_torna' }, once: true, next: 'z2_strada' },
       { text: '🎫 Natalino mette i piedi sul tavolo del 1899 e gratta l\'ULTIMO Gratta e Vinci. Davanti a LUI.', requires: { flag: 'ultimo_biglietto' }, removeItem: 'gratta_vinci', once: true, next: 'gvz' },
@@ -3152,7 +3152,7 @@ E la Fame — la cosa a capotavola, la casa affamata, il patto vestito da padron
 **(Ada è in campo apertamente e la casa VACILLA: nello scontro finale partirete con VANTAGGIO, e la Fame sarà più debole nei primi giri.)**`,
     sets: { vespri_suonati: true, casa_vacilla: true, sorpresa: true, ada_alleata: true },
     choices: [
-      { text: '🧂💧 Adesso il rituale: sale, acqua, nome', requires: { flag: 'rituale_noto' }, next: 'z2_rituale' },
+      { text: '🧂💧 Adesso il rituale: sale, acqua, nome', requires: { flag: 'rituale_noto', item: 'sale_grosso', item2: 'acqua_pozzo' }, removeItem: 'sale_grosso', removeItem2: 'acqua_pozzo', next: 'z2_rituale' },
       { text: '⚔ Adesso la battaglia: che venga a riscuotere, se ci riesce', next: 'z3_boss' },
     ],
   },
@@ -3336,7 +3336,7 @@ Il vino scende. E con il vino, il tempo: le mani si segnano, le spalle si curvan
     sets: { gregorio_umano: true },
     gold: 2,
     choices: [
-      { text: '🧂💧 ORA il rituale: sale, acqua, e il nome da restituire', requires: { flag: 'rituale_noto' }, next: 'z2_rituale' },
+      { text: '🧂💧 ORA il rituale: sale, acqua, e il nome da restituire', requires: { flag: 'rituale_noto', item: 'sale_grosso', item2: 'acqua_pozzo' }, removeItem: 'sale_grosso', removeItem2: 'acqua_pozzo', next: 'z2_rituale' },
       { text: '⚔ La casa manderà qualcuno a riscuotere: pronti a combattere', next: 'z3_boss' },
     ],
   },
@@ -3358,7 +3358,7 @@ Silenzio. Poi la casa — le travi, i muri, i lampadari — emette un suono che 
     sets: { casa_vacilla: true },
     gold: 2,
     choices: [
-      { text: '🧂💧 Chiudere il contratto col rituale: sale, acqua, nome', requires: { flag: 'rituale_noto' }, next: 'z2_rituale' },
+      { text: '🧂💧 Chiudere il contratto col rituale: sale, acqua, nome', requires: { flag: 'rituale_noto', item: 'sale_grosso', item2: 'acqua_pozzo' }, removeItem: 'sale_grosso', removeItem2: 'acqua_pozzo', next: 'z2_rituale' },
       { text: '⚔ La casa chiede comunque l\'ultima parola: che venga a prendersela', next: 'z3_boss' },
     ],
   },

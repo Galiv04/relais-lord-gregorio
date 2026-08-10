@@ -388,6 +388,7 @@ const Engine = (() => {
       if (c.requires.flag && !G.flags[c.requires.flag]) return false;
       if (c.requires.notFlag && G.flags[c.requires.notFlag]) return false;
       if (c.requires.item && !G.inventory.includes(c.requires.item)) return false;
+      if (c.requires.item2 && !G.inventory.includes(c.requires.item2)) return false;
       if (c.requires.notItem && G.inventory.includes(c.requires.notItem)) return false;
     }
     if (c.once && (G.usedChoices[G.sceneId] || []).includes(c.text)) return false;
@@ -437,6 +438,10 @@ const Engine = (() => {
     if (c.item) G.inventory.push(c.item);
     if (c.removeItem) {
       const i = G.inventory.indexOf(c.removeItem);
+      if (i >= 0) G.inventory.splice(i, 1);
+    }
+    if (c.removeItem2) {
+      const i = G.inventory.indexOf(c.removeItem2);
       if (i >= 0) G.inventory.splice(i, 1);
     }
     if (c.sets) Object.assign(G.flags, c.sets);
