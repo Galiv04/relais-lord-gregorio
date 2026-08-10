@@ -67,7 +67,7 @@ const IMPRESE = [
   { flag: 'nodo_pozzo',          icon: '💧', title: 'L\'Acqua che Ricorda',        desc: 'Nodo del pozzo sciolto: Ada vi ha dato la sua acqua.' },
   { flag: 'ada_alleata',         icon: '👗', title: 'Il Nome Restituito',          desc: 'Avete ridato ad Ada il suo nome. Il pozzo non conta più le notti.' },
   { flag: 'pagine_diario',       icon: '📜', title: 'Chi Scende nel Pozzo',        desc: 'Qualcuno si è calato DAVVERO. Le tre pagine strappate sono vostre.' },
-  { flag: 'gregorio_umano',      icon: '🥂', title: 'Il Brindisi del Ritorno',     desc: 'Gregorio ha bevuto il vino del 1899. Dopo centoventicinque anni.' },
+  { flag: 'gregorio_umano',      icon: '🥂', title: 'Il Ritorno del Padrone di Casa', desc: 'Gregorio è tornato uomo — col vino del 1899 nel bicchiere, o con le parole di Ada nelle orecchie.' },
   { flag: 'casa_vacilla',        icon: '📊', title: 'Il Pitch al Patto',           desc: 'Federico ha fatto una proposta commerciale a una casa affamata. E ha quasi chiuso.' },
   { flag: 'rituale_fatto',       icon: '🧂', title: 'Sale, Acqua e un Nome',       desc: 'Avete compiuto il rituale di Ada sulla firma. La casa lo ricorderà.' },
   { flag: 'fame_sconfitta',      icon: '🍽', title: 'Il Tovagliolo Piegato',       desc: 'Avete sconfitto la Fame. Il pasto è finito. Per sempre.' },
