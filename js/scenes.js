@@ -250,9 +250,24 @@ const Scenes = (() => {
 
   // Alone luminoso morbido (fasce concentriche): evita il rettangolo squadrato
   function glow(ctx, x, y, w, h, rgb) {
-    for (let i = 3; i >= 1; i--) {
-      ctx.fillStyle = `rgba(${rgb},${0.05 * i})`;
+    for (let i = 4; i >= 1; i--) {
+      ctx.fillStyle = `rgba(${rgb},${0.022 * i})`;
       ctx.fillRect(x - w * i / 2, y - h * i / 2, w * i, h * i);
+    }
+  }
+
+  // Luna crescente vera: disco chiaro + morso di cielo
+  function crescentMoon(ctx, x, y, r, color = '#c8b8c0', skyColor = '#0a0710') {
+    ctx.fillStyle = color;
+    for (let dy = -r; dy <= r; dy += 3) {
+      const hw = Math.floor(Math.sqrt(r * r - dy * dy) / 3) * 3;
+      ctx.fillRect(x - hw, y + dy, hw * 2, 3);
+    }
+    ctx.fillStyle = skyColor;
+    const off = Math.round(r * 0.45);
+    for (let dy = -r; dy <= r; dy += 3) {
+      const hw = Math.floor(Math.sqrt(r * r - dy * dy) / 3) * 3;
+      ctx.fillRect(x - hw - off, y + dy, hw * 2, 3);
     }
   }
 
@@ -329,15 +344,20 @@ const Scenes = (() => {
       hills(ctx, W, H * 0.62, 90, '#150d12', r, 34);
       const g = H - 60;
       hills(ctx, W, g + 8, 70, '#10090d', r, 30);
-      // castagni scuri
-      for (let i = 0; i < 6; i++) tree(ctx, 30 + i * (W / 5.5) + (r() * 30 - 15), g + 10, 66 + r() * 40, '#14201a', '#241a14', r);
       ground(ctx, W, H, g, '#182018', r, 12, 10);
-      // la strada che serpeggia a tornanti
-      ctx.fillStyle = '#3a3440';
+      // la strada che serpeggia a tornanti (dietro gli alberi del bordo)
       for (let i = 0; i < 4; i++) {
         const y = H * 0.52 + i * H * 0.115;
-        blocks(ctx, W * (0.06 + (i % 2) * 0.16), y, W * 0.72, 16, '#332e3a', 10, r, 0.12);
+        blocks(ctx, W * (0.06 + (i % 2) * 0.16), y, W * 0.72, 15, '#332e3a', 12, r, 0.16);
+        // la curva del tornante che raccorda le corsie
+        const cx = (i % 2) ? W * 0.06 : W * 0.78;
+        blocks(ctx, cx, y, W * 0.16, H * 0.115 + 14, '#332e3a', 12, r, 0.16);
+        // linea di mezzeria sbiadita
+        ctx.fillStyle = 'rgba(200,190,170,.16)';
+        for (let d = 0; d < 8; d++) ctx.fillRect(W * (0.10 + (i % 2) * 0.16) + d * W * 0.085, y + 6, 16, 3);
       }
+      // castagni scuri DOPO la strada: la costeggiano
+      for (let i = 0; i < 6; i++) tree(ctx, 30 + i * (W / 5.5) + (r() * 30 - 15), g + 10, 66 + r() * 40, '#14201a', '#241a14', r);
       // il guardrail e la macchina piena come un uovo
       ctx.fillStyle = '#5a5a66'; ctx.fillRect(W * 0.08, H * 0.755, W * 0.7, 4);
       const cx = W * 0.34, cy = H * 0.652;
@@ -391,10 +411,22 @@ const Scenes = (() => {
       ctx.fillRect(vx + vw / 2 - 30, g - 96, 60, 6);
       ctx.fillRect(vx + vw / 2 - 28, g - 92, 4, 34); ctx.fillRect(vx + vw / 2 + 24, g - 92, 4, 34);
       ctx.fillStyle = '#241a1e'; ctx.fillRect(vx + vw / 2 - 14, g - 88, 28, 30);
-      // viale di ghiaia rastrellata a onde
+      ctx.fillStyle = '#3a2a20'; ctx.fillRect(vx + vw / 2 - 16, g - 60, 32, 4);
+      blocks(ctx, vx + vw / 2 - 20, g - 56, 40, 8, '#a89878', 8, r, 0.08);
+      ctx.fillStyle = '#c8a032'; ctx.fillRect(vx + vw / 2 + 6, g - 76, 3, 3);
+      // viale di ghiaia in prospettiva, rastrellato a onde rade
       ground(ctx, W, H, g, '#1d1418', r, 12, 8);
-      ctx.fillStyle = '#d8d0c0';
-      for (let i = 0; i < 12; i++) blocks(ctx, W * 0.30 + (i % 2) * 6, g + 8 + i * ((H - g - 10) / 12), W * 0.38, 5, '#cfc4ae', 8, r, 0.06);
+      for (let i = 0; i < 7; i++) {
+        const t = i / 7;
+        const vw2 = W * (0.14 + t * 0.30);
+        blocks(ctx, W * 0.5 - vw2 / 2, g + 4 + i * ((H - g - 6) / 7), vw2, (H - g) / 7 + 2, '#b8ac96', 10, r, 0.07);
+      }
+      ctx.fillStyle = 'rgba(90,80,70,.35)';
+      for (let i = 0; i < 6; i++) {
+        const t = i / 6;
+        const vw2 = W * (0.15 + t * 0.28);
+        ctx.fillRect(W * 0.5 - vw2 / 2, g + 10 + i * ((H - g - 10) / 6), vw2, 2);
+      }
       // siepi a forme che non vuoi riguardare
       for (const [bx, bw] of [[0.06, 0.10], [0.82, 0.12]]) {
         blocks(ctx, W * bx, g - 40, W * bw, 44, '#1a2e1d', 8, r, 0.2);
@@ -409,16 +441,16 @@ const Scenes = (() => {
       const r = rng(19);
       blocks(ctx, 0, 0, W, H, '#2a2026', 16, r, 0.12);
       const floorY = H - 84;
-      // pavimento a scacchi in prospettiva
-      for (let row = 0; row < 6; row++) {
-        for (let col = -1; col < 22; col++) {
-          const t = row / 6;
-          const size = 22 + t * 26;
-          const x = W / 2 + (col - 10) * size + (row % 2) * size / 2;
-          const y = floorY + row * 13;
-          ctx.fillStyle = (col + row) % 2 ? '#d8d0c4' : '#1d181c';
-          ctx.fillRect(x, y, size, 14);
+      // pavimento a scacchi in prospettiva (file dal fondo, senza sovrapposizioni)
+      let rowY = floorY;
+      for (let row = 0; row < 5; row++) {
+        const size = 16 + row * 7;
+        for (let col = -12; col < 12; col++) {
+          const x = W / 2 + col * size;
+          ctx.fillStyle = ((col + row) % 2 === 0) ? '#d8d0c4' : '#1d181c';
+          ctx.fillRect(x, rowY, size, size * 0.62);
         }
+        rowY += size * 0.62;
       }
       // lampadario di cristallo
       ctx.fillStyle = '#8a8478'; ctx.fillRect(W * 0.5 - 2, 0, 4, 26);
@@ -498,13 +530,17 @@ const Scenes = (() => {
       ctx.fillStyle = '#2e2a35'; ctx.fillRect(W * 0.64 + 30, 100, 18, 14);
       ctx.fillStyle = '#4a3226'; ctx.fillRect(W * 0.64 + 33, 92, 12, 6);
       ctx.fillStyle = '#3a2620'; ctx.fillRect(W * 0.64 + 60, 44, 4, 84);
-      // letto con lini freschi
-      blocks(ctx, W * 0.10, floorY - 44, W * 0.34, 44, '#5a4030', 8, r, 0.1);
-      blocks(ctx, W * 0.11, floorY - 56, W * 0.32, 18, '#e8e0d0', 8, r, 0.06);
-      blocks(ctx, W * 0.12, floorY - 62, W * 0.10, 10, '#d8d0c0', 8, r, 0.06);
+      // letto con testiera e lini freschi
+      blocks(ctx, W * 0.085, floorY - 92, W * 0.025, 92, '#4a3226', 8, r, 0.1);   // testiera
+      blocks(ctx, W * 0.085, floorY - 96, W * 0.24, 10, '#5a4030', 8, r, 0.08);
+      blocks(ctx, W * 0.10, floorY - 40, W * 0.24, 40, '#5a4030', 8, r, 0.1);     // struttura
+      blocks(ctx, W * 0.10, floorY - 56, W * 0.24, 20, '#e8e0d0', 8, r, 0.05);    // coperta
+      blocks(ctx, W * 0.10, floorY - 48, W * 0.24, 6, '#c8b8a8', 8, r, 0.06);     // risvolto
+      blocks(ctx, W * 0.11, floorY - 66, W * 0.07, 12, '#f0ece4', 6, r, 0.04);    // cuscino
       // il cioccolatino e il biglietto sul cuscino
-      ctx.fillStyle = '#4a2a1d'; ctx.fillRect(W * 0.155, floorY - 58, 6, 4);
-      ctx.fillStyle = '#e8e4dc'; ctx.fillRect(W * 0.24, floorY - 54, 12, 7);
+      ctx.fillStyle = '#4a2a1d'; ctx.fillRect(W * 0.135, floorY - 63, 6, 4);
+      ctx.fillStyle = '#e8e4dc'; ctx.fillRect(W * 0.23, floorY - 62, 13, 8);
+      ctx.fillStyle = '#8a5a48'; ctx.fillRect(W * 0.235, floorY - 60, 9, 1);
       // comodino con candela
       blocks(ctx, W * 0.47, floorY - 34, 34, 34, '#4a3226', 8, r, 0.1);
       glow(ctx, W * 0.485 + 5, floorY - 48, 18, 16, '232,182,76');
@@ -525,8 +561,9 @@ const Scenes = (() => {
       for (const fx of [0.70, 0.86]) {
         ctx.fillStyle = '#3a2620'; ctx.fillRect(W * fx, 30, 86, floorY - 40);
         ctx.fillStyle = '#0d1420'; ctx.fillRect(W * fx + 6, 38, 74, floorY - 56);
-        glow(ctx, W * fx + 43, floorY - 60, 60, 30, '61,138,160');
+        ctx.fillStyle = 'rgba(61,138,160,.14)'; ctx.fillRect(W * fx + 6, floorY - 84, 74, 60);
         ctx.fillStyle = '#2a7a8a'; ctx.fillRect(W * fx + 10, floorY - 60, 66, 36);
+        ctx.fillStyle = 'rgba(120,220,235,.25)'; ctx.fillRect(W * fx + 14, floorY - 56, 26, 4);
         ctx.fillStyle = 'rgba(200,240,255,.25)';
         for (let i = 0; i < 4; i++) ctx.fillRect(W * fx + 14 + r() * 50, floorY - 54 + r() * 24, 12, 2);
         ctx.fillStyle = '#3a2620'; ctx.fillRect(W * fx + 41, 38, 4, floorY - 56);
@@ -564,7 +601,7 @@ const Scenes = (() => {
       skyGradient(ctx, W, H, '#0a0710', '#1d1020', 10);
       stars(ctx, W, H, r, 44);
       // la luna vera: un taglio sottile
-      moon(ctx, W * 0.86, 46, 18, '#c8b8c0', true);
+      crescentMoon(ctx, W * 0.86, 46, 16, '#c8b8c0', '#0a0710');
       const deck = H * 0.44;
       hills(ctx, W, deck - 30, 40, '#0f0a10', r, 36);
       // travertino del bordo
@@ -574,15 +611,22 @@ const Scenes = (() => {
       glow(ctx, px + pw / 2, py + ph / 2, pw * 0.9, ph * 0.9, '61,158,178');
       blocks(ctx, px, py, pw, ph, '#1d7a92', 12, r, 0.14);
       blocks(ctx, px + 8, py + 8, pw - 16, ph - 16, '#2492ac', 12, r, 0.12);
-      // vapore che sale in volute pigre
-      ctx.fillStyle = 'rgba(220,240,245,.10)';
-      for (let i = 0; i < 10; i++) {
-        const vx = px + r() * pw, vy = py - 6 - r() * 26;
-        ctx.fillRect(vx, vy, 14 + r() * 18, 5);
+      // vapore che sale in volute pigre (più visibile, a colonne sfalsate)
+      for (let i = 0; i < 8; i++) {
+        const vx = px + 20 + i * (pw / 8) + (r() - 0.5) * 20;
+        ctx.fillStyle = 'rgba(225,242,246,.16)';
+        ctx.fillRect(vx, py - 10, 20 + r() * 14, 6);
+        ctx.fillStyle = 'rgba(225,242,246,.10)';
+        ctx.fillRect(vx + 6, py - 22, 16 + r() * 10, 6);
+        ctx.fillStyle = 'rgba(225,242,246,.06)';
+        ctx.fillRect(vx + 12, py - 34, 12 + r() * 8, 6);
       }
-      // il riflesso SBAGLIATO: luna piena rossa NELL'ACQUA
-      moon(ctx, px + pw * 0.62, py + ph * 0.55, 20, '#8a2432', false);
-      ctx.fillStyle = 'rgba(138,36,50,.18)'; ctx.fillRect(px + pw * 0.5, py + 8, pw * 0.26, ph - 16);
+      // il riflesso SBAGLIATO: luna piena rossa NELL'ACQUA, con scia
+      ctx.fillStyle = 'rgba(138,36,50,.10)'; ctx.fillRect(px + pw * 0.44, py + 8, pw * 0.38, ph - 16);
+      ctx.fillStyle = 'rgba(138,36,50,.14)'; ctx.fillRect(px + pw * 0.52, py + 8, pw * 0.22, ph - 16);
+      moon(ctx, px + pw * 0.62, py + ph * 0.55, 22, '#8a2432', false);
+      ctx.fillStyle = 'rgba(170,50,64,.5)';
+      for (let i = 0; i < 6; i++) ctx.fillRect(px + pw * 0.54 + r() * pw * 0.18, py + 12 + r() * (ph - 24), 10 + r() * 14, 3);
       // costellazioni sbagliate, fitte, nell'acqua
       ctx.fillStyle = '#d8ccd8';
       for (let i = 0; i < 22; i++) ctx.fillRect(px + 12 + r() * (pw - 24), py + 10 + r() * (ph - 20), 2, 2);
@@ -594,10 +638,14 @@ const Scenes = (() => {
         const lx = W * 0.055 + i * W * 0.155, ly = deck + 4;
         ctx.fillStyle = '#5a5048'; ctx.fillRect(lx, ly - 12, 44, 10);
         ctx.fillStyle = '#3a342e'; ctx.fillRect(lx + 2, ly - 2, 4, 6); ctx.fillRect(lx + 38, ly - 2, 4, 6);
-        // accappatoio bianco piegato (il sesto ha gli spilli)
-        ctx.fillStyle = i === 5 ? '#e8e4dc' : '#f0ece4';
-        ctx.fillRect(lx + 10, ly - 20, 22, 9);
-        ctx.fillStyle = '#7a2432'; ctx.fillRect(lx + 18, ly - 17, 6, 3);
+        // accappatoio bianco appeso al gancio del lettino (il sesto è quello "in attesa")
+        ctx.fillStyle = '#8a8478'; ctx.fillRect(lx + 19, ly - 34, 4, 6);
+        ctx.fillStyle = i === 5 ? '#e0dcd2' : '#f0ece4';
+        ctx.fillRect(lx + 12, ly - 29, 18, 18);
+        ctx.fillRect(lx + 15, ly - 33, 12, 6);
+        ctx.fillStyle = i === 5 ? '#b0aca2' : '#d8d2c6';
+        ctx.fillRect(lx + 20, ly - 29, 2, 18);
+        ctx.fillStyle = '#7a2432'; ctx.fillRect(lx + 14, ly - 25, 5, 4);
       }
       // le luci sott'acqua
       for (const fx of [0.22, 0.5, 0.78]) {
@@ -611,26 +659,33 @@ const Scenes = (() => {
       blocks(ctx, 0, 0, W, H, '#1d1216', 16, r, 0.2);
       const floorY = H - 54;
       blocks(ctx, 0, floorY, W, H - floorY, '#140c10', 14, r, 0.16);
-      // volte in pietra
-      for (const fx of [0.18, 0.5, 0.82]) {
-        blocks(ctx, W * fx - 56, H * 0.16, 22, H * 0.72, '#2e2026', 10, r, 0.14);
-        blocks(ctx, W * fx + 34, H * 0.16, 22, H * 0.72, '#2e2026', 10, r, 0.14);
-        blocks(ctx, W * fx - 56, H * 0.10, 112, 20, '#332430', 10, r, 0.14);
+      // pilastri delle volte
+      for (const fx of [0.03, 0.32, 0.64, 0.95]) {
+        blocks(ctx, W * fx - 12, H * 0.10, 26, H - 54 - H * 0.10, '#2e2026', 10, r, 0.14);
+        blocks(ctx, W * fx - 18, H * 0.08, 38, 16, '#332430', 10, r, 0.12);
       }
-      // rastrelliere di bottiglie coi nomi
-      for (const fx of [0.04, 0.36, 0.68]) {
-        blocks(ctx, W * fx, H * 0.34, W * 0.24, H * 0.42, '#2a1c16', 8, r, 0.12);
-        for (let row = 0; row < 4; row++) for (let col = 0; col < 5; col++) {
-          ctx.fillStyle = '#1a3a2a';
-          ctx.fillRect(W * fx + 8 + col * (W * 0.24 - 16) / 5, H * 0.36 + row * H * 0.10, 12, 7);
-          ctx.fillStyle = '#e8e0d0';
-          ctx.fillRect(W * fx + 8 + col * (W * 0.24 - 16) / 5 + 3, H * 0.36 + row * H * 0.10 + 2, 6, 3);
+      // rastrelliere di bottiglie coi nomi (bottiglie orizzontali, collo verso di voi)
+      for (const fx of [0.06, 0.38, 0.70]) {
+        blocks(ctx, W * fx, H * 0.30, W * 0.24, H * 0.48, '#241812', 8, r, 0.12);
+        for (let row = 0; row < 5; row++) {
+          ctx.fillStyle = '#171009';
+          ctx.fillRect(W * fx + 4, H * 0.315 + row * H * 0.092, W * 0.24 - 8, H * 0.075);
+          for (let col = 0; col < 4; col++) {
+            const bx = W * fx + 10 + col * (W * 0.24 - 24) / 4, by = H * 0.325 + row * H * 0.092;
+            ctx.fillStyle = '#2d5a3d'; ctx.fillRect(bx, by, 22, 9);           // corpo
+            ctx.fillStyle = '#1d4029'; ctx.fillRect(bx + 22, by + 2, 7, 5);   // collo
+            ctx.fillStyle = '#e8e0d0'; ctx.fillRect(bx + 5, by + 2, 10, 5);   // etichetta col nome
+          }
         }
       }
-      // in fondo: il bagliore del forno del Banchetto
-      glow(ctx, W * 0.5, floorY - 18, 90, 40, '200,90,40');
-      ctx.fillStyle = '#c85a28'; ctx.fillRect(W * 0.44, floorY - 26, W * 0.12, 20);
-      ctx.fillStyle = '#e8a04c'; ctx.fillRect(W * 0.465, floorY - 20, W * 0.07, 12);
+      // in fondo: il forno del Banchetto, acceso da 125 anni
+      blocks(ctx, W * 0.42, floorY - 74, W * 0.16, 74, '#3a2c30', 8, r, 0.14);
+      blocks(ctx, W * 0.41, floorY - 82, W * 0.18, 12, '#443440', 8, r, 0.1);
+      glow(ctx, W * 0.5, floorY - 26, 80, 44, '200,90,40');
+      ctx.fillStyle = '#1a0f0a'; ctx.fillRect(W * 0.445, floorY - 52, W * 0.11, 40);
+      ctx.fillStyle = '#c85a28'; ctx.fillRect(W * 0.455, floorY - 46, W * 0.09, 32);
+      ctx.fillStyle = '#e8a04c'; ctx.fillRect(W * 0.468, floorY - 38, W * 0.064, 22);
+      ctx.fillStyle = '#f5d878'; ctx.fillRect(W * 0.478, floorY - 30, W * 0.044, 12);
       // ganci che oscillano senza vento
       ctx.fillStyle = '#8a8478';
       for (const fx of [0.30, 0.44, 0.58, 0.72]) {
@@ -684,13 +739,19 @@ const Scenes = (() => {
       const r = rng(61);
       skyGradient(ctx, W, H, '#0a0710', '#141020', 10);
       stars(ctx, W, H, r, 30);
-      moon(ctx, W * 0.16, 50, 20, '#c8b8c0', true);
+      crescentMoon(ctx, W * 0.16, 50, 18, '#c8b8c0', '#0a0710');
       const g = H - 66;
-      // il muro di nebbia FERMO al confine
-      for (let i = 0; i < 6; i++) {
-        ctx.fillStyle = `rgba(190,180,195,${0.05 + i * 0.02})`;
-        ctx.fillRect(0, H * 0.16 + i * 6, W * 0.085 - i * 3, H);
-        ctx.fillRect(W - W * 0.085 + i * 3, H * 0.16 + i * 6, W, H);
+      // il muro di nebbia FERMO al confine: lingue sfumate, non colonne
+      for (const side of [0, 1]) {
+        for (let i = 0; i < 14; i++) {
+          const fy = H * 0.14 + i * (H * 0.062);
+          const len = W * (0.045 + Math.abs(Math.sin(i * 1.7)) * 0.05);
+          for (let k = 3; k >= 1; k--) {
+            ctx.fillStyle = `rgba(190,180,195,${0.035 * k})`;
+            const lw = len * (1 - (k - 1) * 0.28);
+            ctx.fillRect(side ? W - lw : 0, fy, lw, H * 0.05);
+          }
+        }
       }
       hills(ctx, W, g - 20, 34, '#0f150f', r, 34);
       ground(ctx, W, H, g, '#16241a', r, 12, 8);
@@ -723,7 +784,7 @@ const Scenes = (() => {
       const r = rng(71);
       skyGradient(ctx, W, H, '#0a0710', '#181022', 10);
       stars(ctx, W, H, r, 36);
-      moon(ctx, W * 0.80, 48, 20, '#c8b8c0', true);
+      crescentMoon(ctx, W * 0.80, 48, 18, '#c8b8c0', '#0a0710');
       const g = H - 60;
       hills(ctx, W, g - 26, 36, '#0f150f', r, 34);
       for (let i = 0; i < 3; i++) willow(ctx, W * (0.12 + i * 0.38), g + 6, 70 + r() * 20, '#14261c', '#241a14', r);
@@ -760,12 +821,16 @@ const Scenes = (() => {
       const r = rng(83);
       blocks(ctx, 0, 0, W, H, '#1f151a', 16, r, 0.14);
       const floorY = H - 78;
-      // pavimento a scacchi, più scuro del solito
-      for (let row = 0; row < 6; row++) for (let col = -1; col < 22; col++) {
-        const size = 22 + (row / 6) * 26;
-        const x = W / 2 + (col - 10) * size + (row % 2) * size / 2;
-        ctx.fillStyle = (col + row) % 2 ? '#8a8074' : '#14100e';
-        ctx.fillRect(x, floorY + row * 13, size, 14);
+      // pavimento a scacchi, più scuro del solito (file dal fondo)
+      let rowY = floorY;
+      for (let row = 0; row < 5; row++) {
+        const size = 16 + row * 7;
+        for (let col = -12; col < 12; col++) {
+          const x = W / 2 + col * size;
+          ctx.fillStyle = ((col + row) % 2 === 0) ? '#8a8074' : '#14100e';
+          ctx.fillRect(x, rowY, size, size * 0.62);
+        }
+        rowY += size * 0.62;
       }
       // i ritratti trasferiti QUI, fitti come parenti a un matrimonio
       for (let i = 0; i < 6; i++) {
@@ -835,10 +900,12 @@ const Scenes = (() => {
         ctx.fillStyle = '#f0ece4'; ctx.fillRect(lx, ly, 26, 9);
         ctx.fillStyle = '#c8a032'; ctx.fillRect(lx + 9, ly + 3, 7, 3);
       }
-      // il cancello APERTO
+      // il cancello APERTO: due pilastri e l'anta spalancata contro la siepe
+      blocks(ctx, W * 0.015, g - 46, 12, 50, '#8a8074', 6, r, 0.1);
+      blocks(ctx, W * 0.17, g - 46, 12, 50, '#8a8074', 6, r, 0.1);
       ctx.fillStyle = '#3a3038';
-      ctx.fillRect(W * 0.015, g - 40, 5, 44);
-      for (let i = 0; i < 4; i++) ctx.fillRect(W * 0.03 + i * 8, g - 36 + i * 3, 4, 40 - i * 3);
+      for (let i = 0; i < 5; i++) ctx.fillRect(W * 0.032 + i * 5, g - 38 + i * 2, 3, 34);
+      ctx.fillRect(W * 0.03, g - 40, 28, 3);
       // uccellini veri
       ctx.strokeStyle = '#3a3a45'; ctx.lineWidth = 2;
       for (const [bx, by] of [[W * 0.22, 60], [W * 0.28, 76], [W * 0.75, 56]]) {

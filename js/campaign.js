@@ -72,6 +72,7 @@ Niente. Zero. Claudia sale perfino sul guardrail — *"da qui parte SEMPRE"* —
 
   a2: {
     location: 'relais',
+    npc: ['gregorio'],
     caption: 'Relais Belvedere — il viale d\'ingresso',
     text: `Il viale è di ghiaia bianca, perfetta, rastrellata a onde regolari come un giardino zen. La macchina la rovina per quaranta metri e a tutti, inspiegabilmente, **dispiace**.
 
@@ -110,6 +111,7 @@ E nel bosso, all'altezza di dove un cervo avrebbe gli occhi, ci sono due buchi. 
 
   a3: {
     location: 'hall',
+    npc: ['gregorio'],
     caption: 'La hall del Belvedere',
     text: `Dentro, il Belvedere è **splendido** — e lo è in un modo che mette a disagio solo dopo qualche secondo, come una fotografia ritoccata troppo bene.
 
@@ -271,6 +273,7 @@ Quando Emanuela arriva, la corda penzola immobile, il secchio dondola appena, e 
 
   a6: {
     location: 'salaDaPranzo',
+    npc: ['gregorio'],
     caption: 'La cena delle nove — sala da pranzo',
     text: `La sala da pranzo è un piccolo teatro: un tavolo lungo apparecchiato d'argento, candelabri accesi, e le portefinestre che danno sulla piscina illuminata di turchese là fuori, fumante nell'aria fresca della montagna.
 
@@ -559,6 +562,7 @@ Da qualche parte sopra di voi, al piano delle camere, **un pavimento scricchiola
 
   h1: {
     location: 'corridoio',
+    npc: ['gregorio'],
     caption: 'Il corridoio — mezzanotte',
     text: `A mezzanotte in punto, tre cose succedono insieme.
 
@@ -591,6 +595,7 @@ E davvero: mentre lo dice, una ciocca dei suoi capelli diventa bianca.`,
 
   h2: {
     location: 'corridoio',
+    npc: ['gregorio'],
     caption: 'L\'ultima domanda a Gregorio',
     text: `> Federico: "Gregorio. Una domanda sola. Nel 1899... eravate in sei?"
 
@@ -680,6 +685,7 @@ Dal fondo della cantina, qualcosa di metallico si muove. Piatti. Coperti. **Una 
 
   k3: {
     location: 'cantina',
+    npc: ['cuoco'],
     caption: 'Il fondo della cantina — la cucina del Banchetto',
     text: `Oltre le rastrelliere, la cantina si apre in una **seconda cucina.** Non quella linda del piano di sopra: questa è del 1899 e non ha mai smesso di lavorare. Un forno a legna GRANDE COME UN'AUTO, acceso, con la fiamma che respira piano. Un tavolo da macellaio lungo quattro metri, segnato da centoventicinque anni di lame. Ganci vuoti al soffitto, **che oscillano** senza vento, come se qualcosa ci fosse appena stato appeso. O stesse per esserlo.
 
@@ -1004,6 +1010,7 @@ Cinque cornici. Illuminate. In attesa.
   b1: {
     location: 'giardino',
     caption: 'Il giardino di notte — il regno del Giardiniere',
+    npc: [{ key: 'spaventapasseri', x: 0.52, y: 0.86, scale: 4 }],
     text: `La portafinestra si apre sull'aria gelida della montagna, e il giardino di notte è un altro pianeta: la nebbia salita dalla valle si è fermata — DAVVERO — al confine esatto della proprietà, e ci gira intorno come un mare attorno a un'isola. Dentro il confine, tutto è nitido, azzurrino, **in ordine.**
 
 Troppo in ordine. La ghiaia rastrellata a onde. Le siepi potate a forme che continuano a non voler essere guardate due volte. E in mezzo al prato, dove nel pomeriggio non c'era, uno **spaventapasseri**: giacca da lavoro, cappello di paglia, guanti da potatura. Con delle **cesoie vere** cucite alle maniche.
@@ -1024,6 +1031,7 @@ Il pozzo è a quaranta metri, oltre lo spaventapasseri, oltre l'orto recintato d
   b2_giardiniere_fight: {
     location: 'giardino',
     caption: 'Il Giardiniere — turno di notte',
+    npc: [{ key: 'spaventapasseri', x: 0.62, y: 0.9, scale: 5 }],
     text: `Il piano regge per trenta metri. Poi la nebbia — che non entra MAI nella proprietà — trova il modo di vendicarsi: un banco sottile scavalca la siepe per un secondo, un secondo solo, e copre lo spaventapasseri come un sipario.
 
 Quando il sipario si alza, lo spaventapasseri **non c'è più.**
@@ -1247,6 +1255,7 @@ Sulla soglia, senza voltarsi:
 
   z1: {
     location: 'salaBanchetto',
+    npc: ['gregorio'],
     caption: 'Il Banchetto del Venticinquennio — ore 5:57',
     text: `Non c'è bisogno di cercare la sala del Banchetto. Alle 5:57, il Belvedere **ve la porta**: aprite una porta qualsiasi — QUALSIASI — e dietro c'è sempre lei.
 
