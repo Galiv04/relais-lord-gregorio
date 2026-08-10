@@ -3966,6 +3966,7 @@ const DIARY_FLAGS = [
   ['segreto_contabile',     'Il Contabile vi ha confidato il suo segreto: anche la casa tiene una contabilità. E i conti non tornano.'],
   ['pista_paese',           'Pietrafonda vi conosce: Don Michele, il bar del 1999, la cripta dei custodi.'],
   ['visto_occhio',          'Dal telescopio della soffitta l\'avete visto: c\'è un OCCHIO nella piscina. Il riflesso guarda.'],
+  ['regole_casa_note',      'Le tre regole del Belvedere, imparate sulla pelle: la casa sente tutto, la casa non dimentica, la casa RISPETTA chi gioca bene.'],
   ['un_nodo_sciolto',       'Almeno un nodo della casa è SCIOLTO: quando sarete pronti, ci si può barricare e aspettare il Banchetto.'],
   ['segreto_custodi',       'Il segreto della cripta: il patto è più VECCHIO di Gregorio — e un custode può RIFIUTARSI di passare la penna. O romperla.'],
   ['ada_perdono',           'Ada perdona Gregorio "a metà — la metà che serve". Parole da riferire: al Banchetto varranno un alleato.'],

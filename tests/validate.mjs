@@ -314,6 +314,17 @@ for (const f of flagRichiesti) {
 }
 if (!flagMorti) { ok(); console.log(`  ✔ ${flagRichiesti.size} flag di imprese/cronache/diario, tutti impostabili da almeno una scena`); }
 
+// direzione inversa: flag impostati dalle scene ma senza NESSUN consumatore di gioco
+// (né requires, né combat, né diario/imprese/cronache) — debito narrativo, non errore
+const engineSrc2 = readFileSync(join(root, 'js/engine.js'), 'utf8') + readFileSync(join(root, 'js/combat.js'), 'utf8');
+const consumatori = campSrc + engineSrc2 + epiSrc;
+const senzaConsumatore = [...settableFlags].filter(f => {
+  const inSets = (setsBlocks.match(new RegExp('\\b' + f + '\\b', 'g')) || []).length;
+  const totale = (consumatori.match(new RegExp('\\b' + f + '\\b', 'g')) || []).length;
+  return totale <= inSets;
+});
+if (senzaConsumatore.length) warn(`${senzaConsumatore.length} flag impostati ma senza consumatore di gioco (debito narrativo): ${senzaConsumatore.slice(0, 8).join(', ')}${senzaConsumatore.length > 8 ? ', …' : ''}`);
+
 /* ---------- esito ---------- */
 console.log('\n' + '═'.repeat(50));
 if (failures === 0) {

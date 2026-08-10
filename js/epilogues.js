@@ -96,6 +96,7 @@ const IMPRESE = [
   { flag: 'benzinaio_sapeva',      icon: '⛽', title: 'L\'Uomo del Distributore',    desc: 'Cinque macchine contate in centoventicinque anni. E una frase sola per provarci: lasciate stare il pozzo.' },
   { flag: 'menu_dei_vivi',         icon: '🍳', title: 'Il Menù dei Vivi',            desc: 'Pancakes, crêpes, bruschette e grigliata contro un pasto solo. La casa ci sta ancora pensando.' },
   { flag: 'capitolazione',         icon: '🤝', title: 'La Notte Senza Sangue',       desc: 'Nessuna battaglia: solo i conti fatti bene, un maggiordomo stanco e il pugno che si apre.' },
+  { flag: 'carte_1949_vinte',      icon: '🃏', title: 'Scopa!',                      desc: 'Avete finito la mano interrotta nel 1949. E l\'avete VINTA, coi reduci che fischiavano.' },
 ];
 
 /* ---------- CRONACHE DEL BELVEDERE ----------
@@ -116,6 +117,7 @@ const CRONACA = [
   { flag: 'bambole_addormentate', text: 'Le trentadue signorine del 1924 dormono ancora, composte, le mani in grembo. Un restauratore le ha definite "pezzi unici in condizioni perfette". Nessuno osa svegliarle per venderle.' },
   { flag: 'paese_sa', text: 'La corriera azzurra è ripartita dal tornante undici con la benzina che aveva nel 1974. Alla guida, per l\'ultima tratta, un pensionato di nome Gennaro. In discesa. Cantando.' },
   { flag: 'fumata_di_gruppo', text: 'Sul balcone del primo piano, certe notti d\'estate, il fumo di chissà cosa sale dritto e poi si DISPONE — angoli retti, corridoi, stanze. I nuovi gestori l\'hanno visto. Hanno deciso, con saggezza irpina, di non farci domande.' },
+  { flag: 'sofia_libera', text: 'A Napoli, una donna che dimostra venticinque anni da cinquanta ha rifatto la patente, ha pianto davanti a uno smartphone ("nel 1999 questi non c\'erano") e ha prenotato — testuale — "una vacanza in un posto di MERDA, che quelli belli mi hanno stufato".' },
   { flag: 'capitolazione', text: 'Nel registro del Belvedere, alla pagina del 2024, non c\'è nessuna firma. C\'è scritto, nella grafia elegante di Gregorio: "Banchetto annullato per mancanza di portata principale. La direzione ringrazia e RIAPRE." È incorniciata alla reception.' },
   { flag: 'menu_dei_vivi', text: 'Il menù del relais riaperto ha una pagina nuova, scritta a mano: "I Piatti degli Amici — si servono solo ad agosto, quando tornano loro." I fusilli della signora Margherita, per la prima volta in un secolo, hanno compagnia viva.' },
   { flag: 'benzinaio_sapeva', text: 'Al distributore di Baiano, il benzinaio ha visto riscendere la sesta macchina — piena, viva, coi finestrini aperti. Ha chiuso la pompa, spento la radiolina dell\'ippica, e per la prima volta in venticinque anni si è preso un giorno di ferie.' },
