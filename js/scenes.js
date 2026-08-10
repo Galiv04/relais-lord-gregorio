@@ -378,6 +378,10 @@ const Scenes = (() => {
       ctx.fillStyle = '#0d070a';
       for (let i = 0; i < 6; i++) ctx.fillRect(W * 0.40 + i * W * 0.035, g + 14, 4, H - g - 18);
       ctx.fillRect(W * 0.395, g + 12, W * 0.21, 5);
+      // i cinque, di spalle davanti al cancello: la vacanza sta per cominciare
+      if (typeof Sprites !== 'undefined' && Sprites.registry) {
+        heroesRow(ctx, W, H - 4, ['gaetano', 'claudia', 'natalino', 'emanuela', 'federico'], 2);
+      }
       // nebbia bassa
       ctx.fillStyle = 'rgba(180,170,180,.08)';
       for (let i = 0; i < 8; i++) ctx.fillRect(r() * W, g - 8 + r() * 20, 80 + r() * 120, 6);
