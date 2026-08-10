@@ -1283,6 +1283,15 @@ executeUntil('tronello: la pausa di Natalino (nat_tronello) e la promessa calata
   r => !!(r.log.flags && r.log.flags.tronello_promesso && r.log.flags.ada_ride));
 
 
+
+executeUntil('tronello: il CERCHIO del balcone (dilemma: consumato in gruppo, niente offerta ad Ada)',
+  ['natalino', 'emanuela', 'claudia'],
+  {},
+  { checkBias: 'best', seedBase: 945000,
+    sequences: { h1: ['ho bisogno di un tronello', 'il CERCHIO del tronello', 'PIANO PROIBITO', 'barricarsi'] } },
+  ['nat_tronello', 'tronello_cerchio'], 20,
+  r => !!(r.log.flags && r.log.flags.fumata_di_gruppo && r.log.flags.stanza_intravista && !r.log.flags.ada_ride));
+
 const fatalRuns = results.filter(r => !r.ok);
 for (const r of fatalRuns) fail(`Partita "${r.scenario.name}" (seed ${r.scenario.seed}): ${r.error.split('\n')[0]}`);
 
@@ -1466,6 +1475,8 @@ coverage('Eco a Pietrafonda — la corriera del \'74', ['pp_anello']);
 coverageFlag('Eco a Pietrafonda — flag', ['paese_sa']);
 coverage('Il quinto finale — la proposta, il rifiuto e la penna spezzata', ['z_penna', 'z_penna_no', 'e_penna']);
 coverage('Il tronello — la pausa di Natalino e la promessa al pozzo', ['nat_tronello', 'b4_tronello']);
+coverage('Il tronello — il cerchio del balcone', ['tronello_cerchio']);
+coverageFlag('Il cerchio — flag', ['fumata_di_gruppo', 'stanza_intravista']);
 coverageFlag('Il tronello — flag', ['tronello_promesso', 'ada_ride']);
 
 

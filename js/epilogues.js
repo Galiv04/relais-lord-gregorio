@@ -88,6 +88,7 @@ const IMPRESE = [
   { flag: 'finale_penna',        icon: '🖋', title: 'La Penna Spezzata',            desc: 'Nessun custode nuovo. Nessun custode vecchio. Un finale fuori registro.' },
   { flag: 'tronello_promesso',   icon: '🌿', title: 'Manutenzione',                 desc: 'Natalino ha condiviso il tronello con un fantasma. E gli è sembrato EDUCATO così.' },
   { flag: 'ada_ride',            icon: '😄', title: 'La Risata che Costa',          desc: 'Ada ha riso, dopo cinquant\'anni. L\'ha pagata volentieri.' },
+  { flag: 'fumata_di_gruppo',    icon: '🌿', title: 'Il Cerchio del Balcone',       desc: 'Dieci minuti di vacanza vera. E il fumo, in cambio, vi ha disegnato la mappa.' },
 ];
 
 /* ---------- CRONACHE DEL BELVEDERE ----------

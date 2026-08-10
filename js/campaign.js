@@ -743,6 +743,7 @@ E davvero: mentre lo dice, una ciocca dei suoi capelli diventa bianca.`,
       { text: '🕯 Natalino: la finestra della Camera del Pozzo lo sta aspettando', next: 'cuore_nat', once: true },
       { text: '🎫 Cinque minuti di normalità: Natalino tira fuori i Gratta e Vinci di Baiano', requires: { item: 'gratta_vinci' }, next: 'gv1', once: true },
       { text: '🌿 Natalino alza una mano: "Io ho bisogno di un tronello. Da solo. Camera mia. CINQUE minuti."', next: 'nat_tronello', once: true },
+      { text: '🌿🌿 Stavolta si condivide: il CERCHIO del tronello, sul balcone. Tutti. (consuma il tronello di riserva)', requires: { item: 'tronello' }, removeItem: 'tronello', next: 'tronello_cerchio', once: true },
       { text: '🌅 Basta così: barricarsi e aspettare l\'alba (verso il finale)', next: 'z1', requires: { flag: 'un_nodo_sciolto' } },
     ],
   },
@@ -3046,6 +3047,36 @@ Natalino spegne con cura, ne conserva metà, e torna giù con gli occhi un po' r
     ],
   },
 
+  tronello_cerchio: {
+    location: 'corridoio',
+    caption: 'Il cerchio del balcone',
+    text: `Il balcone del primo piano guarda la valle, e per dieci minuti la regola è una sola: **niente casa, niente patto, niente 1899.** Solo il cerchio.
+
+Natalino accende la metà conservata e la fa girare con l'etichetta del maestro di cerimonie: a Gaetano, che tira da ingegnere — dose calibrata, apnea misurata; a Claudia, che tira da professionista e dichiara "meglio del mio ultimo teambuilding"; e a Emanuela, che dice "vabbè, PROVO" — e tossisce per quaranta secondi con la dignità di una regina, tra gli applausi.
+
+> Federico: *(che non fuma, ma che si è portato la sigaretta elettronica in balcone "per solidarietà aerodinamica", e soffia cerchietti di vapore DENTRO il cerchio degli altri)* "Vi faccio da cornice. Gratis."
+
+E per dieci minuti funziona. Ridete piano, di niente, come si ride in vacanza. La valle respira. La casa — per una volta — non.
+
+Poi Gaetano, gli occhi socchiusi, lo dice: "...il fumo." Il fumo del cerchio non si disperde: **si dispone.** Piano, sopra le vostre teste, in linee ordinate — angoli retti, corridoi, stanze — la PIANTA del primo piano del Belvedere, disegnata in fumo. E in fondo al corridoio di fumo, dove nella pianta vera c'è solo muro... **c'è una stanza in più.**
+
+> Gaetano: "Quella stanza non esiste. Cioè: non esiste nei muri. Ma il fumo dice che—"
+
+> Claudia: *(già in piedi, già lucida)* "La porta con la targhetta vuota. In fondo al corridoio del piano proibito. Il fumo ci ha appena dato la MAPPA."
+
+L'ultimo filo di fumo si stacca dal cerchio, scavalca la ringhiera e se ne va verso il giardino, da solo, in direzione del pozzo — come un tiro consegnato a domicilio.
+
+> Natalino: *(guardandolo andare)* "...tienilo tu, signora. Era comunque tuo."
+
+**(Il cerchio ristora: +3 PV a tutti, Sangue freddo +1. E adesso SAPETE della stanza che non c'è. Flag: fumata_di_gruppo, stanza_intravista.)**`,
+    heal: 3,
+    gold: 1,
+    sets: { fumata_di_gruppo: true, stanza_intravista: true },
+    choices: [
+      { text: '↩ Rientrare dal balcone, più leggeri e con una mappa di fumo in testa', next: 'h1' },
+    ],
+  },
+
   gv1: {
     location: 'corridoio',
     caption: 'Cinque minuti di normalità',
@@ -3717,6 +3748,7 @@ const DIARY_FLAGS = [
   ['orologio_reso',         'L\'orologio di Sofia è tornato al suo polso: il suo tempo, dopo venticinque anni, è ripartito.'],
   ['riflesso_fatto',        'Il Riflesso sotto la piscina ha un padrone di meno: gli ospiti trattenuti sono liberi.'],
   ['tronello_promesso',     'Ada vi ha chiesto un tiro di tronello "per quando esce". E i ragazzi del \'74, il cuoco li ADORAVA.'],
+  ['stanza_intravista',     'Il fumo del cerchio ha disegnato la pianta del primo piano: in fondo al corridoio c\'è una STANZA CHE NON C\'È. La porta con la targhetta vuota.'],
   ['ultimo_biglietto',      'Natalino conserva l\'ULTIMO Gratta e Vinci: "lo gratto quando usciamo, con l\'alba in faccia". È una promessa.'],
   ['biglietto_strappato',   'Il quinto biglietto aveva vinto "una notte, ospite della casa, per sempre". Natalino l\'ha strappato: RITENTA.'],
   ['casa_rispetta',         'Avete denunciato la trappola in faccia a Gregorio, e il suo sorriso è scivolato: la casa vi RISPETTA.'],
@@ -3730,7 +3762,7 @@ const WORLD_MAP = [
   { key: 'tornanti', label: 'I Tornanti',      x: 0.12, y: 0.80, scenes: ['a0', 'a0_benzina', 'a1', 'a1b', 'ft1', 'ft1_inseguiti', 'ft_cesoie', 'ft_cesoie_vinto', 'ft2_capito', 'ft2_notte'] },
   { key: 'relais',   label: 'Il Relais',       x: 0.40, y: 0.30, scenes: ['a2', 'a2_siepi', 'p4_fuga', 'gr1', 'gr2', 'gr3', 'gr3_ko'] },
   { key: 'hall',     label: 'La Hall',         x: 0.56, y: 0.48, scenes: ['a3', 'a3_registro', 'a3_registro_ko', 'a4_firma', 'a4_rinvio', 'a4_firma_forzata', 'p4_rientro'] },
-  { key: 'camere',   label: 'Le Camere',       x: 0.74, y: 0.32, scenes: ['a5', 'a5_pozzo', 'h1', 'h2', 'gv1', 'nat_tronello', 'u1', 'u2_1999', 'u2_1924', 'u2_1899', 'u3_medaglione', 'u3_lanterna', 'u3_bambole_fight', 'u3_bambole_vinte', 'u5_specchio', 'u4_porta_vuota', 'sf1', 'sf2', 'sf3', 'sf4', 'sf5', 'sf6', 's49_1', 's49_2', 's49_3', 's49_3_ko', 's74_1', 's74_2', 's74_3', 'cuore_gc', 'cuore_fe', 'cuore_fe_esito', 'cuore_nat', 'cuore_nat_esito'] },
+  { key: 'camere',   label: 'Le Camere',       x: 0.74, y: 0.32, scenes: ['a5', 'a5_pozzo', 'h1', 'h2', 'gv1', 'nat_tronello', 'tronello_cerchio', 'u1', 'u2_1999', 'u2_1924', 'u2_1899', 'u3_medaglione', 'u3_lanterna', 'u3_bambole_fight', 'u3_bambole_vinte', 'u5_specchio', 'u4_porta_vuota', 'sf1', 'sf2', 'sf3', 'sf4', 'sf5', 'sf6', 's49_1', 's49_2', 's49_3', 's49_3_ko', 's74_1', 's74_2', 's74_3', 'cuore_gc', 'cuore_fe', 'cuore_fe_esito', 'cuore_nat', 'cuore_nat_esito'] },
   { key: 'pranzo',   label: 'Sala da Pranzo',  x: 0.46, y: 0.62, scenes: ['a6', 'a6_menu', 'a6_brindisi', 'a6_no_brindisi', 'a7', 'z1', 'z2_vino', 'z2_trattativa', 'z2_rituale', 'gvz', 'z2_strada', 'z2_alleato', 'z2_bambole', 'z2_claudia', 'z3_boss', 'z3_boss_solo', 'z3_boss_arrabbiato', 'z3_boss_indebolito', 'z4_fase2', 'z5_vittoria', 'z6_alba', 'e_alba', 'z_penna', 'z_penna_no', 'e_penna', 'z_custode', 'e_custode', 'z_resa', 'e_ospiti', 'z_vespri', 'z_smemorati', 'e_smemorati'] },
   { key: 'riflesso', label: 'Il Riflesso',      x: 0.10, y: 0.28, scenes: ['w1_tuffo', 'w2_riflesso', 'w2_riflesso_ko', 'w3_giardino', 'w3_pattuglia_combat', 'w4_sofia', 'w5_racconto', 'w6_1924', 'w7_ronda', 'w7_ronda_combat', 'w8_direttore', 'w9_studio', 'w9_studio_combat', 'w10_orologio', 'w10_orologio_reso', 'w11_inventario', 'w12_tradimento', 'w12_sofia', 'w14_direttore_boss', 'w15_vittoria', 'w16_amaro', 'w17_fuga', 'w17_fuga_ko', 'w18_soglia', 'w_finale'] },
   { key: 'paese',    label: 'Pietrafonda',     x: 0.16, y: 0.90, scenes: ['pp1', 'pp2', 'pp2_bar', 'pp3', 'pp_anello', 'pp4_cripta', 'pp4', 'pp6', 'pp6_ko', 'pp7'] },
