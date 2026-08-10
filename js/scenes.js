@@ -1033,6 +1033,16 @@ const Scenes = (() => {
       ctx.fillStyle = '#d8d0c0'; ctx.fillRect(W * 0.06, g - 37, 38, 3); ctx.fillRect(W * 0.06, g - 32, 26, 2);
       ctx.fillStyle = '#4a4450';
       ctx.fillRect(W * 0.10, g - 14, 16, 14); ctx.fillRect(W * 0.125, g - 20, 14, 20);
+      // la corriera azzurra, ferma dal 1974: gomme a terra, un velo di polvere
+      const bx = W * 0.80, by = g - 4;
+      ctx.fillStyle = '#4a7a9a'; ctx.fillRect(bx, by - 26, 92, 26);            // carrozzeria
+      ctx.fillStyle = '#3a6a8a'; ctx.fillRect(bx, by - 26, 92, 5);             // fascia del tetto
+      ctx.fillStyle = '#1a2530';                                               // finestrini bui
+      for (let i = 0; i < 5; i++) ctx.fillRect(bx + 6 + i * 17, by - 21, 12, 10);
+      ctx.fillStyle = '#2a2228'; ctx.fillRect(bx + 10, by - 2, 14, 7); ctx.fillRect(bx + 66, by - 2, 14, 7); // gomme sgonfie
+      ctx.fillStyle = '#c8c2b0'; ctx.fillRect(bx + 30, by - 24, 34, 4);        // cartello di linea sbiadito
+      ctx.fillStyle = 'rgba(190,180,195,.14)'; ctx.fillRect(bx, by - 27, 92, 27); // il velo di polvere
+      ctx.fillStyle = '#8a8478'; ctx.fillRect(bx + 84, by - 12, 6, 3);         // lo specchietto storto
       // la nebbia ferma sui bordi del paese
       for (let i = 0; i < 4; i++) {
         ctx.fillStyle = `rgba(190,180,195,${0.03 + i * 0.012})`;
