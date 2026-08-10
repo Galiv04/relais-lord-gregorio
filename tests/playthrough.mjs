@@ -1466,6 +1466,18 @@ function findHeroButton(box, heroName) {
 
 
 
+
+(function testEpiloghiSmemorati() {
+  section('Verifica diretta: gli Smemorati NON ricordano (epiloghi coerenti con l\'amnesia)');
+  const game = buildGame(6363);
+  game.act(() => game.api.Engine.newGame([{ heroId: 'gaetano', player: '' }, { heroId: 'natalino', player: '' }]));
+  game.act(() => game.api.Engine.gotoScene('e_smemorati'));
+  const html = game.doc.getElementById('choices').children.map(c => c.innerHTML).join('\n');
+  if (!/NON RIPETERE L'ESPERIMENTO/.test(html)) fail('testEpiloghiSmemorati: epilogo amnesia di Gaetano assente');
+  if (/relazione tecnica di quarantadue pagine/.test(html)) fail('testEpiloghiSmemorati: compare l\'epilogo ALBA di Gaetano (che ricorda tutto) in un finale di amnesia');
+  console.log('  ✅ e_smemorati usa epiloghi dedicati all\'amnesia (niente ricordi dettagliati della notte)');
+})();
+
 (function testEpiloghiPenna() {
   section('Verifica diretta: epiloghi personali e cronache del finale della Penna Spezzata');
   const game = buildGame(5252);
