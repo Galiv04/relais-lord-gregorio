@@ -1176,9 +1176,27 @@ const Scenes = (() => {
       // banco da lavoro a destra con attrezzi appesi
       blocks(ctx, W * 0.70, floorY - 44, W * 0.26, 44, '#4a3a28', 8, r, 0.12);
       blocks(ctx, W * 0.69, floorY - 50, W * 0.28, 8, '#5d4a35', 8, r, 0.08);
-      ctx.fillStyle = '#2a241e'; ctx.fillRect(W * 0.70, H * 0.24, W * 0.26, 42); // pannello attrezzi
-      ctx.fillStyle = '#8a8478';
-      for (let t = 0; t < 6; t++) ctx.fillRect(W * 0.715 + t * W * 0.04, H * 0.26, 4, 22 + (t % 3) * 8);
+      ctx.fillStyle = '#2a241e'; ctx.fillRect(W * 0.70, H * 0.24, W * 0.26, 52); // pannello attrezzi
+      const px = W * 0.70, py = H * 0.24;
+      // martello
+      ctx.fillStyle = '#7a5a35'; ctx.fillRect(px + 12, py + 10, 5, 30);
+      ctx.fillStyle = '#8a8478'; ctx.fillRect(px + 5, py + 8, 19, 8);
+      // chiave inglese
+      ctx.fillStyle = '#9a948a'; ctx.fillRect(px + 38, py + 12, 5, 28);
+      ctx.fillRect(px + 34, py + 8, 13, 6); ctx.fillStyle = '#2a241e'; ctx.fillRect(px + 38, py + 9, 5, 4);
+      // sega a mano
+      ctx.fillStyle = '#b0aa9c'; ctx.fillRect(px + 58, py + 14, 34, 8);
+      ctx.fillStyle = '#2a241e'; for (let z = 0; z < 8; z++) ctx.fillRect(px + 59 + z * 4, py + 22, 2, 3);
+      ctx.fillStyle = '#6a4a2d'; ctx.fillRect(px + 90, py + 10, 8, 16);
+      // tubo di gomma avvolto
+      ctx.strokeStyle = '#3a4a3a'; ctx.lineWidth = 4;
+      ctx.beginPath(); ctx.arc(px + 118, py + 26, 12, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(px + 118, py + 26, 7, 0, Math.PI * 2); ctx.stroke();
+      // cacciaviti
+      for (let t = 0; t < 3; t++) {
+        ctx.fillStyle = ['#c05a48', '#4a5a6e', '#8a6a2d'][t]; ctx.fillRect(px + 140 + t * 10, py + 10, 4, 10);
+        ctx.fillStyle = '#9a948a'; ctx.fillRect(px + 141 + t * 10, py + 20, 2, 16);
+      }
       ctx.fillStyle = '#c05a48'; ctx.fillRect(W * 0.72, floorY - 60, 22, 10); // cassetta attrezzi
       // lampade da officina appese, una tremolante
       for (const fx of [0.14, 0.48, 0.82]) {
