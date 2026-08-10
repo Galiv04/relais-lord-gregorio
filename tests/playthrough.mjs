@@ -822,6 +822,7 @@ scenarios.push(scenario(
   'mondo del riflesso + cuori: cantina, i tre momenti di coppia, poi il riflesso (rifiuto -> boss vinto) -> barricarsi',
   ['claudia', 'federico'], {
     k3: '💇 Natalino fa un passo avanti',
+    cuore_gc: 'Restare ancora un minuto sul balcone',
     w10_orologio: '💗 Restituirlo a Sofia',
     w11_inventario: '⚔ Rifiutare in blocco',
   }, {
@@ -1477,6 +1478,7 @@ coverageFlag('Riflesso — flag chiave (attraversamento, Sofia, Direttore, vitto
 
 /* ---- ESPANSIONE: LE SCENE DEL CUORE ---- */
 
+coverage('Il balcone — l\'esito di Gaetano e Claudia (la foto con la nebbia sbagliata)', ['cuore_gc_esito']);
 coverage('Scene del cuore — Gaetano e Claudia, Federico ed Emanuela, Natalino', [
   'cuore_gc', 'cuore_fe', 'cuore_fe_esito', 'cuore_nat', 'cuore_nat_esito',
 ]);
