@@ -1465,6 +1465,23 @@ function findHeroButton(box, heroName) {
 
 
 
+
+(function testEpiloghiPenna() {
+  section('Verifica diretta: epiloghi personali e cronache del finale della Penna Spezzata');
+  const game = buildGame(5252);
+  game.act(() => game.api.Engine.newGame([{ heroId: 'gaetano', player: '' }, { heroId: 'natalino', player: '' }]));
+  const G = game.getG();
+  G.flags.finale_penna = true; G.flags.paese_sa = true;
+  game.act(() => game.api.Engine.gotoScene('e_penna'));
+  const scelte = game.doc.getElementById('choices');
+  const html = scelte.children.map(c => c.innerHTML).join('\n');
+  if (!/contachilometri azzerato/.test(html)) fail('testEpiloghiPenna: epilogo personale di Gaetano (tipo penna) assente');
+  if (!/scheggia della penna/.test(html)) fail('testEpiloghiPenna: epilogo personale di Natalino (tipo penna) assente');
+  if (!/Non scrive più. Non deve./.test(html)) fail('testEpiloghiPenna: cronaca della stilografica in teca assente');
+  if (!/Gennaro/.test(html)) fail('testEpiloghiPenna: cronaca della corriera (paese_sa) assente');
+  console.log('  ✅ e_penna mostra epiloghi dedicati ai personaggi e le cronache dei flag attivi');
+})();
+
 (function testSorpresaSiSpegne() {
   section('Verifica diretta: la diretta di Claudia si spegne a battaglia vinta');
   const game = buildGame(3131);

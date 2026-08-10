@@ -862,7 +862,7 @@ const Engine = (() => {
     const mins = Math.round((Date.now() - G.stats.start) / 60000);
 
     // epiloghi personali degli eroi
-    const endingType = G.sceneId === 'e_custode' ? 'custode' : G.sceneId === 'e_ospiti' ? null : 'alba';
+    const endingType = G.sceneId === 'e_custode' ? 'custode' : G.sceneId === 'e_penna' ? 'penna' : G.sceneId === 'e_ospiti' ? null : 'alba';
     if (typeof HERO_EPILOGUES !== 'undefined' && endingType) {
       const epi = document.createElement('div');
       epi.innerHTML = `<h3 style="font-family:var(--font-pixel);font-size:14px;color:var(--blue);margin:14px 0 8px">🌟 E i nostri eroi?</h3>` +

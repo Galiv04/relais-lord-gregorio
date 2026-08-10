@@ -3181,6 +3181,7 @@ Sulla soglia, nel primo sole, Gregorio invecchia centoventicinque anni in un min
 Scendete i ventisei tornanti a piedi, nel sole. La strada, stavolta, **scende e basta.** E al tornante undici, parcheggiata di traverso, trovate una corriera azzurra col motore acceso e un autista che non fa domande: a Pietrafonda, Don Michele ha smesso di suonare i vespri. Non servono più. Adesso suona — dice lui — "a festa, e MALE, che è più onesto."
 
 **🖋 FINE — Nessun custode nuovo. Nessun custode vecchio. Avete convinto un maggiordomo di 125 anni a rompere la penna, e una casa a tornare mortale. Questo non era nemmeno un finale previsto dal Belvedere: l'avete scritto voi.**`,
+    sets: { finale_penna: true },
     ending: true,
   },
 
