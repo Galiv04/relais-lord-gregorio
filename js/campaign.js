@@ -1247,10 +1247,28 @@ Le cesoie si aprono con lo scatto oliato di centoventicinque anni di manutenzion
 *(È una creatura della villa: phon e sale doppi. Colpisce come una falciatrice: proteggetevi a vicenda!)*`,
     combat: {
       enemies: ['spaventapasseri', 'lupo_nebbia'],
-      victory: 'b2_orto',
+      victory: 'b2_vinto',
       defeat: 'x_celle',
       loot: { gold: 1 },
     },
+  },
+
+  b2_vinto: {
+    location: 'giardino',
+    caption: 'Il turno di notte è finito',
+    text: `Del Giardiniere resta un cappello di paglia rovesciato sul prato all'inglese, una camicia vuota impigliata nella siepe, e le cesoie — chiuse per sempre, o almeno per stanotte — cadute aperte a metà, come una bocca a cui è mancata l'ultima parola.
+
+Il lupo di nebbia si disfa per ultimo, controvoglia, un banco di foschia alla volta, e se ne torna oltre la siepe da dove la nebbia non dovrebbe passare.
+
+> Federico: *(raddrizzandosi la giacca del pigiama come dopo una riunione andata male ma vinta)* "Verbalizziamo: lo spaventapasseri l'abbiamo spaventato NOI."
+
+> Natalino: "Si sta già rifacendo, eh. La paglia è come la ricrescita: torna sempre. Ma per stanotte... il giardino è NOSTRO."
+
+**(Il turno di notte del giardino è scoperto. Flag: giardiniere_potato. La strada per l'orto di Ada è libera.)**`,
+    sets: { giardiniere_potato: true },
+    choices: [
+      { text: '🌿 Avanti, verso l\'orto delle erbe', next: 'b2_orto' },
+    ],
   },
 
   b2_orto: {
@@ -2240,7 +2258,8 @@ La candela, per fortuna, è già in tasca di Gaetano — tiepida, intatta — an
     sets: { giardiniere_allertato: true },
     choices: [
       { text: 'Correre fuori dalla rimessa, verso il pozzo', next: 'b3_pozzo' },
-      { text: '🏃 Col Giardiniere sveglio, restare è peggio: GIÙ per i tornanti, di corsa', next: 'ft1_inseguiti' },
+      { text: '🏃 Col Giardiniere sveglio, restare è peggio: GIÙ per i tornanti, di corsa', requires: { notFlag: 'giardiniere_potato' }, next: 'ft1_inseguiti' },
+      { text: '🏃 Il Giardiniere è paglia nei filari e il fracasso non ha padrone: GIÙ per i tornanti, con comodo', requires: { flag: 'giardiniere_potato' }, next: 'ft1' },
     ],
   },
 
@@ -2301,10 +2320,29 @@ Le cesoie si aprono con lo scatto oliato della manutenzione fatta con amore. Dal
 *(È una creatura della villa: phon e sale doppi. Qui non c'è nessun piano: solo voi, i pali delle vigne e la notte.)*`,
     combat: {
       enemies: ['spaventapasseri', 'lupo_nebbia'],
-      victory: 'ft2_notte',
+      victory: 'ft_cesoie_vinto',
       defeat: 'x_celle',
       loot: { gold: 1 },
     },
+  },
+
+  ft_cesoie_vinto: {
+    location: 'tornantiPiedi',
+    caption: 'Paglia nei filari',
+    text: `Quando finisce, del Giardiniere resta quello che è sempre stato: **paglia.** Sparsa tra i filari, un cappello rovesciato in un fosso, e le cesoie — chiuse — piantate in verticale nella terra come una piccola lapide che si è scavata da sola.
+
+> Gaetano: *(riprendendo fiato, le mani sulle ginocchia)* "È... morto? Si può dire morto, di uno spaventapasseri?"
+
+> Natalino: "Si dice SFATTO. Come i letti." *(raccoglie il cappello con la punta del palo da vigna, lo esamina, lo lascia cadere)* "Ma vi dico una cosa da professionista: le cose impagliate non muoiono. Si RIFANNO. Come la piega. Solo che ci vuole TEMPO, e stanotte il tempo è l'unica cosa che gli abbiamo tolto."
+
+La nebbia, tutt'intorno, si ritira di un metro — piano, senza fretta, come un padrone che richiama un cane che ha perso l'incontro.
+
+**(Il turno di notte del giardino è SCOPERTO: la paglia si ricompone lentamente. Flag: giardiniere_potato. Sangue freddo +1.)**`,
+    gold: 1,
+    sets: { giardiniere_potato: true },
+    choices: [
+      { text: '🚶 Rimettersi in cammino, lungo la strada che non scende', next: 'ft2_notte' },
+    ],
   },
 
   ft2_capito: {
@@ -3483,6 +3521,7 @@ const CAMPAIGN_START = 'a0';
 const DIARY_FLAGS = [
   ['firma_rinviata',        'Federico ha RINVIATO la firma: chi non ha firmato può ancora varcare il cancello verso Pietrafonda.'],
   ['garage_visto',          'Nella rimessa: la vostra auto è smontata in bacheca, pezzo per pezzo. E la candela era ancora tiepida.'],
+  ['giardiniere_potato',    'Il Giardiniere è PAGLIA SPARSA nei filari: si sta rifacendo, ma stanotte il giardino non ha turno di notte.'],
   ['giardiniere_allertato', 'Il Giardiniere sa che girate di notte: le cesoie, da qualche parte nella nebbia, tengono il conto.'],
   ['strada_che_torna',      'Le strade TORNANO: i ventisei tornanti sono un anello. L\'uscita non è fuori — è nel centro. La casa.'],
   ['storia_ada',            'Conoscete la storia di Gregorio e di Ada: la ciocca bianca, il patto, i centoventicinque anni.'],
@@ -3507,7 +3546,7 @@ const DIARY_FLAGS = [
 
 /* Mappa del mondo: luoghi del Belvedere (per il canvas della mappa) */
 const WORLD_MAP = [
-  { key: 'tornanti', label: 'I Tornanti',      x: 0.12, y: 0.80, scenes: ['a0', 'a0_benzina', 'a1', 'a1b', 'ft1', 'ft1_inseguiti', 'ft_cesoie', 'ft2_capito', 'ft2_notte'] },
+  { key: 'tornanti', label: 'I Tornanti',      x: 0.12, y: 0.80, scenes: ['a0', 'a0_benzina', 'a1', 'a1b', 'ft1', 'ft1_inseguiti', 'ft_cesoie', 'ft_cesoie_vinto', 'ft2_capito', 'ft2_notte'] },
   { key: 'relais',   label: 'Il Relais',       x: 0.40, y: 0.30, scenes: ['a2', 'a2_siepi', 'p4_fuga', 'gr1', 'gr2', 'gr3', 'gr3_ko'] },
   { key: 'hall',     label: 'La Hall',         x: 0.56, y: 0.48, scenes: ['a3', 'a3_registro', 'a3_registro_ko', 'a4_firma', 'a4_rinvio', 'a4_firma_forzata', 'p4_rientro'] },
   { key: 'camere',   label: 'Le Camere',       x: 0.74, y: 0.32, scenes: ['a5', 'a5_pozzo', 'h1', 'h2', 'gv1', 'u1', 'u2_1999', 'u2_1924', 'u2_1899', 'u3_medaglione', 'u3_lanterna', 'u3_bambole_fight', 'u3_bambole_vinte', 'u5_specchio', 'u4_porta_vuota', 'sf1', 'sf2', 'sf3', 'sf4', 'sf5', 'sf6', 's49_1', 's49_2', 's49_3', 's49_3_ko', 's74_1', 's74_2', 's74_3', 'cuore_gc', 'cuore_fe', 'cuore_fe_esito', 'cuore_nat', 'cuore_nat_esito'] },
@@ -3516,6 +3555,6 @@ const WORLD_MAP = [
   { key: 'paese',    label: 'Pietrafonda',     x: 0.16, y: 0.90, scenes: ['pp1', 'pp2', 'pp2_bar', 'pp3', 'pp4_cripta', 'pp4', 'pp6', 'pp6_ko', 'pp7'] },
   { key: 'piscina',  label: 'La Piscina',      x: 0.22, y: 0.50, scenes: ['p1', 'p1_accappatoio', 'p1_accappatoio_ko', 'p2', 'p2_esperimento', 'p2_esperimento_ko', 'p3_fuori'] },
   { key: 'cantina',  label: 'La Cantina',      x: 0.62, y: 0.78, scenes: ['k1', 'k2_sofia', 'k2_sofia_ko', 'k3', 'k4_scambio', 'k4_nastro', 'k4_chef_fight', 'k4_furto', 'k4_furto_ko', 'k5_dopo_chef', 'x_celle', 'os1', 'os2', 'os3', 'os4', 'os5', 'os6'] },
-  { key: 'pozzo',    label: 'Il Pozzo',        x: 0.86, y: 0.66, scenes: ['b1', 'b2_giardiniere_fight', 'b2_orto', 'b3_pozzo', 'b4_medaglione', 'b4_vino', 'b4_parole', 'b4_ira', 'b4_calata', 'b4_calata_ko'] },
+  { key: 'pozzo',    label: 'Il Pozzo',        x: 0.86, y: 0.66, scenes: ['b1', 'b2_giardiniere_fight', 'b2_vinto', 'b2_orto', 'b3_pozzo', 'b4_medaglione', 'b4_vino', 'b4_parole', 'b4_ira', 'b4_calata', 'b4_calata_ko'] },
 ];
 

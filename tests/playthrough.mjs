@@ -1189,6 +1189,17 @@ executeUntil('Banchetto: la diretta di Claudia -> z2_claudia (sorpresa: primo gi
   ['z2_claudia', 'z3_boss'], 20,
   r => !!(r.log.flags && r.log.flags.sorpresa));
 
+
+/* ---- COERENZA DEL GIARDINIERE: battuto nell'orto, la fuga dal garage diventa quieta ---- */
+
+executeUntil('Giardiniere battuto nell\'orto -> b2_vinto, poi dal garage in fracasso si scende CON COMODO (ft1, non inseguiti)',
+  ['natalino', 'emanuela', 'gaetano'],
+  { b1: '👁 Il piano di Gaetano', b2_orto: '🚗 Prima: la porta della rimessa',
+    gr3_ko: 'con comodo', ft1: 'Fermarsi e GUARDARE' },
+  { seedBase: 905000, sequences: { h1: ['POZZO', 'barricarsi'] } },
+  ['b2_vinto', 'gr3_ko', 'ft1'], 24,
+  r => !!(r.log.flags && r.log.flags.giardiniere_potato) && !r.log.scenes.includes('ft1_inseguiti'));
+
 const fatalRuns = results.filter(r => !r.ok);
 for (const r of fatalRuns) fail(`Partita "${r.scenario.name}" (seed ${r.scenario.seed}): ${r.error.split('\n')[0]}`);
 
@@ -1366,6 +1377,9 @@ coverageFlag('Echi incrociati — flag di trama', ['bambole_addormentate', 'chef
 coverage('Alleati del Banchetto — lo sciopero della cucina e il cerchio di porcellana', ['z2_alleato', 'z3_boss_solo', 'z2_bambole']);
 coverageFlag('Alleati del Banchetto — flag di trama', ['cucina_in_sciopero', 'cerchio_di_porcellana']);
 coverage('La diretta di Claudia', ['z2_claudia']);
+coverage('Coerenza del Giardiniere — vittoria nell\'orto ricordata dai filari', ['b2_vinto']);
+coverageFlag('Coerenza del Giardiniere — flag', ['giardiniere_potato']);
+
 
 
 
