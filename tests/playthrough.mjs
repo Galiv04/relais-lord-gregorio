@@ -1562,6 +1562,26 @@ function findHeroButton(box, heroName) {
   console.log('  ✅ Rituale: nascosto senza ingredienti, offerto e CONSUMANTE con sale e acqua in zaino');
 })();
 
+
+(function testCollezioneImprese() {
+  section('Verifica diretta: la collezione delle imprese persiste tra le notti (per profilo)');
+  const game = buildGame(9292);
+  game.act(() => game.api.Engine.newGame([{ heroId: 'gaetano', player: '' }]));
+  const G1 = game.getG();
+  G1.flags.firma_rinviata = true; G1.flags.medaglione = true;
+  game.act(() => game.api.Engine.gotoScene('e_alba'));
+  // seconda notte, STESSO contesto (stesso localStorage): un'impresa diversa
+  game.act(() => game.api.Engine.newGame([{ heroId: 'claudia', player: '' }]));
+  const G2 = game.getG();
+  G2.flags.storia_ada = true;
+  game.act(() => game.api.Engine.gotoScene('e_alba'));
+  const html = game.doc.getElementById('choices').children.map(c => c.innerHTML).join('\n');
+  const m = html.match(/Collezione di [^:]+: (\d+)\//);
+  if (!m) { fail('testCollezioneImprese: contatore della collezione assente dal finale'); return; }
+  if (Number(m[1]) < 3) fail(`testCollezioneImprese: la collezione ha dimenticato le imprese della prima notte (attese >=3, trovate ${m[1]})`);
+  console.log(`  ✅ Collezione persistente: ${m[1]} imprese ricordate attraverso due notti dello stesso profilo`);
+})();
+
 (function testEpiloghiSmemorati() {
   section('Verifica diretta: gli Smemorati NON ricordano (epiloghi coerenti con l\'amnesia)');
   const game = buildGame(6363);

@@ -892,11 +892,20 @@ const Engine = (() => {
     // imprese sbloccate
     if (typeof IMPRESE !== 'undefined') {
       const unlocked = IMPRESE.filter(i => G.flags[i.flag]);
+      // la COLLEZIONE del profilo: le imprese restano sbloccate tra una notte e l'altra
+      let collezione = unlocked.map(i => i.flag);
+      try {
+        const key = 'relais-imprese-' + encodeURIComponent(currentProfile());
+        const prima = JSON.parse(localStorage.getItem(key) || '[]');
+        collezione = [...new Set([...prima, ...collezione])].filter(f => IMPRESE.some(i => i.flag === f));
+        localStorage.setItem(key, JSON.stringify(collezione));
+      } catch (e) { /* localStorage pieno o assente: la collezione resta di sessione */ }
       if (unlocked.length) {
+        const nuove = unlocked.length, totale = collezione.length;
         const ach = document.createElement('div');
-        ach.innerHTML = `<h3 style="font-family:var(--font-pixel);font-size:14px;color:var(--gold);margin:14px 0 8px">🏆 Imprese sbloccate (${unlocked.length}/${IMPRESE.length})</h3>` +
+        ach.innerHTML = `<h3 style="font-family:var(--font-pixel);font-size:14px;color:var(--gold);margin:14px 0 8px">🏆 Imprese di stanotte (${nuove}/${IMPRESE.length}) — Collezione di ${currentProfile()}: ${totale}/${IMPRESE.length}</h3>` +
           unlocked.map(i => `<div class="ability-box" style="border-left-color:var(--gold)"><span class="ability-name">${i.icon} ${i.title}</span><div class="ability-desc">${i.desc}</div></div>`).join('') +
-          `<p style="color:var(--text-dim);font-size:18px;margin:6px 0 10px">Le altre ${IMPRESE.length - unlocked.length} imprese vi aspettano in una nuova partita...</p>`;
+          (totale < IMPRESE.length ? `<p style="color:var(--text-dim);font-size:18px;margin:6px 0 10px">Le altre ${IMPRESE.length - totale} imprese vi aspettano in una nuova notte — e la collezione le RICORDA.</p>` : `<p style="color:var(--gold);font-size:18px;margin:6px 0 10px">🏆 COLLEZIONE COMPLETA: avete spremuto il Belvedere fino all'ultima goccia. Chapeau.</p>`);
         choicesEl.appendChild(ach);
       }
     }
