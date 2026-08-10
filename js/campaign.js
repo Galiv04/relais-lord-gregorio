@@ -41,7 +41,7 @@ Il navigatore ha smesso di parlare da tre tornanti. L'ultima cosa che ha detto �
 
 Fuori, i castagneti si chiudono sopra la strada come dita. In basso, nella valle, un paesino di pietra grigia — il cartello dice **PIETRAFONDA, ab. 41** — con le persiane tutte chiuse. Tutte. Alle sette di sera di un venerdì d'estate.
 
-> Natalino: "Quarantuno abitanti. Chi è l'uno? Io voglio conoscere l'UNO."
+> Natalino: "Quarantuno abitanti. QUARANTUNO. Chi è l'uno, mi chiedo. Io voglio conoscere l'uno. Anzi no, col cazzo: io voglio NON conoscerlo, l'uno."
 
 L'ultimo tornante gira attorno a un muro a secco, e il **Relais Belvedere** appare tutto insieme: una villa liberty color osso, aggrappata al fianco della montagna, con le finestre già accese di una luce calda color miele. È bellissima. È esattamente come nelle foto.
 
@@ -424,6 +424,7 @@ L'accappatoio, raccolto in fretta, viene riappeso storto. Quando vi voltate di n
 
   p2: {
     location: 'piscina',
+    stinger: 'jumpscare',
     caption: 'La piscina — il gioco del riflesso',
     text: `Il bagno riprende. La montagna riprende il suo silenzio. Emanuela organizza il torneo di apnea — regole da salone: *"chi bara paga gli aperitivi per un anno"* — e per un po' l'unica cosa inquietante della serata è quanto Gaetano tenga a vincere.
 
@@ -504,13 +505,13 @@ Il rigonfiamento si ritira. L'infradito affonda **in verticale**, risucchiata, s
 
 L'acqua è tornata normale. Turchese, fumante, invitante. IL problema è esattamente questo: è invitante **come prima**, come se sapesse di aver esagerato e volesse rimediare.
 
-> Natalino: "Ok. Ricapitoliamo da professionisti. Sei accappatoi. Un cielo sbagliato nell'acqua. Un'infradito rapita. E il paese laggiù—" *(indica la valle)* "—che alle sette aveva le persiane chiuse."
+> Natalino: "Ok. Ricapitoliamo da professionisti, e scusate il francesismo che sto per usare. Sei accappatoi. Un cielo SBAGLIATO nell'acqua. Un'infradito rapita. E il paese laggiù—" *(indica la valle)* "—che alle sette aveva le persiane chiuse. Ragazzi: che cazzo di posto ci ha prenotato Federico."
 
 > Emanuela: "E Gregorio che non mangia, non beve, ed è 'astemio dal 1899'."
 
 > Claudia: "E il registro. Un gruppo ogni venticinque anni. **1999. 1974. 1949...**"
 
-> Federico: *(dopo un lungo silenzio, con la voce di chi rilegge un contratto già firmato)* "...e il 2024 saremmo noi. Ragazzi. Io da domani mattina scrivo una recensione DEVASTANTE."
+> Federico: *(dopo un lungo silenzio, con la voce di chi rilegge un contratto già firmato)* "...e il 2024 saremmo noi. Porca puttana. Ragazzi. Porca. Puttana." *(pausa)* "Da domani scrivo una recensione DEVASTANTE."
 
 È quasi mezzanotte. Le luci della piscina, come promesso da Gregorio, cominciano a spegnersi una a una. E dalla valle, per la prima volta da quando siete arrivati, **la nebbia inizia a salire.** Lenta. Compatta. E — Gaetano lo nota con orrore geometrico — **contro pendenza.**`,
     choices: [
@@ -522,7 +523,7 @@ L'acqua è tornata normale. Turchese, fumante, invitante. IL problema è esattam
   p4_fuga: {
     location: 'relais',
     caption: 'Il tentativo di fuga — ore 23:52',
-    text: `La decisione è unanime nel modo speciale in cui è unanime il panico educato: nessuno lo dice ad alta voce, ma in novanta secondi siete tutti vestiti a metà, con le valigie richiuse a morsi, giù per le scale.
+    text: `La decisione è unanime nel modo speciale in cui è unanime il panico: nessuno pronuncia la parola "scappiamo", ma Emanuela ha già le chiavi in mano, Claudia dice solo "MACCHINA. ORA." e in novanta secondi siete tutti vestiti a metà, con le valigie richiuse a morsi, giù per le scale.
 
 La macchina è dove l'avete lasciata. Si apre. Si accende. Gaetano ingrana la prima con la delicatezza di un rapinatore e il viale di ghiaia bianca scricchiola sotto le ruote — fino al **cancello.**
 
@@ -565,6 +566,7 @@ Da qualche parte sopra di voi, al piano delle camere, **un pavimento scricchiola
 
   h1: {
     location: 'corridoio',
+    stinger: 'campana',
     npc: ['gregorio'],
     caption: 'Il corridoio — mezzanotte',
     text: `A mezzanotte in punto, tre cose succedono insieme.
@@ -695,7 +697,15 @@ Dal fondo della cantina, qualcosa di metallico si muove. Piatti. Coperti. **Una 
 
 E al tavolo, di spalle, c'è **lo Chef.**
 
-Due metri di grembiule ingiallito, un cappello da cuoco afflosciato, e il corpo... il corpo è sbagliato nelle proporzioni, come disegnato a memoria da qualcuno che i cuochi li ha solo sentiti descrivere. Sta affilando una mannaia con movimenti LENTI, amorevoli.
+Due metri di grembiule ingiallito, un cappello da cuoco afflosciato, e il corpo... il corpo è SBAGLIATO nelle proporzioni, come disegnato a memoria da qualcuno che i cuochi li ha solo sentiti descrivere. Sta affilando una mannaia con movimenti lenti, amorevoli.
+
+> Emanuela: *(un filo di voce)* "Natalì."
+
+> Natalino: "Lo vedo."
+
+> Emanuela: "Natalì, quello è alto due metri e mezzo."
+
+> Natalino: "LO VEDO, Emanuè. Sto elaborando. Il mio psicologo saprà tutto lunedì."
 
 Senza voltarsi, parla. La voce è un forno che parla:
 
@@ -971,6 +981,7 @@ L'ultima pagina scritta è del 21 agosto 1899:
 
   u5_specchio: {
     location: 'camera',
+    stinger: 'jumpscare',
     caption: 'Lo specchio velato',
     text: `Il lenzuolo scivola via con un sospiro di polvere.
 
@@ -1003,7 +1014,7 @@ La porta non è chiusa. Dentro c'è una camera **identica in tutto alle vostre**
 
 Cinque cornici. Illuminate. In attesa.
 
-> Natalino: *(chiudendo la porta con delicatezza estrema, come per non svegliarla)* "Nessuno. Dorme. Mai più. Ok? Nemmeno DOPO, a casa. Io un mese dormo in piedi come i cavalli."
+> Natalino: *(chiudendo la porta con delicatezza estrema, come per non svegliarla)* "Nessuno. Dorme. Mai più. Ok? Nemmeno DOPO, a casa. Io un mese dormo in piedi come i cavalli, e col cazzo che mi vergogno a dirlo."
 
 **(Il piano proibito non ha più segreti. Meglio tornare al corridoio e scegliere la prossima mossa.)**`,
     choices: [{ text: 'Giù, al corridoio delle tre porte', next: 'h1' }],
@@ -1089,7 +1100,11 @@ La riconoscete tutti e cinque nello stesso istante, e tutti e cinque per un moti
 
 La corda si muove. Piano. Su, e giù. Come un invito col dito.
 
-> Federico: *(bianco)* "È Ada."
+> Federico: *(bianco come i lini del Belvedere)* "È Ada."
+
+> Gaetano: *(molto piano)* "Ha la voce di mia madre. Ce l'ha SOLO PER ME o..."
+
+> Claudia: "No. No, ce l'ha per tutti. Oddio. Oddio, che schifo di posto."
 
 > La voce: *"Ada era il nome di sopra. Qui sotto i nomi si sciolgono come lo zucchero. Ne rimane il DOLCE. Volete sentire?"*`,
     choices: [
@@ -1456,6 +1471,7 @@ Sulla soglia, senza voltarsi:
 
   z1: {
     location: 'salaBanchetto',
+    stinger: 'campana',
     npc: ['gregorio'],
     caption: 'Il Banchetto del Venticinquennio — ore 5:57',
     text: `Non c'è bisogno di cercare la sala del Banchetto. Alle 5:57, il Belvedere **ve la porta**: aprite una porta qualsiasi — QUALSIASI — e dietro c'è sempre lei.
@@ -1665,7 +1681,7 @@ Tutti i candelabri si spengono insieme. Il registro si chiude di scatto sulla pe
 
 Le cinque sedie scattano indietro DA SOLE, invitanti, e il pavimento a scacchi comincia lentamente a inclinarsi verso la tavola, come un piatto verso una bocca.
 
-> Federico: *(arrotolando le maniche del pigiama)* "Va bene. VA BENE. La versione breve della proposta: NO."
+> Federico: *(arrotolando le maniche del pigiama)* "Va bene. VA BENE. La versione breve della proposta: vaffanculo. Con rispetto. Ma vaffanculo."
 
 **(BATTAGLIA FINALE — fase uno, e la casa è di cattivo umore. Sale e phon fanno danni doppi!)**`,
     combat: {

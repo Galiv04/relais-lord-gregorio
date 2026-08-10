@@ -297,6 +297,8 @@ const Engine = (() => {
 
     if (scene.combat) G.lastCombatSceneId = id;
 
+    if (firstVisit && scene.stinger && typeof Sound !== 'undefined') Sound.play(scene.stinger);
+
     // cronologia per il riepilogo "la storia finora"
     if (!G.history) G.history = [];
     if (scene.caption && G.history[G.history.length - 1] !== scene.caption) {
@@ -315,6 +317,8 @@ const Engine = (() => {
     camera: 'carillon', salaDaPranzo: 'villa', piscina: 'piscina',
     cantina: 'cantina', pianoProibito: 'carillon', giardino: 'giardino',
     pozzo: 'pozzo', salaBanchetto: 'banchetto', albaRelais: 'alba',
+    riflesso: 'riflesso', riflesso_interno: 'riflesso',
+    ossario: 'ossario', soffitta: 'soffitta', garage: 'cantina',
   };
 
   function musicForScene(scene) {

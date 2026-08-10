@@ -624,7 +624,8 @@ const Scenes = (() => {
       // il riflesso SBAGLIATO: luna piena rossa NELL'ACQUA, con scia
       ctx.fillStyle = 'rgba(138,36,50,.10)'; ctx.fillRect(px + pw * 0.44, py + 8, pw * 0.38, ph - 16);
       ctx.fillStyle = 'rgba(138,36,50,.14)'; ctx.fillRect(px + pw * 0.52, py + 8, pw * 0.22, ph - 16);
-      moon(ctx, px + pw * 0.62, py + ph * 0.55, 22, '#8a2432', false);
+      const moonY = py + ph * (0.8 - eclipsePhase * 0.55);
+      moon(ctx, px + pw * 0.62, moonY, 22, '#8a2432', false);
       ctx.fillStyle = 'rgba(170,50,64,.5)';
       for (let i = 0; i < 6; i++) ctx.fillRect(px + pw * 0.54 + r() * pw * 0.18, py + 12 + r() * (ph - 24), 10 + r() * 14, 3);
       // costellazioni sbagliate, fitte, nell'acqua
@@ -912,6 +913,185 @@ const Scenes = (() => {
         ctx.fillStyle = `rgba(190,180,195,${0.03 + i * 0.012})`;
         ctx.fillRect(0, H - 26 + i * 5, W, 8);
       }
+    },
+
+
+    riflesso(ctx, W, H) {
+      const r = rng(151);
+      // il cielo del Riflesso: rosso cupo, la luna piena ROSSA domina
+      skyGradient(ctx, W, H, '#1d060c', '#3a0d18', 10);
+      // stelle SBAGLIATE: fitte, in costellazioni geometriche
+      ctx.fillStyle = '#d8ccd8';
+      for (let i = 0; i < 40; i++) {
+        const gx = 40 + (i % 8) * (W / 8), gy = 20 + Math.floor(i / 8) * 26;
+        ctx.fillRect(gx + (r() > 0.5 ? 6 : 0), gy, 2, 2);
+      }
+      moon(ctx, W * 0.5, 64, 40, '#8a2432', false);
+      glow(ctx, W * 0.5, 64, 90, 90, '138,36,50');
+      const deck = H * 0.44;
+      hills(ctx, W, deck - 30, 40, '#170a10', r, 36);
+      blocks(ctx, 0, deck, W, H - deck, '#3a3430', 12, r, 0.1);
+      // la piscina del Riflesso: acqua NERA che mostra il mondo giusto
+      const px = W * 0.14, pw = W * 0.72, py = deck + 22, ph = H - py - 16;
+      blocks(ctx, px, py, pw, ph, '#0c1218', 12, r, 0.14);
+      // dentro l'acqua: il cielo NORMALE, con la luna sottile — casa vostra, laggiù
+      ctx.fillStyle = '#9a90c0';
+      for (let i = 0; i < 12; i++) ctx.fillRect(px + 12 + r() * (pw - 24), py + 10 + r() * (ph - 20), 2, 2);
+      crescentMoon(ctx, px + pw * 0.6, py + ph * 0.5, 12, '#c8b8c0', '#0c1218');
+      ctx.fillStyle = 'rgba(200,184,232,.14)'; ctx.fillRect(px + pw * 0.52, py + 6, pw * 0.2, ph - 12);
+      // CINQUE lettini (di qua il sesto siete voi)
+      for (let i = 0; i < 5; i++) {
+        const lx = W * 0.08 + i * W * 0.17, ly = deck + 4;
+        ctx.fillStyle = '#4a4440'; ctx.fillRect(lx, ly - 12, 44, 10);
+        ctx.fillStyle = '#c8c2b4'; ctx.fillRect(lx + 12, ly - 26, 18, 15);
+      }
+      // le finestre della villa capovolta, in alto, luce FREDDA
+      ctx.fillStyle = '#6ab8ae';
+      for (let i = 0; i < 6; i++) ctx.fillRect(W * 0.2 + i * W * 0.11, 8, 10, 12);
+      ctx.fillStyle = 'rgba(106,184,174,.10)'; ctx.fillRect(0, 0, W, 26);
+    },
+
+    riflesso_interno(ctx, W, H) {
+      const r = rng(157);
+      blocks(ctx, 0, 0, W, H, '#1a1420', 16, r, 0.14);
+      const floorY = H - 76;
+      // scacchi INVERTITI (bianco dove era nero)
+      let rowY = floorY;
+      for (let row = 0; row < 5; row++) {
+        const size = 16 + row * 7;
+        for (let col = -12; col < 12; col++) {
+          const x = W / 2 + col * size;
+          ctx.fillStyle = ((col + row) % 2 === 0) ? '#14100e' : '#d8d0c4';
+          ctx.fillRect(x, rowY, size, size * 0.62);
+        }
+        rowY += size * 0.62;
+      }
+      // lampadario che pende DRITTO in un mondo storto: luce fredda
+      ctx.fillStyle = '#8a8478'; ctx.fillRect(W * 0.5 - 2, 0, 4, 26);
+      glow(ctx, W * 0.5, 52, 60, 34, '106,184,174');
+      ctx.fillStyle = '#c8bca8'; ctx.fillRect(W * 0.5 - 34, 26, 68, 8);
+      for (const dx of [-34, -20, -6, 8, 22, 28]) {
+        ctx.fillStyle = '#e8e0d0'; ctx.fillRect(W * 0.5 + dx, 34, 5, 10);
+        ctx.fillStyle = '#6ab8ae'; ctx.fillRect(W * 0.5 + dx - 1, 44, 7, 7);
+      }
+      // i ritratti del Riflesso: PIENI, e le cornici sono finestre illuminate
+      for (const fx of [0.10, 0.30, 0.62, 0.82]) {
+        ctx.fillStyle = '#c8a032'; ctx.fillRect(W * fx - 3, 62, 62, 76);
+        ctx.fillStyle = '#8a6a1d'; ctx.fillRect(W * fx, 65, 56, 70);
+        ctx.fillStyle = '#2a4a44'; ctx.fillRect(W * fx + 3, 68, 50, 64);
+        ctx.fillStyle = '#d8c8b8';
+        for (let p = 0; p < 4; p++) ctx.fillRect(W * fx + 8 + p * 12, 92, 8, 14);
+        // gli occhi: TUTTI voltati nella stessa direzione
+        ctx.fillStyle = '#0d0a0c';
+        for (let p = 0; p < 4; p++) ctx.fillRect(W * fx + 9 + p * 12, 96, 2, 2);
+      }
+      // l'Inventario: un leggio al centro con un registro NERO
+      blocks(ctx, W * 0.46, floorY - 46, W * 0.08, 46, '#241a1e', 8, r, 0.1);
+      ctx.fillStyle = '#12101a'; ctx.fillRect(W * 0.44, floorY - 58, W * 0.12, 14);
+      ctx.fillStyle = '#8a1a2a'; ctx.fillRect(W * 0.49, floorY - 56, W * 0.02, 10);
+    },
+
+    ossario(ctx, W, H) {
+      const r = rng(163);
+      blocks(ctx, 0, 0, W, H, '#171014', 16, r, 0.22);
+      const floorY = H - 50;
+      blocks(ctx, 0, floorY, W, H - floorY, '#100a0e', 14, r, 0.16);
+      // le tacche del 1899: pareti INTERE di conti a gruppi di cinque
+      ctx.fillStyle = '#2e2426';
+      for (let row = 0; row < 8; row++) for (let i = 0; i < 30; i++) {
+        const x = 20 + i * ((W - 40) / 30), y = 24 + row * ((floorY - 60) / 8);
+        ctx.fillRect(x, y, 2, 12);
+        if (i % 5 === 4) { ctx.save(); ctx.translate(x - 8, y + 6); ctx.rotate(-0.5); ctx.fillRect(0, 0, 12, 2); ctx.restore(); }
+      }
+      // i bagagli mai ritirati, accatastati per epoca
+      const cols = ['#6e5238', '#8a5a35', '#3d5a80', '#5a3a5a'];
+      for (let i = 0; i < 7; i++) {
+        const bx = W * 0.06 + i * W * 0.13, bw = 60 + r() * 30, bh = 24 + r() * 16;
+        blocks(ctx, bx, floorY - bh, bw, bh, cols[i % cols.length], 8, r, 0.14);
+        ctx.fillStyle = '#c8a032'; ctx.fillRect(bx + bw / 2 - 4, floorY - bh + 4, 8, 5);
+      }
+      // il tavolo del Contabile: lume verde, libro mastro, pile di monete
+      blocks(ctx, W * 0.38, floorY - 60, W * 0.24, 14, '#3a2c20', 8, r, 0.1);
+      ctx.fillStyle = '#2a1d14'; ctx.fillRect(W * 0.40, floorY - 46, 10, 46); ctx.fillRect(W * 0.58, floorY - 46, 10, 46);
+      glow(ctx, W * 0.42 + 6, floorY - 74, 22, 18, '95,224,138');
+      ctx.fillStyle = '#3d5a50'; ctx.fillRect(W * 0.42, floorY - 76, 12, 16);
+      ctx.fillStyle = '#e8e0d0'; ctx.fillRect(W * 0.47, floorY - 68, 26, 9);
+      ctx.fillStyle = '#c8a032';
+      for (let i = 0; i < 4; i++) ctx.fillRect(W * 0.55 + i * 7, floorY - 66 - (i % 2) * 3, 5, 6);
+    },
+
+    soffitta(ctx, W, H) {
+      const r = rng(167);
+      blocks(ctx, 0, 0, W, H, '#241a14', 16, r, 0.16);
+      const floorY = H - 58;
+      blocks(ctx, 0, floorY, W, H - floorY, '#1d140e', 12, r, 0.14);
+      // le falde del tetto: travi a vista che convergono
+      ctx.fillStyle = '#3a2a1d';
+      for (let i = 0; i < 7; i++) {
+        const t = i / 6;
+        ctx.save();
+        ctx.translate(W * 0.5, 10);
+        ctx.rotate(-0.9 + t * 1.8);
+        ctx.fillRect(-6, 0, 12, H * 0.7);
+        ctx.restore();
+      }
+      // l'abbaino con la luna
+      ctx.fillStyle = '#3a2620'; ctx.fillRect(W * 0.44, 26, 110, 82);
+      ctx.fillStyle = '#100a14'; ctx.fillRect(W * 0.45, 34, 92, 66);
+      crescentMoon(ctx, W * 0.505, 62, 14, '#c8b8c0', '#100a14');
+      // IL TELESCOPIO d'ottone puntato in BASSO
+      ctx.save();
+      ctx.translate(W * 0.32, floorY - 60);
+      ctx.rotate(0.6);
+      ctx.fillStyle = '#c8a032'; ctx.fillRect(0, 0, 90, 14);
+      ctx.fillStyle = '#8a6a1d'; ctx.fillRect(84, -2, 14, 18);
+      ctx.restore();
+      ctx.fillStyle = '#4a3226';
+      ctx.fillRect(W * 0.30, floorY - 34, 8, 34); ctx.fillRect(W * 0.36, floorY - 34, 8, 34); ctx.fillRect(W * 0.27, floorY - 40, 26, 8);
+      // casse e bauli con la vita di prima
+      for (const [bx, bw, bh] of [[0.55, 90, 40], [0.70, 70, 30], [0.84, 80, 48]]) {
+        blocks(ctx, W * bx, floorY - bh, bw, bh, '#4a3826', 8, r, 0.14);
+        ctx.fillStyle = '#2e2115'; ctx.fillRect(W * bx, floorY - bh + 6, bw, 4);
+      }
+      // l'abito da sposa appeso, spettrale nel buio
+      ctx.fillStyle = '#8a8478'; ctx.fillRect(W * 0.12, 40, 3, 20);
+      ctx.fillStyle = '#e8e4dc';
+      ctx.fillRect(W * 0.095, 60, 40, 14);
+      for (let i = 0; i < 5; i++) ctx.fillRect(W * 0.10 + i * 2, 74, 34 - i * 3, 12);
+      // ragnatele
+      ctx.strokeStyle = 'rgba(200,200,220,.2)'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(50, 40); ctx.moveTo(24, 0); ctx.lineTo(50, 40); ctx.stroke();
+    },
+
+    garage(ctx, W, H) {
+      const r = rng(173);
+      blocks(ctx, 0, 0, W, H, '#20181a', 16, r, 0.16);
+      const floorY = H - 56;
+      blocks(ctx, 0, floorY, W, H - floorY, '#2a2426', 12, r, 0.12);
+      // la saracinesca in fondo
+      ctx.fillStyle = '#3a3438';
+      for (let i = 0; i < 8; i++) ctx.fillRect(W * 0.36, 30 + i * 16, W * 0.28, 12);
+      // IL MOTORE APPESO AL MURO come un trofeo, coi pezzi etichettati
+      for (const [mx, my, mw, mh] of [[0.08, 0.24, 70, 50], [0.08, 0.55, 50, 34], [0.20, 0.38, 40, 30]]) {
+        blocks(ctx, W * mx, H * my, mw, mh, '#4a4a55', 6, r, 0.18);
+        ctx.fillStyle = '#c8a032'; ctx.fillRect(W * mx + mw / 2 - 10, H * my + mh + 2, 20, 6);
+      }
+      ctx.strokeStyle = '#5a5a66'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(W * 0.115, H * 0.24); ctx.lineTo(W * 0.115, 8); ctx.stroke();
+      // la macchina VOSTRA senza motore, col cofano aperto
+      const cx = W * 0.62, cy = floorY - 34;
+      ctx.fillStyle = '#7a2432'; ctx.fillRect(cx, cy, 130, 30);
+      ctx.fillStyle = '#5a1a26'; ctx.fillRect(cx + 16, cy - 16, 90, 18);
+      ctx.fillStyle = '#8ab8d0'; ctx.fillRect(cx + 22, cy - 12, 30, 12); ctx.fillRect(cx + 62, cy - 12, 30, 12);
+      ctx.fillStyle = '#3a1017'; ctx.fillRect(cx + 6, cy - 26, 34, 28);   // cofano alzato
+      ctx.fillStyle = '#0d0a0c'; ctx.fillRect(cx + 10, cy + 2, 26, 16);   // il VUOTO dove era il motore
+      ctx.fillStyle = '#1a1a22'; ctx.fillRect(cx + 12, cy + 28, 18, 14); ctx.fillRect(cx + 96, cy + 28, 18, 14);
+      // attrezzi ordinati OSSESSIVAMENTE
+      ctx.fillStyle = '#8a8f9e';
+      for (let i = 0; i < 8; i++) ctx.fillRect(W * 0.36 + i * 18, floorY - 90, 4, 16 + (i % 3) * 6);
+      // lampada da officina
+      glow(ctx, W * 0.68, 40, 30, 20, '232,182,76');
+      ctx.fillStyle = '#e8b64c'; ctx.fillRect(W * 0.665, 34, 18, 8);
     },
 
     albaRelais(ctx, W, H) {

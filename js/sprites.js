@@ -383,10 +383,104 @@ const Sprites = (() => {
     map: gregorio.map,
   };
 
+
+  // Sofia — la ragazza del 1999: capelli mossi, occhiali da sole sui capelli, jeans
+  const sofia = {
+    palette: { s:'#e8bc98', h:'#3a2418', H:'#4d3020', e:'#3a2a20', o:'#2a2a35', t:'#c8642a', T:'#a04a1d', j:'#3d5a80', J:'#2d4666', w:'#fff', k:'#a06a58' },
+    map: [
+      '....hHHHHHHh....',
+      '...hHoooooo Hh..',
+      '..hHHssssss HHh.',
+      '..hHswsesws sH..',
+      '..hHssssssss H..',
+      '..hHsss kksss...',
+      '...hssssssss h..',
+      '....tttttttt....',
+      '...ttTTTTTTtt...',
+      '..sttTTTTTTtts..',
+      '..stTTTTTTTTts..',
+      '...tttttttttt...',
+      '...jjjjjjjjjj...',
+      '...jJj....jJj...',
+      '...jjj....jjj...',
+      '................',
+    ].map(r => r.replace(/ /g, '.').padEnd(16, '.').slice(0, 16)),
+  };
+
+  // Il Direttore — il riflesso di Gregorio: stesso volto, zero calore, completo NERO
+  const direttore = {
+    palette: { s:'#d8ccc0', h:'#e8e4dc', H:'#c8c2b4', e:'#8a1a2a', l:'#1d1a22', L:'#2e2a35', d:'#12101a', w:'#fff', k:'#5a1a26' },
+    map: [
+      '....hhhhhhhh....',
+      '...hHHHHHHHHh...',
+      '..hHssssssss Hh.',
+      '..hsesssse ss h.',
+      '...ssssssssss...',
+      '...sss kksss s..',
+      '....ssssssss....',
+      '....llllllll....',
+      '...llLLkkLLll...',
+      '..sllLLkkLLlls..',
+      '..slLLLLLLLLls..',
+      '..sllllllllll s.',
+      '...dddddddddd...',
+      '...ddd....ddd...',
+      '...ddd....ddd...',
+      '................',
+    ].map(r => r.replace(/ /g, '.').padEnd(16, '.').slice(0, 16)),
+  };
+
+  // Il Doppio — il vostro riflesso sbagliato: sagoma scura con gli occhi bianchi
+  const doppio = {
+    palette: { v:'#171020', V:'#241a2e', e:'#f0ece4', r:'#8a1a2a' },
+    map: [
+      '....vvvvvvvv....',
+      '...vvvvvvvvvv...',
+      '..vvVVVVVVVVv v.',
+      '..vVeVVVVeVV v..',
+      '..vVVVVVVVVV v..',
+      '..vVVVrrVVVV....',
+      '...vVVVVVVVv....',
+      '....vvvvvvvv....',
+      '...vvvvvvvvvv...',
+      '..vvvVVVVVVvvv..',
+      '..vvVVVVVVVVvv..',
+      '..vvvvvvvvvvvv..',
+      '...vvvvvvvvvv...',
+      '...vvv....vvv...',
+      '...vv......vv...',
+      '................',
+    ].map(r => r.replace(/ /g, '.').padEnd(16, '.').slice(0, 16)),
+  };
+
+  // Il Contabile — scheletro in maniche di camicia e mezze maniche, penna dietro l'orecchio
+  const contabile = {
+    palette: { b:'#e8e4d8', B:'#c8c2b0', e:'#1d1a22', c:'#e8e0d0', C:'#c8c0b0', v:'#3d5a50', g:'#c8a032', k:'#2a2a32' },
+    map: [
+      '....bbbbbbbb....',
+      '...bbbbbbbbbb...',
+      '..bbBBBBBBBBbbg.',
+      '..bbeBBBBBBebb..',
+      '..bbBBBBBBBBbb..',
+      '..bbBeeeeeeBbb..',
+      '...bbbbbbbbbb...',
+      '....cccccccc....',
+      '...ccCCCCCCcc...',
+      '..bcvvvvvvvvcb..',
+      '..bcvCCCCCCvcb..',
+      '..bccccccccccb..',
+      '...kkkkkkkkkk...',
+      '...kkk....kkk...',
+      '...bb......bb...',
+      '................',
+    ].map(r => r.replace(/ /g, '.').padEnd(16, '.').slice(0, 16)),
+  };
+
   const registry = {
     gaetano, natalino, claudia, federico, emanuela, donmichele,
     ombra, cameriere, bambola, spaventapasseri, lupo_nebbia: lupoNebbia,
     cuoco, ritratto, gregorio, gregorio_fame: gregorioFame, ada,
+    sofia, direttore, doppio, contabile,
   };
 
   return { drawSprite, renderToCanvas, registry };

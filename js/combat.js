@@ -89,7 +89,9 @@ const Combat = (() => {
     banner.classList.remove('hidden', 'victory');
     render();
 
-    if (typeof Sound !== 'undefined') { Sound.play('combat'); Sound.music(battle.isBoss ? 'boss' : 'combat'); }
+    const COMBAT_MUSIC = { camera: 'combat_carillon', pianoProibito: 'combat_carillon', giardino: 'combat_verde', pozzo: 'combat_verde', cantina: 'combat_forno', ossario: 'combat_forno', riflesso: 'combat_riflesso', riflesso_interno: 'combat_riflesso' };
+    const loc = (Engine.currentScene() || {}).location;
+    if (typeof Sound !== 'undefined') { Sound.play('combat'); Sound.music(battle.isBoss ? 'boss' : (COMBAT_MUSIC[loc] || 'combat')); }
     log(`<b>Nemici:</b> ${battle.enemies.map(e => e.name).join(', ')}`, 'log-info');
     for (const e of [...new Set(battle.enemies.map(e => e.key))]) {
       log(`<i>${BESTIARY[e].name}: ${BESTIARY[e].flavor}</i>`, 'log-info');

@@ -60,6 +60,8 @@ const Sound = (() => {
     item()    { blip(659, 0.07, 'triangle', 0.11); blip(880, 0.07, 'triangle', 0.11, 0.08); blip(1319, 0.12, 'triangle', 0.12, 0.16); },
     defeat()  { [392, 330, 262, 196].forEach((f, i) => blip(f, 0.2, 'sawtooth', 0.1, i * 0.18)); },
     combat()  { blip(196, 0.1, 'sawtooth', 0.12); blip(196, 0.1, 'sawtooth', 0.12, 0.14); blip(233, 0.25, 'sawtooth', 0.13, 0.28); },
+    jumpscare() { noise(0.3, 0.22); blip(880, 0.05, 'sawtooth', 0.2); blip(92, 0.5, 'sawtooth', 0.18, 0.05); blip(87, 0.6, 'sawtooth', 0.14, 0.2); },
+    campana()  { for (let i = 0; i < 3; i++) { blip(220, 1.1, 'triangle', 0.16, i * 1.2); blip(331, 0.9, 'sine', 0.08, i * 1.2 + 0.02); } },
   };
 
   function play(name) {
@@ -140,6 +142,52 @@ const Sound = (() => {
       bass: [30, 42, 42, 29, 41, 41, 28, 40, 40, 29, 41, 41],
       lead: [66, null, 65, 66, null, 69, null, null, 68, 66, null, 65],
       hat:  [0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1],
+    },
+    // Il Riflesso: il mondo capovolto — arpeggi che scendono dove dovrebbero salire
+    riflesso: {
+      bpm: 70, vol: 0.045,
+      bass: [26, null, null, null, 33, null, null, null, 25, null, null, null, 32, null, null, null],
+      lead: [69, 65, 62, 57, null, null, 68, null, 67, 63, 60, 55, null, null, 66, null],
+    },
+    // L'ossario del Contabile: un ticchettio di conti che non tornano
+    ossario: {
+      bpm: 58, vol: 0.042,
+      bass: [24, null, null, null, null, null, null, null, 31, null, null, null, null, null, null, null],
+      lead: [null, 60, null, 60, null, null, 59, null, null, 60, null, 60, null, null, 58, null],
+    },
+    // La soffitta: la vita di prima, un valzer lentissimo e pieno di polvere
+    soffitta: {
+      bpm: 72, vol: 0.04,
+      bass: [29, 41, 41, 28, 40, 40, 26, 38, 38, 28, 40, 40],
+      lead: [64, null, 63, null, 61, null, 64, null, null, 63, null, null],
+    },
+    // Scontro nel piano proibito: il carillon impazzito
+    combat_carillon: {
+      bpm: 152, vol: 0.05,
+      bass: [33, null, 33, null, 32, null, 32, null, 30, null, 30, null, 32, 32, null, null],
+      lead: [69, 72, 76, 72, 68, 72, 75, 72, 67, 70, 74, 70, 66, null, 78, null],
+      hat:  [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1],
+    },
+    // Scontro nel verde: il giardino che morde — percussivo, organico
+    combat_verde: {
+      bpm: 120, vol: 0.05,
+      bass: [28, 28, null, 35, null, 28, null, 34, 27, 27, null, 33, null, 27, null, 32],
+      lead: [null, null, 59, null, 62, null, null, null, null, null, 58, null, 61, null, 63, null],
+      hat:  [1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0],
+    },
+    // Scontro in cantina: il forno che batte
+    combat_forno: {
+      bpm: 116, vol: 0.052,
+      bass: [24, null, 24, null, 24, null, 31, null, 23, null, 23, null, 23, null, 30, null],
+      lead: [null, null, null, 55, null, null, null, 54, null, null, null, 55, null, 57, null, null],
+      hat:  [1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0],
+    },
+    // Scontro nel Riflesso: il vostro doppio conosce le vostre mosse
+    combat_riflesso: {
+      bpm: 132, vol: 0.052,
+      bass: [26, 26, null, 26, 33, null, 26, null, 25, 25, null, 25, 31, null, 30, null],
+      lead: [null, 62, 57, null, null, 60, 55, null, null, 61, 56, null, null, 63, null, null],
+      hat:  [1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0],
     },
     // Scontro: la casa mostra i denti
     combat: {
