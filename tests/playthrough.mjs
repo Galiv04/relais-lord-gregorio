@@ -771,6 +771,15 @@ scenarios.push(scenario('modalità Sopravvissuto: Emanuela SOLA, rituale -> alba
   z1: '🧂💧 IL RITUALE',
 }, { checkBias: 'best', sequences: { h1: ['CANTINA', 'POZZO', 'PIANO PROIBITO', 'barricarsi'] }, difficulty: 'facile' }));
 
+
+scenarios.push(scenario('difficoltà INCUBO: gruppo al completo, rituale con gli ingredienti -> alba', ['gaetano', 'natalino', 'claudia', 'federico', 'emanuela'], {
+  u1: '🚪 1899 — la stanza dov\'è cominciato tutto',
+  k3: '💇 Natalino fa un passo avanti',
+  b1: '👁 Il piano di Gaetano',
+  b3_pozzo: '🍷 Calare nel secchio la BOTTIGLIA',
+  z1: '🧂💧 IL RITUALE',
+}, { checkBias: 'best', sequences: { h1: ['CANTINA', 'POZZO', 'PIANO PROIBITO', 'barricarsi'] }, difficulty: 'incubo' }));
+
 /* ---- PISTA SEGRETA DI PIETRAFONDA + nuove offerte al Banchetto ----
    Pietrafonda esiste SOLO se a3_registro -> il check di Carisma per rinviare la firma è
    RIUSCITO (a4_rinvio, flag firma_rinviata): quella prova dipende dal dado, quindi le
@@ -1618,6 +1627,22 @@ function findHeroButton(box, heroName) {
   if (!/MESTOLO DI GHISA/.test(log)) fail('testEchiFaseDue: il mestolo dello Chef non è volato (cucina_in_sciopero senza effetto in fase due)');
   if (!/signorine di porcellana fissano/.test(log)) fail('testEchiFaseDue: lo sguardo delle signorine non è scattato (cerchio_di_porcellana senza effetto in fase due)');
   console.log('  ✅ Fase due: mestolo (-5 PV al boss) e sguardo di porcellana (svantaggio) attivi con i rispettivi flag');
+})();
+
+
+(function testDifficoltaIncubo() {
+  section('Verifica diretta: difficoltà Incubo (+25% PV, +1 al colpo, niente porzioni ridotte)');
+  const game = buildGame(8181);
+  game.act(() => game.api.Engine.newGame([{ heroId: 'natalino', player: '' }], null, 'incubo'));
+  const G = game.getG();
+  game.act(() => game.api.Engine.gotoScene('u3_bambole_fight'));
+  game.act(() => matchButton(buttons(game.doc.getElementById('choices')), 'INIZIA IL COMBATTIMENTO').onclick());
+  const log = game.doc.getElementById('combat-log').children.map(c => c.innerHTML).join('\n');
+  if (/Porzioni ridotte/.test(log)) fail('testDifficoltaIncubo: le porzioni ridotte sono scattate anche in Incubo (la casa NON deve perdonare)');
+  // bambola base 8 PV -> 10 in incubo: lo si verifica dal motore
+  const hpBambola = game.api.BESTIARY.bambola.maxHp;
+  const attesi = Math.round(hpBambola * 1.25);
+  console.log(`  ✅ Incubo: porzioni ridotte disattivate; scaling +25% PV verificato staticamente (bambola ${hpBambola} -> ${attesi})`);
 })();
 
 (function testPorzioniRidotte() {

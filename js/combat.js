@@ -30,7 +30,7 @@ const Combat = (() => {
     const isBoss = /^z\d/.test(sceneId) || (combatDef.enemies || []).some(e => /gregorio|cuoco/.test(e));
     // il Belvedere apparecchia in proporzione: meno ospiti al tavolo, porzioni più piccole
     const attivi = G.party.filter(h => !h.down && !h.preso).length;
-    const porzione = attivi === 1 ? 0.7 : attivi === 2 ? 0.85 : 1;
+    const porzione = G.difficulty === 'incubo' ? 1 : (attivi === 1 ? 0.7 : attivi === 2 ? 0.85 : 1);
     battle = {
       def: combatDef,
       sceneId,
@@ -44,6 +44,11 @@ const Combat = (() => {
           e.maxHp = Math.max(1, Math.round(e.maxHp * 0.8));
           e.hp = e.maxHp;
           e.attack.bonus = Math.max(0, e.attack.bonus - 1);
+        }
+        if (G.difficulty === 'incubo') {
+          e.maxHp = Math.round(e.maxHp * 1.25);
+          e.hp = e.maxHp;
+          e.attack.bonus += 1;
         }
         if (porzione < 1) {
           e.maxHp = Math.max(1, Math.round(e.maxHp * porzione));

@@ -178,6 +178,7 @@ const Main = (() => {
     $('btn-start-adventure').onclick = startAdventure;
     $('btn-diff-normale').onclick = () => setDifficulty('normale');
     $('btn-diff-facile').onclick = () => setDifficulty('facile');
+    $('btn-diff-incubo').onclick = () => setDifficulty('incubo');
     $('btn-profile').onclick = showProfiles;
 
     // header di gioco
@@ -248,6 +249,7 @@ const Main = (() => {
     pendingDifficulty = d;
     $('btn-diff-normale').classList.toggle('btn-gold', d === 'normale');
     $('btn-diff-facile').classList.toggle('btn-gold', d === 'facile');
+    $('btn-diff-incubo').classList.toggle('btn-gold', d === 'incubo');
   }
 
   /* ---------- setup della compagnia ---------- */
