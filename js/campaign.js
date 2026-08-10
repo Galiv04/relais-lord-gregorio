@@ -45,6 +45,11 @@ const ITEMS = {
     desc: 'Una candela d\'accensione, ancora TIEPIDA, targhetta d\'ottone: "Gruppo 2024". È la vostra. E da qualche parte, il motore che la aspetta gira ancora: scagliata contro una creatura, morde con la scintilla di un motore vivo (2d6). Un lancio solo — poi addio, macchina.',
     combat: { dice: [2, 6] }, icon: '⚡',
   },
+  biglietto_1949: {
+    name: 'Il biglietto mai consegnato (1949)',
+    desc: 'Carta ingiallita, piegata in otto, mai aperta da chi doveva riceverla: "NON FIRMATE. Scendete stanotte. Il custode." Gregorio ci ha provato, una volta. Poi ha smesso di provarci.',
+    usable: false,
+  },
   erbe_ada: {
     name: 'Rametto d\'argento di Ada',
     desc: 'Un rametto delle erbe argentate dell\'orto, consegnato dalla padrona di casa in persona. "Contro il freddo. Il MIO." Cura il VELENO del Belvedere e scalda anche il resto (+3 PV).',
@@ -756,6 +761,7 @@ E davvero: mentre lo dice, una ciocca dei suoi capelli diventa bianca.`,
       { text: '🚪 Salire al PIANO PROIBITO — i ricordi della casa', next: 'u1', once: true },
       { text: '🌳 Uscire verso il POZZO — la cosa con cui Gregorio firmò', next: 'b1', once: true },
       { text: '❓ Trattenere Gregorio: ancora una domanda, gliela si legge in faccia', next: 'h2', once: true },
+      { text: '🕯 Seguire Gregorio quando si ritira: dove DORME, un maggiordomo di 125 anni?', next: 'cst1', once: true },
       { text: '🚶 Il cancello: chi non ha FIRMATO può ancora passare. Scendere a Pietrafonda', requires: { flag: 'firma_rinviata' }, next: 'pp1', once: true },
       { text: '🌊 Tornare alla PISCINA: il riflesso è una PORTA, e voi ormai lo sapete', next: 'w1_tuffo', requires: { flag: 'un_nodo_sciolto' }, once: true },
       { text: '💑 Gaetano e Claudia: due minuti, da soli, sul balcone', next: 'cuore_gc', once: true },
@@ -3202,6 +3208,50 @@ Emanuela lo taglia — come lo taglierebbe la madre di Ada — lo annusa, e se l
     ],
   },
 
+  cst1: {
+    location: 'corridoio',
+    caption: 'Il corridoio di servizio',
+    text: `Gregorio si ritira sempre allo stesso modo: un inchino, "i signori mi perdoneranno", e poi sparisce oltre una porta che nessuno di voi ha mai guardato due volte — perché è fatta APPOSTA per non essere guardata due volte.
+
+Stanotte la guardate. E la seguite.
+
+Dietro, un corridoio di servizio stretto e nudo: niente tappeti che bevono i passi, niente lampade che si accendono al passaggio. Qui la casa non recita. Qui la casa è solo muri, e i muri sono solo muri.
+
+> Claudia: *(sottovoce)* "Vi rendete conto che in tutta la notte non ci siamo MAI chiesti dove va? Centoventicinque anni di servizio. Dove si RITIRA, uno così?"
+
+In fondo al corridoio, una porta senza numero e senza targhetta. Non chiusa a chiave — al Belvedere le chiavi servono a chi ha qualcosa da difendere, e il custode non possiede niente.
+
+> Natalino: "Ragazzi. Questa è una violazione di domicilio bella e buona." *(pausa)* "Però è anche l'unica porta della casa che non ci ha mai minacciato. Io voto: entriamo."`,
+    choices: [
+      { text: '🚪 Entrare, piano, con rispetto', next: 'cst2' },
+      { text: '↩ No: certe porte si lasciano stare. Tornare al corridoio', next: 'h1' },
+    ],
+  },
+
+  cst2: {
+    location: 'camera',
+    caption: 'La stanza del custode',
+    text: `È la stanza più piccola della casa, e la più pulita, e la più TRISTE.
+
+Una branda militare con le coperte tirate a specchio — MAI usata: la polvere sotto la rete è uniforme come neve fresca, perché i custodi non dormono. Una divisa di ricambio appesa alla parete come un'altra pelle in attesa. Un calendario del 1899 fermo ad agosto, con un solo giorno cerchiato. E su un tavolino, sotto la finestra che guarda il pozzo — LUI la scelse, questa stanza, e adesso sapete perché — due cose.
+
+La prima: un **quaderno**, riempito per centoventicinque anni con la stessa grafia elegante. Non un diario. **Prove generali.** Frasi di benvenuto scritte, provate, cancellate, riscritte: *"Benvenuti al Belvedere" — troppo freddo. "Che piacere avervi" — suona affamato. "I signori sono i benvenuti: la casa li aspettava" — così. Gentile. RIPROVA DOMANI.* Un uomo che ogni giorno, da un secolo, si esercita a sembrare umano — o a non smettere di esserlo.
+
+La seconda: un **biglietto piegato in otto**, mai consegnato. Lo aprite con due dita. *"NON FIRMATE. Scendete stanotte. Il custode."* E sotto, una data: **1949.**
+
+> Emanuela: *(piano)* "Ci ha provato. Una volta, almeno. Ha scritto questo, e poi... non l'ha dato. E il gruppo del '49 è nei ritratti."
+
+Nessuno dice la cosa ovvia: che un biglietto del genere, stanotte, nessuno l'ha trovato sul proprio cuscino. Ma forse — il quaderno lo suggerisce — il modo di Gregorio di riprovarci, dopo il 1949, è stato un altro: restare. Limare la targhetta. Fare resistenza in silenzio, un giorno alla volta.
+
+**(Oggetto: IL BIGLIETTO MAI CONSEGNATO. Sangue freddo +2. Flag: stanza_custode.)**`,
+    item: 'biglietto_1949',
+    gold: 2,
+    sets: { stanza_custode: true },
+    choices: [
+      { text: '↩ Uscire come si esce da una chiesa: piano, e lasciando tutto com\'era', next: 'h1' },
+    ],
+  },
+
   gv1: {
     location: 'corridoio',
     caption: 'Cinque minuti di normalità',
@@ -3273,7 +3323,9 @@ E la casa — le pareti, i lampadari, i ritratti, il pavimento a scacchi — **r
 > Gregorio: "Le regole del Banchetto sono tre. Uno: si esce all'alba, o non si esce. Due: il patto vuole **una firma o un nome.** Tre..." *(e qui, per la prima volta, la voce del maggiordomo perfetto trema)* "...tre: il menù può ancora cambiare. Se avete sciolto i nodi... **è il momento di metterli sul tavolo.**"`,
     choices: [
       { text: '🧂💧 IL RITUALE: sale sulla firma, acqua di Ada sul registro, e restituire il nome', requires: { flag: 'rituale_noto', item: 'sale_grosso', item2: 'acqua_pozzo' }, removeItem: 'sale_grosso', removeItem2: 'acqua_pozzo', next: 'z2_rituale' },
+      { text: '📄 Posare sul registro IL SUO biglietto del 1949: "Ci hai già provato una volta. Riprova ADESSO."', requires: { item: 'biglietto_1949' }, removeItem: 'biglietto_1949', once: true, next: 'z_biglietto' },
       { text: '🖋 "Non ti chiediamo di passare la penna, Gregorio. Ti chiediamo di ROMPERLA." (il segreto della cripta)', requires: { flag: 'segreto_custodi' }, once: true, next: 'z_penna' },
+      { text: '🖋📄 La penna si rompe SENZA chiedere: avete il segreto della cripta E il suo cuore del 1949 sul tavolo', requires: { flag: 'segreto_custodi', flag2: 'gregorio_vacilla' }, once: true, next: 'e_penna' },
       { text: '🛣 "Le strade TORNANO, Gregorio. Le abbiamo viste tornare. E un contratto firmato dentro una trappola... è NULLO."', requires: { flag: 'strada_che_torna' }, once: true, next: 'z2_strada' },
       { text: '🎫 Natalino mette i piedi sul tavolo del 1899 e gratta l\'ULTIMO Gratta e Vinci. Davanti a LUI.', requires: { flag: 'ultimo_biglietto' }, removeItem: 'gratta_vinci', once: true, next: 'gvz' },
       { text: '🍳 "Tu collezioni i piatti dei morti. Noi ti offriamo il MENÙ DEI VIVI." (la contro-offerta)', requires: { flag: 'menu_memoria' }, once: true, next: 'z2_menu_vivi' },
@@ -3357,6 +3409,32 @@ I ritratti alle pareti hanno smesso di sbattere nelle cornici. Adesso vi guardan
     choices: [
       { text: '🪑 Restare seduti. La cena è servita. Il Belvedere ha vinto.', next: 'e_ospiti' },
       { text: '🔥 ALZARSI. Rovesciare la sedia, rovesciare il tavolo, TORNARE A COMBATTERE', next: 'z1', gold: 2 },
+    ],
+  },
+
+  z_biglietto: {
+    location: 'salaBanchetto',
+    npc: ['gregorio'],
+    caption: 'Il biglietto del 1949',
+    text: `Natalino lo posa sul registro senza una parola. Piegato in otto, ingiallito, MAI aperto da chi doveva riceverlo.
+
+Gregorio lo guarda. E per la prima volta in tutta la notte — compresa la battaglia, compreso il vino, compreso tutto — fa un passo INDIETRO.
+
+> Gregorio: "...dove."
+
+> Natalino: "Nella tua stanza. Scusaci: siamo entrati piano e abbiamo lasciato tutto com'era." *(pausa)* "Tranne questo. Questo era troppo tuo per lasciartelo nascondere ancora."
+
+Il maggiordomo perfetto prende il biglietto con due mani — come si prende una cosa che pesa cento volte il suo peso — e lo apre. Rilegge la propria grafia di settantasette anni fa. *NON FIRMATE. Scendete stanotte. Il custode.*
+
+> Gregorio: "Lo scrissi il pomeriggio. Lo tenni in tasca tutta la cena. La signora del gruppo — Rosa, si chiamava — mi chiese se mi sentivo bene, perché continuavo a toccarmi il taschino." *(la voce, adesso, è solo di un uomo)* "Non lo consegnai. Ebbi paura. Non della casa: di sbagliare. Di rovinargli la vacanza per niente, se mi fossi inventato tutto." *(piega il biglietto, con cura, e se lo mette nel taschino — nello STESSO taschino)* "Settantasette anni che mi chiedo chi sarei, se l'avessi consegnato."
+
+> Emanuela: "Uno che ci ha provato. Cioè quello che sei. La differenza, Gregorio, è solo che adesso lo SAI."
+
+**(Il custode vacilla — e stavolta non si raddrizza: Sangue freddo +2. Flag: gregorio_vacilla.)**`,
+    gold: 2,
+    sets: { gregorio_vacilla: true },
+    choices: [
+      { text: '↩ Tornare al tavolo, lasciandogli il biglietto nel taschino', next: 'z1' },
     ],
   },
 
@@ -3974,6 +4052,8 @@ const DIARY_FLAGS = [
   ['visto_occhio',          'Dal telescopio della soffitta l\'avete visto: c\'è un OCCHIO nella piscina. Il riflesso guarda.'],
   ['regole_casa_note',      'Le tre regole del Belvedere, imparate sulla pelle: la casa sente tutto, la casa non dimentica, la casa RISPETTA chi gioca bene.'],
   ['un_nodo_sciolto',       'Almeno un nodo della casa è SCIOLTO: quando sarete pronti, ci si può barricare e aspettare il Banchetto.'],
+  ['stanza_custode',        'La stanza del custode: la branda mai usata, il quaderno delle prove generali ("RIPROVA DOMANI") e il biglietto del 1949 mai consegnato. Gregorio ci ha provato. Una volta.'],
+  ['gregorio_vacilla',      'Gregorio ha riletto il proprio biglietto del 1949 e se l\'è rimesso nel taschino. Stavolta il custode vacilla e NON si raddrizza.'],
   ['segreto_custodi',       'Il segreto della cripta: il patto è più VECCHIO di Gregorio — e un custode può RIFIUTARSI di passare la penna. O romperla.'],
   ['ada_perdono',           'Ada perdona Gregorio "a metà — la metà che serve". Parole da riferire: al Banchetto varranno un alleato.'],
   ['capitolazione',         'La casa ha mollato la presa senza battaglia: il Banchetto annullato per mancanza di portata principale. La vittoria più rara del Belvedere.'],
@@ -4000,8 +4080,8 @@ const WORLD_MAP = [
   { key: 'tornanti', label: 'I Tornanti',      x: 0.12, y: 0.80, scenes: ['a0', 'a0_benzina', 'a1', 'a1b', 'ft1', 'ft1_inseguiti', 'ft_cesoie', 'ft_cesoie_vinto', 'ft2_capito', 'ft2_notte'] },
   { key: 'relais',   label: 'Il Relais',       x: 0.40, y: 0.30, scenes: ['a2', 'a2_siepi', 'p4_fuga', 'gr1', 'gr2', 'gr3', 'gr3_ko'] },
   { key: 'hall',     label: 'La Hall',         x: 0.56, y: 0.48, scenes: ['a3', 'a3_registro', 'a3_registro_ko', 'a4_firma', 'a4_rinvio', 'a4_firma_forzata', 'p4_rientro'] },
-  { key: 'camere',   label: 'Le Camere',       x: 0.74, y: 0.32, scenes: ['a5', 'a5_pozzo', 'h1', 'h2', 'gv1', 'nat_tronello', 'tronello_cerchio', 'ema_orto', 'u1', 'u2_1999', 'u2_1924', 'u2_1899', 'u3_medaglione', 'u3_lanterna', 'u3_bambole_fight', 'u3_bambole_vinte', 'u5_specchio', 'u4_porta_vuota', 'u4_intercapedine', 'sf1', 'sf2', 'sf3', 'sf4', 'sf5', 'sf6', 's49_1', 's49_2', 's49_3', 's49_3_ko', 's74_1', 's74_2', 's74_3', 'cuore_gc', 'cuore_gc_esito', 'cuore_fe', 'cuore_fe_esito', 'cuore_nat', 'cuore_nat_esito'] },
-  { key: 'pranzo',   label: 'Sala da Pranzo',  x: 0.46, y: 0.62, scenes: ['a6', 'a6_menu', 'a6_brindisi', 'a6_no_brindisi', 'a7', 'z1', 'z2_vino', 'z2_perdono', 'z2_menu_vivi', 'z2_capitolazione', 'z2_trattativa', 'z2_rituale', 'gvz', 'z2_strada', 'z2_alleato', 'z2_bambole', 'z2_claudia', 'z3_boss', 'z3_boss_solo', 'z3_boss_arrabbiato', 'z3_boss_indebolito', 'z4_fase2', 'z5_vittoria', 'z6_alba', 'e_alba', 'z_penna', 'z_penna_no', 'e_penna', 'z_custode', 'e_custode', 'z_resa', 'e_ospiti', 'z_vespri', 'z_smemorati', 'e_smemorati'] },
+  { key: 'camere',   label: 'Le Camere',       x: 0.74, y: 0.32, scenes: ['a5', 'a5_pozzo', 'h1', 'h2', 'gv1', 'nat_tronello', 'tronello_cerchio', 'ema_orto', 'cst1', 'cst2', 'u1', 'u2_1999', 'u2_1924', 'u2_1899', 'u3_medaglione', 'u3_lanterna', 'u3_bambole_fight', 'u3_bambole_vinte', 'u5_specchio', 'u4_porta_vuota', 'u4_intercapedine', 'sf1', 'sf2', 'sf3', 'sf4', 'sf5', 'sf6', 's49_1', 's49_2', 's49_3', 's49_3_ko', 's74_1', 's74_2', 's74_3', 'cuore_gc', 'cuore_gc_esito', 'cuore_fe', 'cuore_fe_esito', 'cuore_nat', 'cuore_nat_esito'] },
+  { key: 'pranzo',   label: 'Sala da Pranzo',  x: 0.46, y: 0.62, scenes: ['a6', 'a6_menu', 'a6_brindisi', 'a6_no_brindisi', 'a7', 'z1', 'z2_vino', 'z2_perdono', 'z2_menu_vivi', 'z2_capitolazione', 'z2_trattativa', 'z2_rituale', 'gvz', 'z_biglietto', 'z2_strada', 'z2_alleato', 'z2_bambole', 'z2_claudia', 'z3_boss', 'z3_boss_solo', 'z3_boss_arrabbiato', 'z3_boss_indebolito', 'z4_fase2', 'z5_vittoria', 'z6_alba', 'e_alba', 'z_penna', 'z_penna_no', 'e_penna', 'z_custode', 'e_custode', 'z_resa', 'e_ospiti', 'z_vespri', 'z_smemorati', 'e_smemorati'] },
   { key: 'riflesso', label: 'Il Riflesso',      x: 0.10, y: 0.28, scenes: ['w1_tuffo', 'w2_riflesso', 'w2_riflesso_ko', 'w3_giardino', 'w3_pattuglia_combat', 'w4_sofia', 'w5_racconto', 'w6_1924', 'w7_ronda', 'w7_ronda_combat', 'w8_direttore', 'w9_studio', 'w9_studio_combat', 'w10_orologio', 'w10_orologio_reso', 'w11_inventario', 'w12_tradimento', 'w12_sofia', 'w14_direttore_boss', 'w15_vittoria', 'w16_amaro', 'w17_fuga', 'w17_fuga_ko', 'w18_soglia', 'w_finale'] },
   { key: 'paese',    label: 'Pietrafonda',     x: 0.16, y: 0.90, scenes: ['pp1', 'pp2', 'pp2_bar', 'pp3', 'pp_anello', 'pp4_cripta', 'pp4', 'pp6', 'pp6_ko', 'pp7'] },
   { key: 'piscina',  label: 'La Piscina',      x: 0.22, y: 0.50, scenes: ['p1', 'p1_accappatoio', 'p1_accappatoio_ko', 'p2', 'p2_esperimento', 'p2_esperimento_ko', 'p3_fuori'] },

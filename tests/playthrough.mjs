@@ -1385,6 +1385,22 @@ executeUntil('la NOTTE SENZA SANGUE: vino a Gregorio + menù dei vivi -> capitol
   ['z2_menu_vivi', 'z2_vino', 'z2_capitolazione', 'z6_alba'], 24,
   r => !!(r.log.flags && r.log.flags.capitolazione) && !r.log.scenes.includes('z3_boss') && !r.log.scenes.includes('z4_fase2'));
 
+
+executeUntil('la Stanza del Custode -> il biglietto del 1949 -> Gregorio vacilla -> PENNA SENZA DADO',
+  ['natalino', 'emanuela'],
+  {
+    a3: '📖 Prima, sfogliare il registro',
+    a3_registro: 'Firmiamo domani con calma',
+    pp2: '🚪 Bussare alla canonica',
+    pp3: '⛪ Prima: chiedergli della cripta',
+    cst1: '🚪 Entrare, piano, con rispetto',
+  },
+  { checkBias: 'best', seedBase: 990000,
+    sequences: { h1: ['Seguire Gregorio quando si ritira', 'Pietrafonda', 'CANTINA', 'barricarsi'],
+                 z1: ['IL SUO biglietto del 1949', 'senza chiedere'] } },
+  ['cst2', 'z_biglietto', 'e_penna'], 24,
+  r => r.log.ending === 'e_penna' && !!(r.log.flags && r.log.flags.gregorio_vacilla) && !r.log.scenes.includes('z_penna'));
+
 const fatalRuns = results.filter(r => !r.ok);
 for (const r of fatalRuns) fail(`Partita "${r.scenario.name}" (seed ${r.scenario.seed}): ${r.error.split('\n')[0]}`);
 
@@ -1569,6 +1585,8 @@ coverageFlag('Coerenza del Giardiniere — flag', ['giardiniere_potato']);
 coverage('Eco a Pietrafonda — la corriera del \'74', ['pp_anello']);
 coverageFlag('Eco a Pietrafonda — flag', ['paese_sa']);
 coverage('Il quinto finale — la proposta, il rifiuto e la penna spezzata', ['z_penna', 'z_penna_no', 'e_penna']);
+coverage('La Stanza del Custode e il biglietto del 1949', ['cst1', 'cst2', 'z_biglietto']);
+coverageFlag('Stanza del Custode — flag', ['stanza_custode', 'gregorio_vacilla']);
 coverage('Il tronello — la pausa di Natalino e la promessa al pozzo', ['nat_tronello', 'b4_tronello']);
 coverage('Il tronello — il cerchio del balcone', ['tronello_cerchio']);
 coverageFlag('Il cerchio — flag', ['fumata_di_gruppo', 'stanza_intravista']);
