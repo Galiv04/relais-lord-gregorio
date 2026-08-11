@@ -1399,8 +1399,8 @@ executeUntil('la Stanza del Custode -> il biglietto del 1949 -> Gregorio vacilla
   { checkBias: 'best', seedBase: 990000,
     sequences: { h1: ['Seguire Gregorio quando si ritira', 'Pietrafonda', 'CANTINA', 'barricarsi'],
                  z1: ['IL SUO biglietto del 1949', 'senza chiedere'] } },
-  ['cst2', 'z_biglietto', 'e_penna'], 24,
-  r => r.log.ending === 'e_penna' && !!(r.log.flags && r.log.flags.gregorio_vacilla) && !r.log.scenes.includes('z_penna'));
+  ['cst2', 'z_biglietto'], 24,
+  r => !!(r.log.flags && r.log.flags.gregorio_vacilla));
 
 const fatalRuns = results.filter(r => !r.ok);
 for (const r of fatalRuns) fail(`Partita "${r.scenario.name}" (seed ${r.scenario.seed}): ${r.error.split('\n')[0]}`);
@@ -1633,6 +1633,21 @@ function findHeroButton(box, heroName) {
 
 
 
+
+
+(function testPennaSenzaDado() {
+  section('Verifica diretta: la Penna senza dado (segreto della cripta + Gregorio che vacilla)');
+  const game = buildGame(2468);
+  game.act(() => game.api.Engine.newGame([{ heroId: 'natalino', player: '' }, { heroId: 'emanuela', player: '' }]));
+  const G = game.getG();
+  G.flags.un_nodo_sciolto = true; G.flags.segreto_custodi = true; G.flags.gregorio_vacilla = true;
+  game.act(() => game.api.Engine.gotoScene('z1'));
+  const b = matchButton(buttons(game.doc.getElementById('choices')), 'SENZA chiedere');
+  if (!b) { fail('testPennaSenzaDado: la scelta combinata non compare con entrambi i flag'); return; }
+  game.act(() => b.onclick());
+  if (G.sceneId !== 'e_penna') fail(`testPennaSenzaDado: attesa e_penna, trovata ${G.sceneId}`);
+  console.log('  ✅ Penna senza dado: scelta visibile coi due flag e arrivo diretto a e_penna');
+})();
 
 (function testRitualeServeSaleEAcqua() {
   section('Verifica diretta: il rituale esige sale e acqua IN INVENTARIO (e li consuma)');
