@@ -243,12 +243,26 @@ const Engine = (() => {
 
   /* ---------- scene ---------- */
 
+  /* Luoghi visti CUMULATIVI per profilo (tra tutte le notti): servono a
+     "Rivivi la Notte" per dire quanto manca e DOVE. */
+  const seenKey = () => 'relais-viste-' + encodeURIComponent(currentProfile());
+  function seenScenes() {
+    try { return new Set(JSON.parse(localStorage.getItem(seenKey()) || '[]')); } catch (e) { return new Set(); }
+  }
+  function markSeen(id) {
+    try {
+      const s = seenScenes();
+      if (!s.has(id)) { s.add(id); localStorage.setItem(seenKey(), JSON.stringify([...s])); }
+    } catch (e) {}
+  }
+
   function gotoScene(id) {
     if (id === 'RETRY_COMBAT') id = G.lastCombatSceneId || CAMPAIGN_START;
     const scene = CAMPAIGN[id];
     if (!scene) { console.error('Scena mancante:', id); return; }
     G.sceneId = id;
     G.stats.scenes++;
+    markSeen(id);
 
     const firstVisit = !G.enteredScenes[id];
     G.enteredScenes[id] = true;
@@ -806,12 +820,48 @@ const Engine = (() => {
     try { return localStorage.getItem('relais-notte-finita-' + encodeURIComponent(currentProfile())) === '1'; } catch (e) { return false; }
   }
 
+  /* "Rivivi la Notte" con il CONTO di quello che manca, capitolo per capitolo:
+     % di luoghi visti (cumulativi del profilo) e imprese ancora da sbloccare LÌ. */
+  function chapterProgress() {
+    const seen = seenScenes();
+    // impresa → capitolo: si deduce dalla scena che imposta il suo flag (zero manutenzione)
+    const flagScene = {};
+    for (const [id, sc] of Object.entries(CAMPAIGN)) {
+      for (const f of Object.keys(sc.sets || {})) if (!(f in flagScene)) flagScene[f] = id;
+      for (const ch of sc.choices || []) for (const f of Object.keys(ch.sets || {})) if (!(f in flagScene)) flagScene[f] = id;
+    }
+    let collezione = new Set();
+    try { collezione = new Set(JSON.parse(localStorage.getItem('relais-imprese-' + encodeURIComponent(currentProfile())) || '[]')); } catch (e) {}
+    return (c) => {
+      if (!c.prefixes) return null;
+      const match = id => c.prefixes.some(p => id.startsWith(p));
+      const ids = Object.keys(CAMPAIGN).filter(match);
+      const viste = ids.filter(id => seen.has(id)).length;
+      const imprese = (typeof IMPRESE !== 'undefined' ? IMPRESE : []).filter(i => flagScene[i.flag] && match(flagScene[i.flag]));
+      const mancanti = imprese.filter(i => !collezione.has(i.flag));
+      return { pct: Math.round(viste / Math.max(1, ids.length) * 100), viste, tot: ids.length, imprese: imprese.length, mancanti };
+    };
+  }
+
   function showRevive() {
     const box = $('modal-generic-content');
-    const rows = (typeof CHAPTERS !== 'undefined' ? CHAPTERS : []).map((c, i) =>
-      `<button class="choice-btn" onclick="Engine.startChapter(${i})">${c.label} <span class="choice-tag">${c.desc}</span></button>`).join('');
+    const progress = chapterProgress();
+    const rows = (typeof CHAPTERS !== 'undefined' ? CHAPTERS : []).map((c, i) => {
+      const p = progress(c);
+      let stato = '';
+      if (p) {
+        const done = p.pct >= 100 && !p.mancanti.length;
+        const manca = p.mancanti.length
+          ? ` · 🏆 mancano ${p.mancanti.length}: <i>${p.mancanti.slice(0, 3).map(m => m.title).join(' · ')}${p.mancanti.length > 3 ? ' · …' : ''}</i>`
+          : (p.imprese ? ' · 🏆 imprese complete' : '');
+        stato = `<br><span style="color:${done ? 'var(--green)' : 'var(--gold)'}">${done ? '✅ COMPLETO' : `👁 esplorato ${p.pct}% (${p.viste}/${p.tot} luoghi)`}${manca}</span>`;
+      }
+      return `<button class="choice-btn" onclick="Engine.startChapter(${i})">${c.label} <span class="choice-tag">${c.desc}${stato}</span></button>`;
+    }).join('');
+    const seenAll = seenScenes().size;
+    const totAll = Object.keys(CAMPAIGN).length;
     box.innerHTML = `<h2>🗝 Rivivi la Notte</h2>
-      <p style="color:var(--text-dim);margin-bottom:10px">Avete già visto un'alba: adesso il Belvedere vi lascia scegliere DA DOVE ricominciare. Tutti e cinque presenti, zaino e conoscenze preparati per il capitolo scelto.</p>
+      <p style="color:var(--text-dim);margin-bottom:10px">Avete già visto un'alba: adesso il Belvedere vi lascia scegliere DA DOVE ricominciare — e vi dice QUANTO vi manca. Tutti e cinque presenti, zaino e conoscenze preparati per il capitolo scelto. Esplorazione totale del profilo: <b>${Math.round(seenAll / totAll * 100)}%</b> (${seenAll}/${totAll} luoghi).</p>
       ${rows}
       <button class="btn" style="margin-top:12px" onclick="document.getElementById('modal-generic').classList.add('hidden')">↩ Indietro</button>`;
     $('modal-generic').classList.remove('hidden');
@@ -952,6 +1002,34 @@ const Engine = (() => {
         </div>
       </div>`;
     choicesEl.appendChild(div);
+
+    /* Quello che il Belvedere non vi ha mostrato: suggerimenti SENZA spoiler,
+       col capitolo giusto da cui ricominciare (la feature "cosa manca e dove"). */
+    const progress = chapterProgress();
+    const daFare = (typeof CHAPTERS !== 'undefined' ? CHAPTERS : [])
+      .map(c => ({ c, p: progress(c) }))
+      .filter(x => x.p && (x.p.pct < 100 || x.p.mancanti.length))
+      .sort((a, b) => (b.p.mancanti.length - a.p.mancanti.length) || (a.p.pct - b.p.pct));
+    if (daFare.length) {
+      const sugg = document.createElement('div');
+      sugg.innerHTML = `<h3 style="font-family:var(--font-pixel);font-size:14px;color:var(--green);margin:14px 0 8px">🗝 Quello che il Belvedere non vi ha mostrato</h3>` +
+        daFare.slice(0, 4).map(({ c, p }) =>
+          `<div class="ability-box" style="border-left-color:var(--green)"><span class="ability-name">${c.label}</span>
+            <div class="ability-desc">👁 esplorato ${p.pct}% (${p.viste}/${p.tot} luoghi)${p.mancanti.length ? ` · 🏆 ${p.mancanti.length} impres${p.mancanti.length === 1 ? 'a' : 'e'} ancora là dentro: <i>${p.mancanti.slice(0, 3).map(m => m.title).join(' · ')}${p.mancanti.length > 3 ? ' · …' : ''}</i>` : ''}</div>
+          </div>`).join('') +
+        `<p style="color:var(--text-dim);font-size:18px;margin:6px 0 2px">Nessuno spoiler: solo i titoli. Con <b>🗝 Rivivi la Notte</b> partite dal capitolo giusto, con zaino e conoscenze già pronti — senza rigiocare tutto.</p>`;
+      choicesEl.appendChild(sugg);
+      const goRevive = document.createElement('button');
+      goRevive.className = 'choice-btn';
+      goRevive.style.borderLeftColor = 'var(--green)';
+      goRevive.innerHTML = `🗝 <b>Rivivi la Notte</b> <span class="choice-tag">Scegliete il capitolo: il gioco vi dice quanto manca in ognuno.</span>`;
+      goRevive.onclick = () => showRevive();
+      choicesEl.appendChild(goRevive);
+    } else if (typeof CHAPTERS !== 'undefined') {
+      const done = document.createElement('div');
+      done.innerHTML = `<div class="ability-box" style="border-left-color:var(--gold)"><span class="ability-name">🏆 100%</span><div class="ability-desc">Avete visto OGNI luogo e sbloccato OGNI impresa. Il Belvedere non ha più niente da nascondervi. Voi, a lui, non dovete più niente.</div></div>`;
+      choicesEl.appendChild(done);
+    }
 
     const replay = document.createElement('button');
     replay.className = 'choice-btn';
