@@ -1402,6 +1402,21 @@ executeUntil('la Stanza del Custode -> il biglietto del 1949 -> Gregorio vacilla
   ['cst2', 'z_biglietto'], 24,
   r => !!(r.log.flags && r.log.flags.gregorio_vacilla));
 
+
+executeUntil('il SESTO finale: Gregorio vacilla e ferma la mano -> e_custode_gregorio (la Firma Volontaria)',
+  ['federico', 'gaetano'],
+  {
+    a3: '📖 Prima, sfogliare il registro', a3_registro: 'Firmiamo domani con calma',
+    pp2: '🚪 Bussare alla canonica', cst1: '🚪 Entrare, piano, con rispetto',
+    k3: '💇 Natalino fa un passo avanti',
+    z_custode: 'una mano guantata',
+  },
+  { checkBias: 'best', seedBase: 995000,
+    sequences: { h1: ['Seguire Gregorio quando si ritira', 'CANTINA', 'barricarsi'],
+                 z1: ['IL SUO biglietto del 1949', 'La scelta di cui non parlerete'] } },
+  ['z_biglietto', 'e_custode_gregorio'], 24,
+  r => r.log.ending === 'e_custode_gregorio');
+
 const fatalRuns = results.filter(r => !r.ok);
 for (const r of fatalRuns) fail(`Partita "${r.scenario.name}" (seed ${r.scenario.seed}): ${r.error.split('\n')[0]}`);
 
@@ -1610,9 +1625,9 @@ coverageItem('Nuovi oggetti — ottenuti almeno una volta nelle rispettive scene
   'lanterna_1899', 'asso_di_denari', 'nastro_1974', 'candela_motore', 'gratta_vinci', 'torcia_led', 'accendino', 'birra_limone', 'anello_1999', 'taralli', 'orologio_sofia', 'inventario_riflesso', 'lettere_1899',
 ]);
 
-console.log(`  ${allEndings.size >= 5 ? '✅' : '❌'} Finali raggiunti (${allEndings.size}/5): ${[...allEndings].join(', ') || '(nessuno)'}`);
-if (allEndings.size < 5) {
-  const missing = ['e_alba', 'e_custode', 'e_ospiti', 'e_smemorati', 'e_penna'].filter(e => !allEndings.has(e));
+console.log(`  ${allEndings.size >= 6 ? '✅' : '❌'} Finali raggiunti (${allEndings.size}/6): ${[...allEndings].join(', ') || '(nessuno)'}`);
+if (allEndings.size < 6) {
+  const missing = ['e_alba', 'e_custode', 'e_ospiti', 'e_smemorati', 'e_penna', 'e_custode_gregorio'].filter(e => !allEndings.has(e));
   fail(`Finali non raggiunti in nessuna delle ${scenarios.length} run: ${missing.join(', ')}`);
 }
 
@@ -2077,7 +2092,7 @@ if (failures === 0) {
   const celleRun = results.filter(r => r.ok).map(r => r.log.scenes.filter(sc => sc === 'x_celle').length).sort((a, b) => a - b);
   const q = p => celleRun[Math.min(celleRun.length - 1, Math.floor(celleRun.length * p))];
   console.log(`  ℹ️ Bilanciamento (sconfitte/partita del pilota automatico): mediana ${q(0.5)}, p90 ${q(0.9)}, max ${celleRun[celleRun.length - 1]} — le code lunghe sono i loop di ritentativo del pilota, non l'esperienza umana`);
-  console.log(`✅ TUTTE LE PARTITE SIMULATE COMPLETATE SENZA ERRORI (${results.length} run, ${allScenesSeen.size} scene distinte visitate, ${allEndings.size}/5 finali)`);
+  console.log(`✅ TUTTE LE PARTITE SIMULATE COMPLETATE SENZA ERRORI (${results.length} run, ${allScenesSeen.size} scene distinte visitate, ${allEndings.size}/6 finali)`);
   process.exit(0);
 } else {
   console.log(`❌ ${failures} PROBLEMI RILEVATI su ${results.length} partite simulate`);

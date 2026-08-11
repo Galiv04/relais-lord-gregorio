@@ -103,6 +103,7 @@ const IMPRESE = [
   { flag: 'tentato_sacrificio',    icon: '🖋', title: 'Quasi',                       desc: 'Qualcuno di voi ha preso in mano la penna del Riflesso. L\'ha posata. Ma l\'ha presa.' },
   { flag: 'doni_don_michele',      icon: '☕', title: 'L\'Armeria del Parroco',      desc: 'Moka e campanella del \'74: l\'equipaggiamento completo del sesto che non ha mai smesso di combattere.' },
   { flag: 'firma_messa',           icon: '✍️', title: 'Firmato',                     desc: 'Avete messo la firma sul registro, alla cena. Come tutti. Prima di voi.' },
+  { flag: 'finale_firma_volontaria', icon: '✋', title: 'La Firma Volontaria',        desc: 'La mano guantata è arrivata prima della vostra. Il patto non è spezzato: è rinegoziato.' },
 ];
 
 /* ---------- CRONACHE DEL BELVEDERE ----------
@@ -123,6 +124,7 @@ const CRONACA = [
   { flag: 'bambole_addormentate', text: 'Le trentadue signorine del 1924 dormono ancora, composte, le mani in grembo. Un restauratore le ha definite "pezzi unici in condizioni perfette". Nessuno osa svegliarle per venderle.' },
   { flag: 'paese_sa', text: 'La corriera azzurra è ripartita dal tornante undici con la benzina che aveva nel 1974. Alla guida, per l\'ultima tratta, un pensionato di nome Gennaro. In discesa. Cantando.' },
   { flag: 'fumata_di_gruppo', text: 'Sul balcone del primo piano, certe notti d\'estate, il fumo di chissà cosa sale dritto e poi si DISPONE — angoli retti, corridoi, stanze. I nuovi gestori l\'hanno visto. Hanno deciso, con saggezza irpina, di non farci domande.' },
+  { flag: 'finale_firma_volontaria', text: 'Il Belvedere ha un custode con un CONTRATTO: ferie ogni venticinquennio (le passa a valle, da Don Michele), porte spalancate, e una clausola scritta in bella grafia: "gli ospiti entrano ed escono". La casa firma il rinnovo ogni anno. Con la penna nuova.' },
   { flag: 'gruppo_1924_visto', text: 'In una balera di Avellino, un sabato d\'autunno, cinque anziani elegantissimi che nessuno aveva mai visto hanno ballato un valzer intero senza sbagliare un passo. Alla fine, tutti e cinque hanno fatto l\'inchino — verso una sedia vuota. Il gestore offre da bere a chiunque sappia dire chi fossero.' },
   { flag: 'anello_reso', text: 'A Salerno, un uomo sui cinquanta che non si è mai sposato ha trovato una busta senza mittente: dentro, una polaroid del 1999 con un ragazzo cerchiato in rosso — lui — e un biglietto: "Ora lo so. Sei scappato per potermi aspettare. S." Ha prenotato una camera al Belvedere per giugno. Matrimoniale.' },
   { flag: 'ostaggi_liberati', text: 'Tra settembre e Natale, in giro per la Campania, ventisei famiglie hanno sentito bussare alla porta. Nessuno, sulla soglia, sapeva bene come spiegare dov\'era stato. Tutti hanno chiesto la stessa cosa: "che anno è?" — e poi, subito dopo: "c\'è ancora la mamma?"' },
