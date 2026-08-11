@@ -25,7 +25,7 @@ C'è solo un dettaglio: **il Belvedere prende un gruppo di ospiti ogni venticinq
 ## Come si gioca
 
 1. Sera. Un solo schermo. Possibilmente a bordo piscina.
-2. Ognuno seleziona sé stesso. Chi manca "non è partito".
+2. Ognuno seleziona sé stesso — ma nella storia siete SEMPRE in cinque: chi non gioca è in vacanza con voi, gestito dal Narratore, un passo indietro nei guai.
 3. Leggete ad alta voce, discutete, scegliete, tirate i dadi.
 4. Durata: **almeno 4 ore** seguendo una pista; **fino a 6** esplorando tutto — Pietrafonda, il Riflesso, le scene di coppia, i cinque finali. Rigiocabile: le piste e i finali cambiano la notte.
 

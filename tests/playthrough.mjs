@@ -1387,13 +1387,14 @@ executeUntil('la NOTTE SENZA SANGUE: vino a Gregorio + menù dei vivi -> capitol
 
 
 executeUntil('la Stanza del Custode -> il biglietto del 1949 -> Gregorio vacilla -> PENNA SENZA DADO',
-  ['federico', 'claudia'],
+  ['gaetano', 'federico'],
   {
     a3: '📖 Prima, sfogliare il registro',
     a3_registro: 'Firmiamo domani con calma',
     pp2: '🚪 Bussare alla canonica',
     pp3: '⛪ Prima: chiedergli della cripta',
     cst1: '🚪 Entrare, piano, con rispetto',
+    k3: '💇 Natalino fa un passo avanti',
   },
   { checkBias: 'best', seedBase: 990000,
     sequences: { h1: ['Seguire Gregorio quando si ritira', 'Pietrafonda', 'CANTINA', 'barricarsi'],

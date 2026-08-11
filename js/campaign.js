@@ -1676,7 +1676,7 @@ Si versa un altro caffè. Le mani, per la prima volta, gli tremano.
     choices: [
       { text: '🛣 "Don Michè... la strada che scende. Noi l\'abbiamo vista TORNARE. Il paese lo sa?"', requires: { flag: 'strada_che_torna' }, once: true, next: 'pp_anello' },
       { text: '📖 Raccontargli tutto: il registro, il pozzo, i nodi, il Banchetto', next: 'pp4' },
-      { text: '⛪ Prima: chiedergli della cripta dei registri parrocchiali', tag: 'Prova di Intelligenza — CD 12', check: { stat: 'INT', dc: 12, success: 'pp4_cripta', fail: 'pp4' } },
+      { text: '⛪ Prima: chiedergli della cripta dei registri parrocchiali', tag: 'Prova di Intelligenza — CD 12', once: true, requires: { notFlag: 'segreto_custodi' }, check: { stat: 'INT', dc: 12, success: 'pp4_cripta', fail: 'pp4' } },
     ],
   },
 
@@ -3334,7 +3334,7 @@ E la casa — le pareti, i lampadari, i ritratti, il pavimento a scacchi — **r
       { text: '🧸 Emanuela fischia piano il valzer del 1924, verso il soffitto. E il soffitto... scricchiola di passini.', requires: { flag: 'bambole_addormentate' }, once: true, next: 'z2_bambole' },
       { text: '📱 Claudia alza il telefono e INQUADRA la sedia a capotavola. In diretta. "Sorridi."', once: true, next: 'z2_claudia' },
       { text: '⚔ Il gruppo si mette in mezzo: se la casa vuole un nome, dovrà VENIRSELO A PRENDERE', next: 'z3_boss' },
-      { text: '🗣 Federico chiede la parola: la trattativa della vita', tag: 'Prova di Carisma — CD 13', requires: { notFlag: 'casa_rispetta' }, check: { stat: 'CAR', dc: 13, success: 'z2_trattativa', fail: 'z3_boss_arrabbiato' } },
+      { text: '🗣 Federico chiede la parola: la trattativa della vita', tag: 'Prova di Carisma — CD 13', once: true, requires: { notFlag: 'casa_rispetta' }, check: { stat: 'CAR', dc: 13, success: 'z2_trattativa', fail: 'z3_boss_arrabbiato' } },
       { text: '🗣 Federico riprende la parola — e stavolta la casa ASCOLTA. Nessun dado: il tavolo è cambiato', requires: { flag: 'casa_rispetta' }, next: 'z2_trattativa' },
       { text: '🍷 Prima di tutto: versare il vino del 1899 nel bicchiere di Gregorio', requires: { item: 'vino_1899' }, removeItem: 'vino_1899', next: 'z2_vino' },
       { text: '💧 Riferire le parole del pozzo: "Ada ti perdona. A metà. LA METÀ CHE SERVE."', requires: { flag: 'ada_perdono' }, once: true, next: 'z2_perdono' },

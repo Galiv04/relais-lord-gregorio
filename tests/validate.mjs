@@ -325,6 +325,22 @@ const senzaConsumatore = [...settableFlags].filter(f => {
 });
 if (senzaConsumatore.length) warn(`${senzaConsumatore.length} flag impostati ma senza consumatore di gioco (debito narrativo): ${senzaConsumatore.slice(0, 8).join(', ')}${senzaConsumatore.length > 8 ? ', …' : ''}`);
 
+
+/* ---------- prove ripetibili: check senza once nelle scene rivisitabili ---------- */
+section('Prove nei luoghi rivisitabili (nessuna prova ripetibile)');
+
+const bersagliRitorno = new Set([...campSrc.matchAll(/text: ["']↩[^"']*["'][^\n]*?next: '([a-z_0-9]+)'/g)].map(m => m[1]));
+let proveRipetibili = 0;
+for (const sid of bersagliRitorno) {
+  const m = campSrc.match(new RegExp('^  ' + sid + ': \\{', 'm'));
+  if (!m) continue;
+  const blocco = campSrc.slice(m.index, campSrc.indexOf('\n  },', m.index));
+  for (const c of blocco.matchAll(/\{ text: '([^']{0,60})'[^\n]*?check: \{[^}]*\}[^\n]*\}/g)) {
+    if (!c[0].includes('once')) { fail(`scena rivisitabile "${sid}": la prova "${c[1]}" è ripetibile (manca once)`); proveRipetibili++; }
+  }
+}
+if (!proveRipetibili) { ok(); console.log(`  ✔ ${bersagliRitorno.size} scene rivisitabili, nessuna prova ripetibile`); }
+
 /* ---------- esito ---------- */
 console.log('\n' + '═'.repeat(50));
 if (failures === 0) {
