@@ -92,15 +92,19 @@ const Engine = (() => {
     }
     saveGame();
     gotoScene(CAMPAIGN_START);
-    if (solo) {
+    {
       const box = $('modal-generic-content');
-      box.innerHTML = `<h2>🌒 Modalità Sopravvissuto</h2>
+      let html = `<h2>📖 La Storia</h2>` + (typeof RULES_STORY !== 'undefined' ? RULES_STORY : '');
+      if (solo) {
+        html += `<h2 style="margin-top:16px">🌒 Modalità Sopravvissuto</h2>
         <p style="margin-bottom:12px">${G.party[0].name} affronta il Belvedere DA SOLO. Che incoscienza. Che stile. La notte concede:</p>
         <div class="ability-box"><span class="ability-name">❤ +10 PV massimi e +1 CA</span></div>
         <div class="ability-box"><span class="ability-name">✨ +1 uso a ogni abilità speciale</span></div>
         <div class="ability-box"><span class="ability-name">🎒 Il kit di Emanuela e la grappa del nonno già in borsa</span></div>
-        <p style="color:var(--text-dim);margin-top:10px">Consiglio del narratore: nei film horror il gruppo si divide. Tu SEI già diviso. Compensa con la prudenza.</p>
-        <button class="btn btn-gold" style="margin-top:12px" onclick="document.getElementById('modal-generic').classList.add('hidden')">🌙 Che la notte cominci</button>`;
+        <p style="color:var(--text-dim);margin-top:10px">Consiglio del narratore: nei film horror il gruppo si divide. Tu SEI già diviso. Compensa con la prudenza.</p>`;
+      }
+      html += `<button class="btn btn-gold" style="margin-top:12px" onclick="document.getElementById('modal-generic').classList.add('hidden')">🌙 Che la notte cominci</button>`;
+      box.innerHTML = html;
       $('modal-generic').classList.remove('hidden');
     }
   }

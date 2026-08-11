@@ -1,5 +1,22 @@
 /* ============ REGOLE — guida rapida e "come si gioca" ============ */
 
+const RULES_STORY = `
+<h3>🚗 Dove siete</h3>
+<p>Ferragosto. Cinque amici in macchina — <b>Gaetano, Natalino, Claudia, Federico, Emanuela</b> — con le valigie sopra le ginocchia e la scorta di taralli razionata con criteri militari. Quattro giorni di ferie vere, lontano dal caos: piscina, mangiate, il programma delle colazioni già concordato e già contestato.</p>
+<p>Federico ha prenotato lui: <b>Relais Belvedere</b>, cinque stelle, "un AFFARE, ragazzi". È su una montagna dell'Irpinia, sopra un paese di quarantuno abitanti con tutte le persiane chiuse. Su Google Maps, la foto satellitare del relais è una chiazza sfocata. Il bosco intorno, nitido che si contano le foglie.</p>
+
+<h3>🕯 Cosa sta succedendo</h3>
+<p>Il relais è bellissimo. Davvero: il padrone di casa — <b>Lord Gregorio</b>, completo di lino, mani curate, una gentilezza da altro secolo — vi porta le valigie tutte insieme e vi tratta come ospiti attesi da tempo.</p>
+<p>Ecco: <i>attesi</i>. Perché nel registro alla reception, sotto le firme di gruppi di altre epoche, c'è già una riga pronta. E in fondo al giardino c'è un pozzo che il benzinaio giù in valle vi ha sconsigliato con troppa precisione per essere un caso.</p>
+
+<h3>🌒 Cosa vi aspetta</h3>
+<p>Una notte sola, dal tramonto all'alba, dentro una casa che vi ha già inclusi nei suoi programmi. Tre strade da esplorare in libertà — la cantina, il piano che il padrone chiede di non visitare, il giardino col pozzo — un paese che sa tutto e non parla, e sei modi diversi in cui questa notte può finire.</p>
+<p>Nessuno di voi è un eroe. Avete forbici professionali, un phon da 2200 watt, una borsa di prodotti per capelli e un ottimo istinto per le vibrazioni sbagliate. Basterà? Dipende da quello che deciderete di fare quando la casa sarà gentile con voi.</p>
+
+<h3>🎲 Cosa serve al tavolo</h3>
+<p>Da uno a cinque giocatori, un solo schermo, zero preparazione: uno legge ad alta voce, si discute, si sceglie insieme, e quando serve si tira il dado. Nella storia ci siete <b>sempre tutti e cinque</b>: al setup scegliete solo chi viene giocato. Salvataggio automatico: la notte si può interrompere e riprendere.</p>
+<p><i>Avvertenza: paura vera, momenti macabri, linguaggio da adulti. E una regola che vale la pena ricordare: in questa casa la cortesia è un'arma, e la usano entrambe le parti.</i></p>`;
+
 const RULES_HOWTO = `
 <h3>🕯 Che gioco è questo?</h3>
 <p>È un <b>horror interattivo</b> in stile Dungeons &amp; Dragons, pensato per chi non ha mai giocato.
