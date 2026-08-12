@@ -1,9 +1,9 @@
 # CLAUDE.md — Il Relais di Lord Gregorio
 
-Horror interattivo in italiano per 1-5 giocatori. **Riusa il motore de "La Corona di Mezzanotte"**: la documentazione completa del motore, dello stile e del processo vive là.
+Horror interattivo in italiano per 1-5 giocatori. **Riusa il motore de "La Corona di Mezzanotte"**: la documentazione completa del motore, dello stile e del processo vive nel repo condiviso [Galiv04/dnd-motore](https://github.com/Galiv04/dnd-motore).
 
 - **Live**: https://galiv04.github.io/relais-lord-gregorio/
-- **Motore e guida di produzione**: `../dnd-corona-di-mezzanotte/CLAUDE.md` (+ `docs/ARCHITETTURA.md`, `docs/STILE-NARRATIVO.md`, `docs/COME-CREARE-UNA-CAMPAGNA.md`, `docs/LESSONS-LEARNED.md`, `docs/PREFERENZE.md`)
+- **Motore e guida di produzione**: `../dnd-motore/docs/` (`ARCHITETTURA.md`, `STILE-NARRATIVO.md`, `COME-CREARE-UNA-CAMPAGNA.md`, `LESSONS-LEARNED.md`, `PREFERENZE.md`, `PIPELINE-PRODUZIONE.md`)
 
 ## Cosa cambia rispetto alla Corona
 
