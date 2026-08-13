@@ -97,27 +97,27 @@ const CAMPAIGN = {
     caption: 'Autogrill di Baiano — ore 17:50, l\'ultimo caffè normale',
     text: `**Venerdì pomeriggio, autostrada per Avellino, poi su.**
 
-L'autogrill di Baiano è l'ultimo avamposto della civiltà: cinque caffè, due Camogli, un pacco di taralli "per il viaggio" che Emanuela ha già razionato con criteri militari, e Natalino che torna dalla cassa con l'aria di chi ha vinto qualcosa.
+L'autogrill di Baiano è l'ultimo avamposto della civiltà: cinque caffè, due Camogli, un pacco di taralli che Emanuela ha già razionato con criteri militari, e Natalino che torna dalla cassa raggiante.
 
 > Natalino: "Ho preso i Gratta e Vinci. Cinque. Uno a testa. Se qualcuno vince, il weekend lo paga lui e Federico ci ridà l'anticipo."
 
-> Federico: "L'anticipo era un AFFARE, e comunque il relais è già pagato, quindi tecnicamente—" *(sta tornando dal frigo delle bibite con DIECI birre al limone strette al petto come un neonato)* "—tecnicamente questa è la scorta TATTICA. Ne servono dieci al giorno. È scienza."
+> Federico: "L'anticipo era un AFFARE, e il relais è già pagato, quindi—" *(DIECI birre al limone strette al petto come un neonato)* "—questa è la scorta TATTICA. Ne servono dieci al giorno. È scienza."
 
-> Emanuela: "E il programma resta quello concordato, ricapitolo per i distratti: colazioni con la SFIDA — i pancakes di Federico contro le crêpes di Claudia, giudice il palato di tutti — a pranzo comando io, pasta zucchine e gamberi il primo giorno e non si discute, le bruschette le fa Natalino che è il maestro, e la grigliata stile Pasquetta la gestisce Gaetano. Quattro giorni NOI, la villa, la piscina e ZERO caos di Ferragosto."
+> Emanuela: "Il programma è quello concordato: colazioni con la SFIDA — pancakes di Federico contro crêpes di Claudia — a pranzo comando io, pasta zucchine e gamberi, le bruschette le fa Natalino, e la grigliata la gestisce Gaetano. Quattro giorni NOI, la villa, la piscina e ZERO caos di Ferragosto."
 
 > Claudia: "Le mie crêpes lo umiliano ogni anno e lui ogni anno ci riprova. Lo ammiro, giuro."
 
-> Federico: *(soffiando con calma un cerchio di vapore perfetto dalla sigaretta elettronica, come punteggiatura)* "Quest'anno ho un OVETTO SEGRETO nella pastella. Sentirete."
+> Federico: *(cerchio di vapore dalla sigaretta elettronica)* "Quest'anno ho un OVETTO SEGRETO nella pastella. Sentirete."
 
-> Claudia: "Tecnicamente hai prenotato un posto che su Google Maps È UNA CHIAZZA VERDE. L'ho cercato stamattina: la foto satellitare si interrompe. C'è il bosco, c'è la strada, e poi c'è tipo... una sfocatura."
+> Claudia: "Tecnicamente hai prenotato un posto che su Google Maps È UNA CHIAZZA VERDE. La foto satellitare si interrompe: c'è il bosco, c'è la strada, e poi c'è tipo... una sfocatura."
 
-> Gaetano: "Compressione dell'immagine. Le zone di montagna le aggiornano ogni dieci anni, non ci vive nessuno—"
+> Gaetano: "Compressione dell'immagine. Le zone di montagna le aggiornano ogni dieci anni—"
 
 > Claudia: "Amore. La sfocatura è SOLO sul relais. Il bosco intorno è nitido che gli conti le foglie."
 
-Un silenzio da autogrill, con le tazzine a mezz'aria. Poi Natalino gratta il primo biglietto, perde, e la vita riparte.
+Un silenzio da autogrill. Natalino gratta il primo biglietto, perde, e la vita riparte.
 
-*(I Gratta e Vinci perdono tutti e cinque. Ovviamente. Ma questo lo scoprirete strada facendo.)*`,
+*(I Gratta e Vinci perdono tutti e cinque. Ovviamente.)*`,
     item2: 'birra_limone',
     item: 'gratta_vinci',
     choices: [
@@ -736,25 +736,25 @@ Da qualche parte sopra di voi, al piano delle camere, **un pavimento scricchiola
     stinger: 'campana',
     npc: ['gregorio'],
     caption: 'Il corridoio — mezzanotte',
-    text: `A mezzanotte in punto, tre cose succedono insieme.
+    text: `A mezzanotte, tre cose succedono insieme.
 
-**Uno:** tutte le lampade del corridoio si accendono da sole, in fila, con un *tac-tac-tac* da plotone.
+**Uno:** tutte le lampade del corridoio si accendono da sole, con un *tac-tac-tac* da plotone.
 
-**Due:** l'aria cambia sapore — di colpo sa di cantina, di pietra bagnata, di **casa vecchia sotto la casa nuova.**
+**Due:** l'aria cambia sapore — sa di cantina, di pietra bagnata, di **casa vecchia sotto la casa nuova.**
 
-**Tre:** in fondo al corridoio, dove il muro ha sempre fatto angolo, adesso c'è una **porta.** Verde scuro, vernice screpolata, con una targhetta d'ottone: *"SOLO PERSONALE — dal 1899"*. È socchiusa. Dietro, buio e gradini che scendono.
+**Tre:** in fondo al corridoio c'è una **porta.** Vernice screpolata, targhetta d'ottone: *"SOLO PERSONALE — dal 1899"*. Socchiusa. Dietro, buio e gradini che scendono.
 
-> Gregorio: *(alle vostre spalle: nessuno l'ha sentito arrivare, MAI nessuno lo sente arrivare)* "Ah. La casa vi ha aperto. **Mi dispiace: speravo aveste più tempo.** Di solito lo lascia per l'ultima notte."
+> Gregorio: *(alle vostre spalle, come sempre)* "Ah. La casa vi ha aperto. **Mi dispiace: speravo aveste più tempo.**"
 
-È in vestaglia da camera, impeccabile, con un candeliere in mano. E per la prima volta da quando lo conoscete, il suo sorriso non è in servizio: sembra, semplicemente, **stanco.** Una stanchezza da secoli.
+Vestaglia impeccabile, candeliere in mano. Per la prima volta il suo sorriso non è in servizio: sembra **stanco.** Una stanchezza da secoli.
 
-> Gregorio: "Regole della notte, e ve le dico una volta sola perché una volta sola mi è permesso: **il Belvedere prende un gruppo ogni venticinque anni.** Io sono... il tramite. Non il padrone: il MAGGIORDOMO del patto. Da stanotte all'alba, la casa proverà a trattenervi. A prendervi **a uno a uno.** Chi viene preso non muore — il Belvedere non spreca — ma resta. Come sono rimasto io, nel 1899."
+> Gregorio: "Regole della notte, e le dico una volta sola: **il Belvedere prende un gruppo ogni venticinque anni.** Io sono... il tramite. Il MAGGIORDOMO del patto. Da stanotte all'alba, la casa proverà a prendervi **a uno a uno.** Chi viene preso non muore — ma resta. Come me, dal 1899."
 
-Si scosta, e il candeliere illumina tre direzioni: **la porta verde che scende in cantina**, **la scala di servizio che sale al piano proibito**, e in fondo, la portafinestra verso **il giardino e il pozzo.**
+Il candeliere illumina tre direzioni: **la porta verde che scende in cantina**, **la scala di servizio che sale al piano proibito**, e la portafinestra verso **il giardino e il pozzo.**
 
-> Gregorio: "Il patto ha tre nodi: la CANTINA, dove dormono quelli di prima. Il **PIANO DI SOPRA**, dove la casa tiene i suoi ricordi. E il **POZZO**, dove abita la cosa con cui firmai. Scioglietene quanti riuscite prima dell'alba, e forse l'ultima parola sarà vostra. Io non posso aiutarvi oltre: ogni parola che vi dico, **la casa me la toglie da qualcos'altro.**"
+> Gregorio: "Il patto ha tre nodi: la CANTINA, dove dormono quelli di prima. Il **PIANO DI SOPRA**, dove la casa tiene i suoi ricordi. E il **POZZO**, dove abita la cosa con cui firmai. Scioglietene quanti riuscite prima dell'alba. Io non posso aiutarvi oltre: ogni parola che vi dico, **la casa me la toglie da qualcos'altro.**"
 
-E davvero: mentre lo dice, una ciocca dei suoi capelli diventa bianca.`,
+Mentre lo dice, una ciocca dei suoi capelli diventa bianca.`,
     hub: true,
     choices: [
       { text: '🍷 Scendere in CANTINA — dove dormono quelli di prima', next: 'k1', once: true },
@@ -2723,23 +2723,23 @@ Si guarda intorno, poi torna a guardarli, e per un attimo la sicurezza scricchio
     location: 'riflesso_interno',
     npc: ['sofia'],
     caption: 'Il racconto di Sofia — l\'Inventario',
-    text: `Sofia li porta dentro per un corridoio di servizio, tenendo tutti bassi sotto le finestre — "la casa VEDE, se state dritti in piedi davanti a una finestra è come squillare un citofono" — e mentre camminano, racconta, veloce, come chi ha ripetuto la stessa storia mille volte nella propria testa e mai a nessuno.
+    text: `Sofia li porta dentro per un corridoio di servizio, tenendo tutti bassi — "la casa VEDE, state dritti davanti a una finestra ed è come squillare un citofono" — e racconta, veloce, come chi ha ripetuto la storia mille volte e mai a nessuno.
 
-> Sofia: "Non siamo fantasmi. Vorrei tanto. I fantasmi almeno hanno FINITO qualcosa. Noi siamo — aspettate la parola giusta — OSTAGGI. Presi la notte del nostro venticinquennio, portati di qua, e da allora... fermi. Non invecchiamo. Non moriamo. Non usciamo. Io sono ancora la Sofia del 31 luglio 1999, per sempre, a meno che qualcuno non rompa l'Inventario."
+> Sofia: "Non siamo fantasmi. Vorrei tanto. I fantasmi almeno hanno FINITO qualcosa. Noi siamo — aspettate la parola giusta — OSTAGGI. Presi la notte del venticinquennio, portati di qua, e fermi. Non invecchiamo. Non moriamo. Non usciamo. Sono ancora la Sofia del 31 luglio 1999, a meno che qualcuno non rompa l'Inventario."
 
 > Claudia: "L'Inventario."
 
-> Sofia: "Il registro di QUA. Dall'altra parte tenete un registro con i nomi degli ospiti, no? Qui è uguale, solo che non scrivono i nomi. Catalogano gli OGGETTI. 'Sofia — servizio da tè, 1999.' Io sono una voce di catalogo, gente. Come un piatto. Come un cucchiaio."
+> Sofia: "Il registro di QUA. Dall'altra parte tenete un registro con i nomi degli ospiti, no? Qui non scrivono nomi. Catalogano gli OGGETTI. 'Sofia — servizio da tè, 1999.' Io sono una voce di catalogo, gente. Come un piatto. Come un cucchiaio."
 
-Lo dice ridendo, ma è la risata di chi ha smesso di piangerci sopra da vent'anni per pura decisione strategica.
+Lo dice ridendo — la risata di chi ha smesso di piangerci da vent'anni.
 
 > Sofia: "I camerieri pattugliano. Il Direttore governa. E la casa — ATTENZIONE, questo è importante — vede tutto quello che si muove senza prudenza. Muovetevi come se ogni finestra fosse un occhio, perché lo è."
 
 > Federico: "E il Direttore chi è?"
 
-Sofia si ferma un secondo, e per la prima volta da quando l'hanno incontrata, la battuta pronta le manca.
+Sofia si ferma. Per la prima volta, la battuta pronta le manca.
 
-> Sofia: "Il Direttore è quello che Gregorio sarebbe diventato, se non avesse mai avuto il coraggio di dispiacersi per niente. Non ridete con lui. Non trattate con lui senza un piano. E se vi offre qualcosa... contate le dita di chi ve lo offre. Non sono mai il numero giusto."`,
+> Sofia: "Il Direttore è quello che Gregorio sarebbe diventato, se non avesse mai avuto il coraggio di dispiacersi. Non ridete con lui. Non trattate senza un piano. E se vi offre qualcosa... contate le dita di chi ve lo offre. Non sono mai il numero giusto."`,
     sets: { inventario_scoperto: true, regole_casa_note: true },
     choices: [{ text: 'Chiedere il percorso più sicuro verso il cuore della casa', next: 'w6_1924' }],
   },
@@ -2806,17 +2806,17 @@ Il vassoio vuoto del primo diventa, nelle sue mani, qualcosa con un bordo molto 
     location: 'riflesso_interno',
     npc: ['direttore'],
     caption: 'Il Direttore',
-    text: `La porta in fondo al corridoio si apre da sola, senza corrente d'aria, esattamente come faceva quella di Gregorio dall'altra parte — e dietro, in un ufficio che sembra la reception della hall vista attraverso il gelo di un vetro, c'è un uomo.
+    text: `La porta in fondo al corridoio si apre da sola, e dietro, in un ufficio che sembra la reception vista attraverso il gelo di un vetro, c'è un uomo.
 
-Elegantissimo. Completo di lino, come Gregorio, ma il colore non è tortora: è un grigio senza calore, il colore delle cose che non hanno mai preso il sole. Mani curatissime, unite davanti a sé. Non si alza. Sorride sempre, con la bocca sola: gli occhi restano altrove, come se il resto della faccia stesse ancora aspettando l'ordine di partecipare.
+Elegantissimo. Completo di lino grigio — un grigio senza calore, il colore delle cose che non hanno mai preso il sole. Mani curatissime, unite davanti a sé. Non si alza. Sorride con la bocca sola: gli occhi aspettano l'ordine di partecipare.
 
-> Il Direttore: "Cinque nuovi articoli non catalogati, in giro per la casa fuori orario. E con loro, la signorina Sofia — servizio da tè, 1999 — che sa perfettamente che le uscite non autorizzate si segnano sul registro." *(sposta un dito, senza fretta)* "Buonasera. Sono il Direttore. Gregorio, di là, vi accoglie con il calore. Io vi accolgo con l'ordine. È più efficiente, e con tutto il rispetto per il collega... dura più a lungo."
+> Il Direttore: "Cinque nuovi articoli non catalogati, in giro per la casa fuori orario. E con loro, la signorina Sofia — servizio da tè, 1999 — che sa che le uscite non autorizzate si segnano." *(sposta un dito, senza fretta)* "Buonasera. Sono il Direttore. Gregorio, di là, vi accoglie con il calore. Io vi accolgo con l'ordine. È più efficiente e dura più a lungo."
 
 > Gaetano: *(la voce ferma, ma le mani no)* "Lei è cosa, esattamente?"
 
 > Il Direttore: "Sono ciò che resta quando si smette di dispiacersi. Gregorio si dispiace ancora — è la sua debolezza, e la ragione per cui questa casa, di là, perde ancora ospiti. Io non mi dispiaccio da molto tempo. Funziona meglio."
 
-Si alza, con un movimento troppo fluido per essere del tutto umano, e per un istante la luce fredda della stanza gli attraversa il petto come se non ci fosse niente, dentro il completo di lino, a fermarla.
+Si alza con un movimento troppo fluido per essere umano, e la luce fredda gli attraversa il petto come se non ci fosse niente, dentro il lino, a fermarla.
 
 > Il Direttore: "Vi lascio andare. Stanotte. È più divertente vedere cosa farete con il tempo che vi resta prima che l'Inventario decida come catalogarvi."
 
@@ -2914,19 +2914,19 @@ Sofia si asciuga gli occhi con il dorso della mano, veloce, come chi non vuole c
     location: 'riflesso_interno',
     npc: ['sofia', 'direttore'],
     caption: 'La Sala dell\'Inventario',
-    text: `Sofia li guida per l'ultimo tratto con la sicurezza di chi lo ha percorso mille volte nella propria testa e mai una nella realtà, e la porta in fondo — doppia, di legno scuro, con una maniglia a forma di penna d'oca — si apre su una sala che non ha equivalente dall'altra parte della casa.
+    text: `Sofia li guida per l'ultimo tratto con la sicurezza di chi l'ha percorso mille volte nella testa e mai nella realtà, e la porta in fondo — doppia, legno scuro, maniglia a penna d'oca — si apre su una sala senza equivalente dall'altra parte.
 
-Scaffali fino al soffitto. Migliaia di **schede**, numerate, ognuna con un piccolo oggetto appoggiato sopra come un fermacarte: uno specchietto da borsetta, un paio di occhiali, una spazzola, un accendino senza gas. Sotto ogni oggetto, la scheda dice cosa — non CHI — è: *"Sofia — servizio da tè, 1999." "Margherita — ninnolo da comò, 1924." "Ernesto — posacenere, 1949."*
+Scaffali fino al soffitto. Migliaia di **schede**, numerate, ognuna con un oggetto come fermacarte: specchietto, occhiali, spazzola, accendino senza gas. Sotto ogni oggetto, la scheda dice cosa — non CHI — è: *"Sofia — servizio da tè, 1999." "Margherita — ninnolo da comò, 1924." "Ernesto — posacenere, 1949."*
 
 Al centro, su un leggio, il registro madre: **l'Inventario.** Aperto. E davanti, ad aspettarli come se li avesse invitati a cena, c'è il Direttore.
 
 > Il Direttore: "Siete arrivati fin qui. Complimenti sinceri — e i miei complimenti, di questi tempi, sono la cosa più rara della casa." *(chiude piano l'Inventario, senza fretta)* "Vi propongo un affare da gentiluomini. Un pezzo nuovo, di buona qualità, catalogato con tutti gli onori — al posto di TUTTI i pezzi vecchi qui dentro. Uno di voi resta. Gli altri quattro, con la signorina Sofia, escono all'alba, liberi, con la mia firma di garanzia."
 
-Il silenzio che segue è quello vero, quello che nessuna battuta di Natalino riesce a rompere per una volta.
+Il silenzio che segue, nessuna battuta di Natalino riesce a romperlo.
 
 > Sofia: *(sottovoce, urgentissima)* "NON. Contate le dita, ve l'ho detto. Contate le dita di chi offre."
 
-Il Direttore stende le mani, sul leggio, come per mostrare che sono pulite. Sono dieci. Esattamente dieci. E questo, in qualche modo, è la cosa più inquietante che abbiano visto stanotte.`,
+Il Direttore stende le mani sul leggio. Sono dieci. Esattamente dieci. E questo, in qualche modo, è la cosa più inquietante che abbiano visto stanotte.`,
     choices: [
       { text: '🖋 Accettare: qualcuno del gruppo si offre davvero, per salvare tutti gli altri', next: 'w12_tradimento' },
       { text: '🕯 Fermarsi: "La decisione tocca a Sofia. È la sua casa da venticinque anni."', next: 'w12_sofia' },
@@ -3127,23 +3127,23 @@ Da qualche parte nella villa, una porta verde in fondo a un corridoio aspetta an
   nat_tronello: {
     location: 'camera',
     caption: 'Il tronello del pozzo',
-    text: `Nessuno discute. Ci sono momenti, in trent'anni di amicizia, in cui la frase "ho bisogno di un tronello da solo" ha lo stesso peso istituzionale di "devo chiamare mia madre".
+    text: `Nessuno discute. In trent'anni di amicizia, "ho bisogno di un tronello da solo" ha lo stesso peso di "devo chiamare mia madre".
 
-La Camera del Pozzo, da solo, fa un altro effetto. Natalino apre la finestra — quella che guarda il pozzo, ovviamente, la scuola di pensiero delle tende chiuse ha perso stanotte — si siede sul davanzale e rolla con la calma di chi ha le mani buone di mestiere. Cartina, filtro, la piega giusta. *"Non è vizio,"* dice al buio, per abitudine, *"è manutenzione."*
+La Camera del Pozzo, da solo, fa un altro effetto. Natalino apre la finestra sul pozzo, si siede sul davanzale e rolla con la calma di chi ha le mani buone. Cartina, filtro, la piega giusta. *"Non è vizio,"* dice al buio, *"è manutenzione."*
 
 Il primo tiro è il migliore della sua vita, e non per la qualità.
 
-È al terzo che se ne accorge: **il fumo va verso il pozzo.** Non c'è vento — le foglie degli ulivi sono FERME — ma il fumo esce dalla finestra in un nastro ordinato, attraversa il giardino e scende nel pozzo come acqua in uno scarico. Educato. In fila.
+È al terzo che se ne accorge: **il fumo va verso il pozzo.** Non c'è vento — le foglie sono FERME — ma il fumo esce in un nastro ordinato, attraversa il giardino e scende nel pozzo come acqua in uno scarico.
 
-> La voce dal pozzo: *(piano, con una nostalgia da spezzare il cuore)* "...questo profumo lo conosco. I ragazzi del Settantaquattro... lo fumavano sul prato, la sera. Lo chiamavano in un altro modo, però. Ridevano fortissimo e poi mangiavano TUTTO. Il cuoco li adorava."
+> La voce dal pozzo: *(piano)* "...questo profumo lo conosco. I ragazzi del Settantaquattro... lo fumavano sul prato, la sera. Lo chiamavano in un altro modo. Ridevano fortissimo e mangiavano TUTTO. Il cuoco li adorava."
 
-> Natalino: *(dopo un silenzio lunghissimo, con l'onestà chimica del momento)* "Signora... lei mi sta dicendo che sto condividendo il tronello con un FANTASMA, e io le giuro che la cosa più strana è che mi sembra EDUCATO così."
+> Natalino: *(dopo un silenzio lunghissimo)* "Signora... lei mi sta dicendo che sto condividendo il tronello con un FANTASMA, e io le giuro che la cosa più strana è che mi sembra EDUCATO così."
 
 > La voce dal pozzo: "Tienimene un tiro da parte, ragazzo. Per quando esco."
 
-Natalino spegne con cura, ne conserva metà, e torna giù con gli occhi un po' rossi e un'informazione che nessuna pista aveva dato: **quelli del '74 il cuoco li ADORAVA.** E una promessa da mantenere che definire strana è poco.
+Natalino spegne con cura, ne conserva metà, e torna con gli occhi rossi e un'informazione nuova: **quelli del '74 il cuoco li ADORAVA.** E una promessa.
 
-**(Oggetto: TRONELLO DI RISERVA — la metà conservata. Flag: tronello_promesso. Sangue freddo +1: certe conversazioni rimettono il mondo in prospettiva.)**`,
+**(Oggetto: TRONELLO DI RISERVA. Flag: tronello_promesso. Sangue freddo +1.)**`,
     item: 'tronello',
     gold: 1,
     sets: { tronello_promesso: true },
@@ -3155,21 +3155,21 @@ Natalino spegne con cura, ne conserva metà, e torna giù con gli occhi un po' r
   tronello_cerchio: {
     location: 'corridoio',
     caption: 'Il cerchio del balcone',
-    text: `Il balcone del primo piano guarda la valle, e per dieci minuti la regola è una sola: **niente casa, niente patto, niente 1899.** Solo il cerchio.
+    text: `Il balcone del primo piano guarda la valle, e la regola è una sola: **niente casa, niente patto, niente 1899.** Solo il cerchio.
 
-Natalino accende la metà conservata e la fa girare con l'etichetta del maestro di cerimonie: a Gaetano, che tira da ingegnere — dose calibrata, apnea misurata; a Claudia, che tira da professionista e dichiara "meglio del mio ultimo teambuilding"; e a Emanuela, che dice "vabbè, PROVO" — e tossisce per quaranta secondi con la dignità di una regina, tra gli applausi.
+Natalino accende la metà conservata e la fa girare: a Gaetano, che tira da ingegnere — dose calibrata; a Claudia, che tira da professionista, "meglio del mio ultimo teambuilding"; e a Emanuela — "vabbè, PROVO" — che tossisce quaranta secondi con la dignità di una regina.
 
-> Federico: *(che non fuma, ma che si è portato la sigaretta elettronica in balcone "per solidarietà aerodinamica", e soffia cerchietti di vapore DENTRO il cerchio degli altri)* "Vi faccio da cornice. Gratis."
+> Federico: *(sigaretta elettronica in balcone "per solidarietà aerodinamica", cerchietti di vapore DENTRO il cerchio degli altri)* "Vi faccio da cornice. Gratis."
 
-E per dieci minuti funziona. Ridete piano, di niente, come si ride in vacanza. La valle respira. La casa — per una volta — non.
+Per dieci minuti funziona. Ridete piano, come si ride in vacanza. La valle respira. La casa — per una volta — non.
 
-Poi Gaetano, gli occhi socchiusi, lo dice: "...il fumo." Il fumo del cerchio non si disperde: **si dispone.** Piano, sopra le vostre teste, in linee ordinate — angoli retti, corridoi, stanze — la PIANTA del primo piano del Belvedere, disegnata in fumo. E in fondo al corridoio di fumo, dove nella pianta vera c'è solo muro... **c'è una stanza in più.**
+Poi Gaetano lo dice: "...il fumo." Il fumo non si disperde: **si dispone.** Sopra le vostre teste, in linee ordinate — angoli retti, corridoi, stanze — la PIANTA del Belvedere, disegnata in fumo. E dove nella pianta vera c'è solo muro... **c'è una stanza in più.**
 
 > Gaetano: "Quella stanza non esiste. Cioè: non esiste nei muri. Ma il fumo dice che—"
 
 > Claudia: *(già in piedi, già lucida)* "La porta con la targhetta vuota. In fondo al corridoio del piano proibito. Il fumo ci ha appena dato la MAPPA."
 
-L'ultimo filo di fumo si stacca dal cerchio, scavalca la ringhiera e se ne va verso il giardino, da solo, in direzione del pozzo — come un tiro consegnato a domicilio.
+L'ultimo filo di fumo scavalca la ringhiera e se ne va verso il pozzo — un tiro consegnato a domicilio.
 
 > Natalino: *(guardandolo andare)* "...tienilo tu, signora. Era comunque tuo."
 
@@ -3486,23 +3486,23 @@ Poi la casa **stringe.** Si sente: un giro di vite nelle fondamenta, i ritratti 
     caption: 'EPILOGO — La Penna Spezzata',
     text: `> Gregorio: "...il dispetto era amore."
 
-Lo dice piano, assaggiando le parole come un vino del 1899. Poi prende la penna — la stilografica che ha firmato centoventicinque anni di soggiorni — e la guarda per l'ultima volta.
+Lo dice piano. Poi prende la penna — la stilografica di centoventicinque anni — e la guarda per l'ultima volta.
 
 > Gregorio: "Ada. Amore mio. Il banchetto è finito: **si sparecchia.**"
 
 **CRACK.**
 
-Il suono è piccolo. Quello che segue no: è il suono di una casa che perde la spina dorsale — ogni trave, ogni specchio, ogni firma nel registro che si SLEGA in un solo istante. I ritratti si svuotano come finestre aperte: il gruppo del '24 esce ridendo, quelli del '49 si tolgono il cappello passando, i ragazzi del '74 se ne vanno cantando stonati, e Sofia — Sofia saluta con la mano, e all'improvviso ha di nuovo venticinque anni — l'età esatta di quella sera — e nessuna fretta.
+Il suono è piccolo. Quello che segue no: una casa che perde la spina dorsale — ogni trave, ogni firma che si SLEGA. I ritratti si svuotano: il '24 esce ridendo, il '49 si toglie il cappello, il '74 se ne va cantando stonato, e Sofia saluta con la mano — di nuovo venticinque anni, e nessuna fretta.
 
-E il Belvedere... il Belvedere non crolla. Fa una cosa molto peggiore, per una casa: **diventa una casa.** Vecchia, bella, con l'intonaco da rifare e la piscina da svuotare. Mortale.
+E il Belvedere non crolla. Fa peggio: **diventa una casa.** Vecchia, bella, mortale.
 
-Sulla soglia, nel primo sole, Gregorio invecchia centoventicinque anni in un minuto — e li porta benissimo. L'ultima cosa che fa, prima di diventare polvere educata che il vento del mattino si porta via piano, è un inchino. Perfetto. Da maggiordomo.
+Sulla soglia, nel primo sole, Gregorio invecchia centoventicinque anni in un minuto — e li porta benissimo. L'ultima cosa che fa, prima di diventare polvere che il vento si porta via, è un inchino. Da maggiordomo.
 
-> La voce di Ada, dal pozzo, chiara come una campana: "Grazie, ragazzi. **Chiudete il cancello quando uscite.** Ma non a chiave: chissà che un giorno non torni utile, una casa così."
+> La voce di Ada, dal pozzo: "Grazie, ragazzi. **Chiudete il cancello quando uscite.** Ma non a chiave: chissà che un giorno non torni utile, una casa così."
 
-Scendete i ventisei tornanti a piedi, nel sole. La strada, stavolta, **scende e basta.** E al tornante undici, parcheggiata di traverso, trovate una corriera azzurra col motore acceso e un autista che non fa domande: a Pietrafonda, Don Michele ha smesso di suonare i vespri. Non servono più. Adesso suona — dice lui — "a festa, e MALE, che è più onesto."
+Scendete i tornanti a piedi, nel sole. La strada **scende e basta.** A Pietrafonda, Don Michele ha smesso di suonare i vespri. Adesso suona — dice lui — "a festa, e MALE, che è più onesto."
 
-**🖋 FINE — Nessun custode nuovo. Nessun custode vecchio. Avete convinto un maggiordomo di 125 anni a rompere la penna, e una casa a tornare mortale. Questo non era nemmeno un finale previsto dal Belvedere: l'avete scritto voi.**`,
+**🖋 FINE — Nessun custode nuovo. Nessun custode vecchio. Avete convinto un maggiordomo di 125 anni a rompere la penna, e una casa a tornare mortale. L'avete scritto voi, questo finale.**`,
     sets: { finale_penna: true },
     ending: true,
   },
@@ -3530,23 +3530,23 @@ La penna aspetta. La casa aspetta. L'alba, fuori, non aspetta.`,
     location: 'salaBanchetto',
     caption: 'La geometria denunciata',
     npc: ['gregorio'],
-    text: `Gaetano si alza. Non tocca la penna, non tocca il registro: appoggia le mani sul tavolo e parla con la voce che usa nelle riunioni tecniche quando qualcuno ha sbagliato i conti e lo sa.
+    text: `Gaetano si alza. Appoggia le mani sul tavolo e parla con la voce delle riunioni tecniche, quella di quando qualcuno ha sbagliato i conti.
 
-> Gaetano: "Ventisei tornanti, Gregorio. Li abbiamo scesi. E da tre tornanti più in alto abbiamo visto NOI CAMMINARE là sotto — le nostre giacche, le nostre torce. La tua strada non porta via: RIPORTA. È un anello. E allora il tuo contratto è firmato da gente che non poteva andarsene nemmeno volendo. Chi scende sta salendo. Il tuo contratto è firmato dentro una trappola."
+> Gaetano: "Ventisei tornanti, Gregorio. Li abbiamo scesi. E da tre tornanti più in alto abbiamo visto NOI CAMMINARE là sotto — le nostre giacche, le nostre torce. La tua strada non porta via: RIPORTA. È un anello. Il tuo contratto è firmato da gente che non poteva andarsene. Chi scende sta salendo. Una trappola."
 
 > Federico: *(alzandosi accanto a lui, e per una volta senza slide)* "Si chiama VIZIO DEL CONSENSO, Gregorio. Nullità del contratto. E questa, per una volta, la so io e non lui."
 
-E per la prima volta in tutta la notte — forse per la prima volta in centoventicinque anni — il sorriso di Gregorio **scivola.** Non cade: scivola, di un millimetro, come un quadro appeso male.
+Per la prima volta in centoventicinque anni, il sorriso di Gregorio **scivola** — di un millimetro, come un quadro appeso male.
 
-I ritratti alle pareti si sporgono. Il gruppo del '49 ha smesso di fingere di guardare altrove. Sofia, dal 1999, ha gli occhi spalancati di chi assiste a una cosa mai vista.
+I ritratti si sporgono. Il '49 ha smesso di fingere di guardare altrove. Sofia ha gli occhi spalancati.
 
 > Gregorio: *(piano, spolverando un'invisibile briciola dal frac)* "...in centoventicinque anni, signori, sono scappati in molti. Hanno corso, gridato, pianto, sparato — un signore del '24 aveva portato il fucile, pensate. Ma nessuno. Nessuno si era mai FERMATO. A guardare. La casa apprezza gli ospiti che leggono il contratto... fino in fondo."
 
-Si inchina, di un grado. E la casa — le pareti, i lampadari, il pavimento a scacchi — trattiene il respiro.
+Si inchina, di un grado. La casa trattiene il respiro.
 
 > Gregorio: "Il menù, signori... può ancora cambiare. Ve l'avevo detto."
 
-**(La casa vi rispetta: Sangue freddo +2. La trattativa, adesso, parte da un altro tavolo.)**`,
+**(La casa vi rispetta: Sangue freddo +2. La trattativa parte da un altro tavolo.)**`,
     gold: 2,
     sets: { casa_rispetta: true },
     choices: [
@@ -3914,19 +3914,19 @@ Sul foglio, nella solita calligrafia elegante, c'è scritto solo: *"SALDATO. —
     caption: 'EPILOGO — Il Relais riapre',
     text: `**Un anno dopo.**
 
-Il "Relais Belvedere — da Gregorio e Ada" ha riaperto a giugno, e ad agosto era già pieno: matrimoni, famiglie, gruppi di amici. Le recensioni parlano di un padrone di casa d'altri tempi che sembra avere mille anni di mestiere, di una piscina che di sera è "un sogno", e di una signora che nessuno vede mai ma che piega gli asciugamani **meglio di qualunque hotel a cinque stelle.**
+Il "Relais Belvedere — da Gregorio e Ada" ha riaperto a giugno, e ad agosto era già pieno: matrimoni, famiglie, gruppi di amici. Le recensioni parlano di un padrone di casa d'altri tempi, di una piscina che di sera è "un sogno", e di una signora invisibile che piega gli asciugamani **meglio di qualunque hotel a cinque stelle.**
 
 Il pozzo del giardino ha una targa nuova: *"Fontana di Ada — esprimete un desiderio EDUCATO."*
 
-La comunicazione la cura — gratis, come promesso, e non gliel'ha chiesto nessuno di ricordarlo ogni volta — l'agenzia di Federico. La prima campagna ha vinto anche un premio. Lo slogan l'ha scritto Natalino, una sera, per scherzo:
+La comunicazione la cura — gratis, come promesso — l'agenzia di Federico. Lo slogan l'ha scritto Natalino, per scherzo:
 
 **"Belvedere. Nessuno vi tratterrà."**
 
-E voi cinque? Voi ci tornate ogni anno, l'ultima settimana di agosto. Stessa camera ciascuno — Natalino ha PRETESO la Camera del Pozzo — stessi lettini, stesso bagno di mezzanotte in piscina. L'acqua riflette il cielo giusto, adesso. Quasi sempre. E se qualche notte, nel riflesso, le stelle sembrano UN po' più fitte del dovuto... be'.
+E voi cinque? Voi ci tornate ogni anno, l'ultima settimana di agosto. Stessa camera ciascuno — Natalino ha PRETESO la Camera del Pozzo — stesso bagno di mezzanotte. L'acqua riflette il cielo giusto. Quasi sempre.
 
 Ormai sapete come si fa: si alza il bicchiere verso il pozzo, si dice **"buonanotte, Ada"**, e si va a dormire.
 
-E il resto della settimana, quella prima volta, ve lo siete ripreso TUTTO con gli interessi: la sfida pancakes-crêpes è finita col primo pareggio della storia (giudice Gregorio, diplomatico di mestiere: *"entrambi... memorabili"* — Claudia pretende ancora la revisione del verdetto), la pasta zucchine e gamberi di Emanuela ha commosso un maggiordomo di centoventicinque anni, le bruschette di Natalino sono entrate nel menù ufficiale del relais, e la grigliata stile Pasquetta di Gaetano ha prodotto tanto di quel fumo che Don Michele, dal paese, ha suonato una campana di saluto.
+Quella prima settimana ve la siete ripresa TUTTA: la sfida pancakes-crêpes è finita in pareggio (giudice Gregorio: *"entrambi... memorabili"* — Claudia pretende la revisione), la pasta di Emanuela ha commosso un maggiordomo di centoventicinque anni, le bruschette di Natalino sono entrate nel menù ufficiale, e la grigliata di Gaetano ha prodotto tanto fumo che Don Michele ha suonato una campana di saluto.
 
 **🌅 FINE — Avete rotto un patto di 125 anni, liberato una casa e adottato due fantasmi. La vacanza può cominciare.**`,
     ending: true,

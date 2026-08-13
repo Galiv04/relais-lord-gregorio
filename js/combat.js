@@ -41,14 +41,16 @@ const Combat = (() => {
         const e = { ...b, key, hp: b.maxHp, idx: i, stunned: false, distracted: false, dead: false,
           attack: { ...b.attack } };
         if (G.difficulty === 'facile') {
-          e.maxHp = Math.max(1, Math.round(e.maxHp * 0.8));
+          e.maxHp = Math.max(1, Math.round(e.maxHp * 0.75));
           e.hp = e.maxHp;
-          e.attack.bonus = Math.max(0, e.attack.bonus - 1);
+          e.attack.bonus = Math.max(0, e.attack.bonus - 2);
+          e.attack.plus = Math.max(0, (e.attack.plus || 0) - 1);
         }
         if (G.difficulty === 'incubo') {
-          e.maxHp = Math.round(e.maxHp * 1.25);
+          e.maxHp = Math.round(e.maxHp * 1.5);
           e.hp = e.maxHp;
-          e.attack.bonus += 1;
+          e.attack.bonus += 2;
+          e.attack.plus = (e.attack.plus || 0) + 2;
         }
         if (porzione < 1) {
           e.maxHp = Math.max(1, Math.round(e.maxHp * porzione));
