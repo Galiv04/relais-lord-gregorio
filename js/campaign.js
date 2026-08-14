@@ -12,7 +12,7 @@ const ITEMS = {
   antidoto:         { name: 'Antidoto di Erbe', desc: 'Le erbe giuste dell\'orto, bollite come dice il diario. Guarisce il VELENO del Belvedere — anche in pieno scontro.', usable: true, heal: 0, cureVeleno: true },
   sale_grosso:      { name: 'Sale Grosso Benedetto', desc: 'Dal barattolo in cucina, con un\'etichetta del 1899: "PER LORO". Da lancio: 2d8 danni, DOPPI alle creature della villa.', combat: { dice: [2, 8], holy: true }, icon: '🧂' },
   acqua_pozzo:      { name: 'Acqua del Pozzo Vecchio', desc: 'Gelida, e riflette un cielo che non è quello di stasera. Serve al rituale.', usable: false },
-  diario_ada:       { name: 'Diario di Ada', desc: '1899. La moglie di Gregorio scrisse fino all\'ultima notte. Le ultime tre pagine sono strappate.', usable: false },
+  diario_ada:       { name: 'Diario di Ada', desc: '1899. La moglie di Gregorio scrisse fino all\'ultima notte. Leggere una pagina ad alta voce CONFONDE le creature della casa (1d4, svantaggio al prossimo attacco). Un uso: poi la pagina si dissolve.', combat: { distract: true, dice: [1, 4], distractText: ' — le parole di Ada lo inchiodano: conosce quel nome!' }, icon: '📖' },
   anello_1999:      { name: 'Anello del 1999', desc: 'Trovato sul fondo della piscina. Dentro è inciso: "A Sofia — per sempre qui".', usable: false },
   polaroid:         { name: 'Polaroid degli Ospiti', desc: 'Cinque ragazzi in piscina, datata 1999, uno cerchiato in rosso. La macchina ha ancora UNO scatto: il flash a bruciapelo ACCECA una creatura (svantaggio al prossimo attacco). La foto che esce, meglio non guardarla.', combat: { distract: true, dice: [1, 2], distractText: ' Il FLASH a bruciapelo lo acceca: svantaggio al prossimo attacco!' }, icon: '📸' },
   accendino:        { name: 'Accendino di Federico', desc: '"Non fumo più, lo tengo per affezione." Stanotte vale oro: una fiamma vera, CALDA E VIVA — le cose della villa la odiano (2d4, danni DOPPI alle creature della casa). Il gas basta per un colpo solo.', combat: { dice: [2, 4], holy: true }, icon: '🔥' },
@@ -78,8 +78,8 @@ const ITEMS = {
     desc: 'Cinque biglietti comprati all\'ultimo avamposto della civiltà. Natalino li custodisce come reliquie: "Se qualcuno vince, il weekend lo paga lui." Nessuno ha ancora grattato niente.',
     usable: false,
   },
-  orologio_sofia:     { name: 'Orologio di Sofia', desc: 'Un modello economico da discount, cinturino di plastica scolorito. Fermo alle 23:58 del 31 luglio 1999 — due minuti prima che tutto cominciasse.', usable: false },
-  inventario_riflesso: { name: 'L\'Inventario del Riflesso', desc: 'Il registro dove il Belvedere capovolto catalogava i suoi ospiti come oggetti. Le pagine strappate, quelle rimaste, battono ancora piano — come un cuore che non vuole fermarsi del tutto.', usable: false },
+  orologio_sofia:     { name: 'Orologio di Sofia', desc: 'Fermo alle 23:58 del 31 luglio 1999. Lanciarlo a una creatura la BLOCCA un istante — l\'ora sbagliata le fa perdere il filo (1d4 danni, svantaggio). Poi è rotto per sempre.', combat: { distract: true, dice: [1, 4], distractText: ' — l\'orologio segna l\'ora sbagliata: la creatura esita!' }, icon: '⌚' },
+  inventario_riflesso: { name: 'L\'Inventario del Riflesso', desc: 'Leggere il nome di una creatura dal registro capovolto la RICONOSCE: perde potere. 2d4 a TUTTI (le creature della casa sono tutte nell\'inventario). Un uso: poi le pagine si staccano.', combat: { all: true, distract: true, dice: [2, 4], distractText: ' — sentire il proprio nome dal registro lo inchioda!' }, icon: '📋' },
   campanello:       { name: 'Campanello di Servizio', desc: 'Ottone lucido. Il cartellino dice: "Suonare in caso di bisogno. Verranno." In combattimento il suono PARALIZZA le creature della casa (svantaggio al prossimo attacco, 1d4 danni a tutti). Un uso: poi il batacchio cade.', combat: { all: true, distract: true, dice: [1, 4], distractText: ' — il suono del padrone lo inchioda!' }, icon: '🔔' },
   moka:             { name: 'Moka di Don Michele', desc: 'Caffè del paese, nero come la notte e due volte più forte. Ricarica TUTTE le abilità di una persona.', usable: true, recharge: true },
   bengala:          { name: 'Bengala di Federico', desc: '"Per le emergenze", diceva. Da lancio: 2d6 danni a TUTTI i nemici, che restano accecati (svantaggio).', combat: { dice: [2, 6], all: true, distract: true }, icon: '🧨' },
@@ -145,7 +145,28 @@ La pompa si ferma. Non il numeratore: LA MANO del benzinaio, sull'impugnatura. D
     gold: 1,
     sets: { avviso_benzinaio: true },
     choices: [
-      { text: '🚗 "Simpatico, il signore." Verso i tornanti.', next: 'a1' },
+      { text: '🚗 "Simpatico, il signore." Verso i tornanti', next: 'a1' },
+      { text: '❓ "Scusi — il pozzo? QUALE pozzo?"', next: 'a0_benzina2' },
+    ],
+  },
+
+  a0_benzina2: {
+    location: 'tornanti',
+    caption: 'Il benzinaio non risponde',
+    text: `Il benzinaio ha già la schiena girata. La saracinesca scende a metà — alle sei e mezza di un venerdì d'estate, quando i distributori restano aperti fino a notte.
+
+> Il benzinaio: *(senza voltarsi)* "Ho detto tutto quello che posso dire. Il resto lo dice la casa." *(la saracinesca scende del tutto, e la radiolina, dietro, cambia stazione da sola)* "Buona permanenza."
+
+> Gaetano: "...ok. Io dico che era solo un vecchio strano."
+
+> Claudia: "Anch'io. E lo penseremo entrambi fino a stanotte."
+
+**(Sangue freddo +1: avete provato a capire. Non basta, ma conta.)**`,
+    gold: 1,
+    sets: { benzinaio_insistito: true },
+    choices: [
+      { text: '🚗 Verso i tornanti, col silenzio in macchina', next: 'a1' },
+      { text: '📻 La radiolina ha cambiato stazione da sola: ascoltare cosa trasmette', once: true, gold: 1, sets: { radio_ascoltata: true }, next: 'a1' },
     ],
   },
 
@@ -186,9 +207,12 @@ Niente. Zero. Claudia sale perfino sul guardrail — *"da qui parte SEMPRE"* —
 
 *Un rifugio fuori dal tempo.* Sotto di voi, Pietrafonda spegne l'unica finestra che era rimasta accesa. Alle 18:52.
 
-**(Il gruppo si scambia il primo sguardo della serata. Ne seguiranno altri.)**`,
+**(Il gruppo si scambia il primo sguardo della serata. Ne seguiranno altri. -1 Sangue freddo.)**`,
+    gold: -1,
+    sets: { nessun_segnale: true },
     choices: [
       { text: '🚗 Al relais, prima che faccia buio del tutto', next: 'a2' },
+      { text: '📵 Spegnere i telefoni per risparmiare l\'ultima batteria: la notte sarà lunga', once: true, gold: 1, sets: { batterie_risparmiate: true }, next: 'a2' },
     ],
   },
 
@@ -228,7 +252,27 @@ E nel bosso, all'altezza di dove un cervo avrebbe gli occhi, ci sono due buchi. 
     rep: 0,
     gold: 1,
     sets: { visto_giardiniere: true },
-    choices: [{ text: 'Entrate. Insieme.', next: 'a3' }],
+    choices: [
+      { text: '🚪 Entrate. Insieme', next: 'a3' },
+      { text: '👀 Prima, un giro attorno alla facciata: le siepi meritano un\'occhiata', once: true, next: 'a2_siepi_b' },
+    ],
+  },
+
+  a2_siepi_b: {
+    location: 'relais',
+    caption: 'Il giardino all\'ingresso',
+    text: `La facciata del Belvedere ha sei finestre al primo piano, tutte illuminate. Cinque hanno le tende bianche. La sesta, in fondo a destra, ha una tenda **scura** — e per un istante, un istante che potrebbe essere un riflesso, qualcuno la sposta dall'interno.
+
+Le siepi di bosso, viste da vicino, sono potate con una precisione chirurgica: ogni foglia nello stesso verso, ogni arco simmetrico al centimetro. Ma lo stile non è ornamentale. È **contenitivo**, come il giardiniere non stesse abbellendo le piante ma **impedendo loro di muoversi.**
+
+> Gaetano: "Sai cosa mi ricorda? Le gabbie di Faraday. Le maglie che servono a tenere DENTRO qualcosa, non a decorare."
+
+**(Flag: visto il giardino.)**`,
+    sets: { giardino_ispezionato: true },
+    choices: [
+      { text: '🚪 Dentro. Basta siepi per stasera', next: 'a3' },
+      { text: '🪟 Un\'ultima occhiata alla finestra con la tenda scura, prima di entrare', once: true, gold: 1, sets: { sesta_finestra_notata: true }, next: 'a3' },
+    ],
   },
 
   a3: {
@@ -289,7 +333,10 @@ I vostri nomi sono **già scritti**, in una calligrafia elegante che non è di n
 
 > Federico: *(sottovoce)* "Efficienza. Cinque stelle. Ve l'avevo detto."
 
-> Claudia: *(sottovoce)* "Federico, sapeva i nostri nomi in ordine di posto in macchina."`,
+> Claudia: *(sottovoce)* "Federico, sapeva i nostri nomi in ordine di posto in macchina."
+
+**(Flag: registro sfogliato troppo tardi.)**`,
+    sets: { registro_bloccato: true },
     choices: [
       { text: '✍️ Firmate: siete stanchi e il letto chiama', next: 'a4_firma' },
     ],
@@ -311,7 +358,10 @@ Riprende le valigie. Il lampadario ricomincia a tintinnare.
 **(La firma NON è stata messa. Questo, stanotte, conterà. Sangue freddo +2.)**`,
     sets: { firma_rinviata: true },
     gold: 2,
-    choices: [{ text: 'Alle camere', next: 'a5' }],
+    choices: [
+      { text: 'Alle camere', next: 'a5' },
+      { text: '👀 Osservare Gregorio allontanarsi: il lampadario si è fermato un istante prima di lui', once: true, gold: 1, sets: { lampadario_notato: true }, next: 'a5' },
+    ],
   },
 
   a4_firma_forzata: {
@@ -327,7 +377,10 @@ Firmato. Il registro si chiude da solo con un tonfo soffice, come un applauso a 
 
 E per un attimo — un attimo solo — la luce color miele della hall diventa più calda, come un forno quando ci si mette dentro qualcosa.`,
     sets: { firma_messa: true },
-    choices: [{ text: 'Alle camere', next: 'a5' }],
+    choices: [
+      { text: 'Alle camere', next: 'a5' },
+      { text: '🕯 Controllare la luce della hall, rimasta più calda del dovuto', once: true, gold: 1, sets: { luce_hall_notata: true }, next: 'a5' },
+    ],
   },
 
   a4_firma: {
@@ -345,7 +398,10 @@ Il registro è di nuovo aperto. Sulla pagina di oggi.
 
 **(La firma è stata messa.)**`,
     sets: { firma_messa: true },
-    choices: [{ text: 'Alle camere', next: 'a5' }],
+    choices: [
+      { text: 'Alle camere', next: 'a5' },
+      { text: '📖 Claudia torna a guardare il registro, già riaperto sulla pagina di oggi', once: true, gold: 1, sets: { registro_riaperto_visto: true }, next: 'a5' },
+    ],
   },
 
   a5: {
@@ -396,7 +452,10 @@ Quando Emanuela arriva, la corda penzola immobile, il secchio dondola appena, e 
 **(Flag: il pozzo. Sangue freddo +1 per il sopralluogo.)**`,
     sets: { visto_pozzo: true },
     gold: 1,
-    choices: [{ text: 'Scendete per la cena. In gruppo. Da ora in poi, sempre in gruppo.', next: 'a6' }],
+    choices: [
+      { text: '🍽 Scendete per la cena. In gruppo. Da ora in poi, sempre in gruppo', next: 'a6' },
+      { text: '📸 Claudia scatta la corda del pozzo. Per i posteri', next: 'a6' },
+    ],
   },
 
   a6: {
@@ -472,7 +531,10 @@ Ridete tutti. È chiaramente una battuta. È CHIARAMENTE una battuta.
 **(Flag: astemio dal 1899. Sangue freddo +1.)**`,
     sets: { battuta_1899: true },
     gold: 1,
-    choices: [{ text: '🏊 In piscina!', next: 'p1' }],
+    choices: [
+      { text: '🏊 In piscina!', next: 'p1' },
+      { text: '🍷 Annusare il proprio bicchiere: il vino di Gregorio non sa di niente', once: true, gold: 1, sets: { vino_gregorio_annusato: true }, next: 'p1' },
+    ],
   },
 
   a6_no_brindisi: {
@@ -488,8 +550,15 @@ Il discorso muore lì, elegantissimo, e non c'è modo di rianimarlo: Gregorio è
 
 > Emanuela: "Gaetà. Amore mio. C'è UN coperto in cucina, l'ho visto passando. È **pulito e impolverato insieme.**"
 
-> Gregorio: *(da dietro, sorridente, col vassoio degli amari)* "La piscina è pronta, signori. La notte al Belvedere è la parte migliore del soggiorno."`,
-    choices: [{ text: '🏊 In piscina!', next: 'p1' }],
+> Gregorio: *(da dietro, sorridente, col vassoio degli amari)* "La piscina è pronta, signori. La notte al Belvedere è la parte migliore del soggiorno."
+
+**(Sangue freddo +1: qualcosa non torna, ma il gruppo se lo dice con gli occhi.)**`,
+    gold: 1,
+    sets: { brindisi_rifiutato: true },
+    choices: [
+      { text: '🏊 In piscina!', next: 'p1' },
+      { text: '🍽 Dare un\'occhiata al coperto pulito e impolverato, in cucina', once: true, gold: 1, sets: { coperto_cucina_visto: true }, next: 'p1' },
+    ],
   },
 
   a7: {
@@ -507,8 +576,14 @@ Raccoglie i piatti in un silenzio perfetto, e sulla soglia della cucina si ferma
 
 La porta della cucina si chiude senza rumore.
 
-> Natalino: "...ragazzi, io il bagno lo faccio comunque, sia chiaro. Però qualcuno tiene d'occhio le siepi."`,
-    choices: [{ text: '🏊 In piscina!', next: 'p1' }],
+> Natalino: "...ragazzi, io il bagno lo faccio comunque, sia chiaro. Però qualcuno tiene d'occhio le siepi."
+
+**(Flag: programma della serata.)**`,
+    sets: { programma_serata: true },
+    choices: [
+      { text: '🏊 In piscina!', next: 'p1' },
+      { text: '🌙 Controllare le persiane del piano dalla veranda, prima di scendere', once: true, gold: 1, sets: { persiane_controllate: true }, next: 'p1' },
+    ],
   },
 
   /* ==================== LA SERA IN PISCINA ==================== */
@@ -556,7 +631,10 @@ E nella tasca dell'accappatoio c'è **un paio di occhiali da sole.** Modello ann
 **(Oggetto trovato: gli occhiali del '99 restano nella tasca — ma il dettaglio è registrato. Flag: il sesto ospite. Sangue freddo +1.)**`,
     sets: { sesto_ospite: true },
     gold: 1,
-    choices: [{ text: 'Tornare in acqua e fare finta di niente. Malissimo.', next: 'p2' }],
+    choices: [
+      { text: 'Tornare in acqua e fare finta di niente. Malissimo.', next: 'p2' },
+      { text: '🕶 Provare gli occhiali del \'99, un secondo, prima di rimetterli via', once: true, gold: 1, sets: { occhiali_provati: true }, next: 'p2' },
+    ],
   },
 
   p1_accappatoio_ko: {
@@ -636,7 +714,10 @@ E poi — un secondo dopo, con la stessa calma da ufficio — qualcosa **risale.
     item: 'anello_1999',
     sets: { vista_finestra: true },
     gold: 2,
-    choices: [{ text: 'Fuori dall\'acqua. La scienza ha dato il suo verdetto.', next: 'p3_fuori' }],
+    choices: [
+      { text: 'Fuori dall\'acqua. La scienza ha dato il suo verdetto.', next: 'p3_fuori' },
+      { text: '📸 Claudia fotografa l\'anello, prima che finisca in tasca', once: true, gold: 1, sets: { anello_fotografato: true }, next: 'p3_fuori' },
+    ],
   },
 
   p2_esperimento_ko: {
@@ -703,7 +784,10 @@ Dietro la macchina, sulla ghiaia, il rumore delle cesoie. *Clip. Clip.* Viciniss
 **(-1 Sangue freddo. Il Belvedere è ufficialmente chiuso. Flag: avete provato a scappare.)**`,
     gold: -1,
     sets: { tentata_fuga: true },
-    choices: [{ text: 'Rientrare. Compatti. E cominciare a fare sul serio', next: 'h1' }],
+    choices: [
+      { text: '🏠 Rientrare. Compatti. E cominciare a fare sul serio', next: 'h1' },
+      { text: '🔦 Un ultimo giro: controllare se c\'è una breccia nella nebbia', next: 'h1' },
+    ],
   },
 
   p4_rientro: {
@@ -725,7 +809,10 @@ E accanto alle tazze, un biglietto con la solita calligrafia elegante:
 
 Da qualche parte sopra di voi, al piano delle camere, **un pavimento scricchiola.** Una volta. Poi, educatamente, si ferma ad aspettare.`,
     item: 'campanello',
-    choices: [{ text: 'Su. Insieme. Si va a capire che notte è questa', next: 'h1' }],
+    choices: [
+      { text: '⬆ Su. Insieme. Si va a capire che notte è questa', next: 'h1' },
+      { text: '🫖 La tisana: se è avvelenata almeno lo scopriamo subito', next: 'h1', once: true },
+    ],
   },
 
   /* ==================== LA NOTTE SI CHIUDE — HUB ==================== */
@@ -793,7 +880,10 @@ Si volta e se ne va lungo il corridoio, dritto, e le lampade si spengono al suo 
 **(Flag: la storia di Ada. Sangue freddo +2 — sapere è coraggio.)**`,
     sets: { storia_ada: true },
     gold: 2,
-    choices: [{ text: 'Tornare al corridoio delle tre porte', next: 'h1' }],
+    choices: [
+      { text: 'Tornare al corridoio delle tre porte', next: 'h1' },
+      { text: '🕯 Osservare ancora un istante la ciocca bianca di Gregorio', once: true, gold: 1, sets: { ciocca_bianca_osservata: true }, next: 'h1' },
+    ],
   },
 
   /* ==================== PISTA 1 — LA CANTINA ==================== */
@@ -840,7 +930,10 @@ Non c'è niente da rispondere che non sia una crudeltà. Rimettete la bottiglia 
 **(Segreto: il vino sono i ricordi degli ospiti. Sangue freddo +2. Flag: la voce di Sofia.)**`,
     sets: { voce_sofia: true },
     gold: 2,
-    choices: [{ text: 'Verso il fondo della cantina', next: 'k3' }],
+    choices: [
+      { text: 'Verso il fondo della cantina', next: 'k3' },
+      { text: '🍾 Rimettere in fila le altre bottiglie della rastrelliera, con rispetto', once: true, gold: 1, sets: { bottiglie_riordinate: true }, next: 'k3' },
+    ],
   },
 
   k2_sofia_ko: {
@@ -914,7 +1007,10 @@ Un silenzio lungo come una lievitazione. Poi lo Chef prende la ciocca con due di
     item2: 'vino_1899',
     sets: { nodo_cantina: true, un_nodo_sciolto: true, chef_amico: true },
     gold: 2,
-    choices: [{ text: 'Risalire. C\'è ancora tanta notte', next: 'h1' }],
+    choices: [
+      { text: 'Risalire. C\'è ancora tanta notte', next: 'h1' },
+      { text: '🧹 Ripulire il tavolo da macellaio prima di andare, un gesto di cortesia', once: true, gold: 1, sets: { tavolo_ripulito: true }, next: 'h1' },
+    ],
   },
 
   k4_nastro: {
@@ -940,7 +1036,10 @@ Lo Chef non si volta. Ma le spalle — due metri di spalle sbagliate — si abba
     item2: 'vino_1899',
     sets: { nodo_cantina: true, un_nodo_sciolto: true, chef_amico: true },
     gold: 2,
-    choices: [{ text: 'Risalire. C\'è ancora tanta notte', next: 'h1' }],
+    choices: [
+      { text: 'Risalire. C\'è ancora tanta notte', next: 'h1' },
+      { text: '📻 Chiedere allo Chef altre storie del gruppo del \'74, mentre si esce', once: true, gold: 1, sets: { storie_74_chieste: true }, next: 'h1' },
+    ],
   },
 
   k4_chef_fight: {
@@ -981,7 +1080,10 @@ Uscite in fila indiana, con calma professionale. **(Ottenuti: SALE GROSSO e BOTT
     item2: 'vino_1899',
     sets: { nodo_cantina: true, un_nodo_sciolto: true },
     gold: 2,
-    choices: [{ text: 'Risalire, prima che ci ripensi', next: 'h1' }],
+    choices: [
+      { text: 'Risalire, prima che ci ripensi', next: 'h1' },
+      { text: '😏 Federico chiede davvero il contatto dello Chef, per il format tv', once: true, gold: 1, sets: { contatto_chef_chiesto: true }, next: 'h1' },
+    ],
   },
 
   k4_furto_ko: {
@@ -1238,7 +1340,10 @@ Poi il riflesso torna sala vuota, e lo specchio torna specchio, e cinque facce p
 **(Avete visto il Banchetto com'è apparecchiato PER voi. -1 Sangue freddo, ma flag prezioso: l'avvertimento dello specchio.)**`,
     gold: -1,
     sets: { avvertimento_specchio: true },
-    choices: [{ text: 'Alla porta con la targhetta vuota', next: 'u4_porta_vuota' }],
+    choices: [
+      { text: 'Alla porta con la targhetta vuota', next: 'u4_porta_vuota' },
+      { text: '🕯 Ricoprire lo specchio con più cura di come l\'avete trovato', once: true, gold: 1, sets: { specchio_ricoperto: true }, next: 'u4_porta_vuota' },
+    ],
   },
 
   u4_porta_vuota: {
@@ -1284,6 +1389,7 @@ Dentro la cornice, dipinto a olio con una cura da miniaturista, c'è **il Belved
     sets: { intercapedine_trovata: true },
     choices: [
       { text: 'Richiudere lo sportello-cornice, e giù al corridoio', next: 'h1' },
+      { text: '🖼 Dare un\'ultima occhiata alle cornici vuote sopra i letti', once: true, gold: 1, sets: { cornici_riguardate: true }, next: 'h1' },
     ],
   },
 
@@ -1329,6 +1435,7 @@ Nessuno risponde. Ma da stanotte, se mai rivedrete quel distributore, avete una 
     sets: { benzinaio_sapeva: true },
     choices: [
       { text: '↩ Tornare a guardare lo spaventapasseri. Con più rispetto per chi avvisa.', next: 'b1' },
+      { text: '⛽ Ripensare al volto del benzinaio, per ricordarne ogni dettaglio', once: true, gold: 1, sets: { volto_benzinaio_ricordato: true }, next: 'b1' },
     ],
   },
 
@@ -1447,7 +1554,10 @@ Il secchio risale da solo, pieno di un'acqua che riflette il cielo giusto. **(Ot
     item: 'acqua_pozzo',
     sets: { nodo_pozzo: true, un_nodo_sciolto: true, ada_alleata: true },
     gold: 3,
-    choices: [{ text: 'Dentro. Verso l\'alba. Verso il Banchetto.', next: 'h1' }],
+    choices: [
+      { text: 'Dentro. Verso l\'alba. Verso il Banchetto.', next: 'h1' },
+      { text: '💧 Bagnarsi le mani nell\'acqua del secchio, ora luminosa, un istante', once: true, gold: 1, sets: { acqua_toccata: true }, next: 'h1' },
+    ],
   },
 
   b4_tronello: {
@@ -1472,6 +1582,7 @@ E il pozzo fa una cosa che il Belvedere non sentiva dal 1974: **ride.** Una risa
     sets: { ada_ride: true },
     choices: [
       { text: '↩ Lasciare il pozzo alla sua risata, e tornare alla notte', next: 'b3_pozzo' },
+      { text: '🌿 Fumare l\'ultimo tiro tenuto da parte, in silenzio, con Ada', once: true, gold: 1, sets: { ultimo_tiro_condiviso: true }, next: 'b3_pozzo' },
     ],
   },
 
@@ -1494,7 +1605,10 @@ L'acqua giù si smuove, e la voce quando torna è più giovane. Più Ada.
     item: 'acqua_pozzo',
     sets: { nodo_pozzo: true, un_nodo_sciolto: true, ada_perdono: true },
     gold: 2,
-    choices: [{ text: 'Dentro. Verso l\'alba.', next: 'h1' }],
+    choices: [
+      { text: 'Dentro. Verso l\'alba.', next: 'h1' },
+      { text: '🍷 Chiedere ad Ada se conserva altri ricordi di Gregorio', once: true, gold: 1, sets: { ricordi_gregorio_chiesti: true }, next: 'h1' },
+    ],
   },
 
   b4_parole: {
@@ -1514,7 +1628,10 @@ L'acqua giù si illumina appena.
     item: 'acqua_pozzo',
     sets: { nodo_pozzo: true, un_nodo_sciolto: true, verita_firma: true },
     gold: 2,
-    choices: [{ text: 'Dentro. Verso l\'alba.', next: 'h1' }],
+    choices: [
+      { text: 'Dentro. Verso l\'alba.', next: 'h1' },
+      { text: '🤝 Promettere ad Ada di raccontare la sua storia, fuori, se ce la farete', once: true, gold: 1, sets: { promessa_ad_ada: true }, next: 'h1' },
+    ],
   },
 
   b4_ira: {
@@ -1537,7 +1654,10 @@ Poi la voce si calma, di colpo, esausta:
     gold: -1,
     item: 'acqua_pozzo',
     sets: { nodo_pozzo: true, un_nodo_sciolto: true },
-    choices: [{ text: 'Dentro. E qualcuno prepari quell\'antidoto.', next: 'h1' }],
+    choices: [
+      { text: 'Dentro. E qualcuno prepari quell\'antidoto.', next: 'h1' },
+      { text: '🙏 Chiedere scusa di nuovo, con parole più semplici', once: true, gold: 1, sets: { scuse_ripetute: true }, next: 'h1' },
+    ],
   },
 
   b4_calata: {
@@ -1557,7 +1677,10 @@ Risalire con le pagine in tasca e l'acqua nel secchio è la cosa più vicina a u
     item: 'acqua_pozzo',
     sets: { nodo_pozzo: true, un_nodo_sciolto: true, pagine_diario: true, rituale_noto: true },
     gold: 3,
-    choices: [{ text: 'Dentro. Verso l\'alba.', next: 'h1' }],
+    choices: [
+      { text: 'Dentro. Verso l\'alba.', next: 'h1' },
+      { text: '📜 Rileggere le tre pagine del diario ad alta voce, prima di risalire', once: true, gold: 1, sets: { pagine_rilette: true }, next: 'h1' },
+    ],
   },
 
   b4_calata_ko: {
@@ -1614,7 +1737,10 @@ Dal fondo della valigia di Federico recuperate il **kit emergenze** che viaggia 
 **(Ottenuto: BENGALA — da lancio, acceca e brucia tutto ciò che è nella stanza.)**`,
     item: 'bengala',
     sets: { discesa_paese: true },
-    choices: [{ text: '⬇ Giù, nel corridoio di nebbia, verso il paese', next: 'pp2' }],
+    choices: [
+      { text: '⬇ Giù, nel corridoio di nebbia, verso il paese', next: 'pp2' },
+      { text: '↩ Ripensarci: fuori dalla proprietà col buio è peggio', next: 'h1' },
+    ],
   },
 
   pp2: {
@@ -1653,7 +1779,10 @@ Ada scrive anche fuori dalla proprietà. Ada, in centoventicinque anni, ha conso
 **(Sangue freddo +2: adesso sapete per chi state combattendo, oltre che per voi.)**`,
     gold: 2,
     sets: { visto_bar_1999: true },
-    choices: [{ text: 'Alla canonica', next: 'pp3' }],
+    choices: [
+      { text: 'Alla canonica', next: 'pp3' },
+      { text: '☕ Lasciare qualche moneta sul bancone, per Peppe, ovunque sia', once: true, gold: 1, sets: { monete_lasciate: true }, next: 'pp3' },
+    ],
   },
 
   pp3: {
@@ -1696,6 +1825,7 @@ Si risiede. Vi guarda uno per uno.
     sets: { paese_sa: true },
     choices: [
       { text: '↩ Al tavolo di Don Michele: c\'è ancora tutto da raccontare', next: 'pp3' },
+      { text: '📷 Fotografare la foto della corriera, per non dimenticare i volti', once: true, gold: 1, sets: { corriera_fotografata: true }, next: 'pp3' },
     ],
   },
 
@@ -1718,7 +1848,10 @@ Don Michele vi guida nella cripta sotto la chiesa, tra scaffali di registri parr
 **(Segreto pesante: il patto è più vecchio di Gregorio — e un custode può RIFIUTARSI di passare la penna. Sangue freddo +2.)**`,
     sets: { segreto_custodi: true },
     gold: 2,
-    choices: [{ text: 'Su, da Don Michele: il racconto e i doni', next: 'pp4' }],
+    choices: [
+      { text: '📖 Su, da Don Michele: raccontare tutto e chiedere aiuto', next: 'pp4' },
+      { text: '↩ Al tavolo: la domanda più importante la farete dopo', next: 'pp3' },
+    ],
   },
 
   pp4: {
@@ -1744,7 +1877,10 @@ Sulla porta, mentre uscite, aggiunge l'ultima cosa, quasi sottovoce:
     item2: 'campanella_1974',
     sets: { doni_don_michele: true },
     gold: 2,
-    choices: [{ text: '⬆ Risalire, prima che la nebbia cambi idea', next: 'pp6' }],
+    choices: [
+      { text: '⬆ Risalire, prima che la nebbia cambi idea', next: 'pp6' },
+      { text: '🙏 Promettere a Don Michele di tornare a raccontargli come è andata', once: true, gold: 1, sets: { promessa_don_michele: true }, next: 'pp6' },
+    ],
   },
 
   pp6: {
@@ -1802,7 +1938,10 @@ Si avvia verso il corridoio, poi si volta:
 **(La pista di Pietrafonda è completa. Sangue freddo +1.)**`,
     gold: 1,
     sets: { pista_paese: true, un_nodo_sciolto: true },
-    choices: [{ text: 'Al corridoio delle tre porte', next: 'h1' }],
+    choices: [
+      { text: 'Al corridoio delle tre porte', next: 'h1' },
+      { text: '🔔 Mostrare a Gregorio la campanella, prima di risalire le scale', once: true, gold: 1, sets: { campanella_mostrata: true }, next: 'h1' },
+    ],
   },
 
   /* ==================== LE CELLE (sconfitta non letale) ==================== */
@@ -1858,7 +1997,10 @@ L'aria che sale dal basso non è fredda come sopra: è **ferma**, densa, con un 
 **(Sangue freddo +1: siete scesi comunque. Flag: sceso nell'ossario.)**`,
     gold: 1,
     sets: { sceso_ossario: true },
-    choices: [{ text: 'Scendere fino in fondo', next: 'os2' }],
+    choices: [
+      { text: '🕯 Scendere fino in fondo, verso la candela', next: 'os2' },
+      { text: '🔙 Troppo buio, troppo vecchio: risalire e chiudere il pannello', next: 'h1' },
+    ],
   },
 
   os2: {
@@ -1879,7 +2021,10 @@ Nessuno ha una battuta pronta per questa. Perfino Natalino resta zitto un second
 **(Flag: la tacca di Gregorio, ancora aperta. Sangue freddo +1.)**`,
     gold: 1,
     sets: { tacca_di_gregorio: true },
-    choices: [{ text: 'Proseguire nella sotto-cantina', next: 'os3' }],
+    choices: [
+      { text: 'Proseguire nella sotto-cantina', next: 'os3' },
+      { text: '🔙 Troppo. Risalire e non parlare mai più di questo posto', next: 'h1' },
+    ],
   },
 
   os3: {
@@ -1900,7 +2045,10 @@ Nessuno tocca niente. Si esce da quella stanza come si esce da un funerale: in s
 **(Flag: visti i bagagli mai ritirati. -1 Sangue freddo — sapere fa male.)**`,
     gold: -1,
     sets: { bagagli_visti: true },
-    choices: [{ text: 'Avanti, verso la luce della candela', next: 'os4' }],
+    choices: [
+      { text: 'Avanti, verso la luce della candela', next: 'os4' },
+      { text: '🧳 Controllare il cartellino delle valigie nuove, per un nome', once: true, gold: 1, sets: { cartellino_controllato: true }, next: 'os4' },
+    ],
   },
 
   os4: {
@@ -1936,7 +2084,10 @@ Il lucchetto si apre da solo, come tutto in questa casa. Le pagine sono colonne 
     item: 'lanterna_1899',
     gold: 3,
     sets: { segreto_contabile: true, contabile_visto: true },
-    choices: [{ text: 'Salutarlo con rispetto e risalire, la lanterna in mano e il caffè nel destino di qualcuno', next: 'h1' }],
+    choices: [
+      { text: 'Salutarlo con rispetto e risalire, la lanterna in mano e il caffè nel destino di qualcuno', next: 'h1' },
+      { text: '📖 Chiedere al Contabile quanti gruppi mancano ancora nei conti', once: true, gold: 1, sets: { conti_chiesti: true }, next: 'h1' },
+    ],
   },
 
   os6: {
@@ -1958,7 +2109,10 @@ Vi accompagna fino al corridoio in salita con la candela in mano, e sulla soglia
     gold: 1,
     sets: { ossario_visitato: true },
     item: 'lanterna_1899',
-    choices: [{ text: 'Su, verso il corridoio delle tre porte', next: 'h1' }],
+    choices: [
+      { text: 'Su, verso il corridoio delle tre porte', next: 'h1' },
+      { text: '🕯 Offrire al Contabile un ultimo momento di compagnia, in silenzio', once: true, gold: 1, sets: { compagnia_offerta: true }, next: 'h1' },
+    ],
   },
 
   /* ==================== BLOCCO 2 — LA SOFFITTA ====================
@@ -1984,7 +2138,10 @@ Puntato non verso il tetto, non verso il cielo. Punta **giù**, attraverso un'as
 
 **(Sangue freddo +1: la curiosità, stasera, è anche coraggio.)**`,
     gold: 1,
-    choices: [{ text: 'Guardare dentro il telescopio', next: 'sf2' }],
+    choices: [
+      { text: '🔭 Guardare dentro il telescopio', next: 'sf2' },
+      { text: '📦 Ignorare il telescopio — le casse sotto i lenzuoli interessano di più', next: 'sf3' },
+    ],
   },
 
   sf2: {
@@ -2007,7 +2164,10 @@ Sta guardando in alto. Verso il telescopio. Verso voi.
 **(Rivelazione: la luna rossa nella piscina non è una luna. È un occhio. Flag: visto_occhio. Sangue freddo +2.)**`,
     gold: 2,
     sets: { visto_occhio: true },
-    choices: [{ text: 'Staccarsi dall\'oculare e continuare a esplorare la soffitta', next: 'sf3' }],
+    choices: [
+      { text: 'Staccarsi dall\'oculare e continuare a esplorare la soffitta', next: 'sf3' },
+      { text: '🔙 L\'occhio basta: giù dalla soffitta, ADESSO', next: 'sf6' },
+    ],
   },
 
   sf3: {
@@ -2031,7 +2191,10 @@ Nessun'altra parola sembra adatta. Le lettere finiscono nello zaino con un rispe
     item: 'lettere_1899',
     gold: 1,
     sets: { lettere_lette: true },
-    choices: [{ text: 'In fondo alla soffitta c\'è ancora un angolo buio da controllare', next: 'sf4' }],
+    choices: [
+      { text: '👤 In fondo alla soffitta c\'è ancora un angolo buio da controllare', next: 'sf4' },
+      { text: '🔙 Abbastanza: le lettere bastano. Giù dalla soffitta', next: 'sf6' },
+    ],
   },
 
   sf4: {
@@ -2079,8 +2242,13 @@ Scendendo, l'ultima cosa che si vede, voltandosi, è il telescopio d'ottone — 
 
 Nessuno ride, ma tutti, per un secondo, immaginano di farlo.
 
-**(La soffitta non ha più segreti. Meglio tornare al corridoio del piano proibito.)**`,
-    choices: [{ text: 'Giù, al corridoio delle tre porte', next: 'h1' }],
+**(La soffitta non ha più segreti. Sangue freddo +1.)**`,
+    gold: 1,
+    sets: { soffitta_esplorata: true },
+    choices: [
+      { text: 'Giù, al corridoio delle tre porte', next: 'h1' },
+      { text: '🔭 Ridare un\'ultima occhiata al telescopio, prima di chiudere la botola', once: true, gold: 1, sets: { telescopio_riguardato: true }, next: 'h1' },
+    ],
   },
 
   /* ==================== BLOCCO 3 — STANZA 1949 ====================
@@ -2101,8 +2269,14 @@ Sul tavolo, davanti alla quinta sedia vuota, una mano di scopa **interrotta a me
 
 > Emanuela: *(piano, con la delicatezza che riserva ai clienti anziani)* "Sono i reduci del '49. Il gruppo dopo Gregorio. Sembra... malinconico, più che spaventoso."
 
-> Federico: "Fino a prova contraria. Diamo tempo alla serata."`,
-    choices: [{ text: 'Sedersi al posto vuoto e finire la mano', next: 's49_2' }],
+> Federico: "Fino a prova contraria. Diamo tempo alla serata."
+
+**(Flag: visti i reduci del '49.)**`,
+    sets: { reduci_1949_visti: true },
+    choices: [
+      { text: '🃏 Sedersi al posto vuoto e finire la mano', next: 's49_2' },
+      { text: '🔙 No. Non toccare niente: uscire e chiudere la porta piano', next: 'u1' },
+    ],
   },
 
   s49_2: {
@@ -2137,7 +2311,10 @@ Sul tavolo, dove prima c'erano le carte, resta un solo asso, appoggiato in bella
     item: 'asso_di_denari',
     gold: 2,
     sets: { carte_1949_vinte: true },
-    choices: [{ text: 'Chiudere la porta con rispetto e tornare al corridoio', next: 's74_1' }],
+    choices: [
+      { text: '🚪 La porta accanto — 1974 — è socchiusa, e dall\'incenso ha un che di invitante', next: 's74_1' },
+      { text: '🚶 Tornare al corridoio: questa notte è già abbastanza lunga', next: 'u1' },
+    ],
   },
 
   s49_3_ko: {
@@ -2156,7 +2333,10 @@ Non c'è nessun regalo, stavolta. Solo la sedia che torna a raffreddarsi, e una 
 **(Nessun oggetto — ma la partita l'avete giocata con onore. Sangue freddo +1.)**`,
     gold: 1,
     sets: { carte_1949_perse: true },
-    choices: [{ text: 'Chiudere la porta con rispetto e tornare al corridoio', next: 's74_1' }],
+    choices: [
+      { text: '🚪 La porta accanto — 1974 — è socchiusa, l\'incenso si sente da qui', next: 's74_1' },
+      { text: '🚶 Basta porte: tornare al corridoio', next: 'u1' },
+    ],
   },
 
   /* ==================== BLOCCO 3b — STANZA 1974 ====================
@@ -2180,7 +2360,36 @@ In un angolo, su un mangianastri a pile ancora inserite, una cassetta senza cust
 
 **(Sangue freddo +1: la curiosità, anche qui, vince sulla paura.)**`,
     gold: 1,
-    choices: [{ text: 'Premere PLAY sul mangianastri', next: 's74_2' }],
+    choices: [
+      { text: '▶ Premere PLAY sul mangianastri', next: 's74_2' },
+      { text: '📜 Leggere il manifesto a mano della comune: "L\'AMORE SCIOGLIE OGNI PATTO"', once: true, next: 's74_1b' },
+    ],
+  },
+
+  s74_1b: {
+    location: 'camera',
+    caption: 'Il manifesto della comune',
+    text: `Il manifesto è scritto su un lenzuolo teso tra due canne di bambù, con una calligrafia tonda e fiori disegnati ai margini. È lungo, ingenuo, e letto adesso — con le cesoie del giardiniere nella testa e la nebbia che non entra e non esce — è la cosa più coraggiosa e più triste che abbiate letto stasera.
+
+*"Al Belvedere: non ti temiamo. Non ti combattiamo. Ti AMIAMO."*
+
+*"Veniamo in pace. Portiamo musica. Crediamo che ogni casa abbia un cuore, e che il cuore di una casa si apra come si apre il cuore di una persona: con la pazienza, il canto, e il perdono."*
+
+*"Se dopo dieci giorni non sarà bastato: lasciamo comunque il nostro nome. Così saprete che qualcuno ci ha provato."*
+
+Sotto, cinque firme con cognomi illeggibili e nomi scritti ENORMI: **Lucia, Marco, Giada, Peppino, Sara.**
+
+> Emanuela: *(la voce sottile)* "Hanno firmato con il nome. Come amici. Non come vittime."
+
+> Gaetano: "E alla casa non è bastato."
+
+**(Flag: manifesto del '74 letto. Sangue freddo +1.)**`,
+    gold: 1,
+    sets: { manifesto_74_letto: true },
+    choices: [
+      { text: '▶ Adesso il mangianastri: sentire la loro voce', next: 's74_2' },
+      { text: '✍️ Copiare i nomi delle cinque firme su un foglio, per non dimenticarli', once: true, gold: 1, sets: { nomi_comune_copiati: true }, next: 's74_2' },
+    ],
   },
 
   s74_2: {
@@ -2203,7 +2412,10 @@ Il canto continua per un altro minuto, poi si interrompe di netto — non un fru
 **(Flag: sentita l'ultima registrazione del '74. Sangue freddo +2.)**`,
     gold: 2,
     sets: { nastro_1974_ascoltato: true },
-    choices: [{ text: 'Prendere la cassetta e portarla con voi', next: 's74_3' }],
+    choices: [
+      { text: '📼 Prendere la cassetta e portarla con voi', next: 's74_3' },
+      { text: '⏪ Riavvolgere e riascoltare: quel taglio secco nasconde qualcosa', next: 's74_3' },
+    ],
   },
 
   s74_3: {
@@ -2221,7 +2433,10 @@ Nessuno del gruppo del '74 è mai uscito da questa stanza per l'ultima volta a p
     item: 'nastro_1974',
     gold: 1,
     sets: { stanza_1974_visitata: true },
-    choices: [{ text: 'Chiudere la porta e tornare al corridoio', next: 'h1' }],
+    choices: [
+      { text: 'Chiudere la porta e tornare al corridoio', next: 'h1' },
+      { text: '🎸 Provare un accordo sulla chitarra abbandonata, per salutare la stanza', once: true, gold: 1, sets: { chitarra_provata: true }, next: 'h1' },
+    ],
   },
 
   /* ==================== BLOCCO 4 — SCENE DEL CUORE ====================
@@ -2276,7 +2491,10 @@ La imposta come sfondo. Con la nebbia sbagliata e tutto.
 **(Sangue freddo +1: certe prove non servono a vincere, servono a ricordare perché si combatte.)**`,
     gold: 1,
     sets: { foto_balcone: true },
-    choices: [{ text: 'Tornare dagli altri, mano nella mano', next: 'h1' }],
+    choices: [
+      { text: 'Tornare dagli altri, mano nella mano', next: 'h1' },
+      { text: '🌫 Restare a guardare la nebbia sbagliata ancora un istante', once: true, gold: 1, sets: { nebbia_osservata_insieme: true }, next: 'h1' },
+    ],
   },
 
   cuore_fe: {
@@ -2301,7 +2519,10 @@ Nella sua mano, un piccolo ferro di cavallo di plastica dorata, di quelli da por
 **(Sangue freddo +2. Flag: cuore_fe.)**`,
     gold: 2,
     sets: { cuore_fe: true },
-    choices: [{ text: 'Restare ancora un momento così', next: 'cuore_fe_esito' }],
+    choices: [
+      { text: 'Restare ancora un momento così', next: 'cuore_fe_esito' },
+      { text: '🧳 Emanuela ripesca dalla borsa infinita qualcos\'altro, tanto per ridere ancora', once: true, gold: 1, sets: { borsa_riesplorata: true }, next: 'cuore_fe_esito' },
+    ],
   },
 
   cuore_fe_esito: {
@@ -2319,8 +2540,12 @@ Si baciano, brevemente, senza tragedia — solo due persone che si vogliono bene
 
 Escono mano nella mano, il ferro di cavallo che tintinna piano a ogni passo — l'unico rumore ridicolo e vivo in una casa che di rumori ridicoli non ne fa mai.
 
-**(Il momento è passato, ma resta. Nessun altro effetto: solo cuore.)**`,
-    choices: [{ text: 'Tornare dagli altri', next: 'h1' }],
+**(Il momento è passato, ma resta.)**`,
+    sets: { ferro_cavallo: true },
+    choices: [
+      { text: 'Tornare dagli altri', next: 'h1' },
+      { text: '📌 Appuntare il ferro di cavallo anche sulla borsa di Emanuela, per sicurezza doppia', once: true, gold: 1, sets: { ferro_cavallo_doppio: true }, next: 'h1' },
+    ],
   },
 
   cuore_nat: {
@@ -2341,7 +2566,10 @@ Due che la solitudine la conoscono davvero, per una volta, non hanno bisogno di 
 **(Sangue freddo +2. Flag: cuore_nat.)**`,
     gold: 2,
     sets: { cuore_nat: true },
-    choices: [{ text: 'Restare un altro minuto alla finestra', next: 'cuore_nat_esito' }],
+    choices: [
+      { text: 'Restare un altro minuto alla finestra', next: 'cuore_nat_esito' },
+      { text: '🚬 Accendere la sigaretta mai fumata, solo per il gesto, guardando il pozzo', once: true, gold: 1, sets: { sigaretta_gesto: true }, next: 'cuore_nat_esito' },
+    ],
   },
 
   cuore_nat_esito: {
@@ -2360,7 +2588,11 @@ Natalino non risponde subito. Quando lo fa, la voce gli trema solo un pochino �
 Nessuna risposta, ma la corda, scendendo verso il buio, per un attimo sembra **salutare.**
 
 **(Nessun altro effetto meccanico. Solo un pezzo di notte che resterà.)**`,
-    choices: [{ text: 'Tornare dagli altri, con gli occhi un po\' lucidi', next: 'h1' }],
+    sets: { pozzo_risponde: true },
+    choices: [
+      { text: 'Tornare dagli altri, con gli occhi un po\' lucidi', next: 'h1' },
+      { text: '🪟 Chiudere piano la tenda, lasciando alla signora un po\' di privacy', once: true, gold: 1, sets: { tenda_chiusa_con_rispetto: true }, next: 'h1' },
+    ],
   },
 
   /* ==================== BLOCCO 5 — IL GARAGE ====================
@@ -2384,7 +2616,10 @@ Accanto, altre due bacheche più vecchie: un motore di **Bianchina** targato "gr
 **(Sangue freddo +1: l'assurdo, stanotte, fa quasi ridere. Flag: garage_visto.)**`,
     gold: 1,
     sets: { garage_visto: true },
-    choices: [{ text: 'Gaetano vuole recuperare un pezzo del SUO motore', next: 'gr2' }],
+    choices: [
+      { text: '🔧 Gaetano vuole recuperare un pezzo del SUO motore', next: 'gr2' },
+      { text: '🔙 Non toccare niente: la bacheca è troppo perfetta per non essere una trappola', next: 'b3_pozzo' },
+    ],
   },
 
   gr2: {
@@ -2394,7 +2629,10 @@ Accanto, altre due bacheche più vecchie: un motore di **Bianchina** targato "gr
 
 > Gaetano: "Se tiro il pezzo sbagliato nell'ordine sbagliato, cade TUTTO. Centinaia di componenti. Sulla pietra. Con un rumore che sveglierebbe pure lo Chef due piani più giù."
 
-*(Prova di Destrezza — CD 13: staccare la candela senza far cadere il resto della bacheca.)*`,
+*(Prova di Destrezza — CD 13: staccare la candela senza far cadere il resto della bacheca.)*
+
+**(Sangue freddo +1: provarci è già un piano.)**`,
+    gold: 1,
     choices: [
       { text: '🔧 Sfilarla con calma millimetrica', tag: 'Prova di Destrezza — CD 13', check: { stat: 'DES', dc: 13, success: 'gr3', fail: 'gr3_ko' } },
     ],
@@ -2478,7 +2716,11 @@ Vi incamminate. La notte fuori dalla proprietà è diversa — più fredda, più
 
 I tornanti scendono nel buio tra gli ulivi. Basta staccarlo: le cose del Belvedere, fuori dal Belvedere, forse valgono meno. Forse.
 
+*(-1 Sangue freddo: correre col giardiniere alle spalle è peggio che restare.)*
+
 *(Prova di Destrezza — CD 13: seminare il Giardiniere tra i filari, nel buio.)*`,
+    gold: -1,
+    sets: { fuga_inseguita: true },
     choices: [
       { text: '🌿 Tagliare per la vigna: i filari sono stretti, le cesoie no', tag: 'Prova di Destrezza — CD 13', check: { stat: 'DES', dc: 13, success: 'ft2_capito', fail: 'ft_cesoie' } },
     ],
@@ -2546,6 +2788,7 @@ Nessuno parla per dieci secondi. Poi Natalino, piano: "Però il caffè a Baiano 
     sets: { strada_che_torna: true },
     choices: [
       { text: '⛰ Risalire con la risposta in tasca: se la strada è un anello, l\'uscita è nel CENTRO. La casa.', next: 'b3_pozzo' },
+      { text: '📸 Claudia fotografa le cinque luci in basso, come prova per il gruppo', once: true, gold: 1, sets: { luci_fotografate: true }, next: 'b3_pozzo' },
     ],
   },
 
@@ -2570,6 +2813,7 @@ Rientrate in fila, gelati, zitti. La casa non infierisce: le lanterne, al vostro
     sets: { strada_che_torna: true },
     choices: [
       { text: '🚪 Rientrare. Gelati, zitti, e con una certezza in meno', next: 'b3_pozzo' },
+      { text: '🥶 Stringersi tutti insieme per scaldarsi, prima di rientrare', once: true, gold: 1, sets: { gruppo_stretto_freddo: true }, next: 'b3_pozzo' },
     ],
   },
 
@@ -2628,7 +2872,10 @@ Gaetano si volta verso il Belvedere: le persiane sono tutte aperte, per la prima
 **(Flag: attraversata la finestra. Sangue freddo +1.)**`,
     sets: { riflesso_attraversato: true },
     gold: 1,
-    choices: [{ text: 'Uscire dall\'acqua e avvicinarsi al Belvedere capovolto', next: 'w3_giardino' }],
+    choices: [
+      { text: 'Uscire dall\'acqua e avvicinarsi al Belvedere capovolto', next: 'w3_giardino' },
+      { text: '👀 Contare di nuovo gli accappatoi, per essere sicuri di aver capito bene', once: true, gold: 1, sets: { accappatoi_ricontati: true }, next: 'w3_giardino' },
+    ],
   },
 
   w2_riflesso_ko: {
@@ -2715,7 +2962,10 @@ Si guarda intorno, poi torna a guardarli, e per un attimo la sicurezza scricchio
 **(Flag: Sofia incontrata. Sangue freddo +1.)**`,
     sets: { sofia_incontrata: true },
     gold: 1,
-    choices: [{ text: 'Seguirla: ha l\'aria di sapere esattamente dove state per andare', next: 'w5_racconto' }],
+    choices: [
+      { text: '🗣 Seguirla: ha l\'aria di sapere esattamente dove state per andare', next: 'w5_racconto' },
+      { text: '❓ "Prima: COME fai a essere ancora viva dopo venticinque anni?"', next: 'w5_racconto' },
+    ],
   },
 
   w5_racconto: {
@@ -2740,7 +2990,10 @@ Sofia si ferma. Per la prima volta, la battuta pronta le manca.
 
 > Sofia: "Il Direttore è quello che Gregorio sarebbe diventato, se non avesse mai avuto il coraggio di dispiacersi. Non ridete con lui. Non trattate senza un piano. E se vi offre qualcosa... contate le dita di chi ve lo offre. Non sono mai il numero giusto."`,
     sets: { inventario_scoperto: true, regole_casa_note: true },
-    choices: [{ text: 'Chiedere il percorso più sicuro verso il cuore della casa', next: 'w6_1924' }],
+    choices: [
+      { text: '🗺 Chiedere il percorso più sicuro verso il cuore della casa', next: 'w6_1924' },
+      { text: '⏩ "Andiamo. Subito. Ogni minuto qui il rischio sale"', next: 'w7_ronda' },
+    ],
   },
 
   w6_1924: {
@@ -2763,7 +3016,10 @@ Natalino si ferma davanti al ragazzo che ride della battuta eterna, e per un sec
 
 **(Flag: visto il gruppo del 1924.)**`,
     sets: { gruppo_1924_visto: true },
-    choices: [{ text: 'Proseguire verso il cuore della casa capovolta', next: 'w7_ronda' }],
+    choices: [
+      { text: 'Proseguire verso il cuore della casa capovolta', next: 'w7_ronda' },
+      { text: '👂 Avvicinarsi a uno dei Ballerini, per sentire la parola sussurrata', once: true, gold: 1, sets: { parola_ballerino_sentita: true }, next: 'w7_ronda' },
+    ],
   },
 
   w7_ronda: {
@@ -2821,7 +3077,10 @@ Si alza con un movimento troppo fluido per essere umano, e la luce fredda gli at
 
 **(Flag: il Direttore incontrato.)**`,
     sets: { direttore_incontrato: true },
-    choices: [{ text: 'Uscire dall\'ufficio prima che cambi idea', next: 'w9_studio' }],
+    choices: [
+      { text: 'Uscire dall\'ufficio prima che cambi idea', next: 'w9_studio' },
+      { text: '🖐 Contare anche voi le dita del Direttore, come ha detto Sofia', once: true, gold: 1, sets: { dita_direttore_contate: true }, next: 'w9_studio' },
+    ],
   },
 
   w9_studio: {
@@ -2904,7 +3163,10 @@ Sofia si asciuga gli occhi con il dorso della mano, veloce, come chi non vuole c
     sets: { orologio_reso: true },
     removeItem: 'orologio_sofia',
     gold: 2,
-    choices: [{ text: 'Verso il cuore della casa: la Sala dell\'Inventario', next: 'w11_inventario' }],
+    choices: [
+      { text: 'Verso il cuore della casa: la Sala dell\'Inventario', next: 'w11_inventario' },
+      { text: '🤗 Un abbraccio di gruppo a Sofia, prima di ripartire', once: true, gold: 1, sets: { abbraccio_sofia: true }, next: 'w11_inventario' },
+    ],
   },
 
   /* ==================== LA QUEST — L'INVENTARIO ==================== */
@@ -3054,7 +3316,10 @@ Sofia li abbraccia uno per uno, veloce, feroce, come chi non ha tempo per farlo 
     sets: { patto_riflesso_chiuso: true, ostaggi_liberati: true, sofia_resta: true },
     item: 'inventario_riflesso',
     gold: 2,
-    choices: [{ text: 'Andare. Prima che la casa cambi idea su tutto il resto', next: 'w17_fuga' }],
+    choices: [
+      { text: 'Andare. Prima che la casa cambi idea su tutto il resto', next: 'w17_fuga' },
+      { text: '💌 Promettere a Sofia di raccontare la sua storia, fuori, a chiunque vorrà ascoltare', once: true, gold: 1, sets: { promessa_sofia: true }, next: 'w17_fuga' },
+    ],
   },
 
   /* ==================== USCITA ==================== */
@@ -3068,7 +3333,10 @@ I corridoi si accorciano. Le porte con le targhette degli anni sbattono tutte in
 
 > Sofia *(o il ricordo della sua voce, se è rimasta indietro)*: "La piscina! Correte alla piscina, è l'unica porta che questa casa non può chiudere dall'interno!"
 
-Il giardino capovolto, che all'andata camminava all'incontrario sotto i piedi, ora si muove semplicemente TROPPO, come un tappeto tirato da sotto. Bisogna correre dritti, in linea, senza guardare le siepi che si sciolgono in ombra dietro le spalle.`,
+Il giardino capovolto, che all'andata camminava all'incontrario sotto i piedi, ora si muove semplicemente TROPPO, come un tappeto tirato da sotto. Bisogna correre dritti, in linea, senza guardare le siepi che si sciolgono in ombra dietro le spalle.
+
+**(-1 Sangue freddo: il mondo si sta chiudendo.)**`,
+    gold: -1,
     choices: [
       { text: '🏃 Correre in linea retta, tenendosi per le giacche, senza voltarsi MAI', tag: 'Prova di Costituzione — CD 13', check: { stat: 'COS', dc: 13, success: 'w18_soglia', fail: 'w17_fuga_ko' } },
     ],
@@ -3101,7 +3369,25 @@ Sopra, la luna rossa è arrivata quasi al bordo dell'orizzonte capovolto — e p
 L'acqua, da qui, non riflette più il cielo giusto né quello sbagliato: riflette semplicemente **casa** — la piscina vera, quella di sopra, che aspetta dall'altra parte come una porta tenuta aperta da qualcuno con il piede.
 
 Bisogna saltare tutti insieme, un'ultima volta, prima che il conto finisca.`,
-    choices: [{ text: '🌊 Saltare. Tutti insieme. Senza guardare la luna che conta.', next: 'w_finale' }],
+    choices: [
+      { text: '🌊 Saltare. Tutti insieme. Senza guardare la luna che conta', next: 'w_finale' },
+      { text: '👋 Un ultimo sguardo a Sofia — sta sorridendo, dall\'altra parte', next: 'w18_saluto' },
+    ],
+  },
+
+  w18_saluto: {
+    location: 'riflesso',
+    caption: 'Il saluto di Sofia',
+    text: `Sofia è ferma sull'orlo della piscina capovolta, in controluce contro la luna rossa che scende, e alza una mano — non un'onda da spiaggia, un gesto piccolo, da chi non ha salutato nessuno da venticinque anni e non si ricorda il gesto giusto.
+
+> Sofia: "Ehi. Raccontate di noi, fuori. NON lasciate che ci dimentichino un'altra volta."
+
+Poi sorride — il sorriso di una che aveva vent'anni nel '99 e ne ha ancora venti, ma con dentro la stanchezza di una vita intera — e si volta verso le porte che non si sono ancora chiuse, perché qualcuno deve tenerle aperte dall'interno.
+
+**(Sangue freddo +1: quel saluto era per VOI.)**`,
+    gold: 1,
+    sets: { saluto_sofia: true },
+    choices: [{ text: '🌊 Saltare. Tutti insieme', next: 'w_finale' }],
   },
 
   w_finale: {
@@ -3117,7 +3403,10 @@ L'**Inventario del Riflesso** — vuoto o quasi, a seconda di quanto sia costato
 
 Da qualche parte nella villa, una porta verde in fondo a un corridoio aspetta ancora, e ci sono ancora ore prima dell'alba. Ma qualcosa, stanotte, è cambiato per sempre: **il Riflesso, sotto la piscina, ha un padrone di meno.**`,
     sets: { riflesso_fatto: true, ostaggi_liberati: true },
-    choices: [{ text: 'Tornare al corridoio delle tre porte: la notte, di qua, non è ancora finita', next: 'h1' }],
+    choices: [
+      { text: '🚪 Tornare al corridoio: la notte, di qua, non è ancora finita', next: 'h1' },
+      { text: '🏊 Un minuto in piscina. VERA. Ve lo meritate', next: 'h1' },
+    ],
   },
 
 
@@ -3148,6 +3437,7 @@ Natalino spegne con cura, ne conserva metà, e torna con gli occhi rossi e un'in
     sets: { tronello_promesso: true },
     choices: [
       { text: '↩ Tornare dagli altri, con gli occhi rossi e una promessa nel taschino', next: 'h1' },
+      { text: '🌿 Salutare la voce del pozzo, prima di richiudere la finestra', once: true, gold: 1, sets: { pozzo_salutato: true }, next: 'h1' },
     ],
   },
 
@@ -3178,6 +3468,7 @@ L'ultimo filo di fumo scavalca la ringhiera e se ne va verso il pozzo — un tir
     sets: { fumata_di_gruppo: true, stanza_intravista: true },
     choices: [
       { text: '↩ Rientrare dal balcone, più leggeri e con una mappa di fumo in testa', next: 'h1' },
+      { text: '💨 Seguire con lo sguardo l\'ultimo filo di fumo fino al pozzo', once: true, gold: 1, sets: { fumo_seguito: true }, next: 'h1' },
     ],
   },
 
@@ -3204,6 +3495,7 @@ Emanuela lo taglia — come lo taglierebbe la madre di Ada — lo annusa, e se l
     sets: { orto_curato: true },
     choices: [
       { text: '↩ Rientrare, con le mani che sanno di menta e la borsa più ricca', next: 'h1' },
+      { text: '🌿 Raccogliere anche un rametto di rosmarino, per la cena di domani', once: true, gold: 1, sets: { rosmarino_raccolto: true }, next: 'h1' },
     ],
   },
 
@@ -3248,6 +3540,7 @@ Nessuno dice la cosa ovvia: che un biglietto del genere, stanotte, nessuno l'ha 
     sets: { stanza_custode: true },
     choices: [
       { text: '↩ Uscire come si esce da una chiesa: piano, e lasciando tutto com\'era', next: 'h1' },
+      { text: '📓 Rileggere una pagina del quaderno delle prove generali, con rispetto', once: true, gold: 1, sets: { quaderno_riletto: true }, next: 'h1' },
     ],
   },
 
@@ -3271,6 +3564,7 @@ E per un momento — cinque amici seduti su un gradino a perdere alla lotteria m
     sets: { ultimo_biglietto: true },
     choices: [
       { text: '↩ Tornare al corridoio delle tre porte: la notte vi aspetta', next: 'h1' },
+      { text: '🎫 Controllare ancora una volta i biglietti già grattati, non si sa mai', once: true, gold: 1, sets: { biglietti_ricontrollati: true }, next: 'h1' },
     ],
   },
 
@@ -3297,6 +3591,7 @@ I ritratti alle pareti — tutti, tutti e quattro i gruppi — fanno una cosa ch
     sets: { biglietto_strappato: true },
     choices: [
       { text: '↩ Tornare al tavolo, mentre i ritratti ridono ancora', next: 'z1' },
+      { text: '😏 Raccogliere i pezzi del biglietto strappato, come souvenir', once: true, gold: 1, sets: { biglietto_strappato_raccolto: true }, next: 'z1' },
     ],
   },
 
@@ -3435,6 +3730,7 @@ Il maggiordomo perfetto prende il biglietto con due mani — come si prende una 
     sets: { gregorio_vacilla: true },
     choices: [
       { text: '↩ Tornare al tavolo, lasciandogli il biglietto nel taschino', next: 'z1' },
+      { text: '🤝 Stringere la mano a Gregorio, da uomo a uomo', once: true, gold: 1, sets: { mano_stretta_gregorio: true }, next: 'z1' },
     ],
   },
 
@@ -3455,6 +3751,7 @@ Le lettere restano sul tavolo. Gregorio non le riprende. Ma non le spinge via.
     sets: { gregorio_umano: true, lettere_lette: true },
     choices: [
       { text: '↩ Tornare al tavolo. Le lettere restano dove sono: al centro.', next: 'z1' },
+      { text: '💌 Leggere ad alta voce un\'ultima riga delle lettere, per lui', once: true, gold: 1, sets: { riga_letta_gregorio: true }, next: 'z1' },
     ],
   },
 
@@ -3497,6 +3794,7 @@ Poi la casa **stringe.** Si sente: un giro di vite nelle fondamenta, i ritratti 
     gold: 1,
     choices: [
       { text: '↩ Al tavolo: la notte non aspetta', next: 'z1' },
+      { text: '🖋 Restare a guardare la penna un altro istante, in silenzio', once: true, gold: 1, sets: { penna_osservata: true }, next: 'z1' },
     ],
   },
 
@@ -3571,6 +3869,7 @@ Si inchina, di un grado. La casa trattiene il respiro.
     sets: { casa_rispetta: true },
     choices: [
       { text: '↩ Tornare al tavolo del Banchetto, con la casa che ora vi guarda in modo diverso', next: 'z1' },
+      { text: '🛣 Ripetere a voce alta il numero dei tornanti, per fissarlo bene in mente', once: true, gold: 1, sets: { tornanti_ripetuti: true }, next: 'z1' },
     ],
   },
 
@@ -3593,6 +3892,7 @@ Lo posa sul tavolo, piano, con due mani, come si posa una cosa che non si è pi�
     sets: { gregorio_umano: true },
     choices: [
       { text: '↩ Tornare al tavolo, con un maggiordomo in meno e un alleato in più', next: 'z1' },
+      { text: '💧 Restare in silenzio un momento, lasciando che Gregorio si ricomponga', once: true, gold: 1, sets: { silenzio_rispettoso: true }, next: 'z1' },
     ],
   },
 
@@ -3617,6 +3917,7 @@ Il silenzio che segue non è vuoto: è il silenzio di una casa che sta FACENDO I
     sets: { menu_dei_vivi: true },
     choices: [
       { text: '↩ Tornare al tavolo, lasciando la casa a fare i conti', next: 'z1' },
+      { text: '📝 Promettere a Gregorio la prima ricetta, qui, subito', once: true, gold: 1, sets: { prima_ricetta_promessa: true }, next: 'z1' },
     ],
   },
 
@@ -3705,6 +4006,7 @@ I candelabri sfarfallano. Il registro si richiude piano, come chi si tira il len
     sets: { sorpresa: true },
     choices: [
       { text: '↩ Tornare al tavolo, col pallino rosso ancora acceso', next: 'z1' },
+      { text: '📱 Salvare la diretta sul telefono, prima di spegnere', once: true, gold: 1, sets: { diretta_salvata: true }, next: 'z1' },
     ],
   },
 
@@ -3773,6 +4075,7 @@ E la casa — che può mangiare ospiti, camerieri, giardinieri e un secolo inter
     sets: { cerchio_di_porcellana: true },
     choices: [
       { text: '↩ Tornare al tavolo, dentro il recinto delle signorine', next: 'z1' },
+      { text: '🧸 Accarezzare piano la testa della bambola più vicina, per ringraziarla', once: true, gold: 1, sets: { bambola_accarezzata: true }, next: 'z1' },
     ],
   },
 
@@ -3921,7 +4224,11 @@ E sulla porta, con un vassoio di caffè VERO — lo sentite dal profumo, il caff
 
 > Gregorio: "Signori. Il conto." *(posa il vassoio, e accanto al vassoio un foglio piegato)* "Offre la casa. **Adesso posso dirlo davvero.**"
 
-Sul foglio, nella solita calligrafia elegante, c'è scritto solo: *"SALDATO. — Il Belvedere"*. E sotto, in un'altra grafia, femminile e fitta: *"Tornate a trovarci. Da OSPITI. — A."*`,
+Sul foglio, nella solita calligrafia elegante, c'è scritto solo: *"SALDATO. — Il Belvedere"*. E sotto, in un'altra grafia, femminile e fitta: *"Tornate a trovarci. Da OSPITI. — A."*
+
+**(Sangue freddo +3: l'alba, stasera, non era scontata.)**`,
+    gold: 3,
+    sets: { alba_vista: true },
     choices: [
       { text: '☕ Il caffè, l\'abbraccio, e la domanda che resta: "Gregorio... e adesso?"', next: 'e_alba' },
     ],
@@ -4116,16 +4423,91 @@ const DIARY_FLAGS = [
   ['lettere_lette',         'Le lettere di Gregorio e Ada: l\'ampliamento per le famiglie, i bambini, il futuro che il patto ha cancellato. Posate sul tavolo del Banchetto, pesano più di qualsiasi arma.'],
   ['stanza_1974_visitata',  'La stanza del \'74 è vuota da cinquant\'anni: le brande disfatte, il mangianastri a pile, l\'etichetta di una ragazza che rideva. L\'accordatura, quella l\'hanno trovata.'],
   ['inventario_scoperto',   'L\'INVENTARIO: di qua non siete ospiti, siete ARTICOLI. Sofia — servizio da tè, 1999. Voi, ancora non catalogati. Finché il Direttore non decide come schedarvi.'],
+  ['nessun_segnale',        'Nessun segnale sulla piazzola dei tornanti: cinque telefoni alzati al cielo come un rito pagano, e il cielo non risponde.'],
+  ['benzinaio_insistito',   'Al benzinaio è stato chiesto del pozzo, e lui ha chiuso la saracinesca. A Baiano, alle sei e mezza di un venerdì d\'estate.'],
+  ['giardino_ispezionato',  'Le siepi del Belvedere non sono ornamentali: sono contenitive. Gaetano le ha paragonate a gabbie di Faraday.'],
+  ['registro_bloccato',     'Gregorio ha bloccato il registro prima che si vedessero le date: "le storie degli altri ospiti sono la parte più noiosa". I vostri nomi erano già scritti.'],
+  ['brindisi_rifiutato',    'Gregorio non beve. Non mangia. Il suo coperto in cucina è pulito E impolverato insieme.'],
+  ['programma_serata',      'Il programma di Gregorio: piscina fino a mezzanotte. Il giardiniere pota al buio. Le siepi, dice, non lo vedono arrivare.'],
+  ['soffitta_esplorata',    'La soffitta è stata perquisita da cima a fondo: il telescopio, le casse, le lettere, i ritratti vuoti.'],
+  ['reduci_1949_visti',     'La stanza del 1949: quattro reduci fermi a metà mano di scopa, da settantacinque anni. La radio del 12 agosto non si è mai fermata.'],
+  ['fuga_inseguita',        'La discesa col Giardiniere alle spalle: cesoie nel buio, olivi che non giudicano, e la certezza che le cose della casa non si stancano mai.'],
+  ['ferro_cavallo',         'Il ferro di cavallo Made in China di Emanuela, appuntato al colletto di Federico come una spilla. "Ridicolo e vivo."'],
+  ['pozzo_risponde',        'Dal pozzo, la voce di Ada ha risposto a Natalino: "Single per scelta, hai detto. Anch\'io alla fine l\'ho scelto." Ha promesso una cartolina di Capri.'],
+  ['manifesto_74_letto',    'Il manifesto della comune del \'74: cinque firme con i nomi enormi e la convinzione, ingenua e totale, che l\'amore scioglie ogni patto.'],
+  ['saluto_sofia',          'Sofia ha salutato dall\'altra parte della piscina capovolta: "Raccontate di noi fuori. NON lasciate che ci dimentichino."'],
+  ['alba_vista',            'L\'alba sul Belvedere: la nebbia che si ritira, il gallo, le persiane di Pietrafonda che si aprono. E Gregorio con il caffè vero.'],
+  ['radio_ascoltata',       'La radiolina del benzinaio ha cambiato stazione da sola: statica, poi una voce, poi di nuovo niente. Qualcuno trasmette ancora.'],
+  ['batterie_risparmiate',  'Telefoni spenti alla piazzola: l\'ultima batteria risparmiata per una notte che non sapete ancora quanto sarà lunga.'],
+  ['sesta_finestra_notata', 'La sesta finestra, quella con la tenda scura: l\'unica che non ha risposto alla luce della sera.'],
+  ['lampadario_notato',     'Il lampadario si è fermato un istante prima di Gregorio. Come se la casa sapesse già dove andava.'],
+  ['luce_hall_notata',      'La luce della hall, rimasta più calda del dovuto: come se qualcuno avesse girato la manopola dalla parte sbagliata.'],
+  ['registro_riaperto_visto','Claudia ha notato il registro già riaperto sulla pagina di oggi. Qualcuno l\'ha sfogliato prima di loro.'],
+  ['vino_gregorio_annusato','Il vino di Gregorio non sa di niente: nessun profumo, nessun corpo. Come un ricordo di vino invece che vino vero.'],
+  ['coperto_cucina_visto',  'Il coperto in cucina: piatto pulito, posate allineate, tutto perfetto e tutto impolverato. Nessuno ha mangiato qui da molto tempo.'],
+  ['persiane_controllate',  'Le persiane del piano controllate dalla veranda: tutte chiuse tranne una, e nessuno ricorda di averla aperta.'],
+  ['biglietti_ricontrollati','I biglietti grattati ricontrollati: niente, come al solito. Ma il gesto di grattare è stato l\'ultimo pezzo di normalità della serata.'],
+  ['biglietto_strappato_raccolto','I pezzi del biglietto strappato raccolti come souvenir: l\'ultimo gratta-e-vinci di una vita precedente.'],
+  ['cornici_riguardate',    'Le cornici vuote sopra i letti: tutte uguali, tutte senza foto. Chi le ha svuotate ha fatto in fretta.'],
+  ['cartellino_controllato','Il cartellino delle valigie nuove: nessun nome, nessuna destinazione. Bagagli preparati per un viaggio che nessuno ha fatto.'],
+  ['accappatoi_ricontati',  'Gli accappatoi contati di nuovo: sei, come prima. Il sesto non ha smesso di esistere solo perché vi fa comodo.'],
+  ['occhiali_provati',      'Gli occhiali del \'99 provati un istante: il mondo visto attraverso lenti vecchie di trent\'anni. Poi rimessi via, in fretta.'],
+  ['anello_fotografato',    'Claudia ha fotografato l\'anello prima che finisse in tasca di qualcuno. La prova che era vero, almeno per un momento.'],
+  ['bottiglie_riordinate',  'Le bottiglie della rastrelliera rimesse in fila con rispetto, come se la cantina meritasse ancora un po\' di ordine.'],
+  ['chitarra_provata',      'Un accordo sulla chitarra abbandonata del \'74: stonato, triste, perfetto per salutare una stanza che non vi aspettava.'],
+  ['nomi_comune_copiati',   'I cinque nomi del manifesto della comune, copiati su un foglio: persone vere, con firme enormi e una convinzione che non è bastata.'],
+  ['corriera_fotografata',  'La foto della corriera del Settantaquattro: volti sconosciuti dietro un finestrino sporco. Chi sono diventati?'],
+  ['storie_74_chieste',     'Allo Chef avete chiesto altre storie del gruppo del \'74. Ha risposto con un piatto in più, che vale come tre storie.'],
+  ['contatto_chef_chiesto', 'Federico ha chiesto davvero il contatto dello Chef per il format tv. Lo Chef ha risposto con un mestolo.'],
+  ['tavolo_ripulito',       'Il tavolo da macellaio ripulito prima di andare: un gesto di cortesia verso una cucina che ha dato più di quanto dovesse.'],
+  ['pagine_rilette',        'Le tre pagine del diario rilette ad alta voce in fondo al pozzo: la voce che rimbalza sulle pareti ha un\'eco di troppo.'],
+  ['acqua_toccata',         'L\'acqua del secchio toccata con le dita: luminosa, fredda, e per un istante ha tremato come se qualcuno la guardasse dal fondo.'],
+  ['promessa_ad_ada',       'La promessa fatta ad Ada in fondo al pozzo: raccontare la sua storia fuori, se ce la farete. Ada ha annuito senza parlare.'],
+  ['ultimo_tiro_condiviso', 'L\'ultimo tiro tenuto da parte, fumato in silenzio con Ada: il fumo che sale nel pozzo si è perso prima del bordo.'],
+  ['scuse_ripetute',        'Le scuse ripetute con parole più semplici: a volte la prima versione non basta, e la seconda è quella che conta.'],
+  ['pozzo_salutato',        'La voce del pozzo salutata prima di richiudere la finestra: ha risposto con un eco che somigliava a un grazie.'],
+  ['fumo_seguito',          'L\'ultimo filo di fumo del tronello seguito con lo sguardo fino al pozzo: è sceso nel buio senza tornare su.'],
+  ['rosmarino_raccolto',    'Un rametto di rosmarino raccolto dall\'orto di Ada: per la cena di domani, se ci sarà un domani.'],
+  ['borsa_riesplorata',     'Emanuela ha ripescato dalla borsa infinita qualcos\'altro: quella borsa contiene più cose di quante ne entrano.'],
+  ['telescopio_riguardato', 'Un\'ultima occhiata al telescopio prima di chiudere la botola: puntato su qualcosa che non si vede da qui.'],
+  ['specchio_ricoperto',    'Lo specchio velato ricoperto con più cura di come l\'avete trovato: quello che c\'è dentro non merita altra luce.'],
+  ['sigaretta_gesto',       'La sigaretta mai fumata accesa solo per il gesto, guardando il pozzo: Natalino, da solo, ha bisogno di poco per stare bene.'],
+  ['tenda_chiusa_con_rispetto','La tenda chiusa piano, lasciando alla signora un po\' di privacy: certi incontri si chiudono con le mani, non con le parole.'],
+  ['nebbia_osservata_insieme','La nebbia sbagliata guardata un istante in più: Gaetano e Claudia in silenzio, come davanti a un quadro che non capiscono.'],
+  ['ferro_cavallo_doppio',  'Il ferro di cavallo appuntato anche sulla borsa di Emanuela: doppia protezione, per chi ci crede e per chi non ci crede.'],
+  ['parola_ballerino_sentita','La parola sussurrata dal Ballerino del 1924: incomprensibile, ma pronunciata con una gentilezza che non serviva capire.'],
+  ['ciocca_bianca_osservata','La ciocca bianca di Gregorio osservata un istante di troppo: non è il tempo, è qualcos\'altro che l\'ha sbiancata.'],
+  ['compagnia_offerta',     'Un momento di compagnia offerto al Contabile in silenzio: a volte restare è più utile di parlare.'],
+  ['conti_chiesti',         'Al Contabile avete chiesto quanti gruppi mancano ancora nei conti. Ha risposto girando una pagina in più.'],
+  ['penna_osservata',       'La penna di Gregorio guardata un altro istante in silenzio: il peso di una firma che non è stata messa, o che è stata tolta.'],
+  ['silenzio_rispettoso',   'Un momento di silenzio lasciato a Gregorio per ricomporsi: il perdono ha un suono preciso, e quel suono era il vostro respiro.'],
+  ['mano_stretta_gregorio', 'La mano stretta a Gregorio, da uomo a uomo: le dita fredde, la presa ferma. Un patto senza parole.'],
+  ['riga_letta_gregorio',   'Un\'ultima riga delle lettere letta ad alta voce, per lui: parole che non hanno mai raggiunto nessuno, finché voi le avete dette.'],
+  ['tornanti_ripetuti',     'Il numero dei tornanti ripetuto a voce alta: la geometria della strada sbagliata, fissata in mente prima che cambi di nuovo.'],
+  ['diretta_salvata',       'La diretta salvata sul telefono prima di spegnere: Claudia ha premuto salva come si preme un bottone di emergenza.'],
+  ['bambola_accarezzata',   'La testa della bambola accarezzata per ringraziarla: le signorine del 1924 non chiedevano molto. Solo di essere viste.'],
+  ['prima_ricetta_promessa','La prima ricetta promessa a Gregorio, lì, subito: il menù dei vivi comincia da una promessa fatta a tavola.'],
+  ['dita_direttore_contate','Le dita del Direttore contate anche da voi, come ha detto Sofia: nove. Non dieci. Nove.'],
+  ['campanella_mostrata',   'La campanella mostrata a Gregorio prima di risalire: lui l\'ha guardata senza dire niente, il che è già una risposta.'],
+  ['volto_benzinaio_ricordato','Il volto del benzinaio ripensato con cura: ogni dettaglio fissato, perché chi avverte merita di essere ricordato.'],
+  ['quaderno_riletto',      'Una pagina del quaderno delle prove generali riletta con rispetto: appunti per uno spettacolo che nessuno ha mai visto.'],
+  ['promessa_sofia',        'La promessa fatta a Sofia: raccontare la sua storia fuori, a chiunque vorrà ascoltare. Ha sorriso come chi non ci crede ma spera.'],
+  ['promessa_don_michele',  'La promessa fatta a Don Michele: tornare a raccontargli com\'è andata. Ha annuito come chi sa che non tornerete, ma apprezza lo stesso.'],
+  ['ricordi_gregorio_chiesti','Ad Ada avete chiesto altri ricordi di Gregorio: ha risposto versando altro vino, il che a casa sua significa sì.'],
+  ['luci_fotografate',      'Claudia ha fotografato le cinque luci in basso dal terzo tornante: la prova che la geometria sbagliata non era solo nella loro testa.'],
+  ['monete_lasciate',       'Qualche moneta lasciata sul bancone del bar di Peppe, chiuso dal 1999: un caffè pagato a un barista che non c\'è più.'],
+  ['gruppo_stretto_freddo', 'Tutti stretti insieme per scaldarsi prima di rientrare: un\'ora di buio e di freddo che non dimenticherete.'],
+  ['abbraccio_sofia',       'Un abbraccio di gruppo a Sofia prima di ripartire: cinque paia di braccia attorno a una ragazza che non se lo aspettava.'],
 ];
 
 /* Mappa del mondo: luoghi del Belvedere (per il canvas della mappa) */
 const WORLD_MAP = [
-  { key: 'tornanti', label: 'I Tornanti',      x: 0.12, y: 0.80, scenes: ['a0', 'a0_benzina', 'a1', 'a1b', 'ft1', 'ft1_inseguiti', 'ft_cesoie', 'ft_cesoie_vinto', 'ft2_capito', 'ft2_notte'] },
-  { key: 'relais',   label: 'Il Relais',       x: 0.40, y: 0.30, scenes: ['a2', 'a2_siepi', 'p4_fuga', 'gr1', 'gr2', 'gr3', 'gr3_ko'] },
+  { key: 'tornanti', label: 'I Tornanti',      x: 0.12, y: 0.80, scenes: ['a0', 'a0_benzina', 'a0_benzina2', 'a1', 'a1b', 'ft1', 'ft1_inseguiti', 'ft_cesoie', 'ft_cesoie_vinto', 'ft2_capito', 'ft2_notte'] },
+  { key: 'relais',   label: 'Il Relais',       x: 0.40, y: 0.30, scenes: ['a2', 'a2_siepi', 'a2_siepi_b', 'p4_fuga', 'gr1', 'gr2', 'gr3', 'gr3_ko'] },
   { key: 'hall',     label: 'La Hall',         x: 0.56, y: 0.48, scenes: ['a3', 'a3_registro', 'a3_registro_ko', 'a4_firma', 'a4_rinvio', 'a4_firma_forzata', 'p4_rientro'] },
-  { key: 'camere',   label: 'Le Camere',       x: 0.74, y: 0.32, scenes: ['a5', 'a5_pozzo', 'h1', 'h2', 'gv1', 'nat_tronello', 'tronello_cerchio', 'ema_orto', 'cst1', 'cst2', 'u1', 'u2_1999', 'u2_1924', 'u2_1899', 'u3_medaglione', 'u3_lanterna', 'u3_bambole_fight', 'u3_bambole_vinte', 'u5_specchio', 'u4_porta_vuota', 'u4_intercapedine', 'sf1', 'sf2', 'sf3', 'sf4', 'sf5', 'sf6', 's49_1', 's49_2', 's49_3', 's49_3_ko', 's74_1', 's74_2', 's74_3', 'cuore_gc', 'cuore_gc_esito', 'cuore_fe', 'cuore_fe_esito', 'cuore_nat', 'cuore_nat_esito'] },
+  { key: 'camere',   label: 'Le Camere',       x: 0.74, y: 0.32, scenes: ['a5', 'a5_pozzo', 'h1', 'h2', 'gv1', 'nat_tronello', 'tronello_cerchio', 'ema_orto', 'cst1', 'cst2', 'u1', 'u2_1999', 'u2_1924', 'u2_1899', 'u3_medaglione', 'u3_lanterna', 'u3_bambole_fight', 'u3_bambole_vinte', 'u5_specchio', 'u4_porta_vuota', 'u4_intercapedine', 'sf1', 'sf2', 'sf3', 'sf4', 'sf5', 'sf6', 's49_1', 's49_2', 's49_3', 's49_3_ko', 's74_1', 's74_1b', 's74_2', 's74_3', 'cuore_gc', 'cuore_gc_esito', 'cuore_fe', 'cuore_fe_esito', 'cuore_nat', 'cuore_nat_esito'] },
   { key: 'pranzo',   label: 'Sala da Pranzo',  x: 0.46, y: 0.62, scenes: ['a6', 'a6_menu', 'a6_brindisi', 'a6_no_brindisi', 'a7', 'z1', 'z2_vino', 'z2_perdono', 'z2_menu_vivi', 'z2_capitolazione', 'z2_trattativa', 'z2_rituale', 'gvz', 'z_biglietto', 'z_lettere', 'z2_strada', 'z2_alleato', 'z2_bambole', 'z2_claudia', 'z3_boss', 'z3_boss_solo', 'z3_boss_arrabbiato', 'z3_boss_indebolito', 'z4_fase2', 'z5_vittoria', 'z6_alba', 'e_alba', 'z_penna', 'z_penna_no', 'e_penna', 'z_custode', 'e_custode', 'e_custode_gregorio', 'z_resa', 'e_ospiti', 'z_vespri', 'z_smemorati', 'e_smemorati'] },
-  { key: 'riflesso', label: 'Il Riflesso',      x: 0.10, y: 0.28, scenes: ['w1_tuffo', 'w2_riflesso', 'w2_riflesso_ko', 'w3_giardino', 'w3_pattuglia_combat', 'w4_sofia', 'w5_racconto', 'w6_1924', 'w7_ronda', 'w7_ronda_combat', 'w8_direttore', 'w9_studio', 'w9_studio_combat', 'w10_orologio', 'w10_orologio_reso', 'w11_inventario', 'w12_tradimento', 'w12_sofia', 'w14_direttore_boss', 'w15_vittoria', 'w16_amaro', 'w17_fuga', 'w17_fuga_ko', 'w18_soglia', 'w_finale'] },
+  { key: 'riflesso', label: 'Il Riflesso',      x: 0.10, y: 0.28, scenes: ['w1_tuffo', 'w2_riflesso', 'w2_riflesso_ko', 'w3_giardino', 'w3_pattuglia_combat', 'w4_sofia', 'w5_racconto', 'w6_1924', 'w7_ronda', 'w7_ronda_combat', 'w8_direttore', 'w9_studio', 'w9_studio_combat', 'w10_orologio', 'w10_orologio_reso', 'w11_inventario', 'w12_tradimento', 'w12_sofia', 'w14_direttore_boss', 'w15_vittoria', 'w16_amaro', 'w17_fuga', 'w17_fuga_ko', 'w18_soglia', 'w18_saluto', 'w_finale'] },
   { key: 'paese',    label: 'Pietrafonda',     x: 0.16, y: 0.90, scenes: ['pp1', 'pp2', 'pp2_bar', 'pp3', 'pp_anello', 'pp4_cripta', 'pp4', 'pp6', 'pp6_ko', 'pp7'] },
   { key: 'piscina',  label: 'La Piscina',      x: 0.22, y: 0.50, scenes: ['p1', 'p1_accappatoio', 'p1_accappatoio_ko', 'p2', 'p2_esperimento', 'p2_esperimento_ko', 'p3_fuori'] },
   { key: 'cantina',  label: 'La Cantina',      x: 0.62, y: 0.78, scenes: ['k1', 'k2_sofia', 'k2_sofia_ko', 'k3', 'k4_scambio', 'k4_nastro', 'k4_chef_fight', 'k4_furto', 'k4_furto_ko', 'k5_dopo_chef', 'x_celle', 'os1', 'os2', 'os3', 'os4', 'os5', 'os6'] },
