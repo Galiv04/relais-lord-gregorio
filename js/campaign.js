@@ -95,13 +95,13 @@ const CAMPAIGN = {
     caption: 'Autogrill di Baiano — ore 17:50, l\'ultimo caffè normale',
     text: `**Venerdì pomeriggio, autostrada per Avellino, poi su.**
 
-L'autogrill di Baiano è l'ultimo avamposto della civiltà: cinque caffè, due Camogli, e nel bagagliaio c'è già il bottino della spesa più epica della storia del gruppo — sessanta euro di frutta e verdura, novanta di carne dal macellaio (hamburger di salsiccia, bistecca, la fiorentina), venti e passa di mozzarella paisana e tre buste della Lidl che pesano come un cadavere. Natalino torna dalla cassa raggiante.
+L'autogrill di Baiano è l'ultimo avamposto della civiltà: cinque caffè, due Camogli, e nel bagagliaio il bottino della spesa più epica della storia del gruppo — sessanta euro di frutta e verdura, novanta dal macellaio, mozzarella paisana, e tre buste della Lidl che pesano come un cadavere. Natalino torna dalla cassa raggiante.
 
 > Natalino: "Ho preso i Gratta e Vinci. Cinque. Uno a testa. Se qualcuno vince, il weekend lo paga lui e Federico ci ridà l'anticipo."
 
 > Federico: "L'anticipo era un AFFARE, e il relais è già pagato, quindi—" *(DIECI birre al limone strette al petto come un neonato)* "—questa è la scorta TATTICA. Ne servono dieci al giorno. È scienza."
 
-> Emanuela: "Il programma è quello concordato: colazioni con la SFIDA — pancakes di Federico contro crêpes di Claudia — a pranzo comando io, pasta zucchine e gamberi, le bruschette le fa Natalino, e la grigliata la gestisce Gaetano. Quattro giorni NOI, la villa, la piscina e ZERO caos di Ferragosto."
+> Emanuela: "Colazioni con la SFIDA — pancakes di Federico contro crêpes di Claudia — pasta zucchine e gamberi, grigliata di Gaetano. Quattro giorni NOI, la villa, la piscina e ZERO caos di Ferragosto."
 
 > Claudia: "Le mie crêpes lo umiliano ogni anno e lui ogni anno ci riprova. Lo ammiro, giuro."
 
@@ -1483,6 +1483,7 @@ Il lupo di nebbia si disfa per ultimo, controvoglia, un banco di foschia alla vo
     sets: { giardiniere_potato: true },
     choices: [
       { text: '🌿 Avanti, verso l\'orto delle erbe', next: 'b2_orto' },
+      { text: '🧤 Raccogliere le cesoie: paglia o no, tagliano VERO', once: true, gold: 1, sets: { cesoie_raccolte: true }, next: 'b2_orto' },
     ],
   },
 
@@ -2765,6 +2766,7 @@ La nebbia, tutt'intorno, si ritira di un metro — piano, senza fretta, come un 
     sets: { giardiniere_potato: true },
     choices: [
       { text: '🚶 Rimettersi in cammino, lungo la strada che non scende', next: 'ft2_notte' },
+      { text: '🌙 Fermarsi un momento: la luna sui filari è quasi bella, se dimentichi il resto', once: true, gold: 1, sets: { panorama_filari: true }, next: 'ft2_notte' },
     ],
   },
 
@@ -3291,7 +3293,10 @@ Quando l'ultima pagina si strappa, il Direttore non c'è più: resta solo il com
     sets: { direttore_sconfitto: true, ostaggi_liberati: true, sofia_libera: true },
     item: 'inventario_riflesso',
     gold: 3,
-    choices: [{ text: 'La casa continua a urlare: bisogna USCIRE, ora', next: 'w17_fuga' }],
+    choices: [
+      { text: 'La casa continua a urlare: bisogna USCIRE, ora', next: 'w17_fuga' },
+      { text: '🫂 Abbracciare Sofia — prima che la casa vi separi di nuovo', once: true, gold: 1, sets: { abbraccio_sofia: true }, next: 'w17_fuga' },
+    ],
   },
 
   w16_amaro: {
@@ -3387,7 +3392,10 @@ Poi sorride — il sorriso di una che aveva vent'anni nel '99 e ne ha ancora ven
 **(Sangue freddo +1: quel saluto era per VOI.)**`,
     gold: 1,
     sets: { saluto_sofia: true },
-    choices: [{ text: '🌊 Saltare. Tutti insieme', next: 'w_finale' }],
+    choices: [
+      { text: '🌊 Saltare. Tutti insieme', next: 'w_finale' },
+      { text: '🗣 Dire il suo nome ad alta voce — perché qualcuno lo ricordi anche di QUA', once: true, gold: 1, sets: { nome_sofia_detto: true }, next: 'w_finale' },
+    ],
   },
 
   w_finale: {
@@ -3985,7 +3993,10 @@ Silenzio. Poi la casa — le travi, i muri, i lampadari — emette un suono che 
 
 *(La casa URLA. I candelabri si spengono TUTTI. E nel buio, il Belvedere gioca l'ultima carta: se non può avere una firma... verrà a prendersi il banchetto con le mani.)*`,
     sets: { rituale_fatto: true },
-    choices: [{ text: 'Nel buio, qualcosa di ENORME si alza da capotavola', next: 'z3_boss_indebolito' }],
+    choices: [
+      { text: 'Nel buio, qualcosa di ENORME si alza da capotavola', next: 'z3_boss_indebolito' },
+      { text: '🤝 Nel buio, cercare la mano di Gregorio — dalla VOSTRA parte', once: true, gold: 1, sets: { mano_gregorio: true }, next: 'z3_boss_indebolito' },
+    ],
   },
 
   z2_claudia: {
@@ -4033,6 +4044,7 @@ Si volta. Attraversa la sala. E i due camerieri — che stavano già scivolando 
     sets: { cucina_in_sciopero: true },
     choices: [
       { text: '⚔ Adesso sì: se la casa vuole un nome, dovrà venirselo a prendere. DA SOLA.', next: 'z3_boss_solo' },
+      { text: '🍳 Chiedere allo Chef un ultimo consiglio da cucina: "Come si sgonfia una portata?"', once: true, gold: 1, sets: { consiglio_chef: true }, next: 'z3_boss_solo' },
     ],
   },
 
@@ -4186,6 +4198,7 @@ Fuori, il cielo comincia a schiarire. Nessuna battaglia. Solo una casa vecchia, 
     sets: { capitolazione: true, fame_sconfitta: true },
     choices: [
       { text: "🌅 Verso l'alba, tutti insieme — e verso la colazione", next: 'z6_alba' },
+      { text: '🤝 Stringere la mano a Gregorio — da pari a pari, da albergatore a ospite', once: true, gold: 1, sets: { stretta_gregorio: true }, next: 'z6_alba' },
     ],
   },
 
@@ -4206,7 +4219,10 @@ Dalle finestre, sul filo dei monti, sta salendo **l'alba.**
 
 *(continua)*`,
     sets: { fame_sconfitta: true },
-    choices: [{ text: 'Guardare l\'alba. Ve la siete guadagnata', next: 'z6_alba' }],
+    choices: [
+      { text: 'Guardare l\'alba. Ve la siete guadagnata', next: 'z6_alba' },
+      { text: '🖼 Contare le cornici vuote alle pareti — ognuna è qualcuno che torna a casa', once: true, gold: 1, sets: { cornici_contate: true }, next: 'z6_alba' },
+    ],
   },
 
   z6_alba: {
@@ -4231,6 +4247,7 @@ Sul foglio, nella solita calligrafia elegante, c'è scritto solo: *"SALDATO. —
     sets: { alba_vista: true },
     choices: [
       { text: '☕ Il caffè, l\'abbraccio, e la domanda che resta: "Gregorio... e adesso?"', next: 'e_alba' },
+      { text: '👀 Guardare Pietrafonda che si sveglia — le persiane, il gallo, il mondo vero', once: true, gold: 1, sets: { pietrafonda_vista: true }, next: 'e_alba' },
     ],
   },
 
