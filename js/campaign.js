@@ -1058,7 +1058,7 @@ Solleva la mannaia. Dal buio dietro il forno, due **camerieri in livrea** si rad
       enemies: ['cuoco', 'cameriere', 'cameriere'],
       victory: 'k5_dopo_chef',
       defeat: 'x_celle',
-      loot: { gold: 2 },
+      loot: { gold: 2, items: ['birra_limone'] },
     },
   },
 
@@ -2745,7 +2745,7 @@ Le cesoie si aprono con lo scatto oliato della manutenzione fatta con amore. Dal
       enemies: ['spaventapasseri', 'lupo_nebbia', 'ombra_ospite'],
       victory: 'ft_cesoie_vinto',
       defeat: 'x_celle',
-      loot: { gold: 1 },
+      loot: { gold: 1, items: ['taralli'] },
     },
   },
 
@@ -3215,7 +3215,7 @@ Il Direttore si toglie, con un gesto elegantissimo, la giacca — e sotto non c'
       enemies: ['direttore', 'cameriere_riflesso'],
       victory: 'w15_vittoria',
       defeat: 'x_celle',
-      loot: { gold: 2 },
+      loot: { gold: 2, items: ['birra_limone'] },
     },
   },
 

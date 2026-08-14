@@ -117,6 +117,7 @@ const BESTIARY = {
   ombra_ospite: {
     name: 'Ombra di un Ospite', short: 'Ombra', sprite: 'ombra',
     maxHp: 13, ac: 12, ai: 'random', undead: true,
+    special: 'evasive',
     attack: { name: 'Dita gelide', bonus: 3, dice: [1, 6], plus: 1 },
     flavor: 'Un ospite di un altro venticinquennio. Ha ancora l\'accappatoio del relais.',
   },
@@ -151,6 +152,7 @@ const BESTIARY = {
   cuoco: {
     name: 'Lo Chef', sprite: 'cuoco',
     maxHp: 38, ac: 14, ai: 'smart', undead: true, boss: true,
+    special: 'cleave',
     attack: { name: 'Mannaia per il banchetto', bonus: 5, dice: [2, 6], plus: 2 },
     flavor: 'Prepara il Banchetto del Venticinquennio dal 1899. Il menù non è mai cambiato. Gli ingredienti sì.',
   },
@@ -189,6 +191,7 @@ const BESTIARY = {
   gregorio_fame: {
     name: 'La Fame di Gregorio', short: 'LA FAME', sprite: 'gregorio_fame',
     maxHp: 45, ac: 17, ai: 'smart', undead: true, boss: true,
+    special: 'cleave',
     attack: { name: 'Il Conto da Saldare', bonus: 7, dice: [3, 8], plus: 0 },
     flavor: 'Ciò che il patto ha fatto di lui, sotto il completo di lino. Il Belvedere ha sempre fame.',
   },
