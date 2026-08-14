@@ -9,7 +9,7 @@
 const ITEMS = {
   kit_emanuela:     { name: 'Kit di Emanuela', desc: 'Garze, cerotti, ago da sutura e una calma innaturale. Ripristina 10 PV.', usable: true, heal: 10 },
   grappa_nonno:     { name: 'Grappa del Nonno di Gaetano', desc: 'Portata "per il brindisi". Ripristina 16 PV e un po\' di dignità.', usable: true, heal: 16 },
-  antidoto:         { name: 'Antidoto di Erbe', desc: 'Le erbe giuste dell\'orto, bollite come dice il diario. Guarisce il VELENO del Belvedere.', usable: false, cureVeleno: true },
+  antidoto:         { name: 'Antidoto di Erbe', desc: 'Le erbe giuste dell\'orto, bollite come dice il diario. Guarisce il VELENO del Belvedere — anche in pieno scontro.', usable: true, heal: 0, cureVeleno: true },
   sale_grosso:      { name: 'Sale Grosso Benedetto', desc: 'Dal barattolo in cucina, con un\'etichetta del 1899: "PER LORO". Da lancio: 2d8 danni, DOPPI alle creature della villa.', combat: { dice: [2, 8], holy: true }, icon: '🧂' },
   acqua_pozzo:      { name: 'Acqua del Pozzo Vecchio', desc: 'Gelida, e riflette un cielo che non è quello di stasera. Serve al rituale.', usable: false },
   diario_ada:       { name: 'Diario di Ada', desc: '1899. La moglie di Gregorio scrisse fino all\'ultima notte. Le ultime tre pagine sono strappate.', usable: false },
@@ -82,7 +82,7 @@ const ITEMS = {
   },
   orologio_sofia:     { name: 'Orologio di Sofia', desc: 'Un modello economico da discount, cinturino di plastica scolorito. Fermo alle 23:58 del 31 luglio 1999 — due minuti prima che tutto cominciasse.', usable: false },
   inventario_riflesso: { name: 'L\'Inventario del Riflesso', desc: 'Il registro dove il Belvedere capovolto catalogava i suoi ospiti come oggetti. Le pagine strappate, quelle rimaste, battono ancora piano — come un cuore che non vuole fermarsi del tutto.', usable: false },
-  campanello:       { name: 'Campanello di Servizio', desc: 'Ottone lucido. Il cartellino dice: "Suonare in caso di bisogno. Verranno."', usable: false },
+  campanello:       { name: 'Campanello di Servizio', desc: 'Ottone lucido. Il cartellino dice: "Suonare in caso di bisogno. Verranno." In combattimento il suono PARALIZZA le creature della casa (svantaggio al prossimo attacco, 1d4 danni a tutti). Un uso: poi il batacchio cade.', combat: { all: true, distract: true, dice: [1, 4], distractText: ' — il suono del padrone lo inchioda!' }, icon: '🔔' },
   moka:             { name: 'Moka di Don Michele', desc: 'Caffè del paese, nero come la notte e due volte più forte. Ricarica TUTTE le abilità di una persona.', usable: true, recharge: true },
   bengala:          { name: 'Bengala di Federico', desc: '"Per le emergenze", diceva. Da lancio: 2d6 danni a TUTTI i nemici, che restano accecati (svantaggio).', combat: { dice: [2, 6], all: true, distract: true }, icon: '🧨' },
   campanella_1974:  { name: 'Campanella del 1974', desc: 'La campanella della vecchia chiesa di Pietrafonda. Don Michele: "Quando LEI si siede a tavola... suonate i vespri."', usable: false },
@@ -407,7 +407,7 @@ Quando Emanuela arriva, la corda penzola immobile, il secchio dondola appena, e 
     caption: 'La cena delle nove — sala da pranzo',
     text: `La sala da pranzo è un piccolo teatro: un tavolo lungo apparecchiato d'argento, candelabri accesi, e le portefinestre che danno sulla piscina illuminata di turchese là fuori, fumante nell'aria fresca della montagna.
 
-La cena è — non c'è altra parola — **straordinaria**. Pasta fatta in casa, un arrosto che si taglia col pensiero, verdure dell'orto. Gregorio serve tutto personalmente, con tempi da orologeria, raccontando la valle: i castagneti, il santuario lassù, il paese.
+La cena è un silenzio religioso che dura tre portate. Pasta fatta in casa, un arrosto che si taglia col pensiero, verdure dell'orto che sanno ancora di terra bagnata. Gregorio serve tutto personalmente, con tempi da orologeria, raccontando la valle: i castagneti, il santuario lassù, il paese.
 
 > Gregorio: "Pietrafonda si è svuotata negli anni. Restano gli anziani, e gli anziani vanno a letto presto. Per questo le persiane chiuse: **non è maleducazione. È memoria.**"
 
@@ -726,6 +726,7 @@ E accanto alle tazze, un biglietto con la solita calligrafia elegante:
 > Natalino: "Io questa tisana non la bevo manco morto. Scusate il gioco di parole, ma è mezzanotte passata e ho visto una piscina posseduta: il bon ton è ufficialmente SOSPESO."
 
 Da qualche parte sopra di voi, al piano delle camere, **un pavimento scricchiola.** Una volta. Poi, educatamente, si ferma ad aspettare.`,
+    item: 'campanello',
     choices: [{ text: 'Su. Insieme. Si va a capire che notte è questa', next: 'h1' }],
   },
 
@@ -1773,7 +1774,7 @@ Si cammina. Al centro. Insieme.`,
 
 È un attimo — una voce troppo simile a quella giusta, un *"aspetta"* detto col tono di casa — e un passo esce dal centro del corridoio. La nebbia non aspettava altro: un tentacolo bianco, delicato come un tovagliolo, avvolge il polso di chi ha risposto e **stringe.**
 
-Le mani degli altri lo strappano indietro in un secondo — di nuovo, la disperazione coordinata delle famiglie vere — e il corridoio vi sputa fuori tutti e cinque, in ginocchio sulla ghiaia del Belvedere.
+Le mani degli altri lo strappano indietro in un secondo — otto dita piantate nel tessuto della giacca, senza chiedere il permesso — e il corridoio vi sputa fuori tutti e cinque, in ginocchio sulla ghiaia del Belvedere.
 
 Ma il polso di chi ha risposto porta il segno: cinque dita bianche, fredde, che non se ne vanno.
 
@@ -3080,7 +3081,7 @@ Il giardino capovolto, che all'andata camminava all'incontrario sotto i piedi, o
     caption: 'La casa cerca di trattenervi',
     text: `Un piede sbaglia l'appoggio sulla ghiaia che ancora si muove all'incontrario, e per un secondo un braccio di siepe sciolta — non più forma, solo ombra liquida — si stringe intorno a una caviglia con la forza di una casa che non vuole lasciare andare l'ultimo pezzo che le resta.
 
-Le mani degli altri strappano via chi è caduto con la solita disperazione coordinata delle famiglie vere, e la siepe-ombra si scioglie in un gorgoglio frustrato, troppo lenta ormai per la casa che crolla intorno a lei.
+Le mani degli altri strappano via chi è caduto prima ancora di pensarci — un riflesso che nessuno ha insegnato a nessuno — e la siepe-ombra si scioglie in un gorgoglio frustrato, troppo lenta ormai per la casa che crolla intorno a lei.
 
 Chi è stato preso porta il freddo del Riflesso nelle ossa, l'ennesima volta stanotte.
 
@@ -3336,6 +3337,7 @@ E la casa — le pareti, i lampadari, i ritratti, il pavimento a scacchi — **r
       { text: '⚔ Il gruppo si mette in mezzo: se la casa vuole un nome, dovrà VENIRSELO A PRENDERE', next: 'z3_boss' },
       { text: '🗣 Federico chiede la parola: la trattativa della vita', tag: 'Prova di Carisma — CD 13', once: true, requires: { notFlag: 'casa_rispetta' }, check: { stat: 'CAR', dc: 13, success: 'z2_trattativa', fail: 'z3_boss_arrabbiato' } },
       { text: '🗣 Federico riprende la parola — e stavolta la casa ASCOLTA. Nessun dado: il tavolo è cambiato', requires: { flag: 'casa_rispetta' }, next: 'z2_trattativa' },
+      { text: '💌 Posare le lettere sul tavolo: "Queste le avete scritte VOI DUE. Prima del patto. Prima della fame."', requires: { item: 'lettere_1899' }, removeItem: 'lettere_1899', once: true, next: 'z_lettere' },
       { text: '🍷 Prima di tutto: versare il vino del 1899 nel bicchiere di Gregorio', requires: { item: 'vino_1899' }, removeItem: 'vino_1899', next: 'z2_vino' },
       { text: '💧 Riferire le parole del pozzo: "Ada ti perdona. A metà. LA METÀ CHE SERVE."', requires: { flag: 'ada_perdono' }, once: true, next: 'z2_perdono' },
       { text: '🔔 Suonare la campanella di Don Michele: "quando LEI si siede a tavola..."', requires: { item: 'campanella_1974' }, removeItem: 'campanella_1974', next: 'z_vespri' },
@@ -3435,6 +3437,26 @@ Il maggiordomo perfetto prende il biglietto con due mani — come si prende una 
     sets: { gregorio_vacilla: true },
     choices: [
       { text: '↩ Tornare al tavolo, lasciandogli il biglietto nel taschino', next: 'z1' },
+    ],
+  },
+
+  z_lettere: {
+    location: 'salaBanchetto',
+    npc: ['gregorio'],
+    caption: 'Le lettere che non hanno mai spedito',
+    text: `Il fascio di lettere atterra sul tavolo tra le posate del 1899 con un tonfo morbido che fa tremare i candelabri.
+
+Gregorio le riconosce prima di guardarle — dal nastro, dallo spago, dall'odore di carta vecchia che ha respirato per un secolo senza mai riaprire. Le sue mani e quelle di lei, intrecciate in una grafia doppia che progettava un futuro che non è mai arrivato.
+
+> Gregorio: *(tocca lo spago senza scioglierlo — sa già cosa c'è dentro)* "L'ampliamento. Le camere per le famiglie. Lei voleva i bambini nella dependance — io dicevo che avrebbero rovinato la tappezzeria." *(la voce si rompe su 'tappezzeria', come se la parola fosse troppo normale per quello che è diventato)* "Non c'è mai stato tempo. Poi il patto, e il tempo è diventato TUTTO quello che avevo. E nessuno con cui riempirlo."
+
+Le lettere restano sul tavolo. Gregorio non le riprende. Ma non le spinge via.
+
+**(La memoria di quello che poteva essere pesa più di quella di quello che è stato: Gregorio è di nuovo UMANO. +1 a tutti i vostri tiri nella battaglia finale.)**`,
+    gold: 1,
+    sets: { gregorio_umano: true, lettere_lette: true },
+    choices: [
+      { text: '↩ Tornare al tavolo. Le lettere restano dove sono: al centro.', next: 'z1' },
     ],
   },
 
@@ -4093,6 +4115,7 @@ const DIARY_FLAGS = [
   ['cucina_in_sciopero',    'La cucina SCIOPERA per voi: la Fame, stanotte, serve da sola.'],
   ['sorpresa',              'Il pallino rosso è acceso: la casa è INQUADRATA, e non le piace. Il primo assalto è vostro.'],
   ['cerchio_di_porcellana', 'Trentadue signorine di porcellana fanno cerchio intorno a voi. La casa, davanti a loro, si vergogna.'],
+  ['lettere_lette',         'Le lettere di Gregorio e Ada: l\'ampliamento per le famiglie, i bambini, il futuro che il patto ha cancellato. Posate sul tavolo del Banchetto, pesano più di qualsiasi arma.'],
 ];
 
 /* Mappa del mondo: luoghi del Belvedere (per il canvas della mappa) */
@@ -4101,7 +4124,7 @@ const WORLD_MAP = [
   { key: 'relais',   label: 'Il Relais',       x: 0.40, y: 0.30, scenes: ['a2', 'a2_siepi', 'p4_fuga', 'gr1', 'gr2', 'gr3', 'gr3_ko'] },
   { key: 'hall',     label: 'La Hall',         x: 0.56, y: 0.48, scenes: ['a3', 'a3_registro', 'a3_registro_ko', 'a4_firma', 'a4_rinvio', 'a4_firma_forzata', 'p4_rientro'] },
   { key: 'camere',   label: 'Le Camere',       x: 0.74, y: 0.32, scenes: ['a5', 'a5_pozzo', 'h1', 'h2', 'gv1', 'nat_tronello', 'tronello_cerchio', 'ema_orto', 'cst1', 'cst2', 'u1', 'u2_1999', 'u2_1924', 'u2_1899', 'u3_medaglione', 'u3_lanterna', 'u3_bambole_fight', 'u3_bambole_vinte', 'u5_specchio', 'u4_porta_vuota', 'u4_intercapedine', 'sf1', 'sf2', 'sf3', 'sf4', 'sf5', 'sf6', 's49_1', 's49_2', 's49_3', 's49_3_ko', 's74_1', 's74_2', 's74_3', 'cuore_gc', 'cuore_gc_esito', 'cuore_fe', 'cuore_fe_esito', 'cuore_nat', 'cuore_nat_esito'] },
-  { key: 'pranzo',   label: 'Sala da Pranzo',  x: 0.46, y: 0.62, scenes: ['a6', 'a6_menu', 'a6_brindisi', 'a6_no_brindisi', 'a7', 'z1', 'z2_vino', 'z2_perdono', 'z2_menu_vivi', 'z2_capitolazione', 'z2_trattativa', 'z2_rituale', 'gvz', 'z_biglietto', 'z2_strada', 'z2_alleato', 'z2_bambole', 'z2_claudia', 'z3_boss', 'z3_boss_solo', 'z3_boss_arrabbiato', 'z3_boss_indebolito', 'z4_fase2', 'z5_vittoria', 'z6_alba', 'e_alba', 'z_penna', 'z_penna_no', 'e_penna', 'z_custode', 'e_custode', 'e_custode_gregorio', 'z_resa', 'e_ospiti', 'z_vespri', 'z_smemorati', 'e_smemorati'] },
+  { key: 'pranzo',   label: 'Sala da Pranzo',  x: 0.46, y: 0.62, scenes: ['a6', 'a6_menu', 'a6_brindisi', 'a6_no_brindisi', 'a7', 'z1', 'z2_vino', 'z2_perdono', 'z2_menu_vivi', 'z2_capitolazione', 'z2_trattativa', 'z2_rituale', 'gvz', 'z_biglietto', 'z_lettere', 'z2_strada', 'z2_alleato', 'z2_bambole', 'z2_claudia', 'z3_boss', 'z3_boss_solo', 'z3_boss_arrabbiato', 'z3_boss_indebolito', 'z4_fase2', 'z5_vittoria', 'z6_alba', 'e_alba', 'z_penna', 'z_penna_no', 'e_penna', 'z_custode', 'e_custode', 'e_custode_gregorio', 'z_resa', 'e_ospiti', 'z_vespri', 'z_smemorati', 'e_smemorati'] },
   { key: 'riflesso', label: 'Il Riflesso',      x: 0.10, y: 0.28, scenes: ['w1_tuffo', 'w2_riflesso', 'w2_riflesso_ko', 'w3_giardino', 'w3_pattuglia_combat', 'w4_sofia', 'w5_racconto', 'w6_1924', 'w7_ronda', 'w7_ronda_combat', 'w8_direttore', 'w9_studio', 'w9_studio_combat', 'w10_orologio', 'w10_orologio_reso', 'w11_inventario', 'w12_tradimento', 'w12_sofia', 'w14_direttore_boss', 'w15_vittoria', 'w16_amaro', 'w17_fuga', 'w17_fuga_ko', 'w18_soglia', 'w_finale'] },
   { key: 'paese',    label: 'Pietrafonda',     x: 0.16, y: 0.90, scenes: ['pp1', 'pp2', 'pp2_bar', 'pp3', 'pp_anello', 'pp4_cripta', 'pp4', 'pp6', 'pp6_ko', 'pp7'] },
   { key: 'piscina',  label: 'La Piscina',      x: 0.22, y: 0.50, scenes: ['p1', 'p1_accappatoio', 'p1_accappatoio_ko', 'p2', 'p2_esperimento', 'p2_esperimento_ko', 'p3_fuori'] },

@@ -72,6 +72,8 @@ const Combat = (() => {
       h.rageRounds = 0;
       h.luckUsed = false;
       h.zonkGritUsed = false;
+      h.latched = false;
+      h._stabilized = false;
     }
 
     // passiva Brunilde: +3 PV a tutti a inizio combattimento
@@ -256,7 +258,7 @@ const Combat = (() => {
     if (battle.turnPtr >= battle.turnQueue.length) {
       battle.turnPtr = 0;
       battle.round++;
-      if (battle.tauntRounds > 0) { battle.tauntRounds--; if (battle.tauntRounds === 0) battle.tauntHeroIdx = null; }
+      if (battle.tauntRounds > 0 && battle.tauntHeroIdx == null) battle.tauntRounds = 0;
       if (battle.smokeRounds > 0) battle.smokeRounds--;
       log(`— Round ${battle.round} —`, 'log-turn');
     }
@@ -407,9 +409,13 @@ const Combat = (() => {
           return heroAttack(hIdx, tIdx, opts);
         }
         if (res.success) {
+          if (e.special === 'evasive' && !res.crit && Math.random() < 0.4) {
+            log(`💨 ${e.name} si dissolve nella nebbia — il colpo lo attraversa!`, 'log-info');
+            floatText(e._x + e._size / 2, e._y, 'SCHIVATO', 'float-miss');
+            render(); endHeroAction(); return;
+          }
           const dice = opts.dice || h.attack.dice;
           let dmgRoll = Dice.rollDice(dice[0], dice[1]);
-          // abilità: solo il modificatore della loro statistica; arma base: stat + bonus arma
           const baseBonus = opts.stat ? heroMod(h, opts.stat) : heroMod(h, h.attack.stat) + (h.attack.bonus || 0);
           let dmg = dmgRoll.total + (opts.dmgBonus != null ? opts.dmgBonus : baseBonus);
           if (res.crit) { const extra = Dice.rollDice(dice[0], dice[1]); dmg += extra.total; }
@@ -439,7 +445,7 @@ const Combat = (() => {
     switch (ab.type) {
       case 'taunt':
         spend();
-        battle.tauntHeroIdx = hIdx; battle.tauntRounds = 2;
+        battle.tauntHeroIdx = hIdx; battle.tauntRounds = 3;
         log(`📣 <b>${ab.name}!</b> "QUESTO STUFATO SI CUCINA DA SOLO?!" — i nemici attaccano solo ${h.name}, che subisce metà danni!`, 'log-crit');
         endHeroAction();
         break;
@@ -611,11 +617,17 @@ const Combat = (() => {
       render(); endHeroAction();
       return;
     }
-    const wasDown = ally.down;
-    ally.down = false;
-    ally.hp = Math.min(ally.maxHp, Math.max(0, ally.hp) + item.heal);
-    log(`🧪 ${G.party[hIdx].name} usa ${item.name} su ${ally.name}: ${wasDown ? 'SI RIALZA e ' : ''}recupera <b>${item.heal} PV</b>!`, 'log-heal');
-    if (ally._x != null) floatText(ally._x + ally._size / 2, ally._y, `+${item.heal}`, 'float-heal');
+    if (item.cureVeleno && ally.veleno) {
+      ally.veleno = false;
+      log(`🌿 ${G.party[hIdx].name} usa ${item.name} su ${ally.name}: il freddo del Belvedere si ritira. <b>Veleno curato!</b>`, 'log-heal');
+    }
+    if (item.heal) {
+      const wasDown = ally.down;
+      ally.down = false;
+      ally.hp = Math.min(ally.maxHp, Math.max(0, ally.hp) + item.heal);
+      log(`🧪 ${G.party[hIdx].name} usa ${item.name} su ${ally.name}: ${wasDown ? 'SI RIALZA e ' : ''}recupera <b>${item.heal} PV</b>!`, 'log-heal');
+      if (ally._x != null) floatText(ally._x + ally._size / 2, ally._y, `+${item.heal}`, 'float-heal');
+    }
     if (typeof Sound !== 'undefined') Sound.play('heal');
     render(); endHeroAction();
   }
@@ -661,8 +673,11 @@ const Combat = (() => {
     const h = G.party[tIdx];
 
     let atkBonus = e.attack.bonus;
-    if (G.inventory.includes('lanterna_1899')) atkBonus -= 1; // la lanterna del 1899: le creature esitano
+    if (G.inventory.includes('lanterna_1899')) atkBonus -= 1;
     if (battle.isBoss && G.flags.casa_vacilla && battle.round <= 2) atkBonus -= 1;
+    if (e.special === 'mirror') atkBonus = Math.max(atkBonus, (h.attack.bonus || 0) + 2);
+    const desperate = G.difficulty === 'incubo' && e.hp <= Math.floor(e.maxHp * 0.25);
+    if (desperate) atkBonus += 3;
 
     let die = Dice.roll(20);
     const disadv = battle.smokeRounds > 0 || e.distracted;
@@ -670,20 +685,21 @@ const Combat = (() => {
     e.distracted = false;
 
     let ca = h.ac + (h.defending ? 3 : 0);
+    if (h.latched) { ca -= 2; h.latched = false; }
     const total = die + atkBonus;
-    const crit = die === 20, fumble = die === 1;
+    const crit = die === 20, fumble = die === 1 || (G.difficulty === 'facile' && die === 2);
 
     if (!fumble && (crit || total >= ca)) {
       let dmg = Dice.rollDice(e.attack.dice[0], e.attack.dice[1]).total + e.attack.plus;
       if (crit) dmg += Dice.rollDice(e.attack.dice[0], e.attack.dice[1]).total;
-      // riduzioni
+      if (desperate) dmg += 2;
       if (h.rageRounds > 0) dmg = Math.max(1, dmg - 2);
       if (battle.tauntHeroIdx === tIdx) dmg = Math.max(1, Math.floor(dmg / 2));
       h.hp -= dmg;
-      log(`${crit ? '💥 <b>CRITICO!</b> ' : ''}🗡 ${e.name} colpisce ${h.name} con ${e.attack.name}: <b>${dmg} danni</b>.`, crit ? 'log-crit' : 'log-hit');
+      log(`${crit ? '💥 <b>CRITICO!</b> ' : ''}${desperate ? '🔥 ' : ''}🗡 ${e.name} colpisce ${h.name} con ${e.attack.name}: <b>${dmg} danni</b>${desperate ? ' (FURIA DISPERATA!)' : ''}.`, crit ? 'log-crit' : 'log-hit');
       if (typeof Sound !== 'undefined') Sound.play('hit');
       if (h._x != null) floatText(h._x + h._size / 2, h._y, `-${dmg}`, 'float-dmg');
-      // il vampiro si nutre dei colpi che mette a segno
+
       if (e.lifesteal && e.hp > 0 && e.hp < e.maxHp) {
         const drain = Math.min(Math.ceil(dmg / 2), e.maxHp - e.hp);
         if (drain > 0) {
@@ -692,9 +708,35 @@ const Combat = (() => {
           if (e._x != null) floatText(e._x + e._size / 2, e._y, `+${drain}`, 'float-heal');
         }
       }
+
+      if (e.special === 'latch' && !h.down) {
+        h.latched = true;
+        log(`🪆 La ${e.short || e.name} si aggrappa a ${h.name} — <b>-2 CA</b> al prossimo attacco!`, 'log-hit');
+      }
+
+      if (e.special === 'poisonOnHit' && !h.veleno && !h.down && Math.random() < 0.3) {
+        h.veleno = true;
+        log(`🥶 Il freddo del Belvedere striscia nel vassoio — ${h.name} è <b>avvelenato</b>! (-2 a tutto)`, 'log-crit');
+      }
+
+      if (e.special === 'cleave') {
+        const others = G.party.filter((o, i) => i !== tIdx && !o.down && !o.preso);
+        if (others.length > 0) {
+          const splash = others[Math.floor(Math.random() * others.length)];
+          const splashDmg = Math.max(1, Math.floor(dmg / 2));
+          splash.hp -= splashDmg;
+          log(`🌿 Le cesoie proseguono l'arco — ${splash.name} viene sfiorato: <b>${splashDmg} danni</b>!`, 'log-hit');
+          if (splash._x != null) floatText(splash._x + splash._size / 2, splash._y, `-${splashDmg}`, 'float-dmg');
+          if (splash.hp <= 0) { splash.hp = 0; splash.down = true; log(`💀 <b>${splash.name} cade a terra!</b>`, 'log-hit'); }
+        }
+      }
+
       if (h.hp <= 0) {
-        // passiva Zonk
-        if (false) {
+        if (G.difficulty === 'facile' && !h._stabilized) {
+          h._stabilized = true;
+          h.hp = 1;
+          log(`🛡 ${h.name} barcolla ma RESISTE! L'adrenalina lo tiene in piedi con <b>1 PV</b>.`, 'log-heal');
+          if (h._x != null) floatText(h._x + h._size / 2, h._y, 'RESISTE!', 'float-heal');
         } else {
           h.hp = 0; h.down = true;
           log(`💀 <b>${h.name} cade a terra!</b> Serve una cura o una pozione per rialzarlo!`, 'log-hit');
@@ -702,6 +744,14 @@ const Combat = (() => {
       }
     } else {
       log(`🗡 ${e.name} attacca ${h.name}${h.defending ? ' (in difesa)' : ''}... e MANCA${fumble ? ' clamorosamente' : ''}!${disadv ? ' (svantaggio)' : ''}`, 'log-info');
+    }
+
+    if (battle.tauntHeroIdx != null && tIdx === battle.tauntHeroIdx) {
+      battle.tauntRounds--;
+      if (battle.tauntRounds <= 0) {
+        log(`📣 La provocazione di ${G.party[battle.tauntHeroIdx].name} si esaurisce.`, 'log-info');
+        battle.tauntHeroIdx = null; battle.tauntRounds = 0;
+      }
     }
 
     render();
