@@ -435,7 +435,7 @@ C'è solo un dettaglio che Claudia registra senza volerlo, da professionista del
 
 > Gregorio: "L'arrosto con le castagne: **1949**. Il signor Ernesto diceva che gli ricordava il rancio buono, quello delle domeniche in caserma. Ne mangiò tre porzioni, la sua prima sera. Anche l'ultima, a dire il vero."
 
-> Gregorio: "E il dolce di stasera — mele annurche e miele di castagno — è del **1999**. La signorina Sofia lo definì, cito testualmente, 'una roba da paura'." *(sorride, e per la prima volta il sorriso è più triste dell\'orario di chiusura di un luna park)* "Il linguaggio dei giovani. Sempre così... profetico."
+> Gregorio: "E il dolce di stasera — mele annurche e miele di castagno — è del **1999**. La signorina Sofia lo definì, cito testualmente, 'una roba da paura'." *(sorride, e stavolta il sorriso è più triste dell\'orario di chiusura di un luna park)* "Il linguaggio dei giovani. Sempre così... profetico."
 
 Emanuela posa la forchetta. Piano.
 
@@ -929,7 +929,7 @@ La voce del '74 riempie la cucina del 1899: chitarre scordate, risate sovrappost
 
 Lo Chef non si volta. Ma le spalle — due metri di spalle sbagliate — si abbassano di un centimetro.
 
-> Lo Chef: "...il gruppo del Settantaquattro." *(la voce di forno, per la prima volta, tira fuori qualcosa che somiglia a un tono)* "Mangiavano TUTTO. Il coniglio alla cacciatora. La minestra maritata. Chiedevano il BIS. Ridevano a tavola e lodavano il cuoco, e uno di loro — quello coi capelli lunghi — scriveva le mie ricette su un quaderno."
+> Lo Chef: "...il gruppo del Settantaquattro." *(la voce di forno, finalmente, tira fuori qualcosa che somiglia a un tono)* "Mangiavano TUTTO. Il coniglio alla cacciatora. La minestra maritata. Chiedevano il BIS. Ridevano a tavola e lodavano il cuoco, e uno di loro — quello coi capelli lunghi — scriveva le mie ricette su un quaderno."
 
 *(clic. il nastro finisce, e si spezza da solo, educatamente, come chi esce in punta di piedi.)*
 
@@ -1670,7 +1670,7 @@ Dentro, la canonica è un archivio di guerra: ritagli, registri parrocchiali, un
 
 > Don Michele: "1974. Io ero il sesto. Salimmo in sei da Napoli — io, mio fratello Aldo, e altri quattro. La sera della firma io dissi no. Non per coraggio: per SUPERBIA, non firmo mica io i registri degli alberghi... La nebbia mi lasciò scendere. Loro..." *(indica la foto: cinque ragazzi in piscina, un sesto ritagliato via)* "...loro no. Da cinquant'anni abito qui, dico messa a nessuno e suono i vespri ogni sera. Non per Dio, ragazzi. Perché LEI, lassù — la signora del pozzo — mi rispose UNA volta, nel '74. Disse: 'suona, che chi è dentro almeno sente l'ora.'"
 
-Si versa un altro caffè. Le mani, per la prima volta, gli tremano.
+Si versa un altro caffè. Le mani, adesso, gli tremano.
 
 > Don Michele: "Stanotte è il venticinquennio. E voi siete scesi a bussare alla MIA porta. Ditemi tutto. E poi vediamo cosa vi do."`,
     sets: { storia_1974: true },
@@ -1691,7 +1691,7 @@ Si versa un altro caffè. Le mani, per la prima volta, gli tremano.
 
 Si risiede. Vi guarda uno per uno.
 
-> Don Michele: "Io al mercato in valle ci scendo A PIEDI, ogni giovedì, da cinquant'anni. La strada ME lo lascia fare. Sapete perché? Perché io sono il SESTO. Non ho firmato. La strada non mi conta: per lei sono un errore di arrotondamento." *(e per la prima volta, il sorriso gli riesce storto)* "Voi l'avete VISTA tornare e siete ancora lucidi. Bene. Vuol dire che quando lassù vi diranno 'potete andarvene quando volete'... saprete esattamente quanto vale quella frase."
+> Don Michele: "Io al mercato in valle ci scendo A PIEDI, ogni giovedì, da cinquant'anni. La strada ME lo lascia fare. Sapete perché? Perché io sono il SESTO. Non ho firmato. La strada non mi conta: per lei sono un errore di arrotondamento." *(e qui il sorriso gli riesce storto)* "Voi l'avete VISTA tornare e siete ancora lucidi. Bene. Vuol dire che quando lassù vi diranno 'potete andarvene quando volete'... saprete esattamente quanto vale quella frase."
 
 **(Il paese lo sa dal 1899. Adesso lo sapete con le parole giuste. Flag: paese_sa. Sangue freddo +1.)**`,
     gold: 1,
@@ -1793,7 +1793,7 @@ Ma il polso di chi ha risposto porta il segno: cinque dita bianche, fredde, che 
 
 > Gregorio: "Siete... USCITI." *(conta, riconta)* "E siete TORNATI. Di vostra volontà. Dentro." *(posa il candeliere, si siede sulle scale, e per un attimo è solo un uomo molto vecchio e molto stanco)* "Signori, in tutta la storia di questa casa, nessuno è mai tornato DENTRO potendo restare fuori. Siete magnifici. E completamente scemi. Le due cose, ho imparato quassù, viaggiano spesso insieme."
 
-Poi vede la campanella. E il modo in cui la guarda — come si guarda una fotografia di famiglia in casa d'altri — vi dice che sa ESATTAMENTE cos'è.
+Poi vede la campanella. E il modo in cui la guarda — con lo sguardo di chi riconosce una fotografia di famiglia in casa d'altri — vi dice che sa ESATTAMENTE cos'è.
 
 > Gregorio: "I vespri di Don Michele." *(si rialza, si ricompone, maggiordomo di nuovo)* "Ada li ascolta ogni sera, sapete. Si ferma. Qualunque cosa stia facendo, alle otto, si ferma. Io fingo di non accorgermene da cinquant'anni: certe cose, tra la signora e il paese, non riguardano il personale."
 
@@ -2239,7 +2239,7 @@ Il balcone della Camera dei Melograni guarda la valle, la nebbia ferma al confin
 
 > Gaetano: "Claudia. Stanotte la scienza non basta. Ho passato un'ora a cercare una spiegazione razionale per un maggiordomo che perde ciocche di capelli come un orologio che scarica la batteria, e non ce l'ho. Non c'è. E questo... questo mi fa più paura del mostro."
 
-> Claudia: *(prendendogli la mano, senza il minimo sarcasmo, per la prima volta stasera)* "Lo so. Ti ho visto la faccia mentre lo dicevi."
+> Claudia: *(prendendogli la mano, senza il minimo sarcasmo, come non le era capitato in tutta la sera)* "Lo so. Ti ho visto la faccia mentre lo dicevi."
 
 > Gaetano: "Ho paura, Claudia. Vera. Non 'gestita', non 'analizzata'. Paura."
 
@@ -2309,7 +2309,7 @@ Nella sua mano, un piccolo ferro di cavallo di plastica dorata, di quelli da por
   cuore_fe_esito: {
     location: 'camera',
     caption: 'Il ferro di cavallo',
-    text: `Restano un momento in silenzio, il ferro di cavallo di plastica appoggiato sul comodino come un trofeo assurdo, e per la prima volta da quando sono arrivati al Belvedere nessuno dei due ha bisogno di dire niente di intelligente, di rassicurante, di professionale.
+    text: `Restano un momento in silenzio, il ferro di cavallo di plastica appoggiato sul comodino come un trofeo assurdo, e nessuno dei due sente più il bisogno di dire niente di intelligente, di rassicurante, di professionale.
 
 > Emanuela: *(appuntandoglielo al collo della camicia, come una spilla)* "Tienilo addosso. Ti dà un'aria ridicola che ti serviva."
 
@@ -2531,7 +2531,7 @@ La nebbia, tutt'intorno, si ritira di un metro — piano, senza fretta, come un 
   ft2_capito: {
     location: 'tornantiPiedi',
     caption: 'Il terzo tornante — la geometria sbagliata',
-    text: `Vi fermate al terzo tornante, dove la curva si apre sulla valle, e guardate GIÙ — davvero, per la prima volta, invece di limitarvi a scendere.
+    text: `Vi fermate al terzo tornante, dove la curva si apre sulla valle, e guardate GIÙ — davvero — invece di limitarvi a scendere.
 
 Sotto di voi, tre tornanti più in basso, ci sono **cinque luci.** Piccole, in fila indiana, che scendono piano lungo la strada. Cinque telefoni con la torcia accesa.
 
@@ -2755,7 +2755,7 @@ Non sono statue. Respirano, piano, a un ritmo di un respiro ogni trenta secondi.
 
 > Sofia: "Li chiamo i Ballerini. Sono qui da prima di me, di parecchio. A volte, se passi vicino, ti sussurrano una parola. Una sola. Sempre la stessa, per ognuno. La mia è... be'. Non ve la dico. È mia."
 
-> Emanuela: *(la voce che le trema, per la prima volta stanotte)* "Possiamo... svegliarli?"
+> Emanuela: *(la voce che le trema, come non le era ancora successo)* "Possiamo... svegliarli?"
 
 > Sofia: "Non stanotte. Svegliarli uno a uno richiede tempo che non abbiamo, e la casa se ne accorgerebbe prima che arriviamo a tre. Ma se strappiamo l'Inventario — TUTTO l'Inventario — si svegliano tutti insieme, di colpo, come un allarme che finalmente smette di suonare."
 
@@ -2832,7 +2832,7 @@ Si alza con un movimento troppo fluido per essere umano, e la luce fredda gli at
     caption: 'Lo studio privato — l\'orologio',
     text: `Sofia li porta in una stanza laterale che, dall'altra parte, corrisponde più o meno al bugigattolo dove Gregorio tiene le chiavi di scorta. Di qua, è una vetrina: pareti di vetro smerigliato, e dentro, su mensole numerate, **oggetti con targhette** — spazzole, occhiali da sole, una polaroid gemella di quella che forse avete già in tasca, un pettine, una cintura.
 
-> Sofia: *(la voce che si fa piccola, per la prima volta stanotte)* "Questa è la vetrina dei pezzi pregiati. Le cose che il Direttore tiene 'per affetto', dice lui. Il mio orologio è lì. Terzo scaffale. Fermo alle 23:58 del 31 luglio 1999 — l'ultimo minuto in cui è stato MIO."
+> Sofia: *(la voce che si fa piccola, come mai prima stanotte)* "Questa è la vetrina dei pezzi pregiati. Le cose che il Direttore tiene 'per affetto', dice lui. Il mio orologio è lì. Terzo scaffale. Fermo alle 23:58 del 31 luglio 1999 — l'ultimo minuto in cui è stato MIO."
 
 Il terzo scaffale è a un'altezza scomoda, dietro un vetro che non sembra chiuso a chiave ma sembra, in qualche modo, GUARDATO. Qualcosa, dentro l'ombra oltre la vetrina, si muove appena — o forse è solo il riflesso di uno di voi, un po' storto.
 
@@ -2868,7 +2868,7 @@ Il terzo scaffale è a un'altezza scomoda, dietro un vetro che non sembra chiuso
     caption: 'L\'orologio ritrovato',
     text: `Il terzo scaffale si apre — con la prudenza vincente o con il fragore della lotta appena vinta, non importa più — e l'orologio di Sofia è lì: cinturino di plastica scolorito, vetro incrinato a mezzaluna. Le lancette sono ferme sulle 23:58.
 
-Sofia lo guarda come si guarda una fotografia di sé bambini: con tenerezza e un imbarazzo che non c'entra niente con la vergogna.
+Sofia lo guarda come chi rivede una fotografia di sé bambini: con tenerezza e un imbarazzo che non c'entra niente con la vergogna.
 
 > Sofia: "Costava dodicimila lire. L'avevo comprato PROPRIO quella settimana, per il viaggio. Mi sembrava il colmo del lusso." *(ride, una risata vera, la prima)* "Venticinque anni, e sono ancora le 23:58 di quella sera. Due minuti prima di mezzanotte. Due minuti prima che tutto questo cominciasse."
 
@@ -3627,7 +3627,7 @@ Il silenzio che segue non è vuoto: è il silenzio di una casa che sta FACENDO I
     caption: 'Il brindisi di centoventicinque anni',
     text: `La bottiglia del 1899 — *"da aprire solo per il Padrone"* — viene stappata con le mani che tremano, e il vino scende nel bicchiere di Gregorio, denso e scuro come la notte che sta finendo.
 
-Gregorio lo guarda come si guarda una lettera che non si ha il coraggio di aprire.
+Gregorio lo guarda con l'occhio di chi tiene in mano una lettera che non ha il coraggio di aprire.
 
 > Gregorio: "Questo è... noi lo comprammo per il ritorno. Per il brindisi del ritorno a valle. Sei bicchieri. Non l'ho mai—"
 
@@ -3915,7 +3915,7 @@ Dalle finestre, sul filo dei monti, sta salendo **l'alba.**
 
 La nebbia della valle — il muro bianco che vi teneva chiusi — si ritira giù per i tornanti come la marea, e da Pietrafonda, in basso, arriva un suono che non sentivate da un'era: **un gallo.** Poi le campane. Poi, una alla volta, le persiane del paese che SI APRONO.
 
-Il Belvedere, alle vostre spalle, è solo una bella villa liberty un po' stanca, coi muri che hanno bisogno di una mano di bianco e un giardino magnifico. Il cancello è **aperto.** La ghiaia del viale, per la prima volta, è in disordine — e non se ne cura nessuno.
+Il Belvedere, alle vostre spalle, è solo una bella villa liberty un po' stanca, coi muri che hanno bisogno di una mano di bianco e un giardino magnifico. Il cancello è **aperto.** La ghiaia del viale, per una volta, è in disordine — e non se ne cura nessuno.
 
 Sul bordo della piscina, cinque accappatoi asciugano al primo sole. **Cinque.** Il sesto non c'è più. Da nessuna parte.
 
