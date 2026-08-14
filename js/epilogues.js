@@ -104,6 +104,13 @@ const IMPRESE = [
   { flag: 'doni_don_michele',      icon: '☕', title: 'L\'Armeria del Parroco',      desc: 'Moka e campanella del \'74: l\'equipaggiamento completo del sesto che non ha mai smesso di combattere.' },
   { flag: 'firma_messa',           icon: '✍️', title: 'Firmato',                     desc: 'Avete messo la firma sul registro, alla cena. Come tutti. Prima di voi.' },
   { flag: 'finale_firma_volontaria', icon: '✋', title: 'La Firma Volontaria',        desc: 'La mano guantata è arrivata prima della vostra. Il patto non è spezzato: è rinegoziato.' },
+  { flag: 'discesa_paese',         icon: '🌫', title: 'I Cinque in Discesa',          desc: 'Siete scesi a Pietrafonda a piedi, nella nebbia del corridoio, col bengala come unica luce.' },
+  { flag: 'nastro_1974_ascoltato', icon: '📼', title: 'L\'Ultima Registrazione',      desc: 'Avete ascoltato la canzone del \'74: la frequenza giusta, trovata apposta, rimasta a metà.' },
+  { flag: 'riflesso_attraversato', icon: '🔴', title: 'Dall\'Altra Parte',             desc: 'Avete attraversato la piscina sotto la luna rossa. Di qua si conta diverso.' },
+  { flag: 'sofia_incontrata',      icon: '🕶', title: 'Sofia, Annata 1999',           desc: 'Avete incontrato la ragazza che aspetta da venticinque anni qualcuno con la vostra faccia.' },
+  { flag: 'direttore_incontrato',  icon: '👔', title: 'Il Colloquio',                 desc: 'Il Direttore vi ha lasciati andare perché è più divertente guardare. Non sorrideva.' },
+  { flag: 'sofia_si_offre',        icon: '☕', title: 'La Scelta di Sofia',            desc: 'Non è eroismo, è matematica. E scegliere è l\'unica cosa che la casa non le ha mai permesso.' },
+  { flag: 'patto_riflesso_chiuso', icon: '📄', title: 'Le Pagine Strappate',           desc: 'Il Direttore ha strappato ogni pagina dell\'Inventario tranne una. Un patto onesto. Ne ha pochi.' },
 ];
 
 /* ---------- CRONACHE DEL BELVEDERE ----------
@@ -136,4 +143,6 @@ const CRONACA = [
   { flag: 'cuore_nat', text: 'Sul bordo del pozzo, ogni estate, compare una cartolina di Capri — anche se il mittente, a Capri, non c\'è mai stato. La corda la tira giù piano, senza strappi. E per tutto il giovedì seguente, dal fondo, sale un profumo di lacca professionale.' },
   { flag: 'finale_penna', text: 'La stilografica spezzata riposa nella cripta di Pietrafonda, tra i registri parrocchiali, in una piccola teca. Il cartellino dice: "Non scrive più. Non deve."' },
   { flag: 'ada_ride', text: 'Dal pozzo del giardino, certe sere d\'estate, sale un profumo d\'erba bruciata e una risata di donna, giovane e fuori orario. Gli ospiti pensano a una festa in valle. Il giardiniere nuovo, che ne sa più di loro, lascia sempre una foglia di fico sul secchio.' },
+  { flag: 'contabile_visto', text: 'Nell\'ossario, il Contabile ha chiuso il Libro Mastro per la prima volta in centoventicinque anni. Le cifre in rosso, nell\'ultima colonna, si stanno cancellando da sole — come se qualcuno, finalmente, avesse portato il caffè giusto.' },
+  { flag: 'ossario_visitato', text: 'Nell\'ossario, sotto la cantina, il tavolo del Contabile ha due sedie adesso. La seconda non c\'era mai stata. L\'ha costruita lui, con le ossa che aveva, per la prossima volta che qualcuno si siede.' },
 ];

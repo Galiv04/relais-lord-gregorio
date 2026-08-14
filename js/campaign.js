@@ -13,10 +13,8 @@ const ITEMS = {
   sale_grosso:      { name: 'Sale Grosso Benedetto', desc: 'Dal barattolo in cucina, con un\'etichetta del 1899: "PER LORO". Da lancio: 2d8 danni, DOPPI alle creature della villa.', combat: { dice: [2, 8], holy: true }, icon: '🧂' },
   acqua_pozzo:      { name: 'Acqua del Pozzo Vecchio', desc: 'Gelida, e riflette un cielo che non è quello di stasera. Serve al rituale.', usable: false },
   diario_ada:       { name: 'Diario di Ada', desc: '1899. La moglie di Gregorio scrisse fino all\'ultima notte. Le ultime tre pagine sono strappate.', usable: false },
-  chiave_cancello:  { name: 'Chiave del Cancello', desc: 'Ferro nero, pesante come una condanna. Apre l\'unico cancello del Belvedere.', usable: false },
   anello_1999:      { name: 'Anello del 1999', desc: 'Trovato sul fondo della piscina. Dentro è inciso: "A Sofia — per sempre qui".', usable: false },
   polaroid:         { name: 'Polaroid degli Ospiti', desc: 'Cinque ragazzi in piscina, datata 1999, uno cerchiato in rosso. La macchina ha ancora UNO scatto: il flash a bruciapelo ACCECA una creatura (svantaggio al prossimo attacco). La foto che esce, meglio non guardarla.', combat: { distract: true, dice: [1, 2], distractText: ' Il FLASH a bruciapelo lo acceca: svantaggio al prossimo attacco!' }, icon: '📸' },
-  registro:         { name: 'Registro degli Ospiti', desc: '1899, 1924, 1949, 1974, 1999... e l\'ultima riga: i VOSTRI nomi, già scritti.', usable: false },
   accendino:        { name: 'Accendino di Federico', desc: '"Non fumo più, lo tengo per affezione." Stanotte vale oro: una fiamma vera, CALDA E VIVA — le cose della villa la odiano (2d4, danni DOPPI alle creature della casa). Il gas basta per un colpo solo.', combat: { dice: [2, 4], holy: true }, icon: '🔥' },
   torcia_led:       { name: 'Torcia LED di Gaetano', desc: '1200 lumen, tre modalità. La terza — lo strobo tattico — non l\'avete mai provata: acceca TUTTI i nemici insieme (svantaggio al prossimo attacco). Tre secondi a 1200 lumen, poi la batteria muore per sempre.', combat: { all: true, distract: true, dice: [1, 2], distractText: ' accecato dallo strobo!' }, icon: '🔦' },
   vino_1899:        { name: 'Bottiglia del 1899', desc: 'Il vino del primo Banchetto. L\'etichetta scritta a mano: "Da aprire solo per il Padrone".', usable: false },
@@ -2502,7 +2500,7 @@ Le cesoie si aprono con lo scatto oliato della manutenzione fatta con amore. Dal
 
 *(È una creatura della villa: phon e sale doppi. Qui non c'è nessun piano: solo voi, i pali delle vigne e la notte.)*`,
     combat: {
-      enemies: ['spaventapasseri', 'lupo_nebbia'],
+      enemies: ['spaventapasseri', 'lupo_nebbia', 'ombra_ospite'],
       victory: 'ft_cesoie_vinto',
       defeat: 'x_celle',
       loot: { gold: 1 },
@@ -4116,6 +4114,8 @@ const DIARY_FLAGS = [
   ['sorpresa',              'Il pallino rosso è acceso: la casa è INQUADRATA, e non le piace. Il primo assalto è vostro.'],
   ['cerchio_di_porcellana', 'Trentadue signorine di porcellana fanno cerchio intorno a voi. La casa, davanti a loro, si vergogna.'],
   ['lettere_lette',         'Le lettere di Gregorio e Ada: l\'ampliamento per le famiglie, i bambini, il futuro che il patto ha cancellato. Posate sul tavolo del Banchetto, pesano più di qualsiasi arma.'],
+  ['stanza_1974_visitata',  'La stanza del \'74 è vuota da cinquant\'anni: le brande disfatte, il mangianastri a pile, l\'etichetta di una ragazza che rideva. L\'accordatura, quella l\'hanno trovata.'],
+  ['inventario_scoperto',   'L\'INVENTARIO: di qua non siete ospiti, siete ARTICOLI. Sofia — servizio da tè, 1999. Voi, ancora non catalogati. Finché il Direttore non decide come schedarvi.'],
 ];
 
 /* Mappa del mondo: luoghi del Belvedere (per il canvas della mappa) */
