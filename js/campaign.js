@@ -54,8 +54,8 @@ const ITEMS = {
     usable: true, heal: 3, cureVeleno: true,
   },
   taralli: {
-    name: 'Taralli razionati (scorta di Emanuela)',
-    desc: 'Il pacco dell\'autogrill, razionato con criteri militari. "UNO a testa nei momenti di crisi, e la crisi la certifico IO." +2 PV e un morale insospettabilmente migliore.',
+    name: 'Taralli della spesa epica',
+    desc: 'Dalla spesa colossale organizzata prima di partire: frutta, verdura, carne dal macellaio, mozzarella paisana e tre buste della Lidl. I taralli sono il presidio di emergenza: "Se stiamo per morire, almeno non a stomaco vuoto." +2 PV.',
     usable: true, heal: 2,
   },
   tronello: {
@@ -65,7 +65,7 @@ const ITEMS = {
   },
   birra_limone: {
     name: 'Birra al limone di Federico',
-    desc: 'Della scorta tattica comprata all\'autogrill ("ne servono DIECI al giorno, è scienza"). Gelata al punto giusto anche quando non dovrebbe esserlo: +3 PV e un rutto di conforto.',
+    desc: 'Dalla cassa di birre al limone caricata in macchina come un secondo bagaglio ("ne servono DIECI al giorno, è scienza"). Gelata al punto giusto anche quando non dovrebbe esserlo: +3 PV e un rutto di conforto.',
     usable: true, heal: 3,
   },
   ritratto_casa: {
@@ -95,7 +95,7 @@ const CAMPAIGN = {
     caption: 'Autogrill di Baiano — ore 17:50, l\'ultimo caffè normale',
     text: `**Venerdì pomeriggio, autostrada per Avellino, poi su.**
 
-L'autogrill di Baiano è l'ultimo avamposto della civiltà: cinque caffè, due Camogli, un pacco di taralli che Emanuela ha già razionato con criteri militari, e Natalino che torna dalla cassa raggiante.
+L'autogrill di Baiano è l'ultimo avamposto della civiltà: cinque caffè, due Camogli, e nel bagagliaio c'è già il bottino della spesa più epica della storia del gruppo — sessanta euro di frutta e verdura, novanta di carne dal macellaio (hamburger di salsiccia, bistecca, la fiorentina), venti e passa di mozzarella paisana e tre buste della Lidl che pesano come un cadavere. Natalino torna dalla cassa raggiante.
 
 > Natalino: "Ho preso i Gratta e Vinci. Cinque. Uno a testa. Se qualcuno vince, il weekend lo paga lui e Federico ci ridà l'anticipo."
 
@@ -175,7 +175,7 @@ La pompa si ferma. Non il numeratore: LA MANO del benzinaio, sull'impugnatura. D
     caption: 'Strada provinciale — monti d\'Irpinia, ore 18:40',
     text: `**Venerdì pomeriggio. Cinque amici, una macchina piena come un uovo, e le montagne sopra Avellino che si mangiano il sole.**
 
-Gaetano guida da un'ora e mezza. Claudia, di fianco, ha il telefono alzato da venti minuti: *"Niente segnale. NIENTE. Nemmeno una tacca ironica."* Dietro, Natalino è seduto in mezzo alle valigie come un faraone nel sarcofago, Federico difende la sua prenotazione — "cinque stelle, ragazzi, un AFFARE" — ed Emanuela ha già distribuito acqua e taralli a tutti, due volte.
+Gaetano guida da un'ora e mezza. Claudia, di fianco, ha il telefono alzato da venti minuti: *"Niente segnale. NIENTE. Nemmeno una tacca ironica."* Dietro, Natalino è incastrato tra le buste della Lidl e le valigie come un faraone nel sarcofago, Federico difende la sua prenotazione — "cinque stelle, ragazzi, un AFFARE" — ed Emanuela ha già distribuito taralli e mozzarella a tutti, due volte, perché con quella spesa i viveri non finiranno MAI.
 
 Il navigatore ha smesso di parlare da tre tornanti. L'ultima cosa che ha detto è stata *"procedere sulla strada senza nome"*, e nessuno ha commentato perché nessuno voleva essere il primo.
 
