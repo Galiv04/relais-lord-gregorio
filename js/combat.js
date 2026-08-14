@@ -62,6 +62,7 @@ const Combat = (() => {
       turnQueue: [],
       turnPtr: -1,
       tauntHeroIdx: null, tauntRounds: 0,
+      guardHeroIdx: null, guardedAllyIdx: null,
       smokeRounds: 0,
       over: false,
     };
@@ -260,6 +261,7 @@ const Combat = (() => {
       battle.round++;
       if (battle.tauntRounds > 0 && battle.tauntHeroIdx == null) battle.tauntRounds = 0;
       if (battle.smokeRounds > 0) battle.smokeRounds--;
+      for (const em of battle.enemies) { if (em.marked > 0) em.marked--; }
       log(`— Round ${battle.round} —`, 'log-turn');
     }
 
@@ -394,7 +396,7 @@ const Combat = (() => {
     Dice.showRoll({
       title: `${h.name}: ${opts.label || h.attack.name}<br>contro ${e.name} (CA ${e.ac})`,
       mod, dc: e.ac,
-      advantage: opts.advantage || firstRoundAdvantage(),
+      advantage: opts.advantage || firstRoundAdvantage() || !!e.marked,
       onDone: res => {
         // Fortuna Sfacciata di Fizzle
         if (res.fumble && h.id === 'natalino' && !h.luckUsed) {
@@ -538,6 +540,26 @@ const Combat = (() => {
         endHeroAction();
         break;
 
+      case 'guard':
+        pickAlly(a => {
+          if (a === hIdx) { heroTurn(hIdx); return; }
+          spend();
+          battle.guardHeroIdx = hIdx; battle.guardedAllyIdx = a;
+          log(`🛡 <b>${ab.name}!</b> ${h.name} si piazza davanti a ${G.party[a].name}: il prossimo attacco viene intercettato!`, 'log-crit');
+          endHeroAction();
+        });
+        break;
+
+      case 'mark':
+        pickTarget(t => {
+          spend();
+          const e = battle.enemies[t];
+          e.marked = 2;
+          log(`🎯 <b>${ab.name}!</b> ${h.name} indica il punto debole di ${e.name}: tutti gli attacchi avranno <b>VANTAGGIO</b>!`, 'log-crit');
+          render(); endHeroAction();
+        });
+        break;
+
       case 'stun':
         pickTarget(t => {
           spend();
@@ -668,8 +690,14 @@ const Combat = (() => {
 
   function enemyTurn(eIdx) {
     const e = battle.enemies[eIdx];
-    const tIdx = pickHeroTarget(e);
+    let tIdx = pickHeroTarget(e);
     if (tIdx < 0) return defeat();
+    if (battle.guardedAllyIdx === tIdx && battle.guardHeroIdx != null && !G.party[battle.guardHeroIdx].down) {
+      const guardian = G.party[battle.guardHeroIdx];
+      log(`🛡 ${guardian.name} si lancia davanti a ${G.party[tIdx].name} e intercetta il colpo!`, 'log-crit');
+      tIdx = battle.guardHeroIdx;
+      battle.guardHeroIdx = null; battle.guardedAllyIdx = null;
+    }
     const h = G.party[tIdx];
 
     let atkBonus = e.attack.bonus;
