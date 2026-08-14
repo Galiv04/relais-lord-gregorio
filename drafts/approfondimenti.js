@@ -279,7 +279,7 @@ Le cornici, ad un tratto, **tremano.** Non per il vento — in soffitta non c'è
 
 *(Sono creature della villa: Colpo di Phon e sale fanno danni doppi. Sono lente ma tenaci — non lasciatevi circondare tra le casse.)*`,
     combat: {
-      enemies: ['ritratto', 'ritratto'],
+      enemies: ['ritratto', 'ritratto', 'ritratto'],
       victory: 'sf6',
       defeat: 'x_celle',
       loot: { gold: 1 },

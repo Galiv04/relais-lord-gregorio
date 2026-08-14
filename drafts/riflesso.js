@@ -334,7 +334,7 @@ Il terzo scaffale è a un'altezza scomoda, dietro un vetro che non sembra chiuso
 
 *(Sale e Colpo di Phon doppi. Il Doppio imita: se qualcuno cura, potrebbe puntare proprio chi cura.)*`,
     combat: {
-      enemies: ['doppio'],
+      enemies: ['doppio', 'cameriere_riflesso'],
       victory: 'w10_orologio',
       defeat: 'x_celle',
     },
