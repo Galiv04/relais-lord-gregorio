@@ -423,7 +423,7 @@ E c'è di peggio, se si guarda bene: i cristalli del lampadario non pendono tutt
 
   a4_firma_forzata: {
     location: 'hall',
-    caption: 'La firma',
+    caption: 'La firma — non c\'era scelta',
     text: `> Gregorio: *(dolcissimo, inamovibile)* "Temo di dover insistere. Le assicurazioni, i regolamenti... viviamo in tempi complicati perfino quassù. **Una firma sola** e non ci pensiamo più."
 
 La penna stilografica è già in mano a qualcuno di voi — nessuno ricorda di averla presa. La punta tocca la carta e il tratto esce nero, lucido, *più nero dell'inchiostro*.
@@ -1476,7 +1476,7 @@ Da dietro la porta del 1924, attutito, arriva un suono: **un grammofono.** Un va
       { text: '🚪 1949 — da dietro la porta, una radio gracchia un notiziario', next: 's49_1', once: true },
       { text: '🚪 1974 — sotto la porta, un odore d\'incenso vecchio di mezzo secolo', next: 's74_1', once: true },
       { text: '🪜 In fondo al corridoio, una scaletta a pioli sale verso una botola', next: 'sf1', once: true },
-      { text: '🗝 La sesta porta. La chiave trovata nella borsa. La targhetta vuota. Proviamo.', requires: { item: 'chiave_camera6' }, once: true, next: 'u2_camera6' },
+      { text: '🗝 Con la chiave in mano, il corridoio ha una porta IN PIÙ: ottone brunito, numero 6. Prima non c\'era.', requires: { item: 'chiave_camera6' }, once: true, next: 'u2_camera6' },
     ],
   },
 
@@ -1484,7 +1484,9 @@ Da dietro la porta del 1924, attutito, arriva un suono: **un grammofono.** Un va
     location: 'camera',
     stinger: 'fail',
     caption: 'La Camera n. 6',
-    text: `La chiave d'ottone entra nella serratura della sesta porta come se fosse stata fatta ieri — perché, capite adesso, è stata fatta ieri.
+    text: `La porta non c'era, all'andata. Nessuno di voi la ricorda, e Claudia ha le foto a provarlo. Ma adesso è lì, tra il 1899 e il 1924, discreta come una cosa che c'è sempre stata: ottone brunito, un **6** inciso, nessun anno. L'unica porta del piano con un NUMERO invece di una data — perché le date sono per chi è stato preso, e questa camera aspetta qualcuno che deve ancora DECIDERSI.
+
+La chiave d'ottone entra nella serratura come se fosse stata fatta ieri — perché, capite adesso, è stata fatta ieri.
 
 Dentro, la camera è **pronta.** Ma pronta in un modo che gela il sangue più di qualunque ragnatela: il letto è del 1899, rifatto con lenzuola di lino ricamate. Il comò è del 1924. La poltrona, anni Quaranta. La radio sul comodino, del '74. Le tende, IDENTICHE a quelle delle vostre camere, comprate quest'anno. **La casa l'ha arredata con un pezzo di ogni gruppo che ha preso** — un secolo di bottino disposto con amore mostruoso.
 
