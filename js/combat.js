@@ -261,6 +261,38 @@ const Combat = (() => {
   function heroesAlive() { return G.party.some(h => !h.down && !h.preso); }
   function enemiesAlive() { return battle.enemies.some(e => !e.dead); }
 
+  /* La Fame parla tra i round: la casa ha VISTO tutto quello che avete fatto
+     stanotte, e lo usa. Ogni battuta è legata a un flag della serata — tensione
+     psicologica personalizzata, mai due notti uguali. Una battuta per round,
+     mai ripetuta, solo nei boss. */
+  const BOSS_TAUNTS = [
+    ['radio_ascoltata',    `🍽 La Fame, con la voce dell'annunciatore d'epoca: "...e questa era per i signori ospiti. LA CASA RINGRAZIA. La casa ricorda. La casa sta CONTANDO."`],
+    ['visto_pozzo',        `🍽 La Fame, con la voce di nessuno: "Avete guardato nel pozzo. Il pozzo ha guardato in voi. Solo uno dei due ha PRESO APPUNTI."`],
+    ['menu_memoria',       `🍽 La Fame sfoglia un menù che non c'è: "Ho letto la vostra ANNATA, sapete. Corposa. Un finale... da decidere."`],
+    ['bagagli_visti',      `🍽 La Fame, quasi premurosa: "Le vostre valigie nuove sono GIÀ SOTTO, comode. Non serviranno etichette. Vi conosco per nome."`],
+    ['cartellino_controllato', `🍽 La Fame, alla più attenta del gruppo: "Hai letto i cartellini, cara. Hai letto ANCHE IL TUO. Ti è piaciuto il titolo?"`],
+    ['storia_ada',         `🍽 La Fame, con la voce di Gregorio da giovane: "Ada, amore, FIRMA TU—" *(e si interrompe, assaporando l'effetto)* "...ah, no. Quella battuta è già stata usata."`],
+    ['quaderno_riletto',   `🍽 La Fame, recitando: "'Vorrei solo sedermi al tavolo con loro, una volta.' CHE TENEREZZA il vostro maggiordomo. L'ho lasciato scrivere per un secolo: la speranza insaporisce."`],
+    ['camera6_vista',      `🍽 La Fame, e per un attimo la voce è quasi ferita: "Avete aperto la Camera Sei. CENTOVENTICINQUE anni che la preparo. Lei non è mai salita. Sapete cosa si prova?"`],
+    ['promessa_ad_ada',    `🍽 La Fame, stizzita: "Una promessa alla vecchia del pozzo. Che pensiero GENTILE. Le promesse, qui, le colleziono IO."`],
+    ['diretta_salvata',    `🍽 La Fame, in posa verso il telefono di Claudia: "Venticinque tentativi, UNA ripresa riuscita. Tenetevela. Il mio profilo migliore non l'avete ancora visto."`],
+    ['nodo_cantina',       `🍽 La Fame, con la voce di forno dello Chef: "Il mio cuoco ha scioperato per voi. Dopo stanotte, gli raddoppio il TURNO."`],
+    ['vespri_suonati',     `🍽 La Fame, e la campanella le risuona ancora addosso: "Il SESTO. Cinquant'anni che mi suona le ore. Stanotte gli faccio sentire io... il SILENZIO."`],
+    ['pagine_rilette',     `🍽 La Fame, sillabando: "Sale. Acqua. Nome. Avete letto le istruzioni ad ALTA VOCE, nel mio pozzo. Le ho sentite anch'io. GRAZIE del ripasso."`],
+    ['ferro_cavallo',      `🍽 La Fame, divertita davvero: "Un portafortuna di plastica da due euro. Made in China. È la cosa più COMMOVENTE che sia entrata qui in un secolo. Quasi quasi... me lo tengo."`],
+    ['ultimo_biglietto',   `🍽 La Fame, sottovoce, solo per Natalino: "L'ultimo biglietto, quello della promessa. GRATTALO. Ti dico io cosa c'è sotto: c'è scritto RESTA."`],
+  ];
+
+  function bossTaunt() {
+    if (!battle.isBoss || battle.over) return;
+    if (!battle._tauntsUsed) battle._tauntsUsed = new Set();
+    const pool = BOSS_TAUNTS.filter(([flag]) => G.flags[flag] && !battle._tauntsUsed.has(flag));
+    if (!pool.length || Math.random() < 0.25) return; // ogni tanto tace: il silenzio pesa di più
+    const [flag, line] = pool[Math.floor(Math.random() * pool.length)];
+    battle._tauntsUsed.add(flag);
+    log(line, 'log-info');
+  }
+
   function nextTurn() {
     if (battle.over) return;
     if (!enemiesAlive()) return victory();
@@ -274,6 +306,7 @@ const Combat = (() => {
       if (battle.smokeRounds > 0) battle.smokeRounds--;
       for (const em of battle.enemies) { if (em.marked > 0) em.marked--; }
       log(`— Round ${battle.round} —`, 'log-turn');
+      bossTaunt();
     }
 
     const c = battle.turnQueue[battle.turnPtr];
@@ -480,7 +513,7 @@ const Combat = (() => {
 
       case 'aoe': {
         spend();
-        log(`🔥 <b>${ab.name}!</b> Lyra pronuncia la parola che l'Accademia le aveva PROIBITO...`, 'log-crit');
+        log(`🔥 <b>${ab.name}!</b>`, 'log-crit');
         let killed = 0;
         for (const e of battle.enemies) {
           if (e.dead) continue;
@@ -779,6 +812,14 @@ const Combat = (() => {
         } else {
           h.hp = 0; h.down = true;
           log(`💀 <b>${h.name} cade a terra!</b> Serve una cura o una pozione per rialzarlo!`, 'log-hit');
+          const casaLines = {
+            gaetano: `🏚 E la casa, piano, nel silenzio: <i>"L'ingegnere. Quello che spiega. Vediamo chi vi spiega... ADESSO."</i>`,
+            natalino: `🏚 E la casa, piano, nel silenzio: <i>"Quello che fa ridere. Le case come me odiano chi fa ridere: copre il rumore dei passi."</i>`,
+            claudia: `🏚 E la casa, piano, nel silenzio: <i>"L'occhio del gruppo è a terra. Adesso... chi vi GUARDA le spalle?"</i>`,
+            federico: `🏚 E la casa, piano, nel silenzio: <i>"Chi ha prenotato, paga per primo. È scritto nelle condizioni generali."</i>`,
+            emanuela: `🏚 E la casa, piano, nel silenzio: <i>"La più attenta. Contateli, adesso, i cartellini rimasti in piedi."</i>`,
+          };
+          if (battle.isBoss && casaLines[h.id]) log(casaLines[h.id], 'log-info');
         }
       }
     } else {

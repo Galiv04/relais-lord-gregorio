@@ -1151,7 +1151,36 @@ In fondo alla cantina, oltre le rastrelliere, si vedono **cinque nicchie vuote**
 E le bottiglie — è impossibile, ed è vero — quando ci passate davanti, **sussurrano.** Piano, come un ricordo che si gira nel sonno.`,
     choices: [
       { text: '👂 Avvicinare l\'orecchio a una bottiglia. A "Sofia, 1999".', tag: 'Prova di Saggezza — CD 12', check: { stat: 'SAG', dc: 12, success: 'k2_sofia', fail: 'k2_sofia_ko' } },
+      { text: '🔎 Cercare tra le rastrelliere l\'annata più vecchia di tutte: il 1899', once: true, next: 'k1_1899' },
       { text: '🚶 Non toccare niente e proseguire verso il fondo', next: 'k3' },
+    ],
+  },
+
+  k1_1899: {
+    location: 'cantina',
+    caption: 'Lo scaffale del 1899',
+    text: `Lo scaffale più in fondo, più in basso, dove la polvere ha vinto perfino sulla manutenzione della casa. Sei alloggiamenti scavati nella pietra viva — non nel legno come gli altri: **nella pietra**, come loculi.
+
+Quattro bottiglie coricate: *"Vittoria, 1899." "Carmine, 1899." "Rosa, 1899." "Alfonso, 1899."* Gli amici saliti con Gregorio e Ada. I primi.
+
+Il quinto alloggiamento è **vuoto ma consumato** — la pietra è levigata dove per decenni una bottiglia è stata presa, girata, spolverata, rimessa. Sull'etichetta rimasta incollata al bordo: *"Ada, 1899."* La bottiglia non c'è.
+
+> Gaetano: "È quella che ci ha dato lo Chef. La bottiglia del Padrone. Quella che Gregorio non ha mai aperto... è LEI. È sempre stata lei."
+
+E il sesto alloggiamento — il sesto — non è vuoto. C'è una bottiglia, coricata come le altre. Etichetta: *"Gregorio, 1899."*
+
+È **piena.** Ma il vetro è opaco dall'INTERNO, come appannato dal fiato, e il tappo è messo **al contrario** — infilato dal di dentro, come se qualcuno l'avesse chiuso da dentro la bottiglia.
+
+> Natalino: *(facendo un passo indietro)* "'Anche lui sta in una bottiglia, da qualche parte. Solo che la sua cammina.' L'ha detto Sofia. Ragazzi... quello di sopra col candeliere è il TAPPO. Il vino è QUI."
+
+Nessuno la tocca. Certe bottiglie si lasciano decidere a chi le ha riempite.
+
+**(Sangue freddo +2: adesso sapete cos'è DAVVERO Gregorio — e dove la casa tiene l'originale.)**`,
+    gold: 2,
+    sets: { bottiglia_gregorio_vista: true },
+    choices: [
+      { text: '🚶 Verso il fondo della cantina, senza toccare niente', next: 'k3' },
+      { text: '🧹 Spolverare piano le quattro bottiglie dei primi amici, uno per uno', once: true, heal: 1, next: 'k3' },
     ],
   },
 
@@ -1497,9 +1526,60 @@ Nell'armadio, appesa e inspiegabile, c'è anche una **muta da sub, taglia bambin
     sets: { cerchio_rosso: true },
     gold: 1,
     choices: [
+      { text: '🎒 Aprire lo zaino Invicta — quello identico a quello di Claudia', once: true, next: 'u2_zaino' },
       { text: '🚪 Ancora una stanza: la 1924 del valzer', next: 'u2_1924' },
       { text: '🚪 Ancora una stanza: la 1899 di Ada', next: 'u2_1899' },
       { text: '🚨 Basta stanze: la porta in fondo, quella con la targhetta vuota', next: 'u4_porta_vuota' },
+    ],
+  },
+
+  u2_zaino: {
+    location: 'camera',
+    caption: 'Lo zaino Invicta',
+    stinger: 'fail',
+    text: `Claudia si inginocchia davanti allo zaino con la sagoma dell'alpinista, e la zip fa il rumore esatto che faceva nel 1999 — quel rumore che nessuno progetta e nessuno dimentica.
+
+Dentro, l'estate di una ragazza di vent'anni, imballata con cura: un costume arrotolato, un walkman giallo con le pile ancora dentro, crema solare protezione 6 ("i NOVANTA", sospira Natalino), e un beauty con lo smalto rosa — **lo smalto rosa.** Quello della mano nella foto.
+
+E in fondo, sotto tutto, un'agenda scolastica riciclata da diario. Claudia la apre all'ultima pagina scritta:
+
+*"Giorno 3. Stanotte i ragazzi vogliono fare il bagno di mezzanotte. Il maggiordomo ha detto di rientrare per le 12 ma Marco dice che è una scemenza. Io c'ho un'ansia addosso che non so spiegare. Comunque domani si riparte, mamma mi aspetta per il pranzo di domenica. Le porto i fichi secchi che le piacciono."*
+
+Sotto, con un'altra penna, più incerta, UNA riga aggiunta dopo:
+
+*"Se qualcuno trova questo diario: il pranzo della domenica esiste ancora? Ditele che ci sarei voluta essere. — S."*
+
+> Claudia: *(richiude piano, lo zaino, la zip, tutto, come si richiude una tomba ben tenuta)* "La casa conserva TUTTO tranne quello che conta. Il pranzo di domenica se l'è tenuto lei."
+
+**(Sangue freddo +1, e una cosa da fare, fuori: la mamma di Sofia. Se c'è ancora. Qualcuno le deve dei fichi secchi e una frase.)**`,
+    gold: 1,
+    sets: { zaino_sofia_aperto: true },
+    choices: [
+      { text: '🚪 Uscire dalla stanza 1999, in silenzio', next: 'u1' },
+      { text: '🎧 Premere PLAY sul walkman, solo un secondo', once: true, next: 'u2_walkman' },
+    ],
+  },
+
+  u2_walkman: {
+    location: 'camera',
+    caption: 'PLAY',
+    text: `Il tasto scende con uno scatto meccanico, e il nastro parte: una hit dell'estate '99, gracchiante, bellissima, con quel suono da cassetta riversata dalla radio — si sente perfino la voce del DJ tagliata a metà all'inizio, perché Sofia ha premuto REC un secondo in ritardo, come tutti, sempre.
+
+Per dieci secondi, nella stanza ferma da venticinque anni, c'è **un'estate intera.** Natalino accenna il ritornello a mezza voce. Lo sapete tutti, quel pezzo. C'eravate anche voi, da qualche parte, quell'estate lì.
+
+Poi la musica si abbassa da sola — non si ferma: si ABBASSA, come quando qualcuno vuole parlare sopra — e sul nastro, in mezzo alla canzone, c'è una voce di ragazza, vicinissima al microfono:
+
+> La voce di Sofia, dal 1999: *"...prova, prova. Ok, funziona. Se sto ancora registrando quando lo riascolto, cancella tutto e scusa. Ma se questo nastro lo trova QUALCUN ALTRO... vuol dire che è vero quello che penso da stamattina. Che la casa ci ascolta. E allora ascoltami tu, chiunque sei: NON. FARE. IL BAGNO. DI—"*
+
+**STOP.** Il tasto risale da solo. Con calma. Come un dito che si posa sulle labbra.
+
+> Claudia: *(la mano ancora a mezz'aria)* "L'ha fermato la casa. Venticinque anni dopo. Il messaggio le fa ancora PAURA."
+
+**(Sangue freddo +2: Sofia aveva capito TUTTO, e il suo avviso è arrivato — con venticinque anni di ritardo, ma è arrivato.)**`,
+    gold: 2,
+    sets: { walkman_ascoltato: true },
+    choices: [
+      { text: '🚪 Uscire dalla stanza 1999, portando il ritornello con voi', next: 'u1' },
     ],
   },
 
@@ -5379,6 +5459,9 @@ const DIARY_FLAGS = [
   ['cesoie_raccolte',       'Le cesoie del Giardiniere, raccolte dall\'orto: ferro del 1899, affilato ogni notte da mani di paglia. Ora potano per voi.'],
   ['panorama_filari',       'I filari della valle visti dal muretto dell\'orto: geometrie perfette che nessun contadino ha piantato. La collina ha i suoi disegni.'],
   ['stretta_gregorio',      'La stretta di mano di Gregorio: fredda, ferma, e più GRATA di quanto un maggiordomo possa permettersi di mostrare.'],
+  ['zaino_sofia_aperto',    'Lo zaino Invicta di Sofia: il walkman giallo, lo smalto rosa, e un diario che chiede se il pranzo della domenica esiste ancora.'],
+  ['walkman_ascoltato',     'Il nastro di Sofia: una hit del \'99 e un avviso registrato di nascosto — "NON. FARE. IL BAGNO. DI—". La casa lo ha fermato anche stavolta.'],
+  ['bottiglia_gregorio_vista','La sesta bottiglia del 1899: "Gregorio", piena, col tappo infilato da dentro. Quello di sopra col candeliere è il tappo. Il vino sta in cantina.'],
   ['cornici_contate',       'Le cornici della galleria, contate una per una: venti ritratti, venticinque posti. La casa apparecchia sempre in anticipo.'],
 ];
 
@@ -5387,12 +5470,12 @@ const WORLD_MAP = [
   { key: 'tornanti', label: 'I Tornanti',      x: 0.12, y: 0.80, scenes: ['a0_radio', 'ft2_foto_luci', 'a0', 'a0_benzina', 'a0_benzina2', 'a1', 'a1b', 'ft1', 'ft1_inseguiti', 'ft_cesoie', 'ft_cesoie_vinto', 'ft2_capito', 'ft2_notte'] },
   { key: 'relais',   label: 'Il Relais',       x: 0.40, y: 0.30, scenes: ['a2', 'a2_siepi', 'a2_siepi_b', 'p4_fuga', 'gr1', 'gr2', 'gr3', 'gr3_ko'] },
   { key: 'hall',     label: 'La Hall',         x: 0.56, y: 0.48, scenes: ['a4_lampadario', 'a4_luce', 'a4_registro', 'a3', 'a3_registro', 'a3_registro_ko', 'a4_firma', 'a4_rinvio', 'a4_firma_forzata', 'p4_rientro'] },
-  { key: 'camere',   label: 'Le Camere',       x: 0.74, y: 0.32, scenes: ['h2_ciocca', 'cuore_gc_nebbia', 'cuore_fe_borsa', 'u2_camera6', 'tronello_fumo', 'cst2_quaderno', 'gv1_ricontrollo', 'a5', 'a5_pozzo', 'h1', 'h2', 'gv1', 'nat_tronello', 'tronello_cerchio', 'ema_orto', 'cst1', 'cst2', 'u1', 'u2_1999', 'u2_1924', 'u2_1899', 'u3_medaglione', 'u3_lanterna', 'u3_bambole_fight', 'u3_bambole_vinte', 'u5_specchio', 'u4_porta_vuota', 'u4_intercapedine', 'sf1', 'sf2', 'sf3', 'sf4', 'sf5', 'sf6', 's49_1', 's49_2', 's49_3', 's49_3_ko', 's74_1', 's74_1b', 's74_2', 's74_3', 'cuore_gc', 'cuore_gc_esito', 'cuore_fe', 'cuore_fe_esito', 'cuore_nat', 'cuore_nat_esito'] },
+  { key: 'camere',   label: 'Le Camere',       x: 0.74, y: 0.32, scenes: ['u2_zaino', 'u2_walkman', 'h2_ciocca', 'cuore_gc_nebbia', 'cuore_fe_borsa', 'u2_camera6', 'tronello_fumo', 'cst2_quaderno', 'gv1_ricontrollo', 'a5', 'a5_pozzo', 'h1', 'h2', 'gv1', 'nat_tronello', 'tronello_cerchio', 'ema_orto', 'cst1', 'cst2', 'u1', 'u2_1999', 'u2_1924', 'u2_1899', 'u3_medaglione', 'u3_lanterna', 'u3_bambole_fight', 'u3_bambole_vinte', 'u5_specchio', 'u4_porta_vuota', 'u4_intercapedine', 'sf1', 'sf2', 'sf3', 'sf4', 'sf5', 'sf6', 's49_1', 's49_2', 's49_3', 's49_3_ko', 's74_1', 's74_1b', 's74_2', 's74_3', 'cuore_gc', 'cuore_gc_esito', 'cuore_fe', 'cuore_fe_esito', 'cuore_nat', 'cuore_nat_esito'] },
   { key: 'pranzo',   label: 'Sala da Pranzo',  x: 0.46, y: 0.62, scenes: ['a6_vino', 'a6_coperto', 'a7_persiane', 'z_lettere_riga', 'z2_mano', 'z2_diretta', 'z2_consiglio', 'z_penna_sguardo', 'z6_pietrafonda', 'a6', 'a6_menu', 'a6_brindisi', 'a6_no_brindisi', 'a7', 'z1', 'z2_vino', 'z2_perdono', 'z2_menu_vivi', 'z2_capitolazione', 'z2_trattativa', 'z2_rituale', 'gvz', 'z_biglietto', 'z_lettere', 'z2_strada', 'z2_alleato', 'z2_bambole', 'z2_claudia', 'z3_boss', 'z3_boss_solo', 'z3_boss_arrabbiato', 'z3_boss_indebolito', 'z4_fase2', 'z5_vittoria', 'z6_alba', 'e_alba', 'z_penna', 'z_penna_no', 'e_penna', 'z_custode', 'e_custode', 'e_custode_gregorio', 'z_resa', 'e_ospiti', 'z_vespri', 'z_smemorati', 'e_smemorati'] },
   { key: 'riflesso', label: 'Il Riflesso',      x: 0.10, y: 0.28, scenes: ['w16_promessa', 'w18_nome', 'w1_tuffo', 'w2_riflesso', 'w2_riflesso_ko', 'w3_giardino', 'w3_pattuglia_combat', 'w4_sofia', 'w5_racconto', 'w6_1924', 'w7_ronda', 'w7_ronda_combat', 'w8_direttore', 'w9_studio', 'w9_studio_combat', 'w10_orologio', 'w10_orologio_reso', 'w11_inventario', 'w12_tradimento', 'w12_sofia', 'w14_direttore_boss', 'w15_vittoria', 'w16_amaro', 'w17_fuga', 'w17_fuga_ko', 'w18_soglia', 'w18_saluto', 'w_finale'] },
   { key: 'paese',    label: 'Pietrafonda',     x: 0.16, y: 0.90, scenes: ['pp_foto_corriera', 'pp1', 'pp2', 'pp2_bar', 'pp3', 'pp_anello', 'pp4_cripta', 'pp4', 'pp6', 'pp6_ko', 'pp7'] },
   { key: 'piscina',  label: 'La Piscina',      x: 0.22, y: 0.50, scenes: ['p2_foto_anello', 'p1', 'p1_accappatoio', 'p1_accappatoio_ko', 'p2', 'p2_esperimento', 'p2_esperimento_ko', 'p3_fuori'] },
-  { key: 'cantina',  label: 'La Cantina',      x: 0.62, y: 0.78, scenes: ['k4_storie', 'k4_contatto', 'os3_cartellino', 'os5_conti', 'os6_compagnia', 'k1', 'k2_sofia', 'k2_sofia_ko', 'k3', 'k4_scambio', 'k4_nastro', 'k4_chef_fight', 'k4_furto', 'k4_furto_ko', 'k5_dopo_chef', 'x_celle', 'os1', 'os2', 'os3', 'os4', 'os5', 'os6'] },
+  { key: 'cantina',  label: 'La Cantina',      x: 0.62, y: 0.78, scenes: ['k1_1899', 'k4_storie', 'k4_contatto', 'os3_cartellino', 'os5_conti', 'os6_compagnia', 'k1', 'k2_sofia', 'k2_sofia_ko', 'k3', 'k4_scambio', 'k4_nastro', 'k4_chef_fight', 'k4_furto', 'k4_furto_ko', 'k5_dopo_chef', 'x_celle', 'os1', 'os2', 'os3', 'os4', 'os5', 'os6'] },
   { key: 'pozzo',    label: 'Il Pozzo',        x: 0.86, y: 0.66, scenes: ['b1_volto', 'b4_ricordi', 'b4_promessa', 'b4_scuse', 'b4_pagine', 'b1', 'b1_avviso', 'b2_giardiniere_fight', 'b2_vinto', 'b2_orto', 'b3_pozzo', 'b4_medaglione', 'b4_tronello', 'b4_vino', 'b4_parole', 'b4_ira', 'b4_calata', 'b4_calata_ko'] },
 ];
 
