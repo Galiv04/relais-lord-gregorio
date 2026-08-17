@@ -152,6 +152,17 @@ const Combat = (() => {
       log(`🧸 Trentadue signorine di porcellana fissano la Fame senza sbattere le palpebre. La Fame, a disagio, colpisce PEGGIO (primo attacco con svantaggio).`, 'log-heal');
     }
     if (battle.isBoss && G.flags.gregorio_umano) log(`🍷 Gregorio, umano e furioso, vi copre le spalle: <b>+1 a tutti i vostri tiri!</b>`, 'log-heal');
+    if (battle.isBoss && G.flags.mano_gregorio) {
+      const boss = battle.enemies.find(e => e.boss && !e.dead);
+      if (boss) {
+        boss.hp = Math.max(1, boss.hp - 4);
+        log(`🤝 La casa ha VISTO la mano di Gregorio nella vostra, nel buio — e per la prima volta in 125 anni ha esitato: <b>-4 PV alla Fame</b>, che parte già ferita nell'orgoglio.`, 'log-crit');
+      }
+    }
+    if (battle.isBoss && G.flags.consiglio_chef) {
+      battle.enemies.forEach(e => { if (!e.dead && e.boss) e.attack.plus = Math.max(0, (e.attack.plus || 0) - 1); });
+      log(`🍳 Le tre regole dello Chef: luce, ritmo rotto, niente paura nel piatto. La portata è SGONFIA (<b>-1 ai danni della Fame</b>).`, 'log-heal');
+    }
 
     setTimeout(() => { banner.classList.add('hidden'); nextTurn(); }, 1600);
     if (raf) battle._raf = raf(animLoop);
