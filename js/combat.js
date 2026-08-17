@@ -281,12 +281,15 @@ const Combat = (() => {
     ['pagine_rilette',     `🍽 La Fame, sillabando: "Sale. Acqua. Nome. Avete letto le istruzioni ad ALTA VOCE, nel mio pozzo. Le ho sentite anch'io. GRAZIE del ripasso."`],
     ['ferro_cavallo',      `🍽 La Fame, divertita davvero: "Un portafortuna di plastica da due euro. Made in China. È la cosa più COMMOVENTE che sia entrata qui in un secolo. Quasi quasi... me lo tengo."`],
     ['ultimo_biglietto',   `🍽 La Fame, sottovoce, solo per Natalino: "L'ultimo biglietto, quello della promessa. GRATTALO. Ti dico io cosa c'è sotto: c'è scritto RESTA."`],
+    ['federico_offerta',   `🍽 La Fame, sfogliando una pratica che non ha in mano: "Offerta verbale 2024/F. 'DOMANI MUOIO.' Che ospite PREVIDENTE, il dottore. Il Belvedere però non anticipa mai le consegne: domani è domani. Stanotte... si tratta solo la penale."`],
+    ['offerta_ritirata',   `🍽 La Fame, e per la prima volta la voce rubata suona SCOCCIATA: "Il dottore ha receduto. Ad alta voce. Pagando. CENTOVENTICINQUE anni e nessuno aveva mai letto le clausole fino in fondo. Odio i clienti informati."`],
   ];
 
   function bossTaunt() {
     if (!battle.isBoss || battle.over) return;
     if (!battle._tauntsUsed) battle._tauntsUsed = new Set();
-    const pool = BOSS_TAUNTS.filter(([flag]) => G.flags[flag] && !battle._tauntsUsed.has(flag));
+    const pool = BOSS_TAUNTS.filter(([flag]) => G.flags[flag] && !battle._tauntsUsed.has(flag)
+      && !(flag === 'federico_offerta' && G.flags.offerta_ritirata)); // l'offerta ritirata sostituisce quella aperta
     if (!pool.length || Math.random() < 0.25) return; // ogni tanto tace: il silenzio pesa di più
     const [flag, line] = pool[Math.floor(Math.random() * pool.length)];
     battle._tauntsUsed.add(flag);
@@ -816,7 +819,9 @@ const Combat = (() => {
             gaetano: `🏚 E la casa, piano, nel silenzio: <i>"L'ingegnere. Quello che spiega. Vediamo chi vi spiega... ADESSO."</i>`,
             natalino: `🏚 E la casa, piano, nel silenzio: <i>"Quello che fa ridere. Le case come me odiano chi fa ridere: copre il rumore dei passi."</i>`,
             claudia: `🏚 E la casa, piano, nel silenzio: <i>"L'occhio del gruppo è a terra. Adesso... chi vi GUARDA le spalle?"</i>`,
-            federico: `🏚 E la casa, piano, nel silenzio: <i>"Chi ha prenotato, paga per primo. È scritto nelle condizioni generali."</i>`,
+            federico: (G.flags.federico_offerta && !G.flags.offerta_ritirata)
+              ? `🏚 E la casa, piano, nel silenzio: <i>"'Domani muoio', diceva la pratica. Il Belvedere però le consegne non le anticipa MAI, dottore. Rialzati: l'appuntamento resta per domani."</i>`
+              : `🏚 E la casa, piano, nel silenzio: <i>"Chi ha prenotato, paga per primo. È scritto nelle condizioni generali."</i>`,
             emanuela: `🏚 E la casa, piano, nel silenzio: <i>"La più attenta. Contateli, adesso, i cartellini rimasti in piedi."</i>`,
           };
           if (battle.isBoss && casaLines[h.id]) log(casaLines[h.id], 'log-info');

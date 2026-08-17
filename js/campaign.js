@@ -1036,6 +1036,52 @@ Da qualche parte sopra di voi, al piano delle camere, **un pavimento scricchiola
 
   /* ==================== LA NOTTE SI CHIUDE — HUB ==================== */
 
+
+  p_vespe: {
+    location: 'piscina',
+    caption: 'Il minuto che non vi meritavate',
+    stinger: 'jumpscare',
+    text: `Un minuto. Lo volete, ve lo siete guadagnato, e per trenta secondi lo AVETE: l'acqua a trentadue gradi, il cielo giusto, il silenzio buono.
+
+Poi la siepe comincia a RONZARE.
+
+Non un'ape, non dieci: un rombo basso e fitto che sale dal fondo del giardino — dal pozzo, dal tetto a cuspide del pozzo — e sopra la siepe si alza uno sciame. Vespe. Ma sbagliate: **grigie**, grigie come cenere, con un volo troppo ordinato, a ranghi, come personale richiamato in servizio.
+
+E poi lo sciame fa la cosa che vi toglie il fiato: si FERMA a mezz'aria, si addensa, e prende forma. Spalle. Testa. Le proporzioni di una persona in piedi sul bordo vasca — **la forma esatta del sesto accappatoio**, disegnata da diecimila vespe che sanno stare al loro posto.
+
+> Natalino: *(uscendo dall'acqua all'indietro, senza staccare gli occhi)* "La casa ha finito i camerieri. È passata agli INSETTI."
+
+> Gaetano: "Nidificano nel pozzo dal 1899. SECOLI di sciami, e stanotte li chiama tutti—"
+
+> Claudia: "Meno analisi, più PHON!"
+
+*(Consiglio da narratore: lo sciame è una creatura della villa — phon, sale e fiamma fanno danni DOPPI. È evasivo: i colpi mirati contano più della forza.)*`,
+    combat: { enemies: ['sciame'], victory: 'p_vespe_vinto', defeat: 'x_celle', loot: { gold: 2 } },
+  },
+
+  p_vespe_vinto: {
+    location: 'piscina',
+    caption: 'Lo sciame si sfalda',
+    text: `Lo sciame perde la forma un pezzo alla volta: prima le spalle, poi la testa, poi tutto il resto — le vespe grigie cadono a manciate, e toccando terra fanno un rumore che le vespe non fanno: **carta.** Un fruscio di carta.
+
+Vi chinate a guardare. Ogni vespa caduta è raggomitolata su un frammento minuscolo di foglio ingiallito: le portavano ADDOSSO, come formiche col carico. Claudia ne raccoglie una manciata e ricompone i pezzi sul bordo vasca, alla luce del telefono.
+
+Grafia elegante, del secolo scorso. Bozze. Decine di bozze della stessa frase, con correzioni:
+
+*"Il patto vuole un nome—"* cancellato. *"Il patto ESIGE un nome—"* cancellato. *"Il patto accoglie il nome offerto—"* sottolineato due volte.
+
+> Gaetano: "Sono le MINUTE del contratto. Del 1899. La casa ha riscritto la clausola finché non suonava... gentile." *(alza gli occhi)* "E le vespe le custodiscono da allora. Impollinano una cosa sola, qua dentro: le FIRME."
+
+> Federico: *(che raccoglie un frammento con due dita, e lo guarda come si guarda un nemico di famiglia)* "'Il nome OFFERTO.' Ecco perché protocollano tutto quello che diciamo." *(se lo mette in tasca)* "Questo è mio. Da domani lo incornicio in ufficio: il primo copy della storia a cui NON firmerò mai."
+
+**(Sangue freddo +2: adesso sapete come la casa scrive i suoi contratti — e chi glieli consegna.)**`,
+    gold: 2,
+    sets: { sciame_vinto: true },
+    choices: [
+      { text: '🚪 Dentro. Il minuto è finito da un pezzo', next: 'h1' },
+    ],
+  },
+
   h1: {
     location: 'corridoio',
     stinger: 'campana',
@@ -3791,7 +3837,34 @@ Si alza con un movimento troppo fluido per essere umano, e la luce fredda gli at
     sets: { direttore_incontrato: true },
     choices: [
       { text: 'Uscire dall\'ufficio prima che cambi idea', next: 'w9_studio' },
+      { text: '📋 Sul tavolo c\'è una pratica sottile, in evidenza: "OFFERTA VERBALE — F." Chiedere.', once: true, next: 'w8_pratica' },
       { text: '🖐 Contare anche voi le dita del Direttore, come ha detto Sofia', once: true, gold: 1, sets: { dita_direttore_contate: true }, next: 'w9_studio' },
+    ],
+  },
+
+
+  w8_pratica: {
+    location: 'riflesso_interno',
+    npc: ['direttore'],
+    caption: 'Offerta verbale — F.',
+    stinger: 'fail',
+    text: `Il Direttore segue il vostro sguardo fino alla pratica. E per la prima volta da quando siete entrati, sembra sinceramente CONTENTO di una domanda.
+
+> Il Direttore: "Ah. Questa. Fresca di stasera." *(la apre con due dita, e legge con la voce di chi verbalizza)* "Offerta verbale numero 2024-barra-F. Dichiarante: l'ospite che ha effettuato la prenotazione. Testo: **'DOMANI MUOIO.'** Ripetuta a tavola, davanti a testimoni. Variante registrata a margine, sempre di stasera: **'domani mi prende un infarto fulminante.'**" *(richiude, congiunge le mani)* "Ai sensi del regolamento, una disponibilità dichiarata DUE volte davanti a testimoni costituisce offerta. La casa ringrazia. La pratica è aperta."
+
+Silenzio. Di quelli in cui si sente il proprio sangue.
+
+> Federico: "Era una BATTUTA. Si dice così, è un modo di—"
+
+> Il Direttore: *(gentile come una ghigliottina)* "Il Belvedere non ha mai capito le battute, dottore. Ha capito benissimo i CONTRATTI, però. È il suo unico difetto: prende ogni parola sul serio." *(spinge la pratica di un centimetro verso di lui)* "Può recedere, naturalmente. Non qui: l'offerta è stata fatta DI LÀ, a tavola. E di là si ritira. Ad alta voce. Davanti a tutti. Pagando il conto — le parole rimangiate costano SEMPRE qualcosa, chieda alla signora del pozzo."
+
+> Emanuela: *(sottovoce, prendendo Federico sottobraccio)* "Da stasera parli SOLO tramite ufficio stampa. Sono io, l'ufficio stampa."
+
+**(La casa ha protocollato lo scherzo di Federico. Flag: l'offerta è APERTA — al Banchetto, qualcuno dovrà rimangiarsela ad alta voce. Sangue freddo +1: almeno adesso lo sapete.)**`,
+    gold: 1,
+    sets: { federico_offerta: true },
+    choices: [
+      { text: '🚪 Fuori di qui. E NESSUNO dice più niente ad alta voce', next: 'w9_studio' },
     ],
   },
 
@@ -4164,7 +4237,7 @@ Da qualche parte nella villa, una porta verde in fondo a un corridoio aspetta an
     sets: { riflesso_fatto: true, ostaggi_liberati: true },
     choices: [
       { text: '🚪 Tornare al corridoio: la notte, di qua, non è ancora finita', next: 'h1' },
-      { text: '🏊 Un minuto in piscina. VERA. Ve lo meritate', next: 'h1' },
+      { text: '🏊 Un minuto in piscina. VERA. Ve lo meritate', once: true, next: 'p_vespe' },
     ],
   },
 
@@ -4467,10 +4540,38 @@ E la casa — le pareti, i lampadari, i ritratti, il pavimento a scacchi — **r
       { text: '💌 Posare le lettere sul tavolo: "Queste le avete scritte VOI DUE. Prima del patto. Prima della fame."', requires: { item: 'lettere_1899' }, removeItem: 'lettere_1899', once: true, next: 'z_lettere' },
       { text: '🍷 Prima di tutto: versare il vino del 1899 nel bicchiere di Gregorio', requires: { item: 'vino_1899' }, removeItem: 'vino_1899', next: 'z2_vino' },
       { text: '💧 Riferire le parole del pozzo: "Ada ti perdona. A metà. LA METÀ CHE SERVE."', requires: { flag: 'ada_perdono' }, once: true, next: 'z2_perdono' },
+      { text: '📋 PRIMA DI TUTTO: Federico si alza. C\'è una pratica da chiudere. "Ritiro l\'offerta."', requires: { flag: 'federico_offerta', notFlag: 'offerta_ritirata' }, once: true, next: 'z_offerta' },
       { text: '🔔 Suonare la campanella di Don Michele: "quando LEI si siede a tavola..."', requires: { item: 'campanella_1974' }, removeItem: 'campanella_1974', next: 'z_vespri' },
       { text: '🫙 L\'offerta impensabile: non UN nome. Un RICORDO a testa: questa notte, intera.', next: 'z_smemorati' },
       { text: '🖋 La scelta di cui non parlerete mai più: UNO di voi prende la penna', next: 'z_custode' },
       { text: '🍽 Sedersi. Tutti e cinque. C\'è una pace terribile, nello smettere di lottare...', next: 'z_resa' },
+    ],
+  },
+
+
+  z_offerta: {
+    location: 'salaBanchetto',
+    npc: ['gregorio'],
+    caption: 'Il recesso',
+    text: `Federico si alza. Si abbottona la giacca — il gesto che fa prima dei meeting importanti — e parla alla sala. Non a Gregorio: alla SALA.
+
+> Federico: "Belvedere. Sono io. Quello della prenotazione, quello delle cinque stelle, quello di 'domani muoio'." *(respira)* "RITIRO L'OFFERTA. Formalmente. Davanti a testimoni. Quella frase era mia, e me la rimangio: domani NON muoio. Domani mi sveglio, mi lamento del materasso, faccio colazione DUE volte e do la colpa dei tornanti a Gaetano. Ho... ho un sacco di impegni, domani."
+
+La casa ci pensa. Si sente che ci pensa: il lampadario rallenta, i ritratti si sporgono, e da qualche parte sotto il pavimento un'acqua ferma si mette in ascolto.
+
+> Gregorio: *(piano, senza alzare gli occhi)* "Il conto, dottore. Le parole rimangiate si pagano. È l'unica clausola che la casa non ha mai derogato."
+
+> Federico: "Lo so." *(mette sul tavolo il coraggio, letteralmente: e la voce, per la prima volta stanotte, gli trema senza che provi a nasconderlo)* "Pago col sangue freddo. Tutto quello che serve. Mi terrò la paura, stanotte: è MIA, come la battuta. Almeno la paura non la protocollate."
+
+Un suono attraversa il Belvedere: una pratica, da qualche parte, che si CHIUDE. Con la puntina. Per sempre.
+
+> Emanuela: *(tirandolo giù per la giacca, con gli occhi lucidi e la voce da ufficio stampa)* "Il mio cliente non rilascia altre dichiarazioni."
+
+**(L'offerta è RITIRATA: -2 Sangue freddo, pagati volentieri. E la Fame, stanotte, ha una carta in meno nel mazzo.)**`,
+    goldLoss: 2,
+    sets: { offerta_ritirata: true },
+    choices: [
+      { text: '↩ Al tavolo. E da domani, scaramanzia SOLO per iscritto', next: 'z1' },
     ],
   },
 
@@ -5490,6 +5591,9 @@ const DIARY_FLAGS = [
   ['quaderno_riletto',      'L\'ultima pagina del quaderno di Gregorio, datata IERI: "il gruppo di domani ride forte." E una goccia tonda caduta sull\'ultima parola.'],
   ['promessa_sofia',        'La promessa a Sofia, che ha pianto lacrime NON catalogabili: da articolo di inventario a storia raccontata. Deprezzamento inverso.'],
   ['ricordi_gregorio_chiesti','I ricordi che Ada tiene stretti: il valzer contato male e la mano sotto il tavolo durante i temporali. Il suo sale grosso.'],
+  ['federico_offerta',      'La pratica del Direttore: "OFFERTA VERBALE — F. Domani muoio, ripetuta davanti a testimoni." La casa non capisce le battute. I contratti sì.'],
+  ['offerta_ritirata',      'Federico si è rimangiato la battuta ad alta voce, davanti alla casa, pagando il conto: "Domani NON muoio. Ho un sacco di impegni, domani."'],
+  ['sciame_vinto',          'Lo sciame del pozzo, sconfitto a bordo piscina: diecimila vespe grigie che custodivano le minute del contratto del 1899. Impollinano una cosa sola: le firme.'],
   ['riga_letta_gregorio',   'La regola di Ada, 12 agosto 1899: "in questa casa non si firma MAI niente dopo cena." Tre giorni dopo, Gregorio firmò. Dopo cena.'],
   ['cesoie_raccolte',       'Le cesoie del Giardiniere, raccolte dall\'orto: ferro del 1899, affilato ogni notte da mani di paglia. Ora potano per voi.'],
   ['panorama_filari',       'I filari della valle visti dal muretto dell\'orto: geometrie perfette che nessun contadino ha piantato. La collina ha i suoi disegni.'],
@@ -5507,10 +5611,10 @@ const WORLD_MAP = [
   { key: 'relais',   label: 'Il Relais',       x: 0.40, y: 0.30, scenes: ['a2', 'a2_siepi', 'a2_siepi_b', 'p4_fuga', 'gr1', 'gr2', 'gr3', 'gr3_ko'] },
   { key: 'hall',     label: 'La Hall',         x: 0.56, y: 0.48, scenes: ['a4_lampadario', 'a4_luce', 'a4_registro', 'a3', 'a3_registro', 'a3_registro_ko', 'a4_firma', 'a4_rinvio', 'a4_firma_forzata', 'p4_rientro'] },
   { key: 'camere',   label: 'Le Camere',       x: 0.74, y: 0.32, scenes: ['u2_zaino', 'u2_walkman', 'h2_ciocca', 'cuore_gc_nebbia', 'cuore_fe_borsa', 'u2_camera6', 'tronello_fumo', 'cst2_quaderno', 'gv1_ricontrollo', 'a5', 'a5_pozzo', 'h1', 'h2', 'gv1', 'nat_tronello', 'tronello_cerchio', 'ema_orto', 'cst1', 'cst2', 'u1', 'u2_1999', 'u2_1924', 'u2_1899', 'u3_medaglione', 'u3_lanterna', 'u3_bambole_fight', 'u3_bambole_vinte', 'u5_specchio', 'u4_porta_vuota', 'u4_intercapedine', 'sf1', 'sf2', 'sf3', 'sf4', 'sf5', 'sf6', 's49_1', 's49_2', 's49_3', 's49_3_ko', 's74_1', 's74_1b', 's74_2', 's74_3', 'cuore_gc', 'cuore_gc_esito', 'cuore_fe', 'cuore_fe_esito', 'cuore_nat', 'cuore_nat_esito'] },
-  { key: 'pranzo',   label: 'Sala da Pranzo',  x: 0.46, y: 0.62, scenes: ['a6_vino', 'a6_coperto', 'a7_persiane', 'z_lettere_riga', 'z2_mano', 'z2_diretta', 'z2_consiglio', 'z_penna_sguardo', 'z6_pietrafonda', 'a6', 'a6_menu', 'a6_brindisi', 'a6_no_brindisi', 'a7', 'z1', 'z2_vino', 'z2_perdono', 'z2_menu_vivi', 'z2_capitolazione', 'z2_trattativa', 'z2_rituale', 'gvz', 'z_biglietto', 'z_lettere', 'z2_strada', 'z2_alleato', 'z2_bambole', 'z2_claudia', 'z3_boss', 'z3_boss_solo', 'z3_boss_arrabbiato', 'z3_boss_indebolito', 'z4_fase2', 'z5_vittoria', 'z6_alba', 'e_alba', 'z_penna', 'z_penna_no', 'e_penna', 'z_custode', 'e_custode', 'e_custode_gregorio', 'z_resa', 'e_ospiti', 'z_vespri', 'z_smemorati', 'e_smemorati'] },
-  { key: 'riflesso', label: 'Il Riflesso',      x: 0.10, y: 0.28, scenes: ['w6_parola', 'w16_promessa', 'w18_nome', 'w1_tuffo', 'w2_riflesso', 'w2_riflesso_ko', 'w3_giardino', 'w3_pattuglia_combat', 'w4_sofia', 'w5_racconto', 'w6_1924', 'w7_ronda', 'w7_ronda_combat', 'w8_direttore', 'w9_studio', 'w9_studio_combat', 'w10_orologio', 'w10_orologio_reso', 'w11_inventario', 'w12_tradimento', 'w12_sofia', 'w14_direttore_boss', 'w15_vittoria', 'w16_amaro', 'w17_fuga', 'w17_fuga_ko', 'w18_soglia', 'w18_saluto', 'w_finale'] },
+  { key: 'pranzo',   label: 'Sala da Pranzo',  x: 0.46, y: 0.62, scenes: ['z_offerta', 'a6_vino', 'a6_coperto', 'a7_persiane', 'z_lettere_riga', 'z2_mano', 'z2_diretta', 'z2_consiglio', 'z_penna_sguardo', 'z6_pietrafonda', 'a6', 'a6_menu', 'a6_brindisi', 'a6_no_brindisi', 'a7', 'z1', 'z2_vino', 'z2_perdono', 'z2_menu_vivi', 'z2_capitolazione', 'z2_trattativa', 'z2_rituale', 'gvz', 'z_biglietto', 'z_lettere', 'z2_strada', 'z2_alleato', 'z2_bambole', 'z2_claudia', 'z3_boss', 'z3_boss_solo', 'z3_boss_arrabbiato', 'z3_boss_indebolito', 'z4_fase2', 'z5_vittoria', 'z6_alba', 'e_alba', 'z_penna', 'z_penna_no', 'e_penna', 'z_custode', 'e_custode', 'e_custode_gregorio', 'z_resa', 'e_ospiti', 'z_vespri', 'z_smemorati', 'e_smemorati'] },
+  { key: 'riflesso', label: 'Il Riflesso',      x: 0.10, y: 0.28, scenes: ['w8_pratica', 'w6_parola', 'w16_promessa', 'w18_nome', 'w1_tuffo', 'w2_riflesso', 'w2_riflesso_ko', 'w3_giardino', 'w3_pattuglia_combat', 'w4_sofia', 'w5_racconto', 'w6_1924', 'w7_ronda', 'w7_ronda_combat', 'w8_direttore', 'w9_studio', 'w9_studio_combat', 'w10_orologio', 'w10_orologio_reso', 'w11_inventario', 'w12_tradimento', 'w12_sofia', 'w14_direttore_boss', 'w15_vittoria', 'w16_amaro', 'w17_fuga', 'w17_fuga_ko', 'w18_soglia', 'w18_saluto', 'w_finale'] },
   { key: 'paese',    label: 'Pietrafonda',     x: 0.16, y: 0.90, scenes: ['pp_foto_corriera', 'pp1', 'pp2', 'pp2_bar', 'pp3', 'pp_anello', 'pp4_cripta', 'pp4', 'pp6', 'pp6_ko', 'pp7'] },
-  { key: 'piscina',  label: 'La Piscina',      x: 0.22, y: 0.50, scenes: ['p2_foto_anello', 'p1', 'p1_accappatoio', 'p1_accappatoio_ko', 'p2', 'p2_esperimento', 'p2_esperimento_ko', 'p3_fuori'] },
+  { key: 'piscina',  label: 'La Piscina',      x: 0.22, y: 0.50, scenes: ['p_vespe', 'p_vespe_vinto', 'p2_foto_anello', 'p1', 'p1_accappatoio', 'p1_accappatoio_ko', 'p2', 'p2_esperimento', 'p2_esperimento_ko', 'p3_fuori'] },
   { key: 'cantina',  label: 'La Cantina',      x: 0.62, y: 0.78, scenes: ['k1_1899', 'k4_storie', 'k4_contatto', 'os3_cartellino', 'os5_conti', 'os6_compagnia', 'k1', 'k2_sofia', 'k2_sofia_ko', 'k3', 'k4_scambio', 'k4_nastro', 'k4_chef_fight', 'k4_furto', 'k4_furto_ko', 'k5_dopo_chef', 'x_celle', 'os1', 'os2', 'os3', 'os4', 'os5', 'os6'] },
   { key: 'pozzo',    label: 'Il Pozzo',        x: 0.86, y: 0.66, scenes: ['b1_volto', 'b4_ricordi', 'b4_promessa', 'b4_scuse', 'b4_pagine', 'b1', 'b1_avviso', 'b2_giardiniere_fight', 'b2_vinto', 'b2_orto', 'b3_pozzo', 'b4_medaglione', 'b4_tronello', 'b4_vino', 'b4_parole', 'b4_ira', 'b4_calata', 'b4_calata_ko'] },
 ];

@@ -628,6 +628,12 @@ const Sprites = (() => {
   };
 
 
+  // Lo Sciame — vespe grigie che prendono forma d'ospite (riusa la mappa dell'ombra)
+  const sciame = {
+    palette: { a:'#c9a227', A:'#7a6414', v:'#141005', e:'#f2e05c' },
+    map: ombra.map,
+  };
+
   // Sofia — la ragazza del 1999: capelli mossi, occhiali da sole sui capelli, jeans
   const sofia = {
     palette: { s:'#e8bc98', h:'#3a2418', H:'#4d3020', e:'#3a2a20', o:'#2a2a35', t:'#c8642a', T:'#a04a1d', j:'#3d5a80', J:'#2d4666', w:'#fff', k:'#a06a58', n:'#d0a080', r:'#b05858', K:'#1a1a22' },
@@ -786,7 +792,7 @@ const Sprites = (() => {
 
   const registry = {
     gaetano, natalino, claudia, federico, emanuela, donmichele,
-    ombra, cameriere, bambola, spaventapasseri, lupo_nebbia: lupoNebbia,
+    ombra, sciame, cameriere, bambola, spaventapasseri, lupo_nebbia: lupoNebbia,
     cuoco, ritratto, gregorio, gregorio_fame: gregorioFame, ada,
     sofia, direttore, doppio, contabile,
   };

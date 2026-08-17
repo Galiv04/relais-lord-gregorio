@@ -142,6 +142,13 @@ const BESTIARY = {
     attack: { name: 'Cesoie da siepe', bonus: 4, dice: [1, 10], plus: 1 },
     flavor: 'Cura l\'orto di notte. Nessuno gli ha mai dato un contratto. O un volto.',
   },
+  sciame: {
+    name: 'Lo Sciame del Belvedere', short: 'Sciame', sprite: 'sciame',
+    maxHp: 34, ac: 15, ai: 'random', undead: true,
+    special: 'evasive',
+    attack: { name: 'Mille punture', bonus: 6, dice: [2, 4], plus: 2 },
+    flavor: 'Vespe grigie come cenere, che nidificano sotto il tetto del pozzo dal 1899. Non pungono per difendersi: RISCUOTONO. E quando si alzano tutte insieme... prendono forma d\'ospite.',
+  },
   lupo_nebbia: {
     name: 'Lupo della Nebbia', short: 'Lupo', sprite: 'lupo_nebbia',
     maxHp: 14, ac: 13, ai: 'weakest',
