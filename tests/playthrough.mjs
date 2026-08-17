@@ -394,8 +394,14 @@ function pickSceneChoice(sceneId, btns, scenario, state) {
   }
   const forced = scenario.choices && scenario.choices[sceneId];
   if (forced) {
-    const m = matchButton(btns, forced);
-    if (m) return m;
+    // rete di sicurezza anti-loop: una scelta forzata riapplicata all'infinito
+    // (es. ping-pong z1<->z_smemorati) dopo 30 usi viene lasciata al caso
+    state.forcedUse = state.forcedUse || {};
+    const used = state.forcedUse[sceneId] || 0;
+    if (used < 30) {
+      const m = matchButton(btns, forced);
+      if (m) { state.forcedUse[sceneId] = used + 1; return m; }
+    }
   }
   return btns[Math.floor(scenario.rand() * btns.length)];
 }
@@ -433,7 +439,13 @@ function runGame(scenario) {
     checkInvariants(getG(), 'dopo newGame');
     while (true) {
       steps++;
-      if (steps > STEP_LIMIT) throw new Error(`LOOP INFINITO sospetto nella navigazione (> ${STEP_LIMIT} passi totali)`);
+      if (steps > STEP_LIMIT) {
+        const freq = {};
+        for (const s of log.scenes) freq[s] = (freq[s] || 0) + 1;
+        const top = Object.entries(freq).sort((a, b) => b[1] - a[1]).slice(0, 8)
+          .map(([s, n]) => `${s}×${n}`).join(', ');
+        throw new Error(`LOOP INFINITO sospetto nella navigazione (> ${STEP_LIMIT} passi totali) — scene più visitate: ${top}`);
+      }
 
       const G = getG();
       const sceneId = G.sceneId;
@@ -853,6 +865,9 @@ scenarios.push(scenario(
   ['natalino', 'claudia'], {
     k3: '⚔ Non si tratta con chi ha una mannaia',
     k5_dopo_chef: '🕳 Dietro la cella frigorifera',
+    os1: '🕯 Scendere fino in fondo',      // niente ripensamenti: l'uscita di os1 è once
+    os2: 'Proseguire nella sotto-cantina',
+    os3: 'Avanti, verso la luce',
     os4: '🗣 Sedersi e basta',
   }, { checkBias: 'best', sequences: { h1: ['CANTINA', 'barricarsi'] } }));
 
@@ -887,6 +902,7 @@ function execute(sc) {
   const line = `  ${r.ok ? '✅' : '❌'} [seed ${sc.seed}] ${sc.name} — scene: ${r.log.scenes.length}, combattimenti: ${r.log.combats}, esito: ${endingTxt}`;
   console.log(line);
   if (!r.ok) console.error(`      ↳ ${r.error.split('\n')[0]}`);
+  if (process.env.TEST_DUMP) console.log(`      ↳ percorso: ${r.log.scenes.join(' > ')}`);
   return r;
 }
 
@@ -894,6 +910,8 @@ function execute(sc) {
 // verificare un FLAG (result.log.flags) o che un'azione specifica sia avvenuta davvero
 // (es. result.log.usedForceItem), non solo che una certa scena sia stata visitata.
 function executeUntil(name, heroes, choices, opts, targetScenes, maxAttempts = 14, extraCheck = () => true) {
+  // TEST_FILTER=<sottostringa> esegue solo gli scenari il cui nome combacia (debug mirato)
+  if (process.env.TEST_FILTER && !name.includes(process.env.TEST_FILTER)) return true;
   let last = null;
   for (let i = 0; i < maxAttempts; i++) {
     const sc = scenario(`${name} (tentativo ${i + 1}/${maxAttempts})`, heroes, choices, { ...opts, seed: (opts.seedBase || 555000) + i * 131 });
@@ -905,7 +923,7 @@ function executeUntil(name, heroes, choices, opts, targetScenes, maxAttempts = 1
 }
 
 console.log(`  Esecuzione di ${scenarios.length} partite pilotate + tentativi adattivi per gli esiti a dado...\n`);
-for (const sc of scenarios) execute(sc);
+for (const sc of scenarios) { if (!process.env.TEST_FILTER || sc.name.includes(process.env.TEST_FILTER)) execute(sc); }
 
 // Piscina — l'esperimento di Gaetano va storto (INT fallita): AVVELENAMENTO narrativo
 // (vedi nota sul bug G.lastRoller più sotto: la scena viene comunque raggiunta).
@@ -996,8 +1014,11 @@ executeUntil('Banchetto: i vespri di Don Michele (richiede campanella_1974) -> v
   {
     a3: '📖 Prima, sfogliare il registro',
     a3_registro: 'Firmiamo domani con calma',
-    z1: '🫙 L\'offerta impensabile', // primo giro: solo per toccare z_smemorati
+    pp1: '⬇ Giù, nel corridoio di nebbia',   // dritti in paese: la campanella sta giù
+    pp3: '📖 Raccontargli tutto',             // i doni di Don Michele
     z_smemorati: '↩ No. Questa notte è NOSTRA',
+    // NB: niente scelta FORZATA su z1 — si riapplicherebbe a ogni visita e, senza
+    // campanella, il ping-pong z1<->z_smemorati diventa un loop infinito (bug storico).
   },
   {
     checkBias: 'best', seedBase: 730000,
@@ -1047,8 +1068,13 @@ executeUntil('ossario: con la moka di Don Michele (Pietrafonda) -> os5, il segre
   ['claudia', 'federico'], {
     a3: '📖 Prima, sfogliare il registro',
     a3_registro: 'Firmiamo domani con calma',
+    pp1: '⬇ Giù, nel corridoio di nebbia',    // niente ripensamenti: la moka sta giù
+    pp3: '📖 Raccontargli tutto',              // dritti ai doni di Don Michele (pp4 = moka)
     k3: '⚔ Non si tratta con chi ha una mannaia',
     k5_dopo_chef: '🕳 Dietro la cella frigorifera',
+    os1: '🕯 Scendere fino in fondo',
+    os2: 'Proseguire nella sotto-cantina',
+    os3: 'Avanti, verso la luce',
     os4: '☕ Offrirgli la moka',
   },
   { checkBias: 'best', seedBase: 820000, sequences: { h1: ['Pietrafonda', 'CANTINA', 'barricarsi'] } },
