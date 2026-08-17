@@ -504,7 +504,7 @@ const Engine = (() => {
         G.lastRoller = hIdx;   // il Belvedere ricorda chi ha osato tirare
         $('modal-generic').classList.add('hidden');
         const rollIt = (isReroll) => Dice.showRoll({
-          title: `${h.name} ${isReroll ? 'RITIRA (l\'Asso di Denari!)' : 'tenta'}:<br>${STAT_NAMES[check.stat]} — CD ${check.dc}`,
+          title: `${h.name} ${isReroll ? 'RITIRA (l\'Asso di Denari!)' : 'tenta'}:<br>${STAT_NAMES[check.stat]} — CD ${check.dc}${h.veleno ? '<br><span style="color:var(--red);font-size:16px">☠ avvelenato dal freddo: −2 già contato nel bonus</span>' : ''}`,
           mod, dc: check.dc,
           onDone: res => {
             if (!res.success && !isReroll && G.inventory.includes('asso_di_denari')) {
@@ -559,7 +559,7 @@ const Engine = (() => {
         <div class="party-slot-name">${h.name.split(' ')[0]}</div>
         ${h.player ? `<div class="party-slot-player">${h.player}</div>` : ''}
         <div class="hp-bar"><div class="hp-fill ${frac > 0.5 ? 'high' : frac > 0.25 ? 'mid' : ''}" style="width:${Math.max(0, frac * 100)}%"></div></div>
-        <span class="hp-text">${h.preso ? '🕸 PRESO' : h.down ? 'A TERRA' : (h.veleno ? '☠ ' : '') + h.hp + '/' + h.maxHp + ' PV'}</span>`;
+        <span class="hp-text">${h.preso ? '🕸 PRESO' : h.down ? 'A TERRA' : (h.veleno ? '☠−2 ' : '') + h.hp + '/' + h.maxHp + ' PV'}</span>`;
       slot.appendChild(info);
       slot.onclick = () => showHeroSheet(h);
       bar.appendChild(slot);
@@ -576,10 +576,15 @@ const Engine = (() => {
       const left = withUses && G && G.uses[h.id] ? ` — usi rimasti: <b>${G.uses[h.id][ab.id]}</b>` : ` — usi per avventura: <b>${ab.uses}</b>`;
       return `<div class="ability-box"><span class="ability-name">✨ ${ab.name}</span>${left}<div class="ability-desc">${ab.desc}</div></div>`;
     }).join('');
+    const conditions = [];
+    if (h.veleno) conditions.push(`<div class="ability-box" style="border-left:5px solid var(--red)"><span class="ability-name">☠ AVVELENATO — il freddo del Belvedere</span><div class="ability-desc"><b>−2 a TUTTE le prove e agli attacchi</b> finché dura. Si cura con l'<b>Antidoto di Erbe</b>: Zaino → "🌿 Cura il freddo". Il freddo non passa da solo: la casa non restituisce niente gratis.</div></div>`);
+    if (h.preso) conditions.push(`<div class="ability-box" style="border-left:5px solid var(--red)"><span class="ability-name">🕸 PRESO dalla villa</span><div class="ability-desc">Fuori gioco finché il gruppo non lo libera. La casa lo tiene da parte — non gli farà male: lo sta CONSERVANDO.</div></div>`);
+    if (h.down) conditions.push(`<div class="ability-box" style="border-left:5px solid var(--red)"><span class="ability-name">💀 A TERRA</span><div class="ability-desc">Serve una cura o una pozione per rialzarlo.</div></div>`);
     return `
       <h2>${h.name}</h2>
       <p style="color:var(--blue);font-size:20px">${h.class} — <i>${h.tagline}</i></p>
       ${h.player ? `<p style="color:var(--text-dim)">Giocato da: <b>${h.player}</b></p>` : ''}
+      ${conditions.length ? `<h3>⚠️ Condizioni attive</h3>${conditions.join('')}` : ''}
       <div class="stat-row">
         <div class="stat-chip"><span class="stat-label">PV</span><span class="stat-val">${G ? h.hp + '/' + h.maxHp : h.maxHp}</span></div>
         <div class="stat-chip"><span class="stat-label">CA</span><span class="stat-val">${h.ac}</span></div>
@@ -623,12 +628,23 @@ const Engine = (() => {
       const item = ITEMS[it];
       const useBtn = item.usable ? `<button class="btn btn-small" onclick="Engine.usePotionOutside('${it}')">🧪 Usa</button>` :
         item.cureVeleno ? `<button class="btn btn-small" onclick="Engine.useAntidote('${it}')">🌿 Cura il freddo</button>` : '';
-      return `<div class="inv-item"><span class="inv-name">${item.name}${n > 1 ? ' ×' + n : ''}</span><span class="inv-desc">${item.desc}</span>${useBtn}</div>`;
+      const loreBtn = item.lore ? `<button class="btn btn-small" onclick="Engine.inspectItem('${it}')">📖 Ispeziona</button>` : '';
+      return `<div class="inv-item"><span class="inv-name">${item.name}${n > 1 ? ' ×' + n : ''}</span><span class="inv-desc">${item.desc}</span>${useBtn}${loreBtn}</div>`;
     }).join('') || '<p style="color:var(--text-dim)">Lo zaino è vuoto. Succede ai migliori.</p>';
     box.innerHTML = `<h2>🎒 Le Vostre Cose</h2>
       <div class="gold-display">🕯 Sangue Freddo: ${G.gold}</div>
       ${itemsHtml}
       <button class="btn" style="margin-top:14px" onclick="document.getElementById('modal-generic').classList.add('hidden')">✔ Chiudi</button>`;
+    $('modal-generic').classList.remove('hidden');
+  }
+
+  function inspectItem(itemId) {
+    const item = ITEMS[itemId];
+    if (!item || !item.lore) return;
+    const box = $('modal-generic-content');
+    box.innerHTML = `<h2>📖 ${item.name}</h2>
+      <div class="backstory" style="white-space:pre-wrap">${item.lore}</div>
+      <button class="btn" style="margin-top:14px" onclick="Engine.showInventory()">↩ Allo zaino</button>`;
     $('modal-generic').classList.remove('hidden');
   }
 
@@ -1053,7 +1069,7 @@ const Engine = (() => {
     listProfiles, currentProfile, setCurrentProfile, deleteProfile, renameProfile, exportCode, importCode,
     showScreen, gotoScene, currentScene, renderPartyBar,
     showParty, showHeroSheet, showHeroSheetIdx, showInventory, showRules, showMap, showMenu, showDiary, showBestiary, showRevive, startChapter, reviveUnlocked,
-    usePotionOutside, applyPotion, useAntidote, applyAntidote, backToTitle, confirmRestart, doRestart,
+    usePotionOutside, applyPotion, useAntidote, applyAntidote, inspectItem, backToTitle, confirmRestart, doRestart,
     heroSheetHTML, formatText,
   };
 })();

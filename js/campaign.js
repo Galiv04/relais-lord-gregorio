@@ -91,6 +91,83 @@ const ITEMS = {
   campanella_1974:  { name: 'Campanella del 1974', desc: 'La campanella della vecchia chiesa di Pietrafonda. Don Michele: "Quando LEI si siede a tavola... suonate i vespri."', usable: false },
 };
 
+/* ---- Testi ispezionabili (Zaino → 📖 Ispeziona): leggere gli oggetti AL TAVOLO ---- */
+ITEMS.diario_ada.lore = `Il diario si apre sempre sulla stessa pagina, come se avesse una piega d'abitudine.
+
+"12 agosto 1899 — G. dice che c'è un modo per uscirne, che ha parlato con la cosa nel pozzo, che serve solo una firma. Gli credo. Gli ho sempre creduto: è il suo talento.
+
+Se leggete queste righe, chiunque siate: i nodi della casa si sciolgono con TRE cose — il sale che è rimasto fedele, l'acqua che ricorda, e il nome dato per amore e non per fame.
+
+Le ultime tre pagine le ho strappate io. Le ho date al pozzo, perché certe istruzioni deve poterle dare solo chi le ha pagate. — Ada"
+
+(Le pagine successive sono scritte fitte, ma l'inchiostro scappa dagli occhi quando provate a leggerle: la casa permette UNA pagina per volta. In combattimento, leggerne una ad alta voce confonde le sue creature.)`;
+ITEMS.acqua_pozzo.lore = `Un'acqua che pesa più di quanto dovrebbe, in una bottiglia che era della limonata.
+
+Guardandoci dentro controluce, il riflesso NON è la stanza in cui vi trovate: è un cielo. Stellato, fermo, con una luna sottile — il cielo di un'altra notte, forse di centoventicinque anni fa. Se la inclinate, le stelle NON si muovono.
+
+Sul fondo, una scritta a smalto, di mano femminile: "acqua che ricorda". È uno dei tre ingredienti del rituale. Ada l'ha data a voi: non si spreca, non si beve, non si lascia in giro.`;
+ITEMS.gratta_vinci.lore = `Cinque Gratta e Vinci comprati all'autogrill di Baiano. Quattro grattati, un superstite.
+
+I quattro persi dicono RITENTA — anche se, guardando bene il terzo, le lettere sembrano essersi accomodate in un ordine diverso: RIENTRATE. Sarà la stanchezza.
+
+L'ultimo è intatto. Natalino ci ha giurato sopra: si gratta FUORI di qui, all'alba, tutti e cinque presenti. Non è un biglietto. È una promessa con la patina d'argento.`;
+ITEMS.antidoto.lore = `Erbe dell'orto bollite come dice il diario di Ada: "finché l'acqua non torna a sapere di orto."
+
+L'odore è quello giusto — rosmarino, menta selvatica, e una cosa amara che non ha nome sul barattolo. Scalda le mani attraverso il vetro: è l'ESATTO contrario del freddo del Belvedere.
+
+Chi è avvelenato dal freddo (☠ −2 a prove e attacchi) lo beve e guarisce. Anche in pieno combattimento.`;
+ITEMS.tronello.lore = `Mezzo tronello, conservato con cura da Natalino "per il momento giusto".
+
+Non è droga, ai sensi della serata: è DIPLOMAZIA. Al pozzo ne è già sceso metà, calato nel secchio come un'offerta, e la signora ha gradito. Questo mezzo resta per un cerchio di gruppo, se la notte concede una pausa — o per un'altra ambasciata.`;
+ITEMS.taralli.lore = `I taralli della scorta di viaggio, miracolosamente sopravvissuti al bagagliaio.
+
+Sanno di casa, di autostrada, di qualunque posto che NON sia questo. In una notte in cui la cena l'ha cucinata un morto, un tarallo è la cosa più viva che potete mettervi in bocca. (+PV quando usati: la normalità nutre.)`;
+ITEMS.birra_limone.lore = `La birra al limone di Federico, ancora fresca per miracolo.
+
+L'etichetta è di una marca vera, di un mondo vero, dove i frigoriferi servono a tenere fresche le cose e non le persone. Federico la conserva "per il brindisi della vittoria". Nessuno ha il coraggio di dirgli che porta sfiga dirlo ad alta voce. Anzi: ormai lo sapete, QUI le parole ad alta voce diventano contratti.`;
+ITEMS.torcia_led.lore = `1200 lumen, tre modalità, di Gaetano. "Non si sa mai", aveva detto caricandola.
+
+Sul retro, l'adesivo dell'inventario di laboratorio con il suo nome. La terza modalità — lo strobo tattico — non l'ha mai provata: il manuale dice "per disorientare aggressori". Il manuale non specificava di che secolo.`;
+ITEMS.accendino.lore = `L'accendino di Federico. "Non fumo più, lo tengo per affezione."
+
+È un ricordo di quando fumava, di sere lunghe e discorsi lunghi. La fiamma è piccola, viva, CALDA — e stanotte avete imparato che le cose della villa odiano esattamente questo: il caldo che non devono gestire loro. Il gas basta per un colpo solo: sceglietelo bene.`;
+ITEMS.kit_emanuela.lore = `Il kit di Emanuela: garze, cerotti, ago da sutura, disinfettante, e una calma innaturale ripiegata sul fondo.
+
+C'è un ordine, là dentro, che racconta la sua proprietaria meglio di qualunque biografia: ogni cosa al suo posto, ogni posto con la sua cosa. Sul coperchio, a pennarello: "NON SI MUORE SENZA APPUNTAMENTO. — E."`;
+ITEMS.campanello.lore = `Ottone lucido da bancone, con il cartellino originale: "Suonare in caso di bisogno. Verranno."
+
+Il punto, avete capito ormai, è chi sono LORO — e il fatto che il suono del padrone paralizza il personale: le creature della casa si bloccano sull'attenti. Funziona una volta: poi il batacchio cade, e certe telefonate è meglio non farle due volte.`;
+ITEMS.lettere_1899.lore = `Un fascio di lettere legato con lo spago, grafia doppia: una elegante (G.), una fitta e femminile (A.).
+
+Parlano dell'ampliamento mai fatto: le camere per le famiglie, i bambini nella dependance, il glicine da spostare. Progetti. Preventivi. Un futuro intero, scritto a quattro mani.
+
+Nell'ultima, la regola di Ada: "in questa casa non si firmi MAI niente dopo cena. I contratti sono roba da mattina. Promettimelo." Datata 12 agosto 1899. Tre giorni prima del patto — firmato dopo cena.`;
+ITEMS.biglietto_1949.lore = `Un biglietto piegato in otto, mai consegnato. La carta è consumata SOLO lungo le pieghe: aperto e richiuso mille volte, mai dato.
+
+"NON FIRMATE. Scendete stanotte. Il custode."
+
+Sotto, la data: 1949. Il gruppo del '49 è nei ritratti. Gregorio ci ha provato UNA volta — e da settantacinque anni si porta in tasca il coraggio che non ha avuto. Ridarglielo davanti a tutti, al Banchetto, potrebbe valere più di qualunque arma.`;
+ITEMS.polaroid.lore = `Una Polaroid del luglio 1999: cinque ragazzi che ridono in piscina, di notte.
+
+La ragazza mora con gli occhiali da sole sui capelli è Sofia. Intorno alla sua testa, un cerchio rosso a pennarello — la calligrafia ormai la riconoscete. Come al mercato, quando si sceglie.
+
+E fuori dall'acqua, contateli: SEI asciugamani. La macchina ha ancora uno scatto. Meglio non pensare a chi ha scattato la foto.`;
+ITEMS.anello_1999.lore = `Un anello sottile, dorato, restituito dal fondo della piscina in cambio di un'infradito.
+
+Dentro, un'incisione consumata dall'acqua ma leggibile: "A Sofia — per sempre qui."
+
+"Per sempre qui." Chi gliel'ha regalato non immaginava quanto la casa avrebbe preso alla lettera la dedica. Al pozzo — o a chi lo porta al dito da venticinque anni — questo anello vale una vita.`;
+ITEMS.inventario_riflesso.lore = `Il registro del Direttore, strappato al mondo capovolto. Colonne ordinate: articolo, anno, stato di conservazione.
+
+Leggerlo fa male agli occhi — le righe sono scritte SOTTO la carta, non sopra — ma i nomi si distinguono: ogni creatura della casa è a catalogo, con data di acquisizione. Leggere un nome ad alta voce in combattimento RICONOSCE la creatura: e ciò che viene riconosciuto, qui, perde potere. Le pagine reggono per un uso solo.`;
+ITEMS.moka.lore = `La moka di Don Michele, ammaccata da cinquant'anni d'uso quotidiano e ancora perfetta.
+
+Dentro c'è il caffè del paese: nero, cattivo, VERO. Il parroco l'ha caricata lui stesso: "Lassù vi serviranno le forze. E il caffè, ai morti, fa uno strano effetto: gli ricorda le mattine." Ricarica tutte le abilità di una persona — o, forse, qualcos'altro a qualcun altro.`;
+ITEMS.chiave_camera6.lore = `Ottone annerito, pesante, con l'etichetta di cartone legata allo spago: "Camera n. 6 — per quando la signora si deciderà."
+
+Il Belvedere non HA una camera numero 6. Le camere del piano proibito portano ANNI, non numeri. Eppure la chiave è comparsa nella borsa di Emanuela senza chiedere permesso — e le chiavi, in questa casa, aprono porte che si costruiscono all'occorrenza.`;
+
+
 const CAMPAIGN = {
 
   /* ==================== PROLOGO — IL VIAGGIO ==================== */
