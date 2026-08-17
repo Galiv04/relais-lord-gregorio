@@ -3695,7 +3695,40 @@ Natalino si ferma davanti al ragazzo che ride della battuta eterna, e per un sec
     sets: { gruppo_1924_visto: true },
     choices: [
       { text: 'Proseguire verso il cuore della casa capovolta', next: 'w7_ronda' },
-      { text: '👂 Avvicinarsi a uno dei Ballerini, per sentire la parola sussurrata', once: true, gold: 1, sets: { parola_ballerino_sentita: true }, next: 'w7_ronda' },
+      { text: '👂 Avvicinarsi a uno dei Ballerini, per sentire la parola sussurrata', once: true, next: 'w6_parola' },
+    ],
+  },
+
+  w6_parola: {
+    location: 'riflesso_interno',
+    npc: ['sofia'],
+    caption: 'La parola sussurrata',
+    stinger: 'fail',
+    text: `Emanuela si avvicina all'uomo con la mano tesa — quello che aspetta da cent'anni una mano che non arriva — e accosta l'orecchio, piano, come si fa coi bambini che parlano nel sonno.
+
+Il sussurro c'è. Debolissimo, ritmico, consumato come un solco di vinile:
+
+*"...un-due-tre. Un-due-tre. Un-due-tre..."*
+
+Conta i passi. Da cent'anni. La figura di ballo non è finita, e lui la tiene VIVA contando, perché finché si conta si sta ancora ballando, e finché si balla non è ancora successo niente.
+
+Emanuela sta per staccarsi quando il sussurro CAMBIA. Una volta sola. Il ritmo inciampa, e in mezzo al conteggio, chiarissima:
+
+*"...un-due-tre. Un-due-SEI."*
+
+E l'occhio vitreo — solo quello, in tutto il corpo immobile — ruota lentamente verso di lei.
+
+> Sofia: *(tirandola indietro per un braccio, con più forza del necessario)* "Via. VIA. Quando sbagliano il conto vuol dire che la casa sta parlando ATTRAVERSO di loro. E la casa non conta mai per sbaglio."
+
+> Emanuela: *(bianca)* "Ha detto sei. Noi siamo in cinque, Sofia. Perché QUI dentro tutti contano fino a SEI?"
+
+Sofia non risponde. Ma affretta il passo, e per la prima volta da quando la conoscete... si guarda alle spalle.
+
+**(Sangue freddo +1: la casa conta fino a sei da prima che arrivaste. Il sesto posto non è per uno di voi. È per qualcosa che DEVE ANCORA SEDERSI.)**`,
+    gold: 1,
+    sets: { parola_ballerino_sentita: true },
+    choices: [
+      { text: 'Proseguire verso il cuore della casa capovolta, contando fino a CINQUE', next: 'w7_ronda' },
     ],
   },
 
@@ -5459,6 +5492,7 @@ const DIARY_FLAGS = [
   ['cesoie_raccolte',       'Le cesoie del Giardiniere, raccolte dall\'orto: ferro del 1899, affilato ogni notte da mani di paglia. Ora potano per voi.'],
   ['panorama_filari',       'I filari della valle visti dal muretto dell\'orto: geometrie perfette che nessun contadino ha piantato. La collina ha i suoi disegni.'],
   ['stretta_gregorio',      'La stretta di mano di Gregorio: fredda, ferma, e più GRATA di quanto un maggiordomo possa permettersi di mostrare.'],
+  ['parola_ballerino_sentita','Il sussurro del Ballerino del 1924: un-due-tre, un-due-tre, un-due-SEI. La casa non conta mai per sbaglio.'],
   ['zaino_sofia_aperto',    'Lo zaino Invicta di Sofia: il walkman giallo, lo smalto rosa, e un diario che chiede se il pranzo della domenica esiste ancora.'],
   ['walkman_ascoltato',     'Il nastro di Sofia: una hit del \'99 e un avviso registrato di nascosto — "NON. FARE. IL BAGNO. DI—". La casa lo ha fermato anche stavolta.'],
   ['bottiglia_gregorio_vista','La sesta bottiglia del 1899: "Gregorio", piena, col tappo infilato da dentro. Quello di sopra col candeliere è il tappo. Il vino sta in cantina.'],
@@ -5472,7 +5506,7 @@ const WORLD_MAP = [
   { key: 'hall',     label: 'La Hall',         x: 0.56, y: 0.48, scenes: ['a4_lampadario', 'a4_luce', 'a4_registro', 'a3', 'a3_registro', 'a3_registro_ko', 'a4_firma', 'a4_rinvio', 'a4_firma_forzata', 'p4_rientro'] },
   { key: 'camere',   label: 'Le Camere',       x: 0.74, y: 0.32, scenes: ['u2_zaino', 'u2_walkman', 'h2_ciocca', 'cuore_gc_nebbia', 'cuore_fe_borsa', 'u2_camera6', 'tronello_fumo', 'cst2_quaderno', 'gv1_ricontrollo', 'a5', 'a5_pozzo', 'h1', 'h2', 'gv1', 'nat_tronello', 'tronello_cerchio', 'ema_orto', 'cst1', 'cst2', 'u1', 'u2_1999', 'u2_1924', 'u2_1899', 'u3_medaglione', 'u3_lanterna', 'u3_bambole_fight', 'u3_bambole_vinte', 'u5_specchio', 'u4_porta_vuota', 'u4_intercapedine', 'sf1', 'sf2', 'sf3', 'sf4', 'sf5', 'sf6', 's49_1', 's49_2', 's49_3', 's49_3_ko', 's74_1', 's74_1b', 's74_2', 's74_3', 'cuore_gc', 'cuore_gc_esito', 'cuore_fe', 'cuore_fe_esito', 'cuore_nat', 'cuore_nat_esito'] },
   { key: 'pranzo',   label: 'Sala da Pranzo',  x: 0.46, y: 0.62, scenes: ['a6_vino', 'a6_coperto', 'a7_persiane', 'z_lettere_riga', 'z2_mano', 'z2_diretta', 'z2_consiglio', 'z_penna_sguardo', 'z6_pietrafonda', 'a6', 'a6_menu', 'a6_brindisi', 'a6_no_brindisi', 'a7', 'z1', 'z2_vino', 'z2_perdono', 'z2_menu_vivi', 'z2_capitolazione', 'z2_trattativa', 'z2_rituale', 'gvz', 'z_biglietto', 'z_lettere', 'z2_strada', 'z2_alleato', 'z2_bambole', 'z2_claudia', 'z3_boss', 'z3_boss_solo', 'z3_boss_arrabbiato', 'z3_boss_indebolito', 'z4_fase2', 'z5_vittoria', 'z6_alba', 'e_alba', 'z_penna', 'z_penna_no', 'e_penna', 'z_custode', 'e_custode', 'e_custode_gregorio', 'z_resa', 'e_ospiti', 'z_vespri', 'z_smemorati', 'e_smemorati'] },
-  { key: 'riflesso', label: 'Il Riflesso',      x: 0.10, y: 0.28, scenes: ['w16_promessa', 'w18_nome', 'w1_tuffo', 'w2_riflesso', 'w2_riflesso_ko', 'w3_giardino', 'w3_pattuglia_combat', 'w4_sofia', 'w5_racconto', 'w6_1924', 'w7_ronda', 'w7_ronda_combat', 'w8_direttore', 'w9_studio', 'w9_studio_combat', 'w10_orologio', 'w10_orologio_reso', 'w11_inventario', 'w12_tradimento', 'w12_sofia', 'w14_direttore_boss', 'w15_vittoria', 'w16_amaro', 'w17_fuga', 'w17_fuga_ko', 'w18_soglia', 'w18_saluto', 'w_finale'] },
+  { key: 'riflesso', label: 'Il Riflesso',      x: 0.10, y: 0.28, scenes: ['w6_parola', 'w16_promessa', 'w18_nome', 'w1_tuffo', 'w2_riflesso', 'w2_riflesso_ko', 'w3_giardino', 'w3_pattuglia_combat', 'w4_sofia', 'w5_racconto', 'w6_1924', 'w7_ronda', 'w7_ronda_combat', 'w8_direttore', 'w9_studio', 'w9_studio_combat', 'w10_orologio', 'w10_orologio_reso', 'w11_inventario', 'w12_tradimento', 'w12_sofia', 'w14_direttore_boss', 'w15_vittoria', 'w16_amaro', 'w17_fuga', 'w17_fuga_ko', 'w18_soglia', 'w18_saluto', 'w_finale'] },
   { key: 'paese',    label: 'Pietrafonda',     x: 0.16, y: 0.90, scenes: ['pp_foto_corriera', 'pp1', 'pp2', 'pp2_bar', 'pp3', 'pp_anello', 'pp4_cripta', 'pp4', 'pp6', 'pp6_ko', 'pp7'] },
   { key: 'piscina',  label: 'La Piscina',      x: 0.22, y: 0.50, scenes: ['p2_foto_anello', 'p1', 'p1_accappatoio', 'p1_accappatoio_ko', 'p2', 'p2_esperimento', 'p2_esperimento_ko', 'p3_fuori'] },
   { key: 'cantina',  label: 'La Cantina',      x: 0.62, y: 0.78, scenes: ['k1_1899', 'k4_storie', 'k4_contatto', 'os3_cartellino', 'os5_conti', 'os6_compagnia', 'k1', 'k2_sofia', 'k2_sofia_ko', 'k3', 'k4_scambio', 'k4_nastro', 'k4_chef_fight', 'k4_furto', 'k4_furto_ko', 'k5_dopo_chef', 'x_celle', 'os1', 'os2', 'os3', 'os4', 'os5', 'os6'] },
