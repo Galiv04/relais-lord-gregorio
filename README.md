@@ -12,7 +12,7 @@ C'è solo un dettaglio: **il Belvedere prende un gruppo di ospiti ogni venticinq
 
 - 🎭 **5 protagonisti = voi**: ognuno interpreta sé stesso, con abilità nate dal proprio mestiere (le forbici professionali contano, in certe notti)
 - 🎙 **Narratore automatico**: racconta, propone scelte macabre, tira i dadi, arbitra gli scontri
-- 🗺 **Oltre 160 scene, ~35.000 parole**: l'autogrill di Baiano, il paese di Pietrafonda, la sera in piscina col riflesso sbagliato, tre piste nella notte (la cantina con l'ossario, il piano proibito fino alla soffitta, il pozzo e il garage), la **Strada che Torna** (i tornanti sono un anello — e vederlo cambia il finale), il mondo capovolto del **Riflesso** e il Banchetto dell'alba — che ha **sette modi di finire**, incluso uno senza versare sangue
+- 🗺 **Oltre 160 scene, ~35.000 parole**: l'autogrill di Baiano, il paese di Paternopoli, la sera in piscina col riflesso sbagliato, tre piste nella notte (la cantina con l'ossario, il piano proibito fino alla soffitta, il pozzo e il garage), la **Strada che Torna** (i tornanti sono un anello — e vederlo cambia il finale), il mondo capovolto del **Riflesso** e il Banchetto dell'alba — che ha **sette modi di finire**, incluso uno senza versare sangue
 - 🌒 **6 finali**: uno si conquista, uno si sceglie (e non se ne parlerà mai più), uno si subisce, uno si dimentica, uno non era previsto dal Belvedere (lo scrivete voi)... e uno lo firma qualcun altro, stavolta di sua volontà
 - ☠ **Condizioni, non morti**: al Belvedere nessuno muore — si viene avvelenati dal freddo, presi dalla casa, appesi alle pareti. Gli amici possono salvarti. Di solito.
 - 🎒 **Oltre 30 oggetti**, metà con effetti veri: l'Asso di Denari dei reduci ritira una prova fallita, la Lanterna del 1899 fa esitare le creature (e addormenta le bambole), il Nastro del '74 le ferma ad ascoltare (o ammansisce lo Chef — scegliete voi)
@@ -27,7 +27,7 @@ C'è solo un dettaglio: **il Belvedere prende un gruppo di ospiti ogni venticinq
 1. Sera. Un solo schermo. Possibilmente a bordo piscina.
 2. Ognuno seleziona sé stesso — ma nella storia siete SEMPRE in cinque: chi non gioca è in vacanza con voi, gestito dal Narratore, un passo indietro nei guai.
 3. Leggete ad alta voce, discutete, scegliete, tirate i dadi.
-4. Durata: **almeno 4 ore** seguendo una pista; **fino a 6** esplorando tutto — Pietrafonda, il Riflesso, le scene di coppia, i sei finali. Rigiocabile: le piste e i finali cambiano la notte.
+4. Durata: **almeno 4 ore** seguendo una pista; **fino a 6** esplorando tutto — Paternopoli, il Riflesso, le scene di coppia, i sei finali. Rigiocabile: le piste e i finali cambiano la notte.
 
 ⚠️ Linguaggio da adulti e paura vera: è la vostra vacanza, ma nella versione in cui qualcosa è andato molto storto.
 

@@ -88,8 +88,13 @@ const ITEMS = {
   campanello:       { name: 'Campanello di Servizio', desc: 'Ottone lucido. Il cartellino dice: "Suonare in caso di bisogno. Verranno." In combattimento il suono PARALIZZA le creature della casa (svantaggio al prossimo attacco, 1d4 danni a tutti). Un uso: poi il batacchio cade.', combat: { all: true, distract: true, dice: [1, 4], distractText: ' — il suono del padrone lo inchioda!' }, icon: '🔔' },
   moka:             { name: 'Moka di Don Michele', desc: 'Caffè del paese, nero come la notte e due volte più forte. Ricarica TUTTE le abilità di una persona.', usable: true, recharge: true },
   bengala:          { name: 'Bengala di Federico', desc: '"Per le emergenze", diceva. Da lancio: 2d6 danni a TUTTI i nemici, che restano accecati (svantaggio).', combat: { dice: [2, 6], all: true, distract: true }, icon: '🧨' },
-  campanella_1974:  { name: 'Campanella del 1974', desc: 'La campanella della vecchia chiesa di Pietrafonda. Don Michele: "Quando LEI si siede a tavola... suonate i vespri."', usable: false },
+  campanella_1974:  { name: 'Campanella del 1974', desc: 'La campanella della vecchia chiesa di Paternopoli. Don Michele: "Quando LEI si siede a tavola... suonate i vespri."', usable: false },
+  tisana_1899: { name: 'Tisana del 1899', desc: 'La miscela della casa quando la casa era una casa: malva, tiglio e qualcosa di montagna. Ripristina 12 PV.', usable: true, heal: 12 },
+  caffe_contabile: { name: 'Caffè del Contabile', desc: 'Fatto con la moka che gli avete insegnato ad amare. Nero, doppio, NON negoziabile. Ricarica TUTTE le abilità di una persona.', usable: true, recharge: true },
 };
+
+/* I nodi che valgono un CHECKPOINT (cura+ricarica alla prima volta — vedi engine.js) */
+const CHECKPOINT_FLAGS = ['nodo_cantina', 'nodo_pozzo', 'nodo_piano', 'pista_paese', 'riflesso_fatto'];
 
 /* ---- Testi ispezionabili (Zaino → 📖 Ispeziona): leggere gli oggetti AL TAVOLO ---- */
 ITEMS.diario_ada.lore = `Il diario si apre sempre sulla stessa pagina, come se avesse una piega d'abitudine.
@@ -175,7 +180,7 @@ const CAMPAIGN = {
   a0: {
     location: 'tornanti',
     caption: 'Autogrill di Baiano — ore 17:50, l\'ultimo caffè normale',
-    text: `**Venerdì pomeriggio, autostrada per Avellino, poi su.**
+    text: `**Venerdì pomeriggio. Partiti da Minturno dopo pranzo: Domiziana, autostrada, e poi la A16 verso l'Irpinia.**
 
 L'autogrill di Baiano è l'ultimo avamposto della civiltà: cinque caffè, due Camogli, e nel bagagliaio il bottino della spesa più epica della storia del gruppo — sessanta euro di frutta e verdura, novanta dal macellaio, mozzarella paisana, e tre buste della Lidl che pesano come un cadavere. Natalino torna dalla cassa raggiante.
 
@@ -209,11 +214,11 @@ Un silenzio da autogrill. Natalino gratta il primo biglietto, perde, e la vita r
   a0_benzina: {
     location: 'tornanti',
     caption: 'Il distributore — l\'uomo che conosce la strada',
-    text: `Il distributore fuori dall'autogrill ha un benzinaio VERO, di quelli che esistono ancora solo in provincia: canottiera sotto la camicia aperta, radiolina che gracchia i risultati dell'ippica, e l'occhio lungo di chi vede passare tutti.
+    text: `Usciti dall'autostrada, la Statale delle Puglie vi porta al **Passo di Mirabella**: l'ultimo distributore prima dei tornanti per Fontanarosa e Paternopoli. E ha un benzinaio VERO, di quelli che esistono ancora solo in provincia: canottiera sotto la camicia aperta, radiolina che gracchia i risultati dell'ippica, e l'occhio lungo di chi vede passare tutti.
 
 > Il benzinaio: *(mentre il numeratore gira)* "Turisti? Dove andate di bello?"
 
-> Federico: "Relais Belvedere. Sopra Pietrafonda."
+> Federico: "Relais Belvedere. Sopra Paternopoli."
 
 La pompa si ferma. Non il numeratore: LA MANO del benzinaio, sull'impugnatura. Due secondi. Poi riprende, e lui non vi guarda più.
 
@@ -281,7 +286,7 @@ Dietro la saracinesca, l'ombra del benzinaio non si è mossa di un millimetro. S
   a1: {
     location: 'tornanti',
     caption: 'Strada provinciale — monti d\'Irpinia, ore 18:40',
-    text: `**Venerdì pomeriggio. Cinque amici, una macchina piena come un uovo, e le montagne sopra Avellino che si mangiano il sole.**
+    text: `**Venerdì pomeriggio. Cinque amici, una macchina piena come un uovo, e le colline della media valle del Calore che si mangiano il sole: Fontanarosa alle spalle, Paternopoli sopra di voi.**
 
 Gaetano guida da un'ora e mezza. Claudia, di fianco, ha il telefono alzato da venti minuti: *"Niente segnale. NIENTE. Nemmeno una tacca ironica."* Dietro, Natalino è incastrato tra le buste della Lidl e le valigie come un faraone nel sarcofago, Federico difende la sua prenotazione — "cinque stelle, ragazzi, un AFFARE" — ed Emanuela ha già distribuito taralli e mozzarella a tutti, due volte, perché con quella spesa i viveri non finiranno MAI.
 
@@ -313,7 +318,7 @@ Niente. Zero. Claudia sale perfino sul guardrail — *"da qui parte SEMPRE"* —
 
 > Federico: "Ho fatto una piccola consulenza per il relais in cambio dello sconto. Comunicazione di base. 'Un rifugio fuori dal tempo', roba così."
 
-*Un rifugio fuori dal tempo.* Sotto di voi, Pietrafonda spegne l'unica finestra che era rimasta accesa. Alle 18:52.
+*Un rifugio fuori dal tempo.* Sotto di voi, Paternopoli spegne l'unica finestra che era rimasta accesa. Alle 18:52.
 
 **(Il gruppo si scambia il primo sguardo della serata. Ne seguiranno altri. -1 Sangue freddo.)**`,
     gold: -1,
@@ -652,7 +657,7 @@ Quando Emanuela arriva, la corda penzola immobile, il secchio dondola appena, e 
 
 La cena è un silenzio religioso che dura tre portate. Pasta fatta in casa, un arrosto che si taglia col pensiero, verdure dell'orto che sanno ancora di terra bagnata. Gregorio serve tutto personalmente, con tempi da orologeria, raccontando la valle: i castagneti, il santuario lassù, il paese.
 
-> Gregorio: "Pietrafonda si è svuotata negli anni. Restano gli anziani, e gli anziani vanno a letto presto. Per questo le persiane chiuse: **non è maleducazione. È memoria.**"
+> Gregorio: "Paternopoli si è svuotata negli anni. Restano gli anziani, e gli anziani vanno a letto presto. Per questo le persiane chiuse: **non è maleducazione. È memoria.**"
 
 > Gaetano: "Memoria di cosa?"
 
@@ -1190,7 +1195,7 @@ Mentre lo dice, una ciocca dei suoi capelli diventa bianca.`,
       { text: '🌳 Uscire verso il POZZO — la cosa con cui Gregorio firmò', next: 'b1', once: true },
       { text: '❓ Trattenere Gregorio: ancora una domanda, gliela si legge in faccia', next: 'h2', once: true },
       { text: '🕯 Seguire Gregorio quando si ritira: dove DORME, un maggiordomo di 125 anni?', next: 'cst1', once: true },
-      { text: '🚶 Il cancello: chi non ha FIRMATO può ancora passare. Scendere a Pietrafonda', requires: { flag: 'firma_rinviata' }, next: 'pp1', once: true },
+      { text: '🚶 Il cancello: chi non ha FIRMATO può ancora passare. Scendere a Paternopoli', requires: { flag: 'firma_rinviata' }, next: 'pp1', once: true },
       { text: '🌊 Tornare alla PISCINA: il riflesso è una PORTA, e voi ormai lo sapete', next: 'w1_tuffo', requires: { flag: 'un_nodo_sciolto' }, once: true },
       { text: '💑 Gaetano e Claudia: due minuti, da soli, sul balcone', next: 'cuore_gc', once: true },
       { text: '💑 Federico ed Emanuela: la porta della loro camera è socchiusa', next: 'cuore_fe', once: true },
@@ -1199,6 +1204,7 @@ Mentre lo dice, una ciocca dei suoi capelli diventa bianca.`,
       { text: '🌿 Natalino alza una mano: "Io ho bisogno di un tronello. Da solo. Camera mia. CINQUE minuti."', next: 'nat_tronello', once: true },
       { text: '🌱 Emanuela prende il phon come una fondina: "Devo controllare una cosa nell\'orto. Da sola."', next: 'ema_orto', once: true },
       { text: '🌿🌿 Stavolta si condivide: il CERCHIO del tronello, sul balcone. Tutti. (consuma il tronello di riserva)', requires: { item: 'tronello' }, removeItem: 'tronello', next: 'tronello_cerchio', once: true },
+      { text: '🧾 Giù dal Contabile: lo Spaccio è aperto (comprare, vendere coraggio)', requires: { flag: 'spaccio_aperto' }, next: 'os_spaccio' },
       { text: '🌅 Basta così: barricarsi e aspettare l\'alba (verso il finale)', next: 'z1', requires: { flag: 'un_nodo_sciolto' } },
     ],
   },
@@ -1450,7 +1456,7 @@ Lo Chef resta immobile un tempo lungo. Poi, con la voce di forno più bassa che 
 
 > Claudia: *(piano)* "Il fratello. Quello che scese prima. Che fine ha fatto?"
 
-> Lo Chef: *(tornando ai fornelli)* "Suona le campane, a Pietrafonda. Da cinquant'anni. Adesso FUORI: certe storie, se le racconto tutte, la casa se ne accorge."
+> Lo Chef: *(tornando ai fornelli)* "Suona le campane, a Paternopoli. Da cinquant'anni. Adesso FUORI: certe storie, se le racconto tutte, la casa se ne accorge."
 
 **(Sangue freddo +1: Aldo, il fratello di Don Michele. Il quaderno. Il muro. Tre pezzi che stanotte possono servire.)**`,
     gold: 1,
@@ -1722,9 +1728,60 @@ Al centro, su una sedia a dondolo, la bambola più grande tiene in grembo un **m
 Il problema è che per prenderlo bisogna attraversare la stanza. E il valzer, da quando siete entrati, ha **smesso di saltare.** Sta suonando. Fluido. Come se la stanza si fosse svegliata e avesse voglia di ballare.`,
     choices: [
       { text: '🏮 Alzare la LANTERNA DEL 1899: le bambole della nursery conoscono quella luce', requires: { item: 'lanterna_1899' }, next: 'u3_lanterna' },
-      { text: '🩰 Attraversare la stanza A TEMPO DI VALZER: la casa ama chi sta al gioco', tag: 'Prova di Destrezza — CD 12', check: { stat: 'DES', dc: 12, success: 'u3_medaglione', fail: 'u3_bambole_fight' } },
+      { text: '🩰 Attraversare la stanza A TEMPO DI VALZER: la casa ama chi sta al gioco — 🎮 MINIGIOCO', next: 'mg_valzer' },
       { text: '💨 Corsa e presa al volo: dentro e fuori in tre secondi', tag: 'Prova di Forza — CD 13', check: { stat: 'FOR', dc: 13, success: 'u3_medaglione', fail: 'u3_bambole_fight' } },
     ],
+  },
+
+
+  mg_valzer: {
+    location: 'camera',
+    caption: 'Il valzer del grammofono',
+    text: `Il grammofono suona il valzer che salta sempre sullo stesso giro, e la stanza — capite guardando il pavimento consumato in cerchi — vuole essere ATTRAVERSATA a tempo. Non camminata: BALLATA.
+
+> Emanuela: "I passi sono quattro figure che si ripetono. Le fa il grammofono, le rifate voi. Sbagliata una figura, la stanza se ne accorge."
+
+Il valzer riparte dall'inizio, paziente. Ha aspettato cent'anni: può aspettare che impariate.
+
+*(🎮 MINIGIOCO — Il Valzer del 1924: guardate la sequenza di figure che si illumina e ripetetela. Cresce a ogni giro. Un errore, e la nursery si SVEGLIA.)*`,
+    minigame: {
+      type: 'memoria',
+      success: 'u3_medaglione', fail: 'u3_ninna',
+      tag: 'Il Valzer del 1924 — ripetete la sequenza, cresce a ogni giro',
+      config: { titolo: '🩰 Il Valzer del 1924', simboli: ['🩰', '🎻', '🌹', '🕯'], lunghezza: 5 },
+    },
+  },
+
+  u3_ninna: {
+    location: 'camera',
+    caption: 'La nursery si sveglia',
+    stinger: 'jumpscare',
+    text: `Un passo fuori tempo. UNO. Il grammofono si ferma con un graffio, e dalla nursery accanto arriva il suono che nessuna casa dovrebbe fare alle tre di notte: **trentadue teste di porcellana che ruotano insieme.**
+
+Ma prima che si alzino, la bambola grande — quella coi denti veri — fa una cosa peggiore dell'attacco: comincia a CANTARE. Una ninna nanna, stonata di un quarto di tono, e si ferma a metà del verso. Aspettando.
+
+> Claudia: *(pianissimo)* "Vuole che la finiamo. È un test. Le bambole cantano la ninna nanna di QUESTA casa — se sbagliamo il verso, capiscono che non siamo di famiglia."
+
+> Natalino: "E se lo azzecchiamo?"
+
+> Claudia: "Si RIADDORMENTANO. Forse. Pensate alla versione che canterebbe il Belvedere."
+
+*(🎮 MINIGIOCO — La Ninna Nanna del 1924: completate il verso come lo canterebbero LORO. Una risposta sola.)*`,
+    minigame: {
+      type: 'filastrocca',
+      success: 'u3_bambole_vinte', fail: 'u3_bambole_fight',
+      tag: 'La Ninna Nanna del 1924 — completate il verso GIUSTO (il loro)',
+      config: {
+        titolo: '🧸 La Ninna Nanna del 1924',
+        versi: 'Ninna nanna, ninna oh,\nquesto bimbo a chi lo do?\nLo darò ___',
+        risposte: [
+          { t: '...alla Befana, che lo tiene una settimana', ok: false },
+          { t: '...all\'Uomo Nero, che lo tiene un anno intero', ok: false },
+          { t: '...al Belvedere, che lo tiene VOLENTIERI', ok: true },
+          { t: '...alla sua mamma, che gli canta la ninna nanna', ok: false },
+        ],
+      },
+    },
   },
 
   u3_medaglione: {
@@ -1935,8 +1992,27 @@ Il pozzo è a quaranta metri, oltre lo spaventapasseri, oltre l'orto recintato d
     choices: [
       { text: '⛽ Fermarsi un secondo: "LASCIATE STARE IL POZZO." Il benzinaio. Lo sapeva.', requires: { flag: 'avviso_benzinaio' }, once: true, next: 'b1_avviso' },
       { text: '👁 Il piano di Gaetano: attraversare il prato A TURNI DI SGUARDO, senza mai perderlo di vista', tag: 'Prova di Saggezza — CD 12', check: { stat: 'SAG', dc: 12, success: 'b2_orto', fail: 'b2_giardiniere_fight' } },
-      { text: '🏃 Il piano di Natalino: di corsa lungo le siepi, fuori dalla sua vista', tag: 'Prova di Destrezza — CD 12', check: { stat: 'DES', dc: 12, success: 'b2_orto', fail: 'b2_giardiniere_fight' } },
+      { text: '🏃 Il piano di Natalino: di corsa lungo le siepi, fuori dalla sua vista — 🎮 MINIGIOCO', next: 'mg_corsa_siepi' },
     ],
+  },
+
+
+  mg_corsa_siepi: {
+    location: 'giardino',
+    caption: 'La corsa lungo le siepi',
+    text: `Il piano di Natalino è semplice, che è il suo modo di dire "disperato": correre lungo il filare di siepi, piegati in due, PRIMA che lo spaventapasseri finisca il suo giro di ronda. Il bosso è potato a ostacoli — la casa lo pota APPOSTA, capite adesso — e il prato è una pista a tempo.
+
+> Natalino: "Regola unica: non ci si ferma. Chi si ferma è potato."
+
+Uno di voi corre. Gli altri guardano dal muretto, con il fiato che non serve a niente ma lo trattengono lo stesso.
+
+*(🎮 MINIGIOCO — La Corsa delle Siepi: un tasto solo, SALTO. Superate le siepi potate senza inciampare tre volte. Chi corre lo sceglie il tavolo.)*`,
+    minigame: {
+      type: 'corsa', hero: null,
+      success: 'b2_orto', fail: 'b2_giardiniere_fight',
+      tag: 'La Corsa delle Siepi — un tasto, tre inciampi massimo',
+      config: { titolo: '🌿 La Corsa delle Siepi', tema: 'siepi', ostacoli: 9, velocita: 260, cielo: '#10131c', suolo: '#1c2416' },
+    },
   },
 
   b1_avviso: {
@@ -1976,7 +2052,7 @@ Il pezzo peggiore lo mette Natalino, guardando il pozzo:
 
 > Natalino: "Sessantacinque anni. Il Settantaquattro è cinquant'anni fa. Fate voi il conto di quanti anni aveva ALLORA... e di che cosa può aver visto, da ragazzo, per passare la vita a fare benzina sotto QUESTA collina."
 
-**(Sangue freddo +1: il benzinaio è un testimone. E i testimoni, a Pietrafonda, fanno una fine sola: restano.)**`,
+**(Sangue freddo +1: il benzinaio è un testimone. E i testimoni, a Paternopoli, fanno una fine sola: restano.)**`,
     gold: 1,
     sets: { volto_benzinaio_ricordato: true },
     choices: [
@@ -2347,12 +2423,12 @@ Il secchio risale da solo, pieno.
 
   pp1: {
     location: 'tornanti',
-    caption: 'La discesa a Pietrafonda — ore 1:20',
+    caption: 'La discesa a Paternopoli — ore 1:20',
     text: `Il cancello si apre.
 
 Non cigola, non esita: si apre e basta, come una bocca che non ha motivo di mordere. Gregorio ve l'aveva lasciato intendere con lo sguardo, alla firma rinviata: *il patto tiene chi ha firmato.* Voi, tecnicamente, siete ancora ospiti **in prova.**
 
-E la nebbia — il muro bianco che ha respinto i fari della macchina — davanti a voi si RITIRA. Un corridoio di aria pulita largo esattamente quanto cinque persone affiancate, giù per i tornanti, fino alle luci spente di Pietrafonda.
+E la nebbia — il muro bianco che ha respinto i fari della macchina — davanti a voi si RITIRA. Un corridoio di aria pulita largo esattamente quanto cinque persone affiancate, giù per i tornanti, fino alle luci spente di Paternopoli.
 
 > Claudia: "Si apre solo per noi. Il che significa che può chiudersi solo per noi."
 
@@ -2377,8 +2453,8 @@ Dal fondo della valigia di Federico recuperate il **kit emergenze** che viaggia 
 
   pp2: {
     location: 'paese',
-    caption: 'Pietrafonda, ab. 41 — la piazza',
-    text: `Pietrafonda di notte è un presepe a cui hanno soffiato via le candele.
+    caption: 'Paternopoli, ab. 41 — la piazza',
+    text: `Paternopoli di notte è un presepe a cui hanno soffiato via le candele.
 
 Quarantuno case di pietra grigia, strette attorno a una piazza col campanile mozzato. Ogni persiana chiusa. Ogni comignolo freddo. Il bar — insegna arrugginita: **"DA PEPPE — dal 1961"** — ha ancora i tavolini fuori, impilati e incatenati con la cura di chi pensava di riaprire lunedì. Il lunedì, a giudicare dalla polvere, era venticinque anni fa.
 
@@ -2446,7 +2522,7 @@ Si versa un altro caffè. Le mani, adesso, gli tremano.
     npc: ['donmichele'],
     text: `Don Michele posa la tazza. Con cura. Come si posa una cosa che altrimenti tremerebbe.
 
-> Don Michele: "Il paese lo sa dal 1899, figlio mio. Solo che a Pietrafonda le cose che si sanno non si DICONO: si chiudono le persiane e basta." *(va alla parete delle foto, ne stacca una: una corriera azzurra, anni Settanta, gente che saluta dai finestrini)* "La corriera. Fino al Settantaquattro saliva due volte a settimana. Poi gli autisti cominciarono a rifiutare la tratta. Dicevano che al tornante undici il paesaggio si RIPETEVA. Che l'ago della benzina non calava. Uno, Gennaro si chiamava, arrivò giù piangendo: disse che aveva guidato quaranta minuti in discesa e che il chilometraggio segnava ZERO."
+> Don Michele: "Il paese lo sa dal 1899, figlio mio. Solo che a Paternopoli le cose che si sanno non si DICONO: si chiudono le persiane e basta." *(va alla parete delle foto, ne stacca una: una corriera azzurra, anni Settanta, gente che saluta dai finestrini)* "La corriera. Fino al Settantaquattro saliva due volte a settimana. Poi gli autisti cominciarono a rifiutare la tratta. Dicevano che al tornante undici il paesaggio si RIPETEVA. Che l'ago della benzina non calava. Uno, Gennaro si chiamava, arrivò giù piangendo: disse che aveva guidato quaranta minuti in discesa e che il chilometraggio segnava ZERO."
 
 Si risiede. Vi guarda uno per uno.
 
@@ -2478,7 +2554,7 @@ Nel penultimo finestrino, tra i ragazzi che salutano, c'è un uomo che non salut
 
 > Don Michele: *(dopo un silenzio lunghissimo, senza toccare la foto)* "...Gennaro. L'autista che scese piangendo. Comprò il distributore ai piedi della collina l'anno dopo, e da allora non è più salito. Dice che qualcuno deve pur stare al casello." *(alza gli occhi)* "Non ve l'ha detto, vero? Non lo dice mai. Fa solo il pieno, e avvisa. Da cinquant'anni. **A ogni giro.**"
 
-**(Sangue freddo +1: il benzinaio ha un nome, una storia, e un posto di guardia. Pietrafonda veglia come può.)**`,
+**(Sangue freddo +1: il benzinaio ha un nome, una storia, e un posto di guardia. Paternopoli veglia come può.)**`,
     gold: 1,
     sets: { corriera_fotografata: true },
     choices: [
@@ -2520,7 +2596,7 @@ Don Michele vi guida nella cripta sotto la chiesa, tra scaffali di registri parr
 
 Alla fine si alza, apre un armadio a muro, e comincia a posare cose sul tavolo con la precisione di un armiere.
 
-> Don Michele: "**Uno.** La moka grande. Caffè di Pietrafonda: sveglia i vivi, e stanotte vi serve essere MOLTO vivi." *(posa la moka ancora calda)* "**Due.** Questa."
+> Don Michele: "**Uno.** La moka grande. Caffè di Paternopoli: sveglia i vivi, e stanotte vi serve essere MOLTO vivi." *(posa la moka ancora calda)* "**Due.** Questa."
 
 Ed è una **campanella di bronzo**, consumata, con incisa una data: 1974.
 
@@ -2593,7 +2669,7 @@ Si avvia verso il corridoio, poi si volta:
 
 > Gregorio: "Il sesto del Settantaquattro. Ditegli, quando tutto questo finisce... che suo fratello Aldo, nel ritratto, **sorride.** Sono io che spolvero le cornici: lo so per certo."
 
-**(La pista di Pietrafonda è completa. Sangue freddo +1.)**`,
+**(La pista di Paternopoli è completa. Sangue freddo +1.)**`,
     gold: 1,
     sets: { pista_paese: true, un_nodo_sciolto: true },
     choices: [
@@ -2773,6 +2849,7 @@ Il lucchetto si apre da solo, come tutto in questa casa. Le pagine sono colonne 
     sets: { segreto_contabile: true, contabile_visto: true },
     choices: [
       { text: 'Salutarlo con rispetto e risalire, la lanterna in mano e il caffè nel destino di qualcuno', next: 'h1' },
+      { text: '🕯 "Contabile... lei VENDE qualcosa, per caso?" (aprire lo Spaccio)', once: true, sets: { spaccio_aperto: true }, next: 'os_spaccio' },
       { text: '📖 Chiedere al Contabile quanti gruppi mancano ancora nei conti', once: true, next: 'os5_conti' },
     ],
   },
@@ -2821,6 +2898,84 @@ Vi accompagna fino al corridoio in salita con la candela in mano, e sulla soglia
     choices: [
       { text: 'Su, verso il corridoio delle tre porte', next: 'h1' },
       { text: '🕯 Offrire al Contabile un ultimo momento di compagnia, in silenzio', once: true, next: 'os6_compagnia' },
+      { text: '🕯 "Contabile... lei VENDE qualcosa, per caso?" (aprire lo Spaccio)', once: true, sets: { spaccio_aperto: true }, next: 'os_spaccio' },
+    ],
+  },
+
+
+  os_spaccio: {
+    location: 'ossario',
+    caption: 'Lo Spaccio del Contabile',
+    text: `Il Contabile apre un registro diverso — più piccolo, con l'angolo consumato — e per la prima volta in centoventicinque anni fa una cosa che nessun ospite ha mai visto: **apre bottega.**
+
+> Il Contabile: "Spaccio aziendale. Non ditelo alla casa: formalmente è 'gestione scorte'. Accetto UNA valuta sola — il sangue freddo. Il coraggio è l'unica moneta che quaggiù mantiene il valore: la casa lo toglie, io lo RIMETTO IN CIRCOLO. Economia circolare, si dice di sopra."
+
+Sul tavolo, con cura da vetrina: barattoli di tisana, antidoti secondo la ricetta di Ada, sale del 1899, e una caffettiera che qualcuno gli ha insegnato ad amare.
+
+> Il Contabile: "Listino sotto. Niente sconti, niente resi. E se avete cinque minuti... ci sarebbe un lavoretto. PAGATO, ovviamente: mica siamo la casa."
+
+**(🕯 Il vostro Sangue Freddo si può SPENDERE qui — e guadagnare, chiudendo i conti. Lo Spaccio resta aperto: ci tornate dal corridoio delle tre porte.)**`,
+    choices: [
+      { text: '🍵 Tisana del 1899 — cura 12 PV a chi la beve', requiresGold: 3, gold: -3, item: 'tisana_1899' },
+      { text: '🌿 Antidoto di Erbe — cura il freddo del Belvedere (☠)', requiresGold: 4, gold: -4, item: 'antidoto' },
+      { text: '🧂 Sale Grosso Benedetto — 2d8 da lancio, DOPPI alle creature della villa', requiresGold: 5, gold: -5, item: 'sale_grosso' },
+      { text: '☕ Caffè del Contabile — ricarica TUTTE le mosse di una persona', requiresGold: 6, gold: -6, item: 'caffe_contabile' },
+      { text: '📊 Il lavoretto: aiutarlo a CHIUDERE I CONTI del giorno (paga 4 🕯) — 🎮 MINIGIOCO', once: true, next: 'mg_conti' },
+      { text: '⬆ Risalire al corridoio delle tre porte', next: 'h1' },
+    ],
+  },
+
+  mg_conti: {
+    location: 'ossario',
+    caption: 'I conti del giorno',
+    text: `Il Contabile gira il librone verso di voi e vi porge la penna d'oca, dall'alto della sua stanchezza secolare.
+
+> Il Contabile: "Cinque voci da chiudere. Rispondete giusto e in fretta: la contabilità è matematica più PAURA delle verifiche. Sbagliate poco, e la paga è vostra."
+
+*(🎮 MINIGIOCO — I Conti del Patto: cinque domande, tempo limitato, si risponde ad alta voce tutti insieme. Servono quattro risposte giuste.)*`,
+    minigame: {
+      type: 'calcolo',
+      success: 'os_conti_ok', fail: 'os_conti_ko',
+      tag: 'I Conti del Patto — 5 domande a tempo, ne servono 4',
+      config: {
+        titolo: '🧾 I Conti del Patto',
+        secondi: 20,
+        domande: [
+          { q: 'Il patto è del 1899. Siamo nel 2024: quanti anni di servizio ha Gregorio?', r: [ { t: '125', ok: true }, { t: '115', ok: false }, { t: '135', ok: false }, { t: '120', ok: false } ] },
+          { q: 'Cinque ospiti per cinque annate (1899, 1924, 1949, 1974, 1999): quante bottiglie coricate in cantina?', r: [ { t: '25', ok: true }, { t: '20', ok: false }, { t: '30', ok: false }, { t: '24', ok: false } ] },
+          { q: 'La verde costa 34,50 €. Pagate con 50 €: quanto resto vi dà Gennaro?', r: [ { t: '15,50 €', ok: true }, { t: '16,50 €', ok: false }, { t: '15,00 €', ok: false }, { t: '14,50 €', ok: false } ] },
+          { q: 'Un gruppo ogni 25 anni, e ne mancano 30 al pareggio: quanti ANNI mancano?', r: [ { t: '750', ok: true }, { t: '650', ok: false }, { t: '700', ok: false }, { t: '775', ok: false } ] },
+          { q: 'La tavola del Banchetto ha 6 coperti. Voi siete 5: quanti posti restano... per la casa?', r: [ { t: '1', ok: true }, { t: '0', ok: false }, { t: '2', ok: false }, { t: '6', ok: false } ] },
+        ],
+      },
+    },
+  },
+
+  os_conti_ok: {
+    location: 'ossario',
+    caption: 'Bilancio chiuso',
+    text: `Il Contabile ricontrolla le cinque voci due volte — deformazione professionale — e poi fa un suono che le ossa non dovrebbero fare: un fischio di ammirazione.
+
+> Il Contabile: "Quadrano. QUADRANO TUTTI. Centoventicinque anni che chiudo i giorni da solo, e voi me ne avete chiuso uno in cinque minuti." *(spinge sul tavolo una pila di monete che non sono monete: sono grumi di coraggio, caldi al tatto)* "La paga. Guadagnata. E una nota a margine, gratis: chi sa far di conto, al Banchetto, tratti PER ISCRITTO. La casa odia i numeri precisi: lasciano poco spazio alla fame."
+
+**(🕯 Sangue Freddo +4: il primo stipendio mai pagato al Belvedere. Flag: i conti del giorno sono chiusi.)**`,
+    gold: 4,
+    sets: { conti_chiusi: true },
+    choices: [
+      { text: '↩ Allo Spaccio', next: 'os_spaccio' },
+    ],
+  },
+
+  os_conti_ko: {
+    location: 'ossario',
+    caption: 'Bilancio in rosso',
+    text: `Il Contabile guarda le voci sbagliate con la faccia di chi ha visto crollare imperi per meno.
+
+> Il Contabile: "No. No, no. Qui c'è un riporto saltato, qui avete arrotondato la PAURA per eccesso..." *(richiude il librone con dolcezza, come si chiude la porta a un parente che non ce la fa)* "Niente paga: sarei un pessimo contabile. Ma niente rancore: sareste pessimi ospiti. Il lavoretto resta fatto a metà — e a metà, quaggiù, non paga NESSUNO. Ci vuole coraggio anche a sbagliare i conti davanti a uno scheletro: quello ve lo riconosco. A voce. Gratis."
+
+**(Niente paga stavolta. Il Contabile, però, non è tipo da rinfacciare.)**`,
+    choices: [
+      { text: '↩ Allo Spaccio, con l\'orgoglio ammaccato', next: 'os_spaccio' },
     ],
   },
 
@@ -3465,11 +3620,11 @@ La candela, per fortuna, è già in tasca di Gaetano — tiepida, intatta — an
   ft1: {
     location: 'tornantiPiedi',
     caption: 'I tornanti a piedi — ore 3:40',
-    text: `> Natalino: "Sentite. La macchina è appesa al muro come un salame, il pozzo parla, la casa respira. Io dico: STI CAZZI del pozzo. Sono ventisei tornanti. Li ho contati salendo. Due ore a piedi e siamo al bar di Baiano a bere il caffè PIÙ meritato della storia."
+    text: `> Natalino: "Sentite. La macchina è appesa al muro come un salame, il pozzo parla, la casa respira. Io dico: STI CAZZI del pozzo. Sono ventisei tornanti. Li ho contati salendo. Due ore a piedi e siamo al bar di Fontanarosa a bere il caffè PIÙ meritato della storia."
 
 Il cancello, di notte, non è chiuso: è **aperto**, spalancato sull'asfalto che scende nel buio tra gli ulivi. Ed è questa, forse, la cosa che dovrebbe insospettirvi di più: una casa che chiude a chiave anche le bacheche dei motori... lascia il portone sulla strada spalancato come un invito.
 
-Vi incamminate. La notte fuori dalla proprietà è diversa — più fredda, più onesta. I pali delle vigne sfilano ai lati come sentinelle che hanno giurato di non guardare. Da qualche parte sotto, molto sotto, ci sono le luci vere: Pietrafonda, la statale, il mondo dove i registri sono solo registri.
+Vi incamminate. La notte fuori dalla proprietà è diversa — più fredda, più onesta. I pali delle vigne sfilano ai lati come sentinelle che hanno giurato di non guardare. Da qualche parte sotto, molto sotto, ci sono le luci vere: Paternopoli, la statale, il mondo dove i registri sono solo registri.
 
 > Claudia: *(piano, dopo il primo tornante)* "...qualcuno sta contando i tornanti? Perché io li sto contando. E c'è qualcosa che non mi torna."
 
@@ -3555,7 +3710,7 @@ Sotto di voi, tre tornanti più in basso, ci sono **cinque luci.** Piccole, in f
 
 > Claudia: *(lo zoom del telefono che trema)* "...quella è la mia giacca. Ragazzi. QUELLA È LA MIA GIACCA. Quelli siamo NOI, di spalle, tre tornanti più sotto. Ci sto zoommando addosso, porca puttana."
 
-E in fondo alla valle, dove dovrebbe esserci Pietrafonda, le luci del paese sono disposte in un modo che conoscete già: due finestre accese e una porta — la facciata del **Belvedere**, in scala, che vi aspetta in basso come vi aspetta in alto.
+E in fondo alla valle, dove dovrebbe esserci Paternopoli, le luci del paese sono disposte in un modo che conoscete già: due finestre accese e una porta — la facciata del **Belvedere**, in scala, che vi aspetta in basso come vi aspetta in alto.
 
 > Gaetano: *(la calma piatta delle pessime notizie, di nuovo)* "La strada non scende. GIRA. È un anello — un nastro di Möbius con l'asfalto sopra. Chi scende, sta salendo. Ventisei tornanti e ti riconsegna al cancello, dall'altra parte. Non siamo MAI stati sulla strada per Baiano: siamo sempre stati sul vialetto di casa sua."
 
@@ -4796,7 +4951,7 @@ Gregorio non si muove. Poi, con un gesto lentissimo, prende la lettera dalle man
     location: 'salaBanchetto',
     npc: ['gregorio'],
     caption: 'La proposta impensabile',
-    text: `È Federico che si alza — ma stavolta non è un pitch. Parla piano, guardando Gregorio, e mette sul tavolo il telefono di Claudia, con lo schermo acceso: **i registri parrocchiali di Pietrafonda, fotografati pagina per pagina.** L'unica prova che nessun gruppo, in centoventicinque anni, ha mai portato al Banchetto.
+    text: `È Federico che si alza — ma stavolta non è un pitch. Parla piano, guardando Gregorio, e mette sul tavolo il telefono di Claudia, con lo schermo acceso: **i registri parrocchiali di Paternopoli, fotografati pagina per pagina.** L'unica prova che nessun gruppo, in centoventicinque anni, ha mai portato al Banchetto.
 
 > Federico: "Dodici parroci, due secoli di annotazioni. 'Sale il custode nuovo.' Ogni venticinque anni, da PRIMA di te. Lo sappiamo, Gregorio. Sappiamo che il patto è più vecchio di te. E sappiamo l'altra cosa..." *(si china sul tavolo)* "...che un custode può RIFIUTARSI di passare la penna. Tu lo fai da centoventicinque anni. Per dispetto, dice Don Michele. Il sesto del Settantaquattro. Quello che ti suona i vespri OGNI SERA."
 
@@ -4879,7 +5034,7 @@ Sulla soglia, nel primo sole, Gregorio invecchia centoventicinque anni in un min
 
 > La voce di Ada, dal pozzo: "Grazie, ragazzi. **Chiudete il cancello quando uscite.** Ma non a chiave: chissà che un giorno non torni utile, una casa così."
 
-Scendete i tornanti a piedi, nel sole. La strada **scende e basta.** A Pietrafonda, Don Michele ha smesso di suonare i vespri. Adesso suona — dice lui — "a festa, e MALE, che è più onesto."
+Scendete i tornanti a piedi, nel sole. La strada **scende e basta.** A Paternopoli, Don Michele ha smesso di suonare i vespri. Adesso suona — dice lui — "a festa, e MALE, che è più onesto."
 
 **🖋 FINE — Nessun custode nuovo. Nessun custode vecchio. Avete convinto un maggiordomo di 125 anni a rompere la penna, e una casa a tornare mortale. L'avete scritto voi, questo finale.**`,
     sets: { finale_penna: true },
@@ -5354,7 +5509,7 @@ Dalle finestre, sul filo dei monti, sta salendo **l'alba.**
     caption: 'L\'alba sul Belvedere',
     text: `L'alba, sui monti d'Irpinia, arriva come un perdono: prima grigia, poi rosa, poi di un oro che non chiede niente in cambio.
 
-La nebbia della valle — il muro bianco che vi teneva chiusi — si ritira giù per i tornanti come la marea, e da Pietrafonda, in basso, arriva un suono che non sentivate da un'era: **un gallo.** Poi le campane. Poi, una alla volta, le persiane del paese che SI APRONO.
+La nebbia della valle — il muro bianco che vi teneva chiusi — si ritira giù per i tornanti come la marea, e da Paternopoli, in basso, arriva un suono che non sentivate da un'era: **un gallo.** Poi le campane. Poi, una alla volta, le persiane del paese che SI APRONO.
 
 Il Belvedere, alle vostre spalle, è solo una bella villa liberty un po' stanca, coi muri che hanno bisogno di una mano di bianco e un giardino magnifico. Il cancello è **aperto.** La ghiaia del viale, per una volta, è in disordine — e non se ne cura nessuno.
 
@@ -5371,14 +5526,14 @@ Sul foglio, nella solita calligrafia elegante, c'è scritto solo: *"SALDATO. —
     sets: { alba_vista: true },
     choices: [
       { text: '☕ Il caffè, l\'abbraccio, e la domanda che resta: "Gregorio... e adesso?"', next: 'e_alba' },
-      { text: '👀 Guardare Pietrafonda che si sveglia — le persiane, il gallo, il mondo vero', once: true, next: 'z6_pietrafonda' },
+      { text: '👀 Guardare Paternopoli che si sveglia — le persiane, il gallo, il mondo vero', once: true, next: 'z6_pietrafonda' },
     ],
   },
 
   z6_pietrafonda: {
     location: 'albaRelais',
     stinger: 'campana',
-    caption: 'Pietrafonda si sveglia',
+    caption: 'Paternopoli si sveglia',
     text: `Prima del caffè, vi affacciate tutti e cinque alla balaustra a guardare il paese che si sveglia. Ve lo siete guadagnato.
 
 Le persiane si aprono una via l'altra, e a ogni persiana corrisponde un rumore piccolo del mondo vero: una radio che parte con il giornale, una madre che chiama, una saracinesca che sale. E poi, giù al tornante zero, IL DETTAGLIO: il distributore ha la saracinesca alzata, e davanti alla pompa c'è **il benzinaio**, fermo, la mano sulla fronte a fare ombra, che guarda in su. Verso di voi.
@@ -5525,7 +5680,7 @@ const CHAPTERS = [
   { id: 'a0',       label: '🚗 Il viaggio — autogrill di Baiano', desc: 'Dall\'inizio: caffè, Gratta e Vinci e tornanti.', prefixes: ['a'] },
   { id: 'p1',       label: '🌊 La piscina di sera', desc: 'La scena da cartolina. E il riflesso sbagliato.', prefixes: ['p1', 'p2', 'p3', 'p4'] },
   { id: 'h1',       label: '🕯 Il corridoio di mezzanotte', desc: 'L\'hub delle tre piste: cantina, piano proibito, pozzo — e i momenti di respiro.', prefixes: ['h1', 'h2', 'gv1', 'nat_tronello', 'tronello_cerchio', 'ema_orto', 'cst', 'cuore_'] },
-  { id: 'pp1',      label: '⛪ Pietrafonda', desc: 'Il paese, Don Michele, la cripta dei custodi.', flags: { firma_rinviata: true }, prefixes: ['pp'] },
+  { id: 'pp1',      label: '⛪ Paternopoli', desc: 'Il paese, Don Michele, la cripta dei custodi.', flags: { firma_rinviata: true }, prefixes: ['pp'] },
   { id: 'k1',       label: '🍷 La cantina', desc: 'Lo Chef, il forno del 1899 e l\'ossario là sotto.', prefixes: ['k', 'x_celle', 'os'] },
   { id: 'u1',       label: '🚪 Il piano proibito', desc: 'Le stanze dei gruppi: 1999, 1949, 1974, 1924, 1899 — e la soffitta.', prefixes: ['u', 'sf', 's49_', 's74_'] },
   { id: 'b1',       label: '🌳 Il pozzo e il garage', desc: 'Il regno del Giardiniere, la voce dal pozzo, la rimessa dei motori.', prefixes: ['b', 'gr'] },
@@ -5541,13 +5696,13 @@ const CHAPTERS = [
 /* Il Diario della Notte: le conoscenze acquisite, in chiaro, per chi gioca 4-6 ore
    e non deve ricordare tutto a memoria. Ordine = ordine di visualizzazione. */
 const DIARY_FLAGS = [
-  ['firma_rinviata',        'Federico ha RINVIATO la firma: chi non ha firmato può ancora varcare il cancello verso Pietrafonda.'],
+  ['firma_rinviata',        'Federico ha RINVIATO la firma: chi non ha firmato può ancora varcare il cancello verso Paternopoli.'],
   ['benzinaio_sapeva',      'Il benzinaio di Baiano ha contato cinque macchine, una ogni 25 anni. Sta laggiù APPOSTA. E ha una frase sola per provarci: "lasciate stare il pozzo."'],
   ['garage_visto',          'Nella rimessa: la vostra auto è smontata in bacheca, pezzo per pezzo. E la candela era ancora tiepida.'],
   ['giardiniere_potato',    'Il Giardiniere è PAGLIA SPARSA nei filari: si sta rifacendo, ma stanotte il giardino non ha turno di notte.'],
   ['giardiniere_allertato', 'Il Giardiniere sa che girate di notte: le cesoie, da qualche parte nella nebbia, tengono il conto.'],
   ['strada_che_torna',      'Le strade TORNANO: i ventisei tornanti sono un anello. L\'uscita non è fuori — è nel centro. La casa.'],
-  ['paese_sa',              'Pietrafonda lo sa dal 1899: la corriera smise di salire nel \'74. La strada conta chi ha firmato — e Don Michele è un errore di arrotondamento.'],
+  ['paese_sa',              'Paternopoli lo sa dal 1899: la corriera smise di salire nel \'74. La strada conta chi ha firmato — e Don Michele è un errore di arrotondamento.'],
   ['verita_firma',          'La verità sulla firma: non è un contratto, è un CONSENSO. La casa non può prendere chi non firma — può solo convincerlo a farlo. Tutto il Belvedere è un lungo, paziente convincimento.'],
   ['vista_sagoma_99',       'La sagoma vista in piscina, di notte: qualcuno del 1999 nuota ancora, nell\'ora esatta in cui l\'acqua se lo ricorda.'],
   ['ricetta_antidoto',      'La ricetta dell\'antidoto, strappata allo Chef: le erbe giuste dell\'orto di Ada, bollite finché il freddo non molla. Lui la sapeva a memoria. Da prima del 1899.'],
@@ -5560,7 +5715,7 @@ const DIARY_FLAGS = [
   ['bagagli_visti',          'I bagagli mai ritirati, catalogati per anno sugli scaffali dell\'ossario. E in fondo, uno scaffale VUOTO con le targhette già scritte: "2024".'],
   ['sceso_ossario',         'Siete scesi nell\'ossario dietro la cella frigorifera: i bagagli mai ritirati, le tacche sul muro.'],
   ['segreto_contabile',     'Il Contabile vi ha confidato il suo segreto: anche la casa tiene una contabilità. E i conti non tornano.'],
-  ['pista_paese',           'Pietrafonda vi conosce: Don Michele, il bar del 1999, la cripta dei custodi.'],
+  ['pista_paese',           'Paternopoli vi conosce: Don Michele, il bar del 1999, la cripta dei custodi.'],
   ['cerchio_rosso',         'Nella polaroid del 1999, uno dei cinque ragazzi è cerchiato in rosso. La grafia del cerchio è di Sofia. E il ragazzo cerchiato è l\'unico che nei ritratti della hall NON c\'è.'],
   ['visto_occhio',          'Dal telescopio della soffitta l\'avete visto: c\'è un OCCHIO nella piscina. Il riflesso guarda.'],
   ['regole_casa_note',      'Le tre regole del Belvedere, imparate sulla pelle: la casa sente tutto, la casa non dimentica, la casa RISPETTA chi gioca bene.'],
@@ -5602,7 +5757,7 @@ const DIARY_FLAGS = [
   ['pozzo_risponde',        'Dal pozzo, la voce di Ada ha risposto a Natalino: "Single per scelta, hai detto. Anch\'io alla fine l\'ho scelto." Ha promesso una cartolina di Capri.'],
   ['manifesto_74_letto',    'Il manifesto della comune del \'74: cinque firme con i nomi enormi e la convinzione, ingenua e totale, che l\'amore scioglie ogni patto.'],
   ['saluto_sofia',          'Sofia ha salutato dall\'altra parte della piscina capovolta: "Raccontate di noi fuori. NON lasciate che ci dimentichino."'],
-  ['alba_vista',            'L\'alba sul Belvedere: la nebbia che si ritira, il gallo, le persiane di Pietrafonda che si aprono. E Gregorio con il caffè vero.'],
+  ['alba_vista',            'L\'alba sul Belvedere: la nebbia che si ritira, il gallo, le persiane di Paternopoli che si aprono. E Gregorio con il caffè vero.'],
   ['batterie_risparmiate',  'Telefoni spenti alla piazzola: l\'ultima batteria risparmiata per una notte che non sapete ancora quanto sarà lunga.'],
   ['sesta_finestra_notata', 'La sesta finestra, quella con la tenda scura: l\'unica che non ha risposto alla luce della sera.'],
   ['biglietto_strappato_raccolto','I pezzi del biglietto strappato raccolti come souvenir: l\'ultimo gratta-e-vinci di una vita precedente.'],
@@ -5658,7 +5813,7 @@ const DIARY_FLAGS = [
   ['mano_gregorio',         'La mano di Gregorio cercata e trovata nel buio, dalla VOSTRA parte del tavolo. Nessun gruppo l\'aveva mai fatto.'],
   ['consiglio_chef',        'Le tre regole dello Chef per sgonfiare una portata montata: la luce viva, il ritmo rotto, e un tavolo che non ha fame.'],
   ['penna_osservata',       'Il solco nel fusto della penna del 1899: una firma iniziata e mai finita, decine di migliaia di volte. Una diga che perde.'],
-  ['pietrafonda_vista',     'Pietrafonda che si sveglia, e Gennaro giù al distributore che si toglie il cappello: la prima macchina che riscende, in cinquant\'anni di conta.'],
+  ['pietrafonda_vista',     'Paternopoli che si sveglia, e Gennaro giù al distributore che si toglie il cappello: la prima macchina che riscende, in cinquant\'anni di conta.'],
   ['biglietti_ricontrollati','Il terzo Gratta e Vinci ricontrollato: RITENTA era diventato RIENTRATE. E il regolamento parla di giocatori che diventano montepremi.'],
   ['luci_fotografate',      'La foto delle cinque luci tre tornanti più in basso: cinque facce stanche, le vostre, che fotografano verso l\'alto.'],
   ['corriera_fotografata',  'Il penultimo finestrino della corriera del \'74: Gennaro, giovane, che non saluta. Il testimone che comprò il distributore per fare la guardia.'],
@@ -5671,6 +5826,7 @@ const DIARY_FLAGS = [
   ['federico_offerta',      'La pratica del Direttore: "OFFERTA VERBALE — F. Domani muoio, ripetuta davanti a testimoni." La casa non capisce le battute. I contratti sì.'],
   ['offerta_ritirata',      'Federico si è rimangiato la battuta ad alta voce, davanti alla casa, pagando il conto: "Domani NON muoio. Ho un sacco di impegni, domani."'],
   ['sciame_vinto',          'Lo sciame del pozzo, sconfitto a bordo piscina: diecimila vespe grigie che custodivano le minute del contratto del 1899. Impollinano una cosa sola: le firme.'],
+  ['conti_chiusi',          'I conti del giorno, chiusi in cinque per il Contabile: il primo stipendio mai pagato al Belvedere. Chi sa far di conto tratta per iscritto.'],
   ['riga_letta_gregorio',   'La regola di Ada, 12 agosto 1899: "in questa casa non si firma MAI niente dopo cena." Tre giorni dopo, Gregorio firmò. Dopo cena.'],
   ['cesoie_raccolte',       'Le cesoie del Giardiniere, raccolte dall\'orto: ferro del 1899, affilato ogni notte da mani di paglia. Ora potano per voi.'],
   ['panorama_filari',       'I filari della valle visti dal muretto dell\'orto: geometrie perfette che nessun contadino ha piantato. La collina ha i suoi disegni.'],
@@ -5687,12 +5843,12 @@ const WORLD_MAP = [
   { key: 'tornanti', label: 'I Tornanti',      x: 0.12, y: 0.80, scenes: ['a0_radio', 'ft2_foto_luci', 'a0', 'a0_benzina', 'a0_benzina2', 'a1', 'a1b', 'ft1', 'ft1_inseguiti', 'ft_cesoie', 'ft_cesoie_vinto', 'ft2_capito', 'ft2_notte'] },
   { key: 'relais',   label: 'Il Relais',       x: 0.40, y: 0.30, scenes: ['a2', 'a2_siepi', 'a2_siepi_b', 'p4_fuga', 'gr1', 'gr2', 'gr3', 'gr3_ko'] },
   { key: 'hall',     label: 'La Hall',         x: 0.56, y: 0.48, scenes: ['a4_lampadario', 'a4_luce', 'a4_registro', 'a3', 'a3_registro', 'a3_registro_ko', 'a4_firma', 'a4_rinvio', 'a4_firma_forzata', 'p4_rientro'] },
-  { key: 'camere',   label: 'Le Camere',       x: 0.74, y: 0.32, scenes: ['u2_zaino', 'u2_walkman', 'h2_ciocca', 'cuore_gc_nebbia', 'cuore_fe_borsa', 'u2_camera6', 'tronello_fumo', 'cst2_quaderno', 'gv1_ricontrollo', 'a5', 'a5_pozzo', 'h1', 'h2', 'gv1', 'nat_tronello', 'tronello_cerchio', 'ema_orto', 'cst1', 'cst2', 'u1', 'u2_1999', 'u2_1924', 'u2_1899', 'u3_medaglione', 'u3_lanterna', 'u3_bambole_fight', 'u3_bambole_vinte', 'u5_specchio', 'u4_porta_vuota', 'u4_intercapedine', 'sf1', 'sf2', 'sf3', 'sf4', 'sf5', 'sf6', 's49_1', 's49_2', 's49_3', 's49_3_ko', 's74_1', 's74_1b', 's74_2', 's74_3', 'cuore_gc', 'cuore_gc_esito', 'cuore_fe', 'cuore_fe_esito', 'cuore_nat', 'cuore_nat_esito'] },
+  { key: 'camere',   label: 'Le Camere',       x: 0.74, y: 0.32, scenes: ['mg_valzer', 'u3_ninna', 'u2_zaino', 'u2_walkman', 'h2_ciocca', 'cuore_gc_nebbia', 'cuore_fe_borsa', 'u2_camera6', 'tronello_fumo', 'cst2_quaderno', 'gv1_ricontrollo', 'a5', 'a5_pozzo', 'h1', 'h2', 'gv1', 'nat_tronello', 'tronello_cerchio', 'ema_orto', 'cst1', 'cst2', 'u1', 'u2_1999', 'u2_1924', 'u2_1899', 'u3_medaglione', 'u3_lanterna', 'u3_bambole_fight', 'u3_bambole_vinte', 'u5_specchio', 'u4_porta_vuota', 'u4_intercapedine', 'sf1', 'sf2', 'sf3', 'sf4', 'sf5', 'sf6', 's49_1', 's49_2', 's49_3', 's49_3_ko', 's74_1', 's74_1b', 's74_2', 's74_3', 'cuore_gc', 'cuore_gc_esito', 'cuore_fe', 'cuore_fe_esito', 'cuore_nat', 'cuore_nat_esito'] },
   { key: 'pranzo',   label: 'Sala da Pranzo',  x: 0.46, y: 0.62, scenes: ['z_offerta', 'a6_vino', 'a6_coperto', 'a7_persiane', 'z_lettere_riga', 'z2_mano', 'z2_diretta', 'z2_consiglio', 'z_penna_sguardo', 'z6_pietrafonda', 'a6', 'a6_menu', 'a6_brindisi', 'a6_no_brindisi', 'a7', 'z1', 'z2_vino', 'z2_perdono', 'z2_menu_vivi', 'z2_capitolazione', 'z2_trattativa', 'z2_rituale', 'gvz', 'z_biglietto', 'z_lettere', 'z2_strada', 'z2_alleato', 'z2_bambole', 'z2_claudia', 'z3_boss', 'z3_boss_solo', 'z3_boss_arrabbiato', 'z3_boss_indebolito', 'z4_fase2', 'z5_vittoria', 'z6_alba', 'e_alba', 'z_penna', 'z_penna_no', 'e_penna', 'z_custode', 'e_custode', 'e_custode_gregorio', 'z_resa', 'e_ospiti', 'z_vespri', 'z_smemorati', 'e_smemorati'] },
   { key: 'riflesso', label: 'Il Riflesso',      x: 0.10, y: 0.28, scenes: ['w8_pratica', 'w6_parola', 'w16_promessa', 'w18_nome', 'w1_tuffo', 'w2_riflesso', 'w2_riflesso_ko', 'w3_giardino', 'w3_pattuglia_combat', 'w4_sofia', 'w5_racconto', 'w6_1924', 'w7_ronda', 'w7_ronda_combat', 'w8_direttore', 'w9_studio', 'w9_studio_combat', 'w10_orologio', 'w10_orologio_reso', 'w11_inventario', 'w12_tradimento', 'w12_sofia', 'w14_direttore_boss', 'w15_vittoria', 'w16_amaro', 'w17_fuga', 'w17_fuga_ko', 'w18_soglia', 'w18_saluto', 'w_finale'] },
-  { key: 'paese',    label: 'Pietrafonda',     x: 0.16, y: 0.90, scenes: ['pp_foto_corriera', 'pp1', 'pp2', 'pp2_bar', 'pp3', 'pp_anello', 'pp4_cripta', 'pp4', 'pp6', 'pp6_ko', 'pp7'] },
+  { key: 'paese',    label: 'Paternopoli',     x: 0.16, y: 0.90, scenes: ['pp_foto_corriera', 'pp1', 'pp2', 'pp2_bar', 'pp3', 'pp_anello', 'pp4_cripta', 'pp4', 'pp6', 'pp6_ko', 'pp7'] },
   { key: 'piscina',  label: 'La Piscina',      x: 0.22, y: 0.50, scenes: ['p_vespe', 'p_vespe_vinto', 'p2_foto_anello', 'p1', 'p1_accappatoio', 'p1_accappatoio_ko', 'p2', 'p2_esperimento', 'p2_esperimento_ko', 'p3_fuori'] },
-  { key: 'cantina',  label: 'La Cantina',      x: 0.62, y: 0.78, scenes: ['k1_1899', 'k4_storie', 'k4_contatto', 'os3_cartellino', 'os5_conti', 'os6_compagnia', 'k1', 'k2_sofia', 'k2_sofia_ko', 'k3', 'k4_scambio', 'k4_nastro', 'k4_chef_fight', 'k4_furto', 'k4_furto_ko', 'k5_dopo_chef', 'x_celle', 'os1', 'os2', 'os3', 'os4', 'os5', 'os6'] },
-  { key: 'pozzo',    label: 'Il Pozzo',        x: 0.86, y: 0.66, scenes: ['b1_volto', 'b4_ricordi', 'b4_promessa', 'b4_scuse', 'b4_pagine', 'b1', 'b1_avviso', 'b2_giardiniere_fight', 'b2_vinto', 'b2_orto', 'b3_pozzo', 'b4_medaglione', 'b4_tronello', 'b4_vino', 'b4_parole', 'b4_ira', 'b4_calata', 'b4_calata_ko'] },
+  { key: 'cantina',  label: 'La Cantina',      x: 0.62, y: 0.78, scenes: ['os_spaccio', 'mg_conti', 'os_conti_ok', 'os_conti_ko', 'k1_1899', 'k4_storie', 'k4_contatto', 'os3_cartellino', 'os5_conti', 'os6_compagnia', 'k1', 'k2_sofia', 'k2_sofia_ko', 'k3', 'k4_scambio', 'k4_nastro', 'k4_chef_fight', 'k4_furto', 'k4_furto_ko', 'k5_dopo_chef', 'x_celle', 'os1', 'os2', 'os3', 'os4', 'os5', 'os6'] },
+  { key: 'pozzo',    label: 'Il Pozzo',        x: 0.86, y: 0.66, scenes: ['mg_corsa_siepi', 'b1_volto', 'b4_ricordi', 'b4_promessa', 'b4_scuse', 'b4_pagine', 'b1', 'b1_avviso', 'b2_giardiniere_fight', 'b2_vinto', 'b2_orto', 'b3_pozzo', 'b4_medaglione', 'b4_tronello', 'b4_vino', 'b4_parole', 'b4_ira', 'b4_calata', 'b4_calata_ko'] },
 ];
 

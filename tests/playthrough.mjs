@@ -22,7 +22,7 @@ const root = join(__dirname, '..');
 // Ordine di caricamento IDENTICO a index.html (main.js escluso: qui non serve la UI del titolo).
 const FILES = [
   'js/sound.js', 'js/sprites.js', 'js/scenes.js', 'js/characters.js', 'js/campaign.js',
-  'js/epilogues.js', 'js/rules.js', 'js/dice.js', 'js/combat.js', 'js/engine.js',
+  'js/epilogues.js', 'js/rules.js', 'js/dice.js', 'js/combat.js', 'js/minigames.js', 'js/engine.js',
 ];
 const SOURCES = FILES.map(f => ({ name: f, code: readFileSync(join(root, f), 'utf8') }));
 
@@ -482,6 +482,16 @@ function runGame(scenario) {
         continue;
       }
 
+      if (scene.minigame) {
+        // I minigiochi girano su canvas/rAF: headless si simula l'esito.
+        // scenario.minigames = { [sceneId]: 'success'|'fail' } — default: si vince.
+        const esito = (scenario.minigames && scenario.minigames[sceneId]) || 'success';
+        const ok = esito !== 'fail';
+        game.act(() => api.Engine.gotoScene(ok ? scene.minigame.success : scene.minigame.fail));
+        checkInvariants(getG(), `dopo minigioco in "${sceneId}"`);
+        continue;
+      }
+
       if (scene.combat) {
         log.combats++;
         const box = doc.getElementById('choices');
@@ -589,7 +599,7 @@ const BASE_CHOICES = {
   z_resa: '🔥 ALZARSI. Rovesciare la sedia',
   z5_vittoria: 'Guardare l\'alba.',
   z6_alba: '☕ Il caffè, l\'abbraccio',
-  // ---- Pista Pietrafonda (solo se firma_rinviata) e nuove offerte al Banchetto ----
+  // ---- Pista Paternopoli (solo se firma_rinviata) e nuove offerte al Banchetto ----
   pp2: '🚪 Bussare alla canonica',
   pp3: '📖 Raccontargli tutto',
   pp4_cripta: 'Su, da Don Michele',
@@ -795,7 +805,7 @@ scenarios.push(scenario('difficoltà INCUBO: gruppo al completo, rituale con gli
 }, { checkBias: 'best', sequences: { h1: ['CANTINA', 'POZZO', 'PIANO PROIBITO', 'barricarsi'] }, difficulty: 'incubo' }));
 
 /* ---- PISTA SEGRETA DI PIETRAFONDA + nuove offerte al Banchetto ----
-   Pietrafonda esiste SOLO se a3_registro -> il check di Carisma per rinviare la firma è
+   Paternopoli esiste SOLO se a3_registro -> il check di Carisma per rinviare la firma è
    RIUSCITO (a4_rinvio, flag firma_rinviata): quella prova dipende dal dado, quindi le
    varianti che la richiedono sono degli executeUntil (vedi sezione di esecuzione più sotto).
    L'offerta impensabile ACCETTATA, invece, non richiede alcuna pista (la scelta è sempre
@@ -965,24 +975,24 @@ executeUntil('prologo: registro sfogliato, poi firma rinviata (CAR)', ['federico
 /* ---- PISTA SEGRETA DI PIETRAFONDA (richiede a4_rinvio, dipendente dal dado) + le nuove
    offerte al Banchetto che dipendono dalla pista (campanella_1974 -> z_vespri) ---- */
 
-// Bengala usato DAVVERO in combattimento: si scende a Pietrafonda per prenderlo (pp1), poi
+// Bengala usato DAVVERO in combattimento: si scende a Paternopoli per prenderlo (pp1), poi
 // si va dritti allo scontro deterministico contro lo Chef (k3 -> attacco diretto) e lo si
 // lancia lì (verificato con log.usedForceItem, non solo con la scena raggiunta). Copre anche
 // l'intera pista pp1..pp7 (percorso diretto, senza le due prove opzionali del bar/cripta).
-executeUntil('Pietrafonda (pista completa) + Bengala usato in combattimento (k4_chef_fight)',
+executeUntil('Paternopoli (pista completa) + Bengala usato in combattimento (k4_chef_fight)',
   ['claudia', 'federico'],
   {
     a3: '📖 Prima, sfogliare il registro',
     a3_registro: 'Firmiamo domani con calma',
     k3: '⚔ Non si tratta con chi ha una mannaia',
   },
-  { checkBias: 'best', seedBase: 700000, sequences: { h1: ['Pietrafonda', 'CANTINA', 'barricarsi'] }, forceCombatItem: 'Bengala' },
+  { checkBias: 'best', seedBase: 700000, sequences: { h1: ['Paternopoli', 'CANTINA', 'barricarsi'] }, forceCombatItem: 'Bengala' },
   ['pp1', 'pp2', 'pp3', 'pp4', 'pp6', 'pp7', 'k4_chef_fight'], 20,
   r => r.log.usedForceItem === true);
 
-// Giro turistico completo di Pietrafonda: entrambe le prove opzionali (bar del 1999 SAG,
+// Giro turistico completo di Paternopoli: entrambe le prove opzionali (bar del 1999 SAG,
 // cripta dei custodi INT) riuscite, oltre alla firma rinviata (CAR) necessaria per scendere.
-executeUntil('Pietrafonda: bar del 1999 (SAG) e cripta dei custodi (INT) riuscite',
+executeUntil('Paternopoli: bar del 1999 (SAG) e cripta dei custodi (INT) riuscite',
   ['claudia', 'federico'],
   {
     a3: '📖 Prima, sfogliare il registro',
@@ -990,23 +1000,23 @@ executeUntil('Pietrafonda: bar del 1999 (SAG) e cripta dei custodi (INT) riuscit
     pp2: '🔦 Prima, una torcia dentro al bar',
     pp3: '⛪ Prima: chiedergli della cripta',
   },
-  { checkBias: 'best', seedBase: 710000, sequences: { h1: ['Pietrafonda', 'barricarsi'] } },
+  { checkBias: 'best', seedBase: 710000, sequences: { h1: ['Paternopoli', 'barricarsi'] } },
   ['pp2_bar', 'pp4_cripta'], 24,
   r => !!(r.log.flags && r.log.flags.segreto_custodi));
 
 // La nebbia della risalita "assaggia" chi tira (SAG fallita): stesso bug narrativo del
 // veleno già documentato più sotto (G.lastRoller non viene mai assegnato), ma la scena e il
 // -1 Sangue Freddo sono comunque raggiunti e verificati.
-executeUntil('Pietrafonda: la nebbia della risalita assaggia (SAG fallita) -> pp6_ko',
+executeUntil('Paternopoli: la nebbia della risalita assaggia (SAG fallita) -> pp6_ko',
   ['federico', 'natalino'],
   {
     a3: '📖 Prima, sfogliare il registro',
     a3_registro: 'Firmiamo domani con calma',
   },
-  { checkBias: 'best', seedBase: 720000, sequences: { h1: ['Pietrafonda', 'barricarsi'] } },
+  { checkBias: 'best', seedBase: 720000, sequences: { h1: ['Paternopoli', 'barricarsi'] } },
   ['pp6_ko'], 20);
 
-// I vespri di Don Michele (richiede la campanella_1974, ottenuta a Pietrafonda): si scende,
+// I vespri di Don Michele (richiede la campanella_1974, ottenuta a Paternopoli): si scende,
 // si prende la campanella, si rifiuta prima l'offerta impensabile (solo per toccare anche
 // z_smemorati senza chiudere la partita lì), poi si suonano i vespri e si va alla vittoria.
 executeUntil('Banchetto: i vespri di Don Michele (richiede campanella_1974) -> vittoria',
@@ -1022,7 +1032,7 @@ executeUntil('Banchetto: i vespri di Don Michele (richiede campanella_1974) -> v
   },
   {
     checkBias: 'best', seedBase: 730000,
-    sequences: { h1: ['Pietrafonda', 'barricarsi'], z1: ['offerta impensabile', 'Suonare la campanella'] },
+    sequences: { h1: ['Paternopoli', 'barricarsi'], z1: ['offerta impensabile', 'Suonare la campanella'] },
   },
   ['pp7', 'z_smemorati', 'z_vespri', 'z3_boss', 'z5_vittoria', 'e_alba'], 24,
   r => !!(r.log.flags && r.log.flags.pista_paese && r.log.flags.vespri_suonati));
@@ -1060,11 +1070,11 @@ executeUntil('mondo del riflesso: la casa capovolta cerca di trattenervi mentre 
   { checkBias: 'worst', seedBase: 790000, sequences: { h1: ['POZZO', 'Tornare alla PISCINA', 'barricarsi'] } },
   ['w17_fuga_ko'], 24);
 
-/* ---- OSSARIO — variante con la moka di Don Michele (richiede firma_rinviata -> Pietrafonda) ----
+/* ---- OSSARIO — variante con la moka di Don Michele (richiede firma_rinviata -> Paternopoli) ----
    Il Contabile mostra il Libro Mastro (flag segreto_contabile) SOLO se gli si offre la moka
-   in os4: qui serve prima scendere a Pietrafonda per procurarsela (pp4), il che dipende dalla
+   in os4: qui serve prima scendere a Paternopoli per procurarsela (pp4), il che dipende dalla
    firma rinviata (CAR, a4_rinvio) — un dado, da qui l'executeUntil. */
-executeUntil('ossario: con la moka di Don Michele (Pietrafonda) -> os5, il segreto del Contabile',
+executeUntil('ossario: con la moka di Don Michele (Paternopoli) -> os5, il segreto del Contabile',
   ['claudia', 'federico'], {
     a3: '📖 Prima, sfogliare il registro',
     a3_registro: 'Firmiamo domani con calma',
@@ -1077,7 +1087,7 @@ executeUntil('ossario: con la moka di Don Michele (Pietrafonda) -> os5, il segre
     os3: 'Avanti, verso la luce',
     os4: '☕ Offrirgli la moka',
   },
-  { checkBias: 'best', seedBase: 820000, sequences: { h1: ['Pietrafonda', 'CANTINA', 'barricarsi'] } },
+  { checkBias: 'best', seedBase: 820000, sequences: { h1: ['Paternopoli', 'CANTINA', 'barricarsi'] } },
   ['pp4', 'os1', 'os2', 'os3', 'os4', 'os5'], 20,
   r => !!(r.log.flags && r.log.flags.segreto_contabile));
 
@@ -1250,7 +1260,7 @@ executeUntil('Giardiniere battuto nell\'orto -> b2_vinto, poi dal garage in frac
 
 /* ---- ECO A PIETRAFONDA: la corriera del '74 (richiede strada_che_torna PRIMA di scendere) ---- */
 
-executeUntil('Pietrafonda sa dell\'anello: pozzo+garage+tornanti PRIMA, poi la domanda a Don Michele -> pp_anello',
+executeUntil('Paternopoli sa dell\'anello: pozzo+garage+tornanti PRIMA, poi la domanda a Don Michele -> pp_anello',
   ['claudia', 'federico'],
   {
     a3: '📖 Prima, sfogliare il registro',
@@ -1260,7 +1270,7 @@ executeUntil('Pietrafonda sa dell\'anello: pozzo+garage+tornanti PRIMA, poi la d
     pp2: '🚪 Bussare alla canonica',
   },
   { checkBias: 'best', seedBase: 910000,
-    sequences: { h1: ['POZZO', 'Pietrafonda', 'barricarsi'], pp3: ['la strada che scende', 'Raccontargli tutto'] } },
+    sequences: { h1: ['POZZO', 'Paternopoli', 'barricarsi'], pp3: ['la strada che scende', 'Raccontargli tutto'] } },
   ['ft2_capito', 'pp_anello'], 24,
   r => !!(r.log.flags && r.log.flags.paese_sa));
 
@@ -1277,7 +1287,7 @@ executeUntil('quinto finale: il segreto della cripta convince Gregorio a ROMPERE
     z_penna: 'Resta l\'uomo',
   },
   { checkBias: 'best', seedBase: 915000,
-    sequences: { h1: ['Pietrafonda', 'CANTINA', 'barricarsi'], z1: ['ROMPERLA'] } },
+    sequences: { h1: ['Paternopoli', 'CANTINA', 'barricarsi'], z1: ['ROMPERLA'] } },
   ['pp4_cripta', 'z_penna', 'e_penna'], 24,
   r => r.log.ending === 'e_penna');
 
@@ -1291,7 +1301,7 @@ executeUntil('quinto finale: Gregorio VACILLA ma la casa stringe (CAR fallita) -
     z_penna: 'Resta l\'uomo',
   },
   { seedBase: 920000,
-    sequences: { h1: ['Pietrafonda', 'CANTINA', 'barricarsi'], z1: ['ROMPERLA'] } },
+    sequences: { h1: ['Paternopoli', 'CANTINA', 'barricarsi'], z1: ['ROMPERLA'] } },
   ['z_penna', 'z_penna_no'], 40);
 
 
@@ -1423,7 +1433,7 @@ executeUntil('la Stanza del Custode -> il biglietto del 1949 -> Gregorio vacilla
     k3: '💇 Natalino fa un passo avanti',
   },
   { checkBias: 'best', seedBase: 990000,
-    sequences: { h1: ['Seguire Gregorio quando si ritira', 'Pietrafonda', 'CANTINA', 'barricarsi'],
+    sequences: { h1: ['Seguire Gregorio quando si ritira', 'Paternopoli', 'CANTINA', 'barricarsi'],
                  z1: ['IL SUO biglietto del 1949', 'senza chiedere'] } },
   ['cst2', 'z_biglietto'], 24,
   r => !!(r.log.flags && r.log.flags.gregorio_vacilla));
@@ -1534,12 +1544,12 @@ coverage('Finale — sconfitta contro il boss -> celle', ['x_celle']);
 coverage('Finale — z_custode', ['z_custode']);
 coverage('Finale — z_resa', ['z_resa']);
 
-coverage('Pietrafonda — pista completa (pp1..pp7)', ['pp1', 'pp2', 'pp3', 'pp4', 'pp6', 'pp7']);
-coverage('Pietrafonda — bar del 1999 (SAG successo)', ['pp2_bar']);
-coverage('Pietrafonda — cripta dei custodi (INT successo)', ['pp4_cripta']);
-coverage('Pietrafonda — nebbia della risalita (SAG fallita, avvelenamento narrativo)', ['pp6_ko']);
-coverageFlag('Pietrafonda — flag pista_paese', ['pista_paese']);
-coverageFlag('Pietrafonda — flag segreto_custodi', ['segreto_custodi']);
+coverage('Paternopoli — pista completa (pp1..pp7)', ['pp1', 'pp2', 'pp3', 'pp4', 'pp6', 'pp7']);
+coverage('Paternopoli — bar del 1999 (SAG successo)', ['pp2_bar']);
+coverage('Paternopoli — cripta dei custodi (INT successo)', ['pp4_cripta']);
+coverage('Paternopoli — nebbia della risalita (SAG fallita, avvelenamento narrativo)', ['pp6_ko']);
+coverageFlag('Paternopoli — flag pista_paese', ['pista_paese']);
+coverageFlag('Paternopoli — flag segreto_custodi', ['segreto_custodi']);
 coverage('Banchetto — Bengala usato in combattimento (k4_chef_fight)', ['k4_chef_fight']);
 {
   const bengalaRun = results.find(r => r.ok && r.log.usedForceItem);
@@ -1624,8 +1634,8 @@ coverage('La diretta di Claudia', ['z2_claudia']);
 coverage('Il perdono di Ada al Banchetto', ['z2_perdono']);
 coverage('Coerenza del Giardiniere — vittoria nell\'orto ricordata dai filari', ['b2_vinto']);
 coverageFlag('Coerenza del Giardiniere — flag', ['giardiniere_potato']);
-coverage('Eco a Pietrafonda — la corriera del \'74', ['pp_anello']);
-coverageFlag('Eco a Pietrafonda — flag', ['paese_sa']);
+coverage('Eco a Paternopoli — la corriera del \'74', ['pp_anello']);
+coverageFlag('Eco a Paternopoli — flag', ['paese_sa']);
 coverage('Il quinto finale — la proposta, il rifiuto e la penna spezzata', ['z_penna', 'z_penna_no', 'e_penna']);
 coverage('La Stanza del Custode e il biglietto del 1949', ['cst1', 'cst2', 'z_biglietto']);
 coverageFlag('Stanza del Custode — flag', ['stanza_custode', 'gregorio_vacilla']);

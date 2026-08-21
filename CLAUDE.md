@@ -16,7 +16,7 @@ Horror interattivo in italiano per 1-5 giocatori. **Riusa il motore de "La Coron
 | Nemici | `undead: true` = creatura della villa → Colpo di Phon e sale = danni doppi |
 | Finali | `e_alba` (rituale/vittoria), `e_custode` (uno resta — scelta), `e_ospiti` (resa — subìto), `e_smemorati` (un ricordo a testa), `e_penna` (il segreto della cripta: Gregorio rompe la penna — CAR 14), `e_custode_gregorio` (la Firma Volontaria: con gregorio_vacilla, lui ferma la mano) |
 | Struttura | Prologo → piscina → hub `h1` con TRE piste NON esclusive (cantina `k*`, piano `u*`, pozzo `b*`) → Banchetto `z*` |
-| Localizzazione | Pietrafonda e il Belvedere sono inventati; la geografia è irpina generica |
+| Localizzazione | **Geografia reale** (richiesta di Gali, ago 2026): il Belvedere sta sopra **Paternopoli** (AV); si parte da **Minturno**; itinerario Domiziana → A16 → autogrill di Baiano → uscita per il Passo di Mirabella (ultimo distributore, quello di Gennaro) → Fontanarosa → tornanti per Paternopoli. Il Belvedere resta inventato. |
 
 ## Capacità del motore aggiunte in questo gioco (non presenti nella Corona)
 
@@ -31,6 +31,8 @@ Per le prossime campagne, il motore di QUESTO repo è il più avanzato. Novità 
 - **Eclissi**: `moon(..., eclipse=true)` usa la fase di `Engine.eclipsePhaseFor(sceneId)` — la luna cresce e si arrossa con l'orologio della notte
 - **Echi dei flag nei boss** (js/combat.js, blocco d'apertura del combattimento): `sorpresa`, `rituale_fatto`, `gregorio_umano`, `cucina_in_sciopero`, `cerchio_di_porcellana`, `menu_dei_vivi` — il posto giusto per far pesare in battaglia le scelte della notte
 - **"Cosa manca e dove"** (agosto 2026, portata dalla Casa che non Finisce): `seenScenes`/`markSeen` in engine.js tracciano le scene viste CUMULATIVE per profilo; `chapterProgress()` calcola per capitolo la % di stanze viste (dai `prefixes` dei CHAPTERS) e le imprese mancanti, dedotte automaticamente dalla scena che imposta il flag; "Rivivi la Notte" mostra lo stato per capitolo e il finale mostra "🗝 Quello che il Belvedere non vi ha mostrato" (solo titoli: nessuno spoiler) col salto diretto al capitolo. Se si aggiungono scene o capitoli, aggiornare i `prefixes` dei CHAPTERS.
+- **Minigiochi** (ago 2026, riusabile): `js/minigames.js` + `scene.minigame {type, hero, success, fail, config}` — tipi: corsa/indovinello/memoria/calcolo/filastrocca. Nel Relais: corsa delle siepi (b1), valzer del '24 (mg_valzer), ninna nanna delle bambole (u3_ninna), conti del Contabile (mg_conti). Il validatore segue gli archi minigame; il bot headless simula l'esito (`scenario.minigames`). Doc: `../dnd-motore/docs/MINIGIOCHI.md`
+- **Checkpoint ai nodi**: `CHECKPOINT_FLAGS` in campaign.js — la prima volta che si completa un nodo il motore cura e ricarica il gruppo (modale). **Spaccio del Contabile** (os_spaccio, rivisitabile da h1): il Sangue Freddo si spende in cure/oggetti; su 'normale' i nemici hanno +12% PV per compensare.
 - **4 validatori di coerenza** (tests/validate.mjs): flag di imprese/cronache/diario impostabili · stinger esistenti in sound.js · sprite/palette coerenti · capitoli di Rivivi la Notte con destinazioni e zaini validi — tenerli verdi previene le classi di bug trovate durante la produzione. Regola d'oro: **ogni flag narrativo deve avere un consumatore** (meccanica, diario, impresa o cronaca)
 
 ## Comandi

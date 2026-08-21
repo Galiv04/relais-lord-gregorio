@@ -46,6 +46,12 @@ const Combat = (() => {
           e.attack.bonus = Math.max(0, e.attack.bonus - 2);
           e.attack.plus = Math.max(0, (e.attack.plus || 0) - 1);
         }
+        if (G.difficulty === 'normale' && !b.boss) {
+          // con checkpoint ai nodi e Spaccio attivi, 'normale' regge un +12% di PV
+          // sui nemici NORMALI. I boss restano com'erano: sono già tarati al limite.
+          e.maxHp = Math.round(e.maxHp * 1.12);
+          e.hp = e.maxHp;
+        }
         if (G.difficulty === 'incubo') {
           e.maxHp = Math.round(e.maxHp * 1.5);
           e.hp = e.maxHp;
@@ -681,7 +687,7 @@ const Combat = (() => {
     if (item.recharge) {
       // la moka di Don Michele: abilità di nuovo cariche, anche in piena battaglia
       for (const ab of ally.abilities) G.uses[ally.id][ab.id] = ab.uses;
-      log(`☕ ${G.party[hIdx].name} passa la moka a ${ally.name}: TUTTE le abilità ricaricate. Caffè di Pietrafonda: rispettare.`, 'log-heal');
+      log(`☕ ${G.party[hIdx].name} passa la moka a ${ally.name}: TUTTE le abilità ricaricate. Caffè di Paternopoli: rispettare.`, 'log-heal');
       if (typeof Sound !== 'undefined') Sound.play('heal');
       render(); endHeroAction();
       return;

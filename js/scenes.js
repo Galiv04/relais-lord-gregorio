@@ -427,7 +427,7 @@ const Scenes = (() => {
       // valigie sul tetto
       ctx.fillStyle = '#8a5a35'; ctx.fillRect(cx + 14, cy - 20, 16, 8);
       ctx.fillStyle = '#4a5238'; ctx.fillRect(cx + 34, cy - 19, 14, 7);
-      // Pietrafonda in basso: persiane tutte chiuse
+      // Paternopoli in basso: persiane tutte chiuse
       for (let i = 0; i < 5; i++) {
         const px = W * 0.62 + (i % 3) * 30, py = H - 78 + Math.floor(i / 3) * 16;
         blocks(ctx, px, py, 24, 14, '#2a2228', 6, r, 0.12);

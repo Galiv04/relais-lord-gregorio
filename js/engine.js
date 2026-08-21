@@ -274,6 +274,31 @@ const Engine = (() => {
     // effetti d'ingresso (solo alla prima visita)
     if (firstVisit) {
       if (scene.sets) Object.assign(G.flags, scene.sets);
+      // CHECKPOINT: la prima volta che si completa un nodo/pista (lista per-gioco
+      // CHECKPOINT_FLAGS in campaign.js) il gruppo recupera PV e mosse. Le condizioni
+      // (veleno, preso) NON si curano qui: hanno le loro cure. Vedi docs/MINIGIOCHI.md.
+      if (typeof CHECKPOINT_FLAGS !== 'undefined' && scene.sets) {
+        if (!G.checkpointsDone) G.checkpointsDone = [];
+        const nuovo = CHECKPOINT_FLAGS.find(f => scene.sets[f] && !G.checkpointsDone.includes(f));
+        if (nuovo) {
+          G.checkpointsDone.push(nuovo);
+          for (const h of G.party) {
+            if (h.morto) continue;
+            h.hp = h.maxHp; h.down = false;
+            if (G.uses[h.id]) for (const ab of h.abilities) G.uses[h.id][ab.id] = ab.uses;
+          }
+          if (typeof Sound !== 'undefined') Sound.play('heal');
+          setTimeout(() => {
+            const box = $('modal-generic-content');
+            box.innerHTML = `<h2>🕯 NODO SCIOLTO — Checkpoint</h2>
+              <p style="font-size:20px;line-height:1.6;margin:10px 0">Il gruppo tira il fiato: <b>PV al massimo</b> e <b>tutte le mosse ricaricate</b>.<br>
+              <span style="color:var(--text-dim)">Le condizioni (☠ veleno, 🕸 preso) restano: quelle vogliono le loro cure.</span></p>
+              <button class="btn btn-gold" onclick="document.getElementById('modal-generic').classList.add('hidden')">▶ Si continua</button>`;
+            $('modal-generic').classList.remove('hidden');
+            renderPartyBar('party-bar');
+          }, 900);
+        }
+      }
       if (scene.rep) G.flags.reputazione = (G.flags.reputazione || 0) + scene.rep;
       if (scene.gold) G.gold = Math.max(0, G.gold + scene.gold);
       if (scene.goldLoss) G.gold = Math.max(0, G.gold - scene.goldLoss);
@@ -420,6 +445,18 @@ const Engine = (() => {
 
     if (scene.ending) {
       renderEnding(scene);
+      return;
+    }
+
+    if (scene.minigame) {
+      const b = document.createElement('button');
+      b.className = 'choice-btn';
+      b.innerHTML = `🎮 <b>SI GIOCA!</b> <span class="choice-tag">${scene.minigame.tag || 'Un minigioco: il gioco vi spiega le regole.'}</span>`;
+      b.onclick = () => Minigames.start(scene.minigame, ok => {
+        if (ok) { G.stats.checksPassed++; } else { G.stats.checksFailed++; }
+        gotoScene(ok ? scene.minigame.success : scene.minigame.fail);
+      });
+      choicesEl.appendChild(b);
       return;
     }
 
