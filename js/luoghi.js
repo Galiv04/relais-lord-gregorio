@@ -215,6 +215,72 @@ const Luoghi = (() => {
       storia: 'Smontare un motore e disporlo così non è vandalismo: è catalogazione. Chi lo ha fatto sapeva cosa faceva, ha preso il suo tempo, e ha voluto che si vedesse. Un pezzo mancante, in una collezione ordinata, è la cosa più visibile che ci sia.',
       gioco: 'Qui si recuperano pezzi, e i pezzi servono: la macchina è la strada di casa, e la strada di casa è un finale. Quello che vi manca alla fine è quello che non siete venuti a prendere.',
     },
+    tornantiPiedi: {
+      titolo: 'I ventisei tornanti, a piedi',
+      ora: 'Le 3:40 di notte',
+      guarda: [
+        ['La strada', 'Ventisei tornanti. Natalino li ha contati salendo, e ha ragione: sono ventisei.'],
+        ['Il cancello', 'Di notte non è chiuso. È l’unica cosa di questa proprietà che non fa resistenza.'],
+        ['I filari', 'Vigneti a spalliera sui terrazzamenti, e in mezzo la paglia che copre i piedi delle viti.'],
+        ['Il buio', 'Sopra i mille metri non c’è illuminazione perché non ci sono più abitanti da illuminare.'],
+      ],
+      storia: 'Due ore a piedi, in discesa, sono una stima onesta: ventisei tornanti di montagna fanno otto o nove chilometri di asfalto per due di distanza in linea d’aria. La paglia nei filari si mette a fine estate per tenere l’umidità nel terreno, e la potatura verde si fa di giorno — di notte non la fa nessuno.',
+      gioco: 'È la via di fuga più ovvia, e il gioco la lascia aperta per davvero: si può provare. Quello che si incontra scendendo dipende da quanto la casa ha già capito di voi, e il Quaderno tiene il conto.',
+    },
+
+    salaDaPranzo: {
+      titolo: 'La sala da pranzo — la cena delle nove',
+      ora: 'Le 21:00',
+      guarda: [
+        ['Il tavolo', 'Lungo, apparecchiato d’argento. I coperti sono contati, e sono contati bene.'],
+        ['I candelabri', 'Accesi. In una casa con la corrente elettrica, le candele sono una scelta.'],
+        ['Le portefinestre', 'Danno sulla piscina illuminata di turchese, fumante nell’aria fresca della montagna.'],
+        ['Le portate', 'Pasta fatta in casa, un arrosto, il dolce. Tre portate in un silenzio religioso.'],
+        ['Il vino', 'Servito, versato, guardato. Non sa di niente.'],
+      ],
+      storia: 'Un menù raccontato portata per portata è una tradizione dei ristoranti di una certa età: il piatto viene presentato con la sua storia, e la storia serve a farti mangiare più lentamente. Il vino che non sa di niente, invece, non è una tradizione: un vino può essere cattivo, ossidato, tappato — ma un vino che non ha nessun sapore non esiste in natura.',
+      gioco: 'La cena è la scena in cui si ascolta: il menù, il brindisi e quello che Gregorio dice fra le portate sono tre fonti diverse di indizi. Mangiare cura; bere no.',
+    },
+
+    pianoProibito: {
+      titolo: 'Il piano proibito — il corridoio dei venticinquenni',
+      ora: 'Notte',
+      guarda: [
+        ['La scala di servizio', 'Sale stretta, e a ogni gradino l’aria diventa più **ferma**. Non fredda: ferma, come dentro una fotografia.'],
+        ['Il corridoio', 'Identico al vostro, ma sbagliato nei dettagli: la carta da parati cambia disegno dove non dovrebbe.'],
+        ['Le targhette', 'Sulle porte, come al primo piano. La sesta è vuota.'],
+        ['L’intercapedine', 'Fra due muri che al piano di sotto sono uno.'],
+      ],
+      storia: 'Il secondo piano non compare nelle fotografie del sito, e adesso si sa perché. Nelle ville liberty il piano alto era per la servitù e per i bauli: soffitti bassi, corridoio unico, e nessuna ragione di fotografarlo. Nessuna ragione, però, di rifarlo identico a quello degli ospiti.',
+      gioco: 'Qui si trovano nomi e date, che in questo gioco sono le armi vere. Il piano è anche il punto da cui si arriva alla soffitta: la scaletta c’è, e la polvere sui pioli è mossa.',
+    },
+
+    salaBanchetto: {
+      titolo: 'La sala del Banchetto',
+      ora: 'La fine',
+      guarda: [
+        ['Il tavolo', 'Apparecchiato per tutti, coi posti già assegnati. C’è anche una sedia storta, accanto: quella dell’ospite maleducato.'],
+        ['Il registro', 'Aperto, con la penna del 1899 accanto. È la stessa penna di tutte le firme.'],
+        ['La bambola', 'Sta al suo posto da centoventicinque anni. Qualcuno, prima di andarsene, la accarezza.'],
+        ['Il freezer', 'In cucina, dietro. Il pannello sul retro non dovrebbe muoversi.'],
+        ['Gregorio', 'In piedi, come sempre. È l’unica persona di questa casa che non si è mai seduta.'],
+      ],
+      storia: 'Il banchetto è la forma che questa casa ha scelto per la cosa che fa: un pasto in cui gli ospiti sono anche il menù, e in cui tutto — le portate, i posti, il registro, la firma — è cerimonia. Le cerimonie hanno una regola: si possono interrompere solo dall’interno.',
+      gioco: 'È la sala dello scontro finale, e non si vince con le statistiche: si vince con quello che si è raccolto e con chi si è portato. Un Gratta e Vinci, per esempio, è un oggetto vero dell’inventario.',
+    },
+
+    albaRelais: {
+      titolo: 'L’alba sul Belvedere',
+      ora: 'Dopo',
+      guarda: [
+        ['La penna', 'La stilografica di centoventicinque anni. Il suono che fa quando si rompe è piccolo.'],
+        ['La casa', 'Perde la spinta tutta insieme: le luci, il lampadario che tintinnava, la ghiaia rastrellata.'],
+        ['La valle', 'La nebbia si muove di nuovo, e attraversa il confine della proprietà come se non ci fosse.'],
+        ['Paternopoli', 'Si sveglia. Qualche persiana si apre, e sono le prime di venticinque anni.'],
+      ],
+      storia: '«Il dispetto era amore.» È la frase che tiene insieme tutta la storia, e Gregorio la dice piano perché è una cosa che ha capito tardi. Il banchetto finisce come finiscono i banchetti: si sparecchia.',
+      gioco: 'È l’epilogo, e il gioco fa i conti: chi è tornato, chi è rimasto, cosa avete firmato e cosa no. Il Relais, alla fine, riapre — e come riapre dipende da voi.',
+    },
   };
 
   /* ---------- il rendering: identico in tutti i giochi della serie ---------- */
