@@ -22,7 +22,7 @@ const root = join(__dirname, '..');
 // Ordine di caricamento IDENTICO a index.html (main.js escluso: qui non serve la UI del titolo).
 const FILES = [
   'js/sound.js', 'js/sprites.js', 'js/scenes.js', 'js/characters.js', 'js/campaign.js',
-  'js/epilogues.js', 'js/rules.js', 'js/dice.js', 'js/combat.js', 'js/minigames.js', 'js/engine.js',
+  'js/epilogues.js', 'js/rules.js', 'js/dice.js', 'js/combat.js', 'js/minigames.js', 'js/luoghi.js', 'js/engine.js',
 ];
 const SOURCES = FILES.map(f => ({ name: f, code: readFileSync(join(root, f), 'utf8') }));
 
@@ -167,7 +167,7 @@ function makeDocument() {
 
 const scriptCache = SOURCES.map(s => ({ name: s.name, script: new vm.Script(s.code, { filename: s.name }) }));
 const scriptGetG = new vm.Script('(typeof G !== "undefined" ? G : null)');
-const scriptGetApi = new vm.Script('({Engine, Combat, Dice, HEROES, BESTIARY, ITEMS, CAMPAIGN, CAMPAIGN_START, WORLD_MAP})');
+const scriptGetApi = new vm.Script('({Engine, Combat, Dice, HEROES, BESTIARY, ITEMS, CAMPAIGN, CAMPAIGN_START, WORLD_MAP, Luoghi})');
 
 function makeTimers() {
   let seq = 0;
@@ -2384,6 +2384,14 @@ section('Economia del 🕯 Sangue Freddo (raccolto per partita)');
     if (typeof E[nome] !== 'function') continue;
     try { game.act(() => E[nome]()); aperte++; }
     catch (e) { fail(`${nome}() esplode: ${(e && e.message) || e}`); rotte++; }
+  }
+  /* LE SCHEDE DEI LUOGHI (il pulsante 🔎): template che disegnano elenchi, e una
+     scheda malformata si vede solo aprendola. Si aprono tutte. */
+  if (game.api.Luoghi) {
+    for (const k of Object.keys(game.api.Luoghi.LUOGHI)) {
+      try { game.act(() => game.api.Luoghi.apri(k, 'prova')); aperte++; }
+      catch (e) { fail(`la scheda del luogo "${k}" esplode: ${(e && e.message) || e}`); rotte++; }
+    }
   }
   /* il retro degli oggetti: template a sé, e con quarantadue testi dietro */
   if (typeof E.inspectItem === 'function') {
