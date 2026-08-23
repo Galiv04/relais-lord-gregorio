@@ -49,6 +49,8 @@ const HERO_EPILOGUES = {
 /* Ogni voce: { flag, icon, title, desc } — sbloccata se G.flags[flag] è veritiero. */
 
 const IMPRESE = [
+  { flag: 'ultimo_caffe',        icon: '☕', title: 'La Domanda che Resta',        desc: 'Vi siete presi il caffè e l\'abbraccio prima di scendere, e nessuno ha chiesto ad alta voce se Ada c\'è ancora.' },
+  { flag: 'saluto_a_gennaro',    icon: '👋', title: 'Il Cappello sul Petto',        desc: 'Avete risposto al saluto di Gennaro tutti e cinque, a braccia larghe. Cinquant\'anni che aspettava di poterlo fare.' },
   { flag: 'visto_giardiniere',   icon: '🌳', title: 'Le Siepi Ricambiano',        desc: 'Avete notato il lavoro del Giardiniere già dal viale d\'ingresso.' },
   { flag: 'visto_registro',      icon: '📖', title: 'Lettori del Venticinquennio', desc: 'Avete sfogliato il registro all\'indietro PRIMA di firmare. 1999, 1974, 1949...' },
   { flag: 'firma_rinviata',      icon: '🖋', title: 'Domattina, Con Calma',        desc: 'Avete rimandato la firma. Il Belvedere non se l\'aspettava.' },

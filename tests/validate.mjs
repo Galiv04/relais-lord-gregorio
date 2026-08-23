@@ -103,7 +103,6 @@ for (const scene of Object.values(CAMPAIGN)) {
 let flagProblems = 0;
 for (const [id, scene] of Object.entries(CAMPAIGN)) {
   for (const c of scene.choices || []) {
-    if (c.requires?.flag && !knownFlags.has(c.requires.flag)) { fail(`scena "${id}": richiede flag mai impostato "${c.requires.flag}"`); flagProblems++; }
     for (const itemRef of [c.item, c.removeItem, c.requires?.item]) {
       if (itemRef && !ITEMS[itemRef]) { fail(`scena "${id}": oggetto inesistente "${itemRef}"`); flagProblems++; }
     }
@@ -555,6 +554,96 @@ function testTestoNelCanvas() {
   if (!sospetti) { ok(); console.log('  ✔ nel canvas solo numeri, icone e simboli: le parole stanno in DOM'); }
 }
 testTestoNelCanvas();
+
+/* ---------- 45. il retro degli oggetti ----------
+   Il bottone «Ispeziona» compare solo se l'oggetto ha un `lore`. Prima di agosto 2026 il
+   bottone c'era in quattro giochi su cinque e quasi nessun oggetto aveva qualcosa da
+   leggere: una funzione costruita e vuota, cioè la stessa bugia di una valuta che non
+   compra niente. Il controllo tiene insieme le due metà — la funzione e il contenuto —
+   e rifiuta i retro-stub da una riga. NON pretende un lore su ogni oggetto: un pezzo di
+   nastro isolante che serve solo a costruire altro non ha un secondo strato, e inventarlo
+   sarebbe riempitivo. */
+function testRetroOggetti() {
+  console.log('\n▸ Il retro degli oggetti');
+  const chiavi = Object.keys(ITEMS);
+  const conLore = chiavi.filter(k => ITEMS[k].lore);
+  let motore = '';
+  try { motore = readFileSync(new URL('../js/engine.js', import.meta.url), 'utf8'); } catch {}
+  const haFunzione = /function inspectItem/.test(motore);
+  const haBottone = /Engine\.inspectItem\(/.test(motore);
+
+  if (conLore.length && !(haFunzione && haBottone)) {
+    fail(`${conLore.length} oggetti hanno un retro ma l'interfaccia non lo mostra `
+       + `(inspectItem: ${haFunzione ? 'sì' : 'NO'}, bottone nello zaino: ${haBottone ? 'sì' : 'NO'})`);
+  } else if (haBottone) {
+    const quota = conLore.length / chiavi.length;
+    if (conLore.length < 8 || quota < 0.20) {
+      fail(`il bottone Ispeziona esiste ma solo ${conLore.length} oggetti su ${chiavi.length} `
+         + `(${Math.round(quota * 100)}%) hanno qualcosa da leggere: una funzione quasi vuota `
+         + 'promette e non mantiene');
+    } else {
+      ok(); console.log(`  ✔ ${conLore.length}/${chiavi.length} oggetti (${Math.round(quota * 100)}%) hanno un retro leggibile`);
+    }
+  } else { ok(); console.log('  ✔ nessun retro e nessun bottone: coerente'); }
+
+  const corti = conLore.filter(k => ITEMS[k].lore.trim().split(/\s+/).length < 35);
+  if (corti.length) fail(`retro troppo corti (sotto le 35 parole), sono stub: ${corti.join(', ')}`);
+  else if (conLore.length) { ok(); console.log('  ✔ nessun retro da una riga'); }
+
+  const vietate = conLore.filter(k => /inquietant|misterios|agghiacciant|raccapricciant|indicibil/i.test(ITEMS[k].lore));
+  if (vietate.length) fail(`parole vietate nel retro di: ${vietate.join(', ')} (l'orrore sta nel dettaglio, non nell'aggettivo)`);
+  else if (conLore.length) { ok(); console.log('  ✔ nessun aggettivo che fa il lavoro al posto del dettaglio'); }
+}
+testRetroOggetti();
+
+/* ---------- 46. scelte chiuse dietro un flag che nessuno imposta ----------
+   Trovato così (agosto 2026) un'intera scena di Corona — k_torvald, «da cuoco a cuoco»
+   con Monsieur Ragoût — chiusa dietro `torvald_presente`, un flag che nessuna scena e
+   nessun modulo impostava mai: scritta, testata, e invisibile a chiunque abbia giocato.
+   Il controllo guarda anche fuori da campaign.js, perché i premi dei misteri e delle
+   ricette sono flag impostati dai loro moduli. */
+function testFlagRichiestiMaiImpostati() {
+  console.log('\n▸ Scelte chiuse dietro flag inesistenti');
+  const impostati = new Set();
+  for (const s of Object.values(CAMPAIGN)) {
+    for (const f of Object.keys(s.sets || {})) impostati.add(f);
+    for (const c of (s.choices || [])) {
+      for (const f of Object.keys(c.sets || {})) impostati.add(f);
+      for (const f of Object.keys(c.sacrificeSets || {})) impostati.add(f);
+    }
+  }
+  if (typeof RECIPES !== 'undefined') for (const r of RECIPES) if (r.flag) impostati.add(r.flag);
+  if (typeof MISTERI !== 'undefined') for (const m of MISTERI) if (m.premio && m.premio.flag) impostati.add(m.premio.flag);
+  for (const f of ['js/misteri.js', 'js/crafting.js', 'js/engine.js', 'js/combat.js', 'js/minigames.js']) {
+    let src = '';
+    try { src = readFileSync(new URL('../' + f, import.meta.url), 'utf8'); } catch { continue; }
+    for (const m of src.matchAll(/G\.flags\[['"]([a-z0-9_]+)['"]\]\s*=/gi)) impostati.add(m[1]);
+  }
+  const morti = new Map(), inutili = new Map();
+  for (const [id, s] of Object.entries(CAMPAIGN)) for (const c of (s.choices || [])) {
+    const r = c.requires; if (!r) continue;
+    for (const f of [r.flag, r.flag2, ...(r.flagAny || [])]) {
+      if (!f || impostati.has(f)) continue;
+      if (!morti.has(f)) morti.set(f, []);
+      morti.get(f).push(id);
+    }
+    if (r.notFlag && !impostati.has(r.notFlag)) {
+      if (!inutili.has(r.notFlag)) inutili.set(r.notFlag, []);
+      inutili.get(r.notFlag).push(id);
+    }
+  }
+  if (morti.size) {
+    for (const [f, scene] of morti) {
+      fail(`flag "${f}" richiesto da una scelta ma MAI impostato da nessuna scena né da nessun modulo: `
+         + `contenuto irraggiungibile in ${scene.join(', ')}`);
+    }
+  } else { ok(); console.log('  ✔ ogni scelta condizionata può davvero comparire'); }
+  for (const [f, scene] of inutili) {
+    warn(`notFlag "${f}" non è mai impostato da nessuno: la condizione è sempre vera `
+       + `(intenzione morta in ${scene.join(', ')})`);
+  }
+}
+testFlagRichiestiMaiImpostati();
 
 /* ---------- esito ---------- */
 
