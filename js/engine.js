@@ -80,11 +80,16 @@ const Engine = (() => {
       usedChoices: {},   // sceneId -> [testi scelti "once"]
       enteredScenes: {}, // sceneId -> true (per effetti one-shot)
       lastCombatSceneId: null,
+      checkpointsDone: [],  // flag di CHECKPOINT_FLAGS già scattati
+      lastCheckpoint: null, // { sceneId, flag, snapshot } — il punto di ripartenza
+      koCount: {},          // sceneId del combattimento -> quante volte ci siete caduti
+      ritiri: { ctx: null, n: 0 }, // ritiri comprati col Sangue Freddo nel contesto corrente
       history: [],       // tappe della storia (per il riepilogo alla ripresa)
       seenEnemies: [],   // nemici incontrati (per il bestiario)
       slot,
       difficulty,
-      stats: { combats: 0, checksPassed: 0, checksFailed: 0, scenes: 0, start: Date.now() },
+      stats: { combats: 0, checksPassed: 0, checksFailed: 0, scenes: 0, start: Date.now(),
+               goldEarned: 0, ritiriComprati: 0 },
     };
     for (const h of G.party) {
       G.uses[h.id] = {};
@@ -260,6 +265,71 @@ const Engine = (() => {
     } catch (e) {}
   }
 
+  /* ============ 🕯 IL SANGUE FREDDO — COSA FA DAVVERO ============
+     Una risorsa che non ha effetti visibili non esiste (LESSONS-LEARNED #15-16).
+     Nel Relais il Sangue Freddo compra UNA cosa, e il gioco la dice dentro il gioco:
+     il SECONDO TENTATIVO. Quando un dado va male — una prova di scena o un colpo
+     mancato in combattimento — si può pagare e rifarlo. Il primo ritiro costa poco,
+     il quarto costa quanto un'intera notte di coraggio: così il gruppo scommette,
+     non compra l'onnipotenza. Il conto ricomincia da capo a ogni nuova scena e a
+     ogni nuovo scontro (contesti separati), e la stessa valuta si spende anche allo
+     Spaccio del Contabile: le due cose competono, ed è quello il bello. */
+
+  const RITIRO_COSTI = [2, 3, 5, 8];   // oltre il quarto: +3 ciascuno, all'infinito
+
+  function costoRitiro(n) {
+    const k = Math.max(0, n | 0);
+    if (k < RITIRO_COSTI.length) return RITIRO_COSTI[k];
+    return RITIRO_COSTI[RITIRO_COSTI.length - 1] + 3 * (k - RITIRO_COSTI.length + 1);
+  }
+
+  // quanti ritiri sono già stati comprati NEL contesto ctx ('scena:<id>' / 'scontro:<id>')
+  function ritiriFatti(ctx) {
+    if (!G || !G.ritiri || G.ritiri.ctx !== ctx) return 0;
+    return G.ritiri.n || 0;
+  }
+
+  function costoRitiroOra(ctx) { return costoRitiro(ritiriFatti(ctx)); }
+
+  function puoiRitirare(ctx) { return !!G && G.gold >= costoRitiroOra(ctx); }
+
+  /* Scala il costo e incrementa il contatore del contesto. Torna il costo pagato
+     (numero, sempre > 0) oppure 0 se il saldo non bastava: si paga PRIMA di ritirare,
+     mai dopo (LESSON #11: un passo indietro dopo la spesa regala azioni gratis). */
+  function spendiRitiro(ctx) {
+    if (!puoiRitirare(ctx)) return 0;
+    const costo = costoRitiroOra(ctx);
+    const n = ritiriFatti(ctx) + 1;
+    G.gold = Math.max(0, G.gold - costo);
+    G.ritiri = { ctx, n };
+    if (!G.stats) G.stats = {};
+    G.stats.ritiriComprati = (G.stats.ritiriComprati || 0) + 1;
+    saveGame();
+    return costo;
+  }
+
+  /* Quanti ritiri compra il saldo di ADESSO, pagandoli a costi crescenti. Senza ctx
+     conta come una scena nuova (è il numero che serve alla HUD). */
+  function ritiriDisponibili(ctx) {
+    if (!G) return 0;
+    let saldo = G.gold, n = ctx ? ritiriFatti(ctx) : 0, quanti = 0;
+    while (saldo >= costoRitiro(n) && quanti < 99) { saldo -= costoRitiro(n); n++; quanti++; }
+    return quanti;
+  }
+
+  /* Ogni movimento della valuta passa da qui: senza un contatore del RACCOLTO non si
+     può misurare (né tarare) l'economia — e "quanto ne ho preso" è un dato di partita
+     che il finale mostra accanto al saldo. */
+  function muoviFreddo(delta) {
+    if (!G || !delta) return 0;
+    if (delta > 0) {
+      if (!G.stats) G.stats = {};
+      G.stats.goldEarned = (G.stats.goldEarned || 0) + delta;
+    }
+    G.gold = Math.max(0, G.gold + delta);
+    return G.gold;
+  }
+
   function gotoScene(id) {
     if (id === 'RETRY_COMBAT') id = G.lastCombatSceneId || CAMPAIGN_START;
     const scene = CAMPAIGN[id];
@@ -282,6 +352,15 @@ const Engine = (() => {
         const nuovo = CHECKPOINT_FLAGS.find(f => scene.sets[f] && !G.checkpointsDone.includes(f));
         if (nuovo) {
           G.checkpointsDone.push(nuovo);
+          // SNAPSHOT del checkpoint: se il Belvedere vi stende due volte nello stesso
+          // punto, si riparte da QUI con lo stato di ADESSO (vedi riprendiDaCheckpoint).
+          try {
+            G.lastCheckpoint = { sceneId: G.sceneId, flag: nuovo, snapshot: JSON.stringify({
+              party: G.party, uses: G.uses, gold: G.gold, inventory: G.inventory,
+              flags: G.flags, checkpointsDone: G.checkpointsDone, koCount: G.koCount || {},
+              enteredScenes: G.enteredScenes, usedChoices: G.usedChoices,
+            }) };
+          } catch (e) {}
           for (const h of G.party) {
             if (h.morto) continue;
             h.hp = h.maxHp; h.down = false;
@@ -300,8 +379,8 @@ const Engine = (() => {
         }
       }
       if (scene.rep) G.flags.reputazione = (G.flags.reputazione || 0) + scene.rep;
-      if (scene.gold) G.gold = Math.max(0, G.gold + scene.gold);
-      if (scene.goldLoss) G.gold = Math.max(0, G.gold - scene.goldLoss);
+      if (scene.gold) muoviFreddo(scene.gold);
+      if (scene.goldLoss) muoviFreddo(-scene.goldLoss);
       if (scene.item) G.inventory.push(scene.item);
       if (scene.item2) G.inventory.push(scene.item2);
       if (scene.heal) {
@@ -329,7 +408,7 @@ const Engine = (() => {
         h.hp = h.maxHp; h.down = false;
         for (const ab of h.abilities) G.uses[h.id][ab.id] = ab.uses;
       }
-      if (!firstVisit && scene.goldLoss) G.gold = Math.max(0, G.gold - scene.goldLoss);
+      if (!firstVisit && scene.goldLoss) muoviFreddo(-scene.goldLoss);
     }
     if (scene.recharge) {
       for (const h of G.party) for (const ab of h.abilities) G.uses[h.id][ab.id] = ab.uses;
@@ -384,9 +463,17 @@ const Engine = (() => {
     showScreen('screen-game');
     if (typeof Sound !== 'undefined') Sound.music(musicForScene(scene));
     if (typeof Scenes.setEclipse === 'function') Scenes.setEclipse(eclipsePhaseFor(G.sceneId));
-    $('hud-location').textContent = '📍 ' + (scene.caption || '');
+    /* Le didascalie sono scritte come "Luogo, ora — frase": il luogo e l'ora vanno
+       nell'HUD (orientamento), la frase sotto il quadro (didascalia dell'immagine).
+       Senza trattino lungo l'HUD prende tutto e la didascalia sotto resta vuota. */
+    const capIntera = scene.caption || '';
+    const tagliaCap = capIntera.indexOf(' — ');
+    const capLuogo = tagliaCap > 0 ? capIntera.slice(0, tagliaCap) : capIntera;
+    const capFrase = tagliaCap > 0 ? capIntera.slice(tagliaCap + 3) : '';
+    $('hud-location').textContent = '📍 ' + capLuogo;
     Scenes.paint('scene-canvas', scene.location, null, scene.npc);
-    $('scene-caption').textContent = scene.caption || '';
+    $('scene-caption').textContent = capFrase;
+    $('scene-caption').classList.toggle('hidden', !capFrase);
 
     const narr = $('narration');
     const choicesEl = $('choices');
@@ -476,10 +563,27 @@ const Engine = (() => {
       let inner = c.text;
       if (c.tag) inner += ` <span class="choice-check">🎲 ${c.tag}</span>`;
       const poor = c.requiresGold && G.gold < c.requiresGold;
-      if (poor) inner += ` <span class="choice-tag">(vi servono ${c.requiresGold} monete — ne avete ${G.gold})</span>`;
+      if (poor) inner += ` <span class="choice-tag">(vi serve 🕯 ${c.requiresGold} di Sangue Freddo — ne avete ${G.gold})</span>`;
       b.innerHTML = inner;
       b.disabled = !!poor;
       b.onclick = () => resolveChoice(scene, c);
+      choicesEl.appendChild(b);
+    }
+
+    /* ↩ SI RIPARTE DAL CHECKPOINT — offerta ESPLICITA nelle scene di sconfitta,
+       dalla SECONDA caduta nello stesso scontro (la prima volta il gioco vi
+       raccoglie e basta). È una scelta vera, non una punizione: tornare indietro
+       vi restituisce il pezzo di storia che la sconfitta vi fa saltare, e vi costa
+       tutto quello che avete raccolto da lì in poi (la modale lo dice per nome). */
+    if (haCheckpoint() && isSceneDiSconfitta(G.sceneId) &&
+        (G.koCount || {})[G.lastCombatSceneId] > 1) {
+      const nodo = (CAMPAIGN[G.lastCheckpoint.sceneId] || {}).caption || 'l\'ultimo checkpoint';
+      const b = document.createElement('button');
+      b.className = 'choice-btn';
+      b.id = 'btn-checkpoint-return';
+      b.innerHTML = `↩ <b>🕯 Tornare indietro</b>: la notte si riavvolge fino a «${nodo}»` +
+        ` <span class="choice-tag">Riprendete da lì: PV pieni, nessuno preso, la notte di nuovo intera — ma quello che avete raccolto dopo, il Belvedere se lo tiene</span>`;
+      b.onclick = () => riprendiDaCheckpoint();
       choicesEl.appendChild(b);
     }
   }
@@ -490,7 +594,7 @@ const Engine = (() => {
       if (!G.usedChoices[G.sceneId]) G.usedChoices[G.sceneId] = [];
       G.usedChoices[G.sceneId].push(c.text);
     }
-    if (c.gold) G.gold = Math.max(0, G.gold + c.gold);
+    if (c.gold) muoviFreddo(c.gold);
     if (c.item) G.inventory.push(c.item);
     if (c.removeItem) {
       const i = G.inventory.indexOf(c.removeItem);
@@ -504,7 +608,7 @@ const Engine = (() => {
     // Erano chiavi morte silenziose: decine di scelte le usavano senza effetto (ago 2026).
     if (c.heal) { for (const h of G.party) if (!h.down) h.hp = Math.min(h.maxHp, h.hp + c.heal); }
     if (c.damage) { for (const h of G.party) if (!h.down) h.hp = Math.max(1, h.hp - c.damage); }
-    if (c.goldLoss) G.gold = Math.max(0, G.gold - c.goldLoss);
+    if (c.goldLoss) muoviFreddo(-c.goldLoss);
     if (c.sets) Object.assign(G.flags, c.sets);
     if (c.rep) G.flags.reputazione = (G.flags.reputazione || 0) + c.rep;
     saveGame();
@@ -545,42 +649,195 @@ const Engine = (() => {
       b.onclick = () => {
         G.lastRoller = hIdx;   // il Belvedere ricorda chi ha osato tirare
         $('modal-generic').classList.add('hidden');
-        const rollIt = (isReroll) => Dice.showRoll({
-          title: `${h.name} ${isReroll ? 'RITIRA (l\'Asso di Denari!)' : 'tenta'}:<br>${STAT_NAMES[check.stat]} — CD ${check.dc}${h.veleno ? '<br><span style="color:var(--red);font-size:16px">☠ avvelenato dal freddo: −2 già contato nel bonus</span>' : ''}`,
+        // il costo dei ritiri cresce DENTRO la scena: uscirne azzera il conto
+        const ctx = 'scena:' + G.sceneId;
+        const TITOLI = { asso: 'RITIRA (l\'Asso di Denari!)', freddo: 'RITIRA a sangue freddo', null: 'tenta' };
+        const rollIt = (comeMai) => Dice.showRoll({
+          title: `${h.name} ${TITOLI[comeMai] || TITOLI.null}:<br>${STAT_NAMES[check.stat]} — CD ${check.dc}${h.veleno ? '<br><span style="color:var(--red);font-size:16px">☠ avvelenato dal freddo: −2 già contato nel bonus</span>' : ''}`,
           mod, dc: check.dc,
           onDone: res => {
-            if (!res.success && !isReroll && G.inventory.includes('asso_di_denari')) {
-              return offerReroll(() => {
-                const i = G.inventory.indexOf('asso_di_denari');
-                if (i >= 0) G.inventory.splice(i, 1);
-                saveGame();
-                rollIt(true);
-              }, () => {
-                G.stats.checksFailed++;
-                gotoScene(check.fail);
-              });
+            // PROVA FALLITA: due strade per un secondo tentativo, se esistono davvero.
+            // L'Asso di Denari è un oggetto one-shot (si consuma), il Sangue Freddo si
+            // paga e si può ripagare — a prezzo crescente dentro questa stessa scena.
+            const asso = G.inventory.includes('asso_di_denari');
+            if (!res.success && (asso || puoiRitirare(ctx))) {
+              return offerReroll(ctx, asso,
+                () => {   // 🃏 l'Asso dei reduci del '49
+                  const i = G.inventory.indexOf('asso_di_denari');
+                  if (i >= 0) G.inventory.splice(i, 1);
+                  saveGame();
+                  rollIt('asso');
+                },
+                () => {   // 🕯 il coraggio, pagato in contanti
+                  if (!spendiRitiro(ctx)) { G.stats.checksFailed++; return gotoScene(check.fail); }
+                  rollIt('freddo');
+                },
+                () => {   // 🙅 il fato, accettato
+                  G.stats.checksFailed++;
+                  gotoScene(check.fail);
+                });
             }
             if (res.success) G.stats.checksPassed++; else G.stats.checksFailed++;
             gotoScene(res.success ? check.success : check.fail);
           },
         });
-        rollIt(false);
+        rollIt(null);
       };
       box.appendChild(b);
     });
     $('modal-generic').classList.remove('hidden');
   }
 
-  // proposta di ritiro con l'Asso di Denari dei reduci del 1949
-  function offerReroll(onYes, onNo) {
+  /* Bottone di modale con un id: creato come nodo VERO (così il simulatore headless,
+     che non genera figli da innerHTML, lo vede e lo può cliccare — LESSON #28) e con
+     l'handler esposto anche via getElementById, che nel browser è lo stesso nodo. */
+  function modalBtn(box, id, html, fn) {
+    const b = document.createElement('button');
+    b.className = 'choice-btn';
+    b.id = id;
+    b.innerHTML = html;
+    b.onclick = fn;
+    box.appendChild(b);
+    const byId = $(id);
+    if (byId && byId !== b) byId.onclick = fn;
+    return b;
+  }
+
+  /* IL SECONDO TENTATIVO su una prova fallita. Due strade, offerte solo se esistono:
+     l'Asso di Denari dei reduci del '49 (oggetto, un uso solo) e il Sangue Freddo
+     (valuta, costo crescente nella scena). Se non c'è né l'uno né l'altro questa
+     modale non viene mai chiamata: il fato resta il fato. */
+  function offerReroll(ctx, hasAsso, onAsso, onFreddo, onNo) {
     const box = $('modal-generic-content');
-    box.innerHTML = `<h2>🃏 L'Asso di Denari scalda la tasca...</h2>
-      <p style="margin-bottom:12px">La prova è fallita, ma in tasca l'Asso dei reduci del '49 <i>scotta</i>. Settant'anni di fortuna, un uso solo. Questo momento lo merita?</p>
-      <button class="choice-btn" id="btn-reroll-yes">🃏 <b>SÌ: i reduci vi prestano la loro fortuna!</b> (consuma l'Asso di Denari)</button>
-      <button class="choice-btn" id="btn-reroll-no">🙅 No, accettate il fato: sarà per un momento più importante</button>`;
+    const costo = costoRitiroOra(ctx);
+    const puoi = puoiRitirare(ctx);
+    let html = `<h2>🎲 Il dado ha detto no. Si insiste?</h2>`;
+    if (hasAsso) {
+      html += `<p style="margin-bottom:10px">In tasca, l'<b>Asso di Denari</b> dei reduci del '49 <i>scotta</i>: settant'anni di fortuna, un uso solo. Questo momento lo merita?</p>`;
+    }
+    if (puoi) {
+      html += `<p style="margin-bottom:10px">E poi c'è il modo faticoso: <b>tenere il sangue freddo</b>. Respirare, contare fino a tre e rifare il gesto come se la casa non stesse guardando. Costa <b>🕯 ${costo}</b> — ne avete ${G.gold} — e il prossimo ritiro <i>in questa scena</i> ne vorrà ${costoRitiro(ritiriFatti(ctx) + 1)}: il coraggio, a ripeterlo, si paga sempre più caro.</p>`;
+    }
+    box.innerHTML = html;
     $('modal-generic').classList.remove('hidden');
-    $('btn-reroll-yes').onclick = () => { $('modal-generic').classList.add('hidden'); onYes(); };
-    $('btn-reroll-no').onclick = () => { $('modal-generic').classList.add('hidden'); onNo(); };
+    const chiudi = fn => () => { $('modal-generic').classList.add('hidden'); fn(); };
+    if (hasAsso) {
+      modalBtn(box, 'btn-reroll-yes', `🃏 <b>SÌ: i reduci vi prestano la loro fortuna!</b> (consuma l'Asso di Denari)`, chiudi(onAsso));
+    }
+    if (puoi) {
+      modalBtn(box, 'btn-freddo-yes', `🕯 <b>Tenere il sangue freddo — rifai il tiro (costa ${costo})</b> <span class="choice-tag">Vi restano ${G.gold - costo} di Sangue Freddo</span>`, chiudi(onFreddo));
+    }
+    modalBtn(box, 'btn-reroll-no', `🙅 No, accettate il fato: quello che è andato storto, stanotte, resta storto`, chiudi(onNo));
+  }
+
+  /* Le scene che un combattimento usa come SCONFITTA: sono i punti in cui il
+     gioco offre il ritorno al checkpoint (e non possono essere checkpoint loro). */
+  let _sconfitte = null;
+  function isSceneDiSconfitta(id) {
+    if (!_sconfitte) {
+      _sconfitte = new Set();
+      for (const s of Object.values(CAMPAIGN)) {
+        if (s.combat && s.combat.defeat) _sconfitte.add(s.combat.defeat);
+      }
+    }
+    return _sconfitte.has(id);
+  }
+
+  /* Quante volte siete già caduti in QUESTO scontro (la prima volta il gioco vi
+     raccoglie, dalla seconda si torna al checkpoint). Restituisce il conteggio
+     aggiornato, compresa la caduta appena avvenuta. */
+  function registraCaduta(sceneId) {
+    if (!G) return 1;
+    if (!G.koCount) G.koCount = {};
+    const k = sceneId || G.sceneId || '?';
+    G.koCount[k] = (G.koCount[k] || 0) + 1;
+    return G.koCount[k];
+  }
+
+  function haCheckpoint() { return !!(G && G.lastCheckpoint && G.lastCheckpoint.snapshot); }
+
+  /* ============ SE CADETE TUTTI: SI RIPARTE DAL CHECKPOINT ============
+     Non «game over, ricomincia». La PRIMA volta che il Belvedere vi stende in
+     uno scontro, Gregorio perde le chiavi e vi raccoglie (le scene di sconfitta
+     scritte restano lì, intatte). La SECONDA volta nello stesso punto no: la
+     notte torna indietro all'ultimo nodo sciolto, con lo stato di ALLORA.
+     Quello che avete capito dopo, l'avete perso — e la modale lo dice per nome.
+     Torna true se il ripristino è avvenuto, false se non c'è nessun checkpoint
+     (chi cade prima del primo nodo si tiene la sconfitta scritta). */
+  function riprendiDaCheckpoint() {
+    /* PIETÀ PROGRESSIVA. Senza questo, un gruppo troppo debole per uno scontro
+       rimbalza fra il checkpoint e la sconfitta all'infinito: nelle partite
+       simulate il Belvedere ha rimandato il bot sullo stesso boss 225 volte. Ogni
+       ritorno toglie il 12% delle forze a chi vi ha steso, fino a un terzo, e il
+       log del combattimento lo DICE. Il gioco cede, non il giocatore. */
+    if (G) {
+      G.stats = G.stats || {};
+      G.stats.checkpointRitorni = (G.stats.checkpointRitorni || 0) + 1;   // a vita: serve alle imprese
+      /* Il conto che CONTA è per SCONTRO, non a vita: in una notte da quaranta
+         combattimenti cadere cinque volte in punti diversi è normale, non un loop.
+         Quello che va scontato — e sorvegliato — è rimbalzare sullo STESSO scontro. */
+      const _scontro = G.lastCombatSceneId || G.sceneId || '?';
+      G.stats.ritorniPerScontro = G.stats.ritorniPerScontro || {};
+      G.stats.ritorniPerScontro[_scontro] = (G.stats.ritorniPerScontro[_scontro] || 0) + 1;
+      G.pieta = Math.min(0.34, G.stats.ritorniPerScontro[_scontro] * 0.12);
+    }
+
+    const cp = G && G.lastCheckpoint;
+    if (!cp || !cp.snapshot) return false;
+    let s;
+    try { s = JSON.parse(cp.snapshot); } catch (e) { return false; }
+    if (!s || !s.party || !s.party.length) return false;
+
+    // cosa vi state lasciando indietro, PER NOME (mai testo generico)
+    const restanti = [...(s.inventory || [])];
+    const perse = [];
+    for (const it of (G.inventory || [])) {
+      const i = restanti.indexOf(it);
+      if (i >= 0) restanti.splice(i, 1); else perse.push(it);
+    }
+    const nomiPersi = perse.map(i => (ITEMS[i] ? ITEMS[i].name : i));
+    const freddoPerso = Math.max(0, (G.gold || 0) - (s.gold || 0));
+
+    G.party = s.party;
+    G.uses = s.uses;
+    G.gold = s.gold;
+    G.inventory = s.inventory;
+    G.flags = s.flags;
+    G.checkpointsDone = s.checkpointsDone || [];
+    G.koCount = s.koCount || {};
+    G.ritiri = { ctx: null, n: 0 };   // la notte si riavvolge: anche i nervi ripartono da zero
+    // si riavvolge ANCHE cosa è stato visitato: senza questo i flag one-shot
+    // delle scene già entrate non si rimettono più e il contenuto si soft-locka.
+    if (s.enteredScenes) G.enteredScenes = s.enteredScenes;
+    if (s.usedChoices) G.usedChoices = s.usedChoices;
+    for (const h of G.party) {
+      h.hp = h.maxHp; h.down = false; h.preso = false; h.veleno = false; h.luckUsed = false;
+    }
+    G.stats = G.stats || {};
+    G.stats.checkpointRitorni = (G.stats.checkpointRitorni || 0) + 1;
+
+    // si NAVIGA prima e si racconta dopo: la modale è informativa, non un cancello
+    // (un bottone con onclick inline non viene eseguito né dagli stub dei test né
+    //  da chi chiude la modale con Esc: il ripristino non può dipendere da lui).
+    gotoScene(cp.sceneId);
+
+    const nodo = CAMPAIGN[cp.sceneId] ? CAMPAIGN[cp.sceneId].caption : 'un nodo che avevate sciolto';
+    const box = $('modal-generic-content');
+    box.innerHTML = `<h2 style="color:var(--red)">🕯 LA NOTTE VI HA RIMESSI INDIETRO</h2>
+      <div class="backstory" style="white-space:pre-wrap">Vi risvegliate in piedi. È questa la cosa peggiore: non a terra, non in una cella — <b>in piedi</b>, con le mani asciutte e il respiro regolare, esattamente dove eravate quando avevate sciolto <i>${nodo}</i>.
+
+Il candeliere di Gregorio è sul tavolo, con la cera colata dalla parte sbagliata: sta tornando su.
+
+> Gregorio: <i>(da qualche parte, molto stanco)</i> "La casa ha rimesso a posto la serata. Lo fa quando gli ospiti la annoiano. Vi conviene non annoiarla due volte."
+
+Quello che avete capito da lì in poi, <b>non c'è più</b>. E nelle tasche manca qualcosa.${nomiPersi.length ? `\n\n<span style="color:var(--red)">Vi manca:</span> ${nomiPersi.join(', ')}.` : `\n\n<span style="color:var(--text-dim)">Le tasche, almeno, sono come le avevate lasciate.</span>`}${freddoPerso ? `\n<span style="color:var(--red)">🕯 Sangue Freddo:</span> ne avevate messo insieme ${freddoPerso} in più. Ricominciate da ${G.gold}.` : ''}
+
+<span style="color:var(--green)">PV al massimo, mosse ricaricate, nessuno è più preso.</span> L'alba, però, non vi ha aspettati.</div>
+      <button class="btn btn-gold" style="margin-top:14px" onclick="document.getElementById('modal-generic').classList.add('hidden')">🕯 Rifarlo meglio</button>`;
+    $('modal-generic').classList.remove('hidden');
+    if (typeof Sound !== 'undefined') Sound.play('defeat');
+    saveGame();
+    return true;
   }
 
   /* ---------- barra del gruppo ---------- */
@@ -649,12 +906,22 @@ const Engine = (() => {
     $('modal-generic').classList.remove('hidden');
   }
 
+  /* Gli stati stanno nella scheda completa, ma servono nel riepilogo: nel mezzo di un
+     combattimento nessuno apre cinque schede per sapere chi è conciato male. */
+  function badgeStati(h) {
+    const b = [];
+    if (h.down) b.push('💀 A TERRA');
+    if (h.preso) b.push('🕸 PRESO');
+    if (h.veleno) b.push('☠ AVVELENATO');
+    return b.length ? ' · ' + b.join(' · ') : '';
+  }
+
   function showParty() {
     const box = $('modal-generic-content');
     box.innerHTML = `<h2>🎭 La Compagnia</h2>` +
       G.party.map((h, i) => `<div class="ability-box" style="cursor:pointer" onclick="Engine.showHeroSheetIdx(${i})">
         <span class="ability-name">${h.name}</span> — ${h.class}${h.player ? ' · ' + h.player : ''}
-        <div class="ability-desc">PV ${h.hp}/${h.maxHp} · CA ${h.ac} ${h.down ? '· 💀 A TERRA' : ''} — <i>tocca per la scheda completa</i></div>
+        <div class="ability-desc">PV ${h.hp}/${h.maxHp} · CA ${h.ac}${badgeStati(h)} — <i>tocca per la scheda completa</i></div>
       </div>`).join('') +
       `<button class="btn" style="margin-top:14px" onclick="document.getElementById('modal-generic').classList.add('hidden')">✔ Chiudi</button>`;
     $('modal-generic').classList.remove('hidden');
@@ -673,8 +940,18 @@ const Engine = (() => {
       const loreBtn = item.lore ? `<button class="btn btn-small" onclick="Engine.inspectItem('${it}')">📖 Ispeziona</button>` : '';
       return `<div class="inv-item"><span class="inv-name">${item.name}${n > 1 ? ' ×' + n : ''}</span><span class="inv-desc">${item.desc}</span>${useBtn}${loreBtn}</div>`;
     }).join('') || '<p style="color:var(--text-dim)">Lo zaino è vuoto. Succede ai migliori.</p>';
+    // La HUD deve contenere la SPIEGAZIONE, non un numero (LESSONS-LEARNED #16):
+    // qui si legge cosa compra il Sangue Freddo e quanto ne resta in ritiri veri.
+    const k = ritiriDisponibili();
+    const dopo = costoRitiro(k);
     box.innerHTML = `<h2>🎒 Le Vostre Cose</h2>
       <div class="gold-display">🕯 Sangue Freddo: ${G.gold}</div>
+      <div class="ability-box" style="border-left-color:var(--gold)">
+        <span class="ability-name">🕯 A che serve tenere i nervi</span>
+        <div class="ability-desc">È il vostro <b>secondo tentativo</b>. Quando un dado va male — una prova o un colpo mancato in uno scontro — il gioco vi chiede se volete <b>rifarlo</b>, e questo è il prezzo: il primo ritiro costa <b>${costoRitiro(0)}</b>, poi ${RITIRO_COSTI.slice(1).join(', ')}, e da lì tre in più ogni volta. Il conto <b>riparte da capo a ogni scena nuova e a ogni scontro nuovo</b>: dentro un singolo momento insistere costa caro, cambiare stanza no.<br>
+        <b>Col saldo di adesso: ${k === 0 ? 'nessun ritiro' : k === 1 ? 'un ritiro solo' : k + ' ritiri'}.</b>${k > 0 ? ` (poi ve ne servirebbero ${dopo})` : ` Ne serv${costoRitiro(0) === 1 ? 'e' : 'ono'} ${costoRitiro(0)} per il prossimo.`}<br>
+        <span style="color:var(--text-dim)">Lo stesso coraggio è contante allo <b>Spaccio del Contabile</b>, giù nell'ossario: tisane, antidoti, sale benedetto. Spenderlo in medicine o in secondi tentativi è la vera decisione della notte.</span></div>
+      </div>
       ${itemsHtml}
       <button class="btn" style="margin-top:14px" onclick="document.getElementById('modal-generic').classList.add('hidden')">✔ Chiudi</button>`;
     $('modal-generic').classList.remove('hidden');
@@ -752,10 +1029,22 @@ const Engine = (() => {
 
   /* ---------- mappa ---------- */
 
+  /* La pianta è un canvas da 720 mostrato a 289 sul telefono: il 40%. Un'etichetta da
+     9px arrivava a 3,6px, cioè un impasto. Nella pianta restano i NUMERI, che si leggono
+     anche rimpiccioliti; i nomi stanno qui sotto in testo vero, che non rimpicciolisce
+     con l'immagine. */
+  function legendaMappa() {
+    const cur = WORLD_MAP.find(w => w.scenes && G && w.scenes.includes(G.sceneId));
+    return '<div class="mappa-legenda">' + WORLD_MAP.map((l, i) => {
+      const qui = cur && cur.key === l.key;
+      return `<span class="mappa-voce${qui ? ' qui' : ''}"><b>${i + 1}</b> ${l.label}${qui ? ' ⭐' : ''}</span>`;
+    }).join('') + '</div>';
+  }
+
   function showMap() {
     const box = $('modal-generic-content');
-    box.innerHTML = `<h2>🗺 Il Belvedere — pianta della proprietà</h2><canvas id="map-canvas" width="720" height="480"></canvas>
-      <p style="color:var(--text-dim);font-size:19px;margin-top:8px">⭐ = dove siete adesso. La nebbia segna il confine: di notte, il confine è ovunque.</p>
+    box.innerHTML = `<h2>🗺 Il Belvedere — pianta della proprietà</h2><canvas id="map-canvas" width="720" height="480"></canvas>${legendaMappa()}
+      <p style="color:var(--text-dim);font-size:19px;margin-top:8px">⭐ = dove siete adesso, e i numeri sulla pianta sono nell'elenco qui sopra. La nebbia segna il confine: di notte, il confine è ovunque.</p>
       <button class="btn" style="margin-top:10px" onclick="document.getElementById('modal-generic').classList.add('hidden')">✔ Chiudi</button>`;
     $('modal-generic').classList.remove('hidden');
     drawMap();
@@ -847,7 +1136,8 @@ const Engine = (() => {
       ctx.fillStyle = cur && cur.key === loc.key ? '#e8b64c' : '#b09a9c';
       ctx.font = "10px 'Press Start 2P'";
       ctx.textAlign = 'center';
-      ctx.fillText(loc.label, x, y + 26);
+      ctx.font = "26px 'Press Start 2P'";
+      ctx.fillText(String(WORLD_MAP.indexOf(loc) + 1), x, y + 48);
       if (cur && cur.key === loc.key) {
         ctx.fillStyle = '#e8b64c';
         ctx.font = "16px 'Press Start 2P'";
@@ -1058,7 +1348,8 @@ const Engine = (() => {
         <div class="ability-desc">
           Sopravvissuti: ${G.party.map(h => h.name.split(' ')[0]).join(', ')}<br>
           Scontri vinti: ${G.stats.combats} · Prove superate: ${G.stats.checksPassed} · Prove fallite: ${G.stats.checksFailed} (le più memorabili)<br>
-          Sangue Freddo finale: 🕯 ${G.gold} · Durata: circa ${mins} minuti<br>
+          Sangue Freddo: 🕯 ${G.gold} rimasti su ${G.stats.goldEarned || 0} messi insieme stanotte${G.stats.ritiriComprati ? ` · ${G.stats.ritiriComprati} second${G.stats.ritiriComprati === 1 ? 'o' : 'i'} tentativ${G.stats.ritiriComprati === 1 ? 'o' : 'i'} comprat${G.stats.ritiriComprati === 1 ? 'o' : 'i'} a nervi saldi` : ' · nessun ritiro comprato: il dado, stanotte, ha avuto l\'ultima parola'}<br>
+          Durata: circa ${mins} minuti<br>
           Esplorazione del Belvedere: ${Math.round(Object.keys(G.enteredScenes || {}).length / Object.keys(CAMPAIGN).length * 100)}% (${Object.keys(G.enteredScenes || {}).length} luoghi su ${Object.keys(CAMPAIGN).length})<br>
           Nodi sciolti: ${['nodo_cantina','nodo_piano','nodo_pozzo'].filter(n => G.flags[n]).length}/3 ${G.flags.gregorio_umano ? '· 🍷 Gregorio è tornato umano' : ''} ${G.flags.ada_alleata ? '· 💍 Ada è vostra alleata' : ''}
         </div>
@@ -1112,6 +1403,9 @@ const Engine = (() => {
     showScreen, gotoScene, currentScene, renderPartyBar,
     showParty, showHeroSheet, showHeroSheetIdx, showInventory, showRules, showMap, showMenu, showDiary, showBestiary, showRevive, startChapter, reviveUnlocked,
     usePotionOutside, applyPotion, useAntidote, applyAntidote, inspectItem, backToTitle, confirmRestart, doRestart,
+    riprendiDaCheckpoint, registraCaduta, haCheckpoint,
+    // 🕯 il Sangue Freddo compra il secondo tentativo (usato da qui e da js/combat.js)
+    costoRitiro, costoRitiroOra, puoiRitirare, spendiRitiro, ritiriDisponibili, muoviFreddo,
     heroSheetHTML, formatText,
   };
 })();

@@ -95,7 +95,12 @@ class FakeElement {
       add: (...cls) => { const s = new Set(toks()); cls.forEach(c => s.add(c)); self._className = [...s].join(' '); },
       remove: (...cls) => { const s = new Set(toks()); cls.forEach(c => s.delete(c)); self._className = [...s].join(' '); },
       contains: (c) => toks().includes(c),
-      toggle: (c) => { if (toks().includes(c)) self.classList.remove(c); else self.classList.add(c); },
+      toggle: (c, force) => {
+        const c_e = toks().includes(c);
+        const vuole = force === undefined ? !c_e : !!force;
+        if (vuole && !c_e) self.classList.add(c);
+        else if (!vuole && c_e) self.classList.remove(c);
+      },
     };
   }
   get innerHTML() { return this._innerHTML; }
@@ -447,6 +452,18 @@ function runGame(scenario) {
         throw new Error(`LOOP INFINITO sospetto nella navigazione (> ${STEP_LIMIT} passi totali) — scene più visitate: ${top}`);
       }
 
+      /* Se il gruppo rimbalza fra checkpoint e sconfitta, la partita non finisce mai:
+         è un loop, non una partita difficile. Va scoperto qui, con un messaggio
+         chiaro, invece di bruciare i passi della guardia generica. */
+      {
+        const Gc = getG();
+        const _perScontro = (Gc && Gc.stats && Gc.stats.ritorniPerScontro) || {};
+        const _peggio = Object.entries(_perScontro).sort((a, b) => b[1] - a[1])[0];
+        if (_peggio && _peggio[1] > 3) {
+          throw new Error(`LOOP DI CHECKPOINT: ${_peggio[1]} ritorni sullo STESSO scontro ("${_peggio[0]}") — il gruppo non lo supera e il gioco non offre una via d'uscita`);
+        }
+      }
+
       const G = getG();
       const sceneId = G.sceneId;
       const scene = api.CAMPAIGN[sceneId];
@@ -467,6 +484,19 @@ function runGame(scenario) {
         const btns = buttons(content);
         const clickable = btns.filter(b => typeof b.onclick === 'function');
         if (!clickable.length) { modalGeneric.classList.add('hidden'); continue; }
+        // La modale del SECONDO TENTATIVO (prova fallita: 🃏 Asso di Denari / 🕯 Sangue
+        // Freddo / accettare il fato) non è una scelta di eroe. Per default il pilota
+        // automatico ACCETTA IL FATO: così i percorsi di fallimento restano coperti e
+        // la valuta non si volatilizza a caso. Gli scenari con `compraRitiri: true`
+        // comprano invece il ritiro, per collaudare la meccanica in partita vera.
+        const ritiro = clickable.find(b => b.id === 'btn-freddo-yes');
+        const fato = clickable.find(b => b.id === 'btn-reroll-no');
+        if (fato) {
+          const scelto = (scenario.compraRitiri && ritiro) ? ritiro : fato;
+          game.act(() => scelto.onclick());
+          checkInvariants(getG(), `dopo la modale del ritiro in "${sceneId}"`);
+          continue;
+        }
         const chosen = pickCheckHero(clickable, scenario);
         game.act(() => chosen.onclick());
         checkInvariants(getG(), `dopo scelta eroe per prova in "${sceneId}"`);
@@ -527,6 +557,12 @@ function runGame(scenario) {
   log.flags = { ...(getG().flags || {}) };
   log.inventory = [...(getG().inventory || [])];
   log.usedForceItem = !!state.forceCombatItemUsed;
+  // economia del Sangue Freddo: quanto ne ha RACCOLTO la partita e quanti secondi
+  // tentativi ha comprato (la riga di sintesi in fondo li usa per tarare i guadagni)
+  const gEnd = getG();
+  log.goldEarned = (gEnd.stats && gEnd.stats.goldEarned) || 0;
+  log.goldLeft = gEnd.gold || 0;
+  log.ritiriComprati = (gEnd.stats && gEnd.stats.ritiriComprati) || 0;
   return { ok: true, scenario, log };
 }
 
@@ -622,6 +658,7 @@ function scenario(name, heroes, choices, opts = {}) {
     forceFirstCombatLoss: !!opts.forceFirstCombatLoss,
     forceCombatItem: opts.forceCombatItem || null,
     difficulty: opts.difficulty || 'normale',
+    compraRitiri: !!opts.compraRitiri,
   };
 }
 
@@ -1734,6 +1771,10 @@ function findHeroButton(box, heroName) {
   const G1 = game.getG();
   G1.inventory.push('asso_di_denari'); G1.gold = 7;
   game.act(() => E.gotoScene('a3'));   // l'auto-save fotografa lo stato
+  /* Il saldo atteso si LEGGE dallo stato, non si scrive a mano: dopo la
+     ricalibrazione dell'economia la scena d'arrivo può concedere Sangue Freddo, e
+     un numero fisso qui rendeva il test una fotografia di com'era il gioco allora. */
+  const freddoAtteso = game.getG().gold;
   const code = E.exportCode(1);
   if (!code) { fail('testExportImport: exportCode ha restituito null'); return; }
   // "altro dispositivo": si importa su uno slot diverso e si carica
@@ -1742,7 +1783,7 @@ function findHeroButton(box, heroName) {
   game.act(() => E.loadGame(3));
   const G2 = game.getG();
   if (G2.sceneId !== 'a3') fail(`testExportImport: scena attesa a3, trovata ${G2.sceneId}`);
-  if (!G2.inventory.includes('asso_di_denari') || G2.gold !== 7) fail('testExportImport: inventario o Sangue Freddo persi nel viaggio');
+  if (!G2.inventory.includes('asso_di_denari') || G2.gold !== freddoAtteso) fail(`testExportImport: inventario o Sangue Freddo persi nel viaggio (atteso ${freddoAtteso}, trovato ${G2.gold})`);
   if (G2.party[0].player !== 'Gali') fail('testExportImport: nome del giocatore perso');
   if (E.importCode('non-un-codice!!!', 3) === null) fail('testExportImport: un codice spazzatura è stato accettato');
   console.log('  ✅ Export/import: codice generato, importato su altro slot, stato integro (scena, zaino, oro, nomi) e spazzatura rifiutata');
@@ -2122,6 +2163,229 @@ function findHeroButton(box, heroName) {
 })();
 
 /* ==================== ESITO FINALE ==================== */
+
+/* ==================== VERIFICHE DIRETTE: 🕯 IL SECONDO TENTATIVO ====================
+   La valuta non deve essere decorativa (feedback del committente, ago 2026): il Sangue
+   Freddo compra il RITIRO di un tiro andato male, a prezzo crescente dentro la stessa
+   scena o lo stesso scontro. Qui si collauda il meccanismo end-to-end, dal bottone che
+   compare al saldo che scende, perché "una risorsa che non fa nulla" non torni mai. */
+
+// nel DOM finto i figli generati da innerHTML non esistono: i bottoni con id si cercano
+// tra i FIGLI VERI, non con getElementById (che ne inventerebbe uno vuoto)
+function btnConId(box, id) { return buttons(box).find(b => b.id === id) || null; }
+
+(function testRitiroProvaDiScena() {
+  section('Verifica diretta: 🕯 il Sangue Freddo ritira una PROVA DI SCENA (costo crescente)');
+  const game = buildGame(31415);
+  const E = game.api.Engine;
+  game.act(() => E.newGame([{ heroId: 'claudia', player: '' }, { heroId: 'emanuela', player: '' }]));
+  const G = game.getG();
+  G.gold = 6;   // basta per due ritiri (2 + 3), non per il terzo (5)
+  if (G.inventory.includes('asso_di_denari')) fail('testRitiroProvaDiScena: l\'Asso in zaino falserebbe la prova');
+
+  game.act(() => E.gotoScene('a2'));
+  const siepi = matchButton(buttons(game.doc.getElementById('choices')), 'occhiata alle siepi');
+  if (!siepi) { fail('testRitiroProvaDiScena: bottone della prova (a2, SAG CD 11) non trovato'); return; }
+  game.act(() => siepi.onclick());
+  const heroBtn = buttons(game.doc.getElementById('modal-generic-content'))[0];
+  if (!heroBtn) { fail('testRitiroProvaDiScena: nessun eroe nella modale della prova'); return; }
+
+  const ctxMath = vm.runInContext('Math', game.context);
+  const realRandom = ctxMath.random;
+  ctxMath.random = () => 0;   // 1 naturale a ogni tiro: la prova fallisce SEMPRE
+  game.act(() => heroBtn.onclick());
+
+  const modalBox = game.doc.getElementById('modal-generic-content');
+  const contBtn = () => game.doc.getElementById('btn-dice-continue');
+  const overlay = game.doc.getElementById('dice-overlay');
+  if (overlay.classList.contains('hidden')) { fail('testRitiroProvaDiScena: overlay del dado non visibile'); ctxMath.random = realRandom; return; }
+  game.act(() => contBtn().onclick());
+
+  // 1º ritiro: il bottone c'è, costa 2, e l'Asso NON viene offerto (non lo abbiamo)
+  let freddo = btnConId(modalBox, 'btn-freddo-yes');
+  if (!freddo) {
+    fail('testRitiroProvaDiScena: su prova fallita con saldo 6 NON compare btn-freddo-yes');
+    ctxMath.random = realRandom; return;
+  }
+  if (btnConId(modalBox, 'btn-reroll-yes')) fail('testRitiroProvaDiScena: offerto l\'Asso di Denari senza averlo in zaino');
+  if (!btnConId(modalBox, 'btn-reroll-no')) fail('testRitiroProvaDiScena: manca il bottone per accettare il fato');
+  if (E.costoRitiroOra('scena:a2') !== 2) fail(`testRitiroProvaDiScena: il primo ritiro dovrebbe costare 2, costa ${E.costoRitiroOra('scena:a2')}`);
+  if (!/costa 2/.test(freddo.innerHTML)) fail(`testRitiroProvaDiScena: il bottone non dichiara il costo giusto: ${freddo.innerHTML}`);
+  game.act(() => freddo.onclick());
+  if (G.gold !== 4) fail(`testRitiroProvaDiScena: dopo il ritiro da 2 il saldo dovrebbe essere 4, è ${G.gold}`);
+  if (G.stats.ritiriComprati !== 1) fail(`testRitiroProvaDiScena: ritiriComprati atteso 1, trovato ${G.stats.ritiriComprati}`);
+  if (overlay.classList.contains('hidden')) fail('testRitiroProvaDiScena: il dado non è stato ritirato (overlay chiuso)');
+  if (G.sceneId !== 'a2') fail(`testRitiroProvaDiScena: il ritiro ha cambiato scena (${G.sceneId}) invece di rifare il tiro`);
+
+  // 2º ritiro NELLA STESSA SCENA: costa più del primo
+  game.act(() => contBtn().onclick());
+  freddo = btnConId(modalBox, 'btn-freddo-yes');
+  if (!freddo) { fail('testRitiroProvaDiScena: secondo ritiro non offerto pur avendo 4 di saldo'); ctxMath.random = realRandom; return; }
+  if (E.costoRitiroOra('scena:a2') !== 3) fail(`testRitiroProvaDiScena: il secondo ritiro nella stessa scena dovrebbe costare 3, costa ${E.costoRitiroOra('scena:a2')}`);
+  game.act(() => freddo.onclick());
+  if (G.gold !== 1) fail(`testRitiroProvaDiScena: dopo il secondo ritiro (3) il saldo dovrebbe essere 1, è ${G.gold}`);
+
+  // 3º tentativo: con 1 di saldo il terzo ritiro (5) è fuori portata → niente bottone,
+  // niente modale, il fato si compie e si va alla scena di fallimento
+  game.act(() => contBtn().onclick());
+  ctxMath.random = realRandom;
+  // (la modale non viene RIcostruita: i suoi vecchi figli restano nel DOM sia qui sia
+  //  nel browser, quindi l'assenza dell'offerta si legge da "modale chiusa e scena
+  //  avanzata", non dalla lista dei bottoni)
+  if (E.puoiRitirare('scena:a2')) fail(`testRitiroProvaDiScena: con 1 di saldo il motore crede di poter ritirare (costo ${E.costoRitiroOra('scena:a2')})`);
+  if (!game.doc.getElementById('modal-generic').classList.contains('hidden')) fail('testRitiroProvaDiScena: modale del ritiro aperta pur non essendoci nulla da offrire');
+  if (G.sceneId !== 'a3') fail(`testRitiroProvaDiScena: atteso l'esito di fallimento (a3), trovato ${G.sceneId}`);
+  /* La verifica è la RELAZIONE, non un numero assoluto: quanti ritiri compra il
+     saldo che il gruppo ha in questo momento, con i costi 2/3/5/8. Un numero fisso
+     qui si rompe ogni volta che una scena concede un punto. */
+  {
+    const saldo = G.gold;
+    const attesi = (() => { let r = saldo, n = 0, q = 0; const costo = k => [2, 3, 5, 8][Math.min(k, 3)] + Math.max(0, k - 3) * 3;
+      while (r >= costo(n)) { r -= costo(n); n++; q++; } return q; })();
+    if (E.ritiriDisponibili() !== attesi) fail(`testRitiroProvaDiScena: con ${saldo} di saldo i ritiri disponibili dovrebbero essere ${attesi}, sono ${E.ritiriDisponibili()}`);
+  }
+  console.log('  ✅ Prova di scena: fallimento → btn-freddo-yes (costa 2) → saldo 6→4 e dado ritirato → secondo ritiro a 3 → con saldo 1 nessuna offerta e fato compiuto');
+})();
+
+(function testRitiroInCombattimento() {
+  section('Verifica diretta: 🕯 il Sangue Freddo ritira un COLPO MANCATO in combattimento');
+  const game = buildGame(27182);
+  const E = game.api.Engine;
+  game.act(() => E.newGame([{ heroId: 'claudia', player: '' }, { heroId: 'emanuela', player: '' }]));
+  const G = game.getG();
+  G.gold = 5;   // un ritiro da 2, poi uno da 3
+  game.act(() => E.gotoScene('p_vespe'));
+  const startBtn = buttons(game.doc.getElementById('choices'))[0];
+  if (!startBtn) { fail('testRitiroInCombattimento: bottone di avvio del combattimento assente in p_vespe'); return; }
+
+  const ctxMath = vm.runInContext('Math', game.context);
+  const realRandom = ctxMath.random;
+  ctxMath.random = () => 0;   // 1 naturale sempre: tutti mancano, nessuno cade
+  game.act(() => startBtn.onclick());
+
+  const box = game.doc.getElementById('combat-actions');
+  const attacco = buttons(box).find(b => /^⚔/.test(b.innerHTML));
+  if (!attacco) { fail(`testRitiroInCombattimento: nessun bottone di attacco nel turno dell'eroe (${buttons(box).map(b => b.innerHTML.slice(0, 20)).join(' | ')})`); ctxMath.random = realRandom; return; }
+  game.act(() => attacco.onclick());
+  const bersaglio = buttons(box).find(b => /^🎯/.test(b.innerHTML));
+  if (!bersaglio) { fail('testRitiroInCombattimento: menu dei bersagli non comparso'); ctxMath.random = realRandom; return; }
+  game.act(() => bersaglio.onclick());
+  const contBtn = () => game.doc.getElementById('btn-dice-continue');
+  game.act(() => contBtn().onclick());   // il tiro per colpire: 1 naturale, mancato
+
+  // L'offerta vive DENTRO #combat-actions (mai una modale: il pilota automatico dei
+  // test, in combattimento, guarda solo lì) e "Lascia perdere" deve stare per PRIMA.
+  let btns = buttons(box);
+  const freddo = btnConId(box, 'btn-freddo-combat');
+  if (!freddo) { fail(`testRitiroInCombattimento: dopo il colpo mancato manca btn-freddo-combat in #combat-actions (${btns.map(b => b.innerHTML.slice(0, 24)).join(' | ')})`); ctxMath.random = realRandom; return; }
+  if (!/Lascia perdere/.test(btns[0].innerHTML)) fail(`testRitiroInCombattimento: il primo bottone dovrebbe essere "Lascia perdere", è "${btns[0].innerHTML.slice(0, 40)}"`);
+  if (classifyCombatMenu(btns) !== 'main') fail('testRitiroInCombattimento: il menu del ritiro viene classificato come bersagli/alleati (icone sbagliate)');
+  if (pickMainCombatAction(btns, 0, G) !== btns[0]) fail('testRitiroInCombattimento: il pilota automatico non sceglierebbe "Lascia perdere" (scenari esistenti a rischio)');
+  if (!/costa 2/.test(freddo.innerHTML)) fail(`testRitiroInCombattimento: costo sbagliato sul bottone: ${freddo.innerHTML}`);
+
+  const overlay = game.doc.getElementById('dice-overlay');
+  game.act(() => freddo.onclick());
+  if (G.gold !== 3) fail(`testRitiroInCombattimento: dopo il ritiro da 2 il saldo dovrebbe essere 3, è ${G.gold}`);
+  if (G.stats.ritiriComprati !== 1) fail(`testRitiroInCombattimento: ritiriComprati atteso 1, trovato ${G.stats.ritiriComprati}`);
+  if (overlay.classList.contains('hidden')) fail('testRitiroInCombattimento: il colpo non è stato ritirato (overlay del dado chiuso)');
+
+  // secondo colpo mancato nello STESSO scontro: il prezzo sale, e "Lascia perdere"
+  // fa proseguire il turno normalmente (nessuna azione extra regalata — LESSON #11)
+  game.act(() => contBtn().onclick());
+  const freddo2 = btnConId(box, 'btn-freddo-combat');
+  if (!freddo2) { fail('testRitiroInCombattimento: seconda offerta assente pur avendo 3 di saldo'); ctxMath.random = realRandom; return; }
+  if (!/costa 3/.test(freddo2.innerHTML)) fail(`testRitiroInCombattimento: il secondo ritiro dello stesso scontro dovrebbe costare 3: ${freddo2.innerHTML}`);
+  const lascia = buttons(box)[0];
+  game.act(() => lascia.onclick());
+  ctxMath.random = realRandom;
+  if (G.gold !== 3) fail(`testRitiroInCombattimento: "Lascia perdere" ha toccato il saldo (${G.gold} invece di 3)`);
+  if (btnConId(box, 'btn-freddo-combat')) fail('testRitiroInCombattimento: l\'offerta di ritiro è rimasta a schermo dopo "Lascia perdere"');
+  if (!buttons(box).length && !game.doc.getElementById('screen-combat').classList.contains('active')) {
+    fail('testRitiroInCombattimento: dopo "Lascia perdere" il combattimento è rimasto senza azioni');
+  }
+  console.log('  ✅ Combattimento: colpo mancato → btn-freddo-combat in #combat-actions (Lascia perdere per primo) → saldo 5→3 e colpo ritirato → seconda offerta a 3 → "Lascia perdere" prosegue il turno');
+})();
+
+/* ==================== ECONOMIA DEL SANGUE FREDDO (misura permanente) ====================
+   Il committente, giocando: «non mi convince questa valuta, alla fine non fa nulla».
+   Adesso fa una cosa sola e chiarissima (compra il secondo tentativo), ma perché il
+   numero SIGNIFICHI qualcosa va anche raccolto con parsimonia: con i costi 2/3/5/8 il
+   raccolto di una partita deve valere 3-4 ritiri, cioè stare nella fascia 15-30. Questa
+   riga tiene la misura ripetibile — non "a occhio" — a ogni esecuzione della suite. */
+section('Economia del 🕯 Sangue Freddo (raccolto per partita)');
+{
+  const RACCOLTO_MIN = 12, RACCOLTO_MAX = 34;   // ~3-4 ritiri a costi 2/3/5/8
+  const SCENE_UMANE = 150;   // oltre, è il pilota automatico che rimbalza, non un giocatore
+  const buoni = results.filter(r => r.ok);
+  const mediana = a => a.length ? a.slice().sort((x, y) => x - y)[Math.floor(a.length / 2)] : 0;
+  const tutti = buoni.map(r => r.log.goldEarned || 0).sort((a, b) => a - b);
+  // Le run con migliaia di scene sono i loop di ritentativo del pilota: rivisitano gli
+  // stessi scontri e ne raccolgono il bottino N volte. La misura che conta è quella
+  // delle partite di lunghezza umana.
+  const umane = buoni.filter(r => r.log.scenes.length <= SCENE_UMANE).map(r => r.log.goldEarned || 0).sort((a, b) => a - b);
+  if (!tutti.length) {
+    fail('Economia: nessuna partita riuscita da cui misurare il Sangue Freddo raccolto');
+  } else {
+    const med = mediana(umane.length ? umane : tutti);
+    const ritiriTot = buoni.reduce((t, r) => t + (r.log.ritiriComprati || 0), 0);
+    const compra = n => [2, 3, 5, 8].reduce((acc, c) => (acc.r >= c ? { r: acc.r - c, n: acc.n + 1 } : acc), { r: n, n: 0 }).n;
+    console.log(`  ℹ️ raccolto per partita, ${umane.length} run di lunghezza umana (≤${SCENE_UMANE} scene): min ${umane[0] || 0} · mediana ${med} · max ${umane[umane.length - 1] || 0}`);
+    console.log(`  ℹ️ tutte le ${tutti.length} run (compresi i rimbalzi del pilota): min ${tutti[0]} · mediana ${mediana(tutti)} · max ${tutti[tutti.length - 1]}`);
+    console.log(`  ℹ️ un raccolto di ${med} compra ${compra(med)} ritiri a prezzo pieno (2+3+5+8) · ritiri comprati dal pilota automatico: ${ritiriTot}`);
+    if (med < RACCOLTO_MIN) fail(`Economia: il raccolto mediano (${med}) è sotto ${RACCOLTO_MIN}: la valuta non basta nemmeno per due ritiri, il giocatore non la userà mai`);
+    else if (med > RACCOLTO_MAX) fail(`Economia: il raccolto mediano (${med}) supera ${RACCOLTO_MAX}: è inflazione, il numero smette di significare qualcosa (LESSONS-LEARNED #15)`);
+    else console.log(`  ✅ raccolto mediano nella fascia ${RACCOLTO_MIN}-${RACCOLTO_MAX}: la valuta vale 3-4 secondi tentativi in una notte`);
+  }
+}
+
+
+/* ==================== SCHEDA DEL PERSONAGGIO ====================
+   Nessuna partita simulata clicca su un eroe, quindi per mesi la scheda ha potuto
+   crashare senza che nessun test lo notasse: `conditions` era dichiarata dentro il
+   ciclo delle abilità e il template la cercava fuori — ReferenceError a ogni click,
+   proprio sulla schermata che il committente aveva chiesto per vedere gli stati.
+   Questa prova apre la scheda di OGNI eroe in OGNI combinazione di stati. */
+(function testSchedaPersonaggio() {
+  section('Scheda del personaggio: si apre sempre, in ogni stato');
+  const game = buildGame(424242);
+  const E = game.api.Engine;
+  const tuttiGliEroi = game.api.HEROES;
+  game.act(() => E.newGame(tuttiGliEroi.filter(h => !h.locked).slice(0, 2).map(h => ({ heroId: h.id, player: '' }))));
+  /* Solo gli stati che QUESTO motore conosce: cercare un blocco "Condizioni attive"
+     per uno stato che il gioco non ha mai sarebbe un test che chiede l'impossibile.
+     La lista si deduce dal codice del motore, non si scrive a memoria. */
+  const engineSrc = readFileSync(join(root, 'js/engine.js'), 'utf8');
+  const STATI_NOTI = ['veleno', 'down', 'preso', 'morto', 'rimasto']
+    .filter(s => new RegExp(`h\\.${s}\\b`).test(engineSrc) && new RegExp(`if \\(h\\.${s}\\) conditions\\.push`).test(engineSrc));
+  const STATI = [{}, ...STATI_NOTI.map(s => ({ [s]: true }))];
+  if (STATI_NOTI.length >= 2) STATI.push({ [STATI_NOTI[0]]: true, [STATI_NOTI[1]]: true });
+  let rotte = 0, aperte = 0;
+  for (const base of tuttiGliEroi) {
+    for (const stato of STATI) {
+      // una copia dell'eroe con lo stato addosso, come lo vedrebbe il giocatore
+      const h = Object.assign(JSON.parse(JSON.stringify(base)), { hp: 3, player: 'Gali' }, stato);
+      try {
+        const html = E.heroSheetHTML(h);
+        aperte++;
+        if (typeof html !== 'string' || html.length < 200) { fail(`scheda di "${base.id}" con stato ${JSON.stringify(stato)}: HTML vuoto o troppo corto`); rotte++; }
+        const conStato = Object.keys(stato).length > 0;
+        if (conStato && !/Condizioni attive/.test(html)) { fail(`scheda di "${base.id}" con stato ${JSON.stringify(stato)}: nessun blocco "Condizioni attive" — lo stato è invisibile al giocatore`); rotte++; }
+        if (/undefined|\[object Object\]|NaN/.test(html)) { fail(`scheda di "${base.id}" con stato ${JSON.stringify(stato)}: contiene "undefined"/"NaN" nel testo mostrato`); rotte++; }
+      } catch (e) {
+        fail(`scheda di "${base.id}" con stato ${JSON.stringify(stato)} ESPLODE: ${e.message}`);
+        rotte++;
+      }
+    }
+  }
+  // e la modale vera, quella che si apre cliccando nella barra del gruppo
+  try {
+    game.act(() => E.showHeroSheetIdx(0));
+    const box = game.doc.getElementById('modal-generic-content');
+    if (!box.innerHTML || box.innerHTML.length < 200) { fail('showHeroSheetIdx(0): la modale resta vuota'); rotte++; }
+    if (game.doc.getElementById('modal-generic').classList.contains('hidden')) { fail('showHeroSheetIdx(0): la modale non si apre'); rotte++; }
+  } catch (e) { fail(`showHeroSheetIdx(0) esplode: ${e.message}`); rotte++; }
+  if (!rotte) console.log(`  ✅ ${aperte} schede aperte (${tuttiGliEroi.length} eroi × ${STATI.length} stati), tutte complete e con le condizioni visibili`);
+})();
 
 console.log('\n' + '═'.repeat(60));
 if (failures === 0) {

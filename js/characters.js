@@ -123,9 +123,9 @@ const BESTIARY = {
   },
   cameriere: {
     name: 'Cameriere in Livrea', short: 'Cameriere', sprite: 'cameriere',
-    maxHp: 15, ac: 13, ai: 'random', undead: true,
+    maxHp: 10, ac: 13, ai: 'random', undead: true,
     special: 'poisonOnHit',
-    attack: { name: 'Vassoio d\'argento', bonus: 3, dice: [1, 8], plus: 1 },
+    attack: { name: 'Vassoio d\'argento', bonus: 3, dice: [1, 6], plus: 1 },
     flavor: 'Un manichino in livrea impeccabile. Si muove solo quando non lo guardi.',
   },
   bambola: {
@@ -160,7 +160,7 @@ const BESTIARY = {
     name: 'Lo Chef', sprite: 'cuoco',
     maxHp: 38, ac: 14, ai: 'smart', undead: true, boss: true,
     special: 'cleave',
-    attack: { name: 'Mannaia per il banchetto', bonus: 5, dice: [2, 6], plus: 2 },
+    attack: { name: 'Mannaia per il banchetto', bonus: 5, dice: [1, 8], plus: 2 },
     flavor: 'Prepara il Banchetto del Venticinquennio dal 1899. Il menù non è mai cambiato. Gli ingredienti sì.',
   },
   ritratto: {
@@ -186,20 +186,20 @@ const BESTIARY = {
   direttore: {
     name: 'Il Direttore', sprite: 'direttore',
     maxHp: 42, ac: 17, ai: 'smart', undead: true, boss: true, lifesteal: true,
-    attack: { name: 'Il Timbro del Catalogo', bonus: 6, dice: [2, 8], plus: 2 },
+    attack: { name: 'Il Timbro del Catalogo', bonus: 6, dice: [1, 6], plus: 2 },
     flavor: 'Ciò che Gregorio sarebbe diventato senza rimorso. Non urla mai. Non ne ha bisogno.',
   },
   gregorio: {
     name: 'Lord Gregorio', sprite: 'gregorio',
-    maxHp: 55, ac: 16, ai: 'smart', undead: true, boss: true, lifesteal: true,
-    attack: { name: 'L\'Etichetta del Padrone di Casa', bonus: 6, dice: [2, 8], plus: 2 },
+    maxHp: 55, ac: 14, ai: 'smart', undead: true, boss: true, lifesteal: true,
+    attack: { name: 'L\'Etichetta del Padrone di Casa', bonus: 6, dice: [1, 6], plus: 2 },
     flavor: 'Il vostro ospite. Gentile, elegante, immortale. Il sorriso è sincero: è questo il problema.',
   },
   gregorio_fame: {
     name: 'La Fame di Gregorio', short: 'LA FAME', sprite: 'gregorio_fame',
     maxHp: 45, ac: 17, ai: 'smart', undead: true, boss: true,
     special: 'cleave',
-    attack: { name: 'Il Conto da Saldare', bonus: 7, dice: [3, 8], plus: 0 },
+    attack: { name: 'Il Conto da Saldare', bonus: 7, dice: [2, 4], plus: 0 },
     flavor: 'Ciò che il patto ha fatto di lui, sotto il completo di lino. Il Belvedere ha sempre fame.',
   },
 };

@@ -38,9 +38,11 @@ Voi dovete solo <b>leggere ad alta voce, discutere e scegliere</b>. E ogni tanto
 Se il totale raggiunge la <b>CD</b> (difficoltà), è un successo.</p>
 <p>Un <b>20 naturale</b> è sempre un trionfo. Un <b>1 naturale</b> è sempre una scena da film horror. La vostra.</p>
 
-<h3>🕯 Il Sangue Freddo</h3>
-<p>È il coraggio collettivo del gruppo: si <b>guadagna</b> affrontando l'orrore a testa alta, si <b>perde</b> nei momenti peggiori.
-Alcune scelte particolarmente audaci richiedono una certa dose di Sangue Freddo. Tenetevelo stretto.</p>
+<h3>🕯 Il Sangue Freddo — il vostro secondo tentativo</h3>
+<p>È il coraggio collettivo del gruppo: si <b>guadagna</b> affrontando l'orrore a testa alta, si <b>perde</b> nei momenti peggiori. E serve a una cosa precisa: <b>rifare un tiro andato male</b>.</p>
+<p>Prova fallita o colpo mancato, il gioco vi chiede: <i>«tenere il sangue freddo e riprovare?»</i>. Il primo ritiro costa <b>2</b>, il secondo 3, poi 5, poi 8 — e da lì tre in più ogni volta.
+Il conto <b>riparte da zero a ogni scena nuova e a ogni scontro nuovo</b>: insistere nello stesso momento diventa proibitivo, ricominciare altrove no.</p>
+<p>Lo stesso coraggio è la moneta dello <b>Spaccio del Contabile</b> (tisane, antidoti, sale benedetto) e di qualche scelta particolarmente audace. È lì la decisione vera: medicine, o secondi tentativi?</p>
 
 <h3>☠ Le condizioni del Belvedere</h3>
 <p>Al Relais non si muore. Si finisce PEGGIO:</p>
@@ -96,9 +98,10 @@ const RULES_QUICK = `
 <p><b>🛡 Difesa</b> — +3 CA fino al tuo prossimo turno.</p>
 </div></details></div>
 
-<div class="rules-section"><details><summary>🕯 Sangue Freddo</summary><div class="rules-body">
-<p>Il coraggio del gruppo. Si guadagna guardando l'orrore negli occhi, si perde nei disastri.</p>
-<p>Alcune scelte audaci richiedono una soglia minima di Sangue Freddo. Non è mai sprecato: è la vostra storia che diventa leggenda.</p>
+<div class="rules-section"><details><summary>🕯 Sangue Freddo = secondo tentativo</summary><div class="rules-body">
+<p>Il coraggio del gruppo. Si guadagna guardando l'orrore negli occhi, si perde nei disastri. <b>E si spende per rifare un tiro andato male</b>: prova fallita o colpo mancato, il gioco vi offre il ritiro.</p>
+<p>Prezzo: <b>2</b>, poi <b>3</b>, <b>5</b>, <b>8</b> (e +3 ogni volta in più). Il conto <b>riparte da zero in ogni scena nuova e in ogni scontro nuovo</b>: insistere costa, cambiare stanza no.</p>
+<p>Lo Zaino (🎒) vi dice sempre quanti ritiri comprate col saldo di adesso. La stessa valuta serve allo <b>Spaccio del Contabile</b> e a qualche scelta audace: scegliete voi se pagare in medicine o in fortuna.</p>
 </div></details></div>
 
 <div class="rules-section"><details><summary>🔥 Creature della villa e danni "caldi"</summary><div class="rules-body">

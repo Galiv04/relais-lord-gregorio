@@ -12,14 +12,18 @@ C'è solo un dettaglio: **il Belvedere prende un gruppo di ospiti ogni venticinq
 
 - 🎭 **5 protagonisti = voi**: ognuno interpreta sé stesso, con abilità nate dal proprio mestiere (le forbici professionali contano, in certe notti)
 - 🎙 **Narratore automatico**: racconta, propone scelte macabre, tira i dadi, arbitra gli scontri
-- 🗺 **Oltre 160 scene, ~35.000 parole**: l'autogrill di Baiano, il paese di Paternopoli, la sera in piscina col riflesso sbagliato, tre piste nella notte (la cantina con l'ossario, il piano proibito fino alla soffitta, il pozzo e il garage), la **Strada che Torna** (i tornanti sono un anello — e vederlo cambia il finale), il mondo capovolto del **Riflesso** e il Banchetto dell'alba — che ha **sette modi di finire**, incluso uno senza versare sangue
+- 🗺 **244 scene, oltre 46.000 parole**: l'autogrill di Baiano, il paese di Paternopoli, la sera in piscina col riflesso sbagliato, tre piste nella notte (la cantina con l'ossario, il piano proibito fino alla soffitta, il pozzo e il garage), la **Strada che Torna** (i tornanti sono un anello — e vederlo cambia il finale), il mondo capovolto del **Riflesso** e il Banchetto dell'alba — che ha **sette modi di finire**, incluso uno senza versare sangue
 - 🌒 **6 finali**: uno si conquista, uno si sceglie (e non se ne parlerà mai più), uno si subisce, uno si dimentica, uno non era previsto dal Belvedere (lo scrivete voi)... e uno lo firma qualcun altro, stavolta di sua volontà
 - ☠ **Condizioni, non morti**: al Belvedere nessuno muore — si viene avvelenati dal freddo, presi dalla casa, appesi alle pareti. Gli amici possono salvarti. Di solito.
+- 🕯 **Il Sangue Freddo è il vostro secondo tentativo**: l'unica valuta del gioco si spende per **rifare un tiro andato male** — una prova o un colpo mancato. Costa 2, poi 3, 5, 8, e il conto riparte a ogni scena e a ogni scontro: si raccoglie poco e si decide ogni volta se bruciarlo qui o portarlo allo Spaccio del Contabile (tisane, antidoti, sale benedetto)
 - 🎒 **Oltre 30 oggetti**, metà con effetti veri: l'Asso di Denari dei reduci ritira una prova fallita, la Lanterna del 1899 fa esitare le creature (e addormenta le bambole), il Nastro del '74 le ferma ad ascoltare (o ammansisce lo Chef — scegliete voi)
 - 🔗 **Le piste si parlano**: ciò che scoprite in una apre strade nelle altre, e le gentilezze seminate nella notte tornano come alleati al Banchetto. Un 📔 Diario della Notte tiene il conto di ciò che sapete
 - ⚖ **Tre difficoltà** (Tranquilla / Normale / Incubo) e **porzioni ridotte** in 1-2 giocatori — giocabile anche in solitaria
 - 🗝 **Rivivi la Notte**: dopo il primo finale, 11 capitoli d'ingresso per giocare piste, segreti e finali che vi siete persi — con zaino e conoscenze già pronti
-- 🏆 **Oltre 40 imprese con collezione persistente** per profilo: il Belvedere tiene il registro degli ospiti, voi tenete il suo
+- 🚪 **Nessuna schermata che ti fa solo premere avanti**: dove il Belvedere ti chiede qualcosa
+  hai in media **2,4 strade**, e ogni scena che non te ne offre due almeno cambia qualcosa —
+  un oggetto, una ferita, una cosa che hai capito
+- 🏆 **62 imprese e 29 cronache con collezione persistente** per profilo: il Belvedere tiene il registro degli ospiti, voi tenete il suo
 - ⚔ Combattimenti a turni in stile D&D, con **musica di battaglia diversa per luogo** · 📖 regole in un click · 💾 salvataggio automatico su 3 slot con profili + codici di esportazione tra dispositivi · 🎵 colonna sonora chiptune che cambia con la scena (dal carillon al valzer marcio del Banchetto) · 🕹 pixel art via canvas ispirata al vero relais irpino · zero dipendenze
 
 ## Come si gioca

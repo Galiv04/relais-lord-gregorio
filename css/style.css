@@ -53,8 +53,10 @@ canvas { image-rendering: pixelated; image-rendering: crisp-edges; display:block
   letter-spacing: 2px;
   margin-bottom: 12px;
 }
-.game-subtitle { color: var(--text-dim); font-size: 22px; margin-bottom: 26px; }
-.title-buttons { display:flex; flex-direction:column; gap:14px; align-items:center; margin-bottom: 18px; }
+.game-subtitle { color: var(--text-dim); font-size: 22px; margin-bottom: 26px;
+  margin-inline:auto; text-wrap: balance; }
+.title-buttons { display:flex; flex-direction:column; gap:14px; align-items:stretch;
+  margin-bottom: 18px; width:100%; max-width:420px; margin-inline:auto; }
 .title-footer { color: var(--text-dim); font-size: 18px; opacity:.8; }
 
 /* ---------- bottoni ---------- */
@@ -307,9 +309,9 @@ canvas { image-rendering: pixelated; image-rendering: crisp-edges; display:block
 .rules-section summary { font-family: var(--font-pixel); font-size: 12px; color: var(--blue); cursor:pointer; padding: 8px; background: var(--panel-dark); border: 2px solid var(--border); }
 .rules-section .rules-body { padding: 10px 14px; font-size: 20px; border: 2px solid var(--border); border-top:none; background: rgba(0,0,0,.2); }
 .rules-body b { color: var(--gold); }
-.inv-item { display:flex; justify-content:space-between; align-items:center; gap:10px; background: var(--panel-dark); border:2px solid var(--border); padding: 8px 12px; margin-bottom: 6px; }
+.inv-item { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-start; gap:4px 10px; background: var(--panel-dark); border:2px solid var(--border); padding: 8px 12px; margin-bottom: 6px; }
 .inv-item .inv-name { color: var(--gold); }
-.inv-item .inv-desc { color: var(--text-dim); font-size: 18px; flex:1; }
+.inv-item .inv-desc { color: var(--text-dim); font-size: 18px; flex:1 1 220px; }
 .gold-display { font-family: var(--font-pixel); font-size: 13px; color: var(--gold); margin-bottom: 12px; }
 
 /* ---------- numeri di danno fluttuanti ---------- */
@@ -412,3 +414,92 @@ html.text-large .rules-body, html.text-large .backstory, html.text-large .abilit
 .minigame-simon-btn:disabled { opacity: .8; cursor: default; }
 .minigame-timerbar { height: 10px; background: #221a2a; border: 2px solid var(--border, #3a2f40); margin: 8px 0 14px; }
 .minigame-timerbar > div { height: 100%; width: 100%; background: var(--gold, #c9a227); transition: width .1s linear; }
+
+/* INCIPIT sulla schermata del titolo: la storia si presenta subito, senza spoiler.
+   Sta SOTTO i bottoni, perché il pulsante per giocare deve stare sopra la piega. */
+.title-incipit {
+  max-width: 640px;
+  margin: 4px auto 18px;
+  padding: 14px 18px 12px;
+  text-align: left;
+  font-size: 19px;
+  line-height: 1.45;
+  color: var(--text-dim);
+  background: rgba(0,0,0,.55);
+  border: 2px solid var(--border);
+  border-left: 5px solid var(--gold-dark, var(--gold));
+  box-shadow: 0 0 0 3px #000, 0 10px 30px rgba(0,0,0,.6);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+}
+.title-incipit p { margin-bottom: 10px; }
+.title-incipit p:last-child { margin-bottom: 0; }
+.title-incipit b { color: var(--text); }
+.title-incipit-close {
+  margin-top: 13px;
+  padding-top: 11px;
+  border-top: 2px solid var(--border);
+  font-size: 18px;
+  color: var(--gold);
+}
+html.text-large .title-incipit { font-size: 23px; }
+html.text-large .title-incipit-close { font-size: 21px; }
+@media (max-width: 600px) {
+  .title-incipit { font-size: 18px; line-height: 1.42; padding: 12px 14px 11px; margin-bottom: 16px; border-left-width: 4px; }
+  .title-incipit p { margin-bottom: 8px; }
+  .title-incipit-close { font-size: 16px; margin-top: 10px; padding-top: 9px; }
+}
+
+/* La schermata del titolo NON si centra verticalmente quando il contenuto è più alto
+   dello schermo: `justify-content: center` su un flex che sfora spinge il contenuto
+   SOPRA l'origine dello scroll, e scorrendo si vede un buco vuoto in cima. È il
+   difetto che il committente ha visto («la schermata iniziale è tutta sbagliata»).
+   `safe center` centra quando c'è spazio e si comporta da flex-start quando non c'è. */
+#screen-title.active {
+  justify-content: safe center;
+  padding-block: 18px;
+}
+@supports not (justify-content: safe center) {
+  #screen-title.active { justify-content: flex-start; }
+}
+
+/* ---------- legenda della pianta ----------
+   I nomi delle stanze stavano dentro il canvas, che sul telefono si rimpicciolisce del
+   60%: illeggibili. Qui sono testo vero e restano della loro misura. */
+.mappa-legenda {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 4px 14px; margin-top: 10px; font-size: 17px; color: var(--text-dim);
+}
+.mappa-voce b { color: var(--text); margin-right: 4px; }
+.mappa-voce.qui { color: var(--gold); }
+
+/* La traduzione sotto un testo in dialetto: si legge, ma non ruba la scena all'originale. */
+.minigame-gloss { display:block; margin-top: 10px; font-size: 17px; color: var(--text-dim); font-style: normal; }
+
+/* ---------- elenco dei nemici sotto il campo di battaglia ----------
+   Sta DENTRO la cornice rossa, come una didascalia del quadro. */
+.combat-enemies {
+  display: flex; flex-wrap: wrap; gap: 2px 14px;
+  padding: 6px 10px; background: #000; border-top: 3px solid var(--border);
+  font-family: var(--font-body); font-size: 17px; color: var(--text);
+}
+.combat-enemies:empty { display: none; }
+.nemico-voce b { color: var(--gold); margin-right: 4px; }
+.nemico-voce.morto { color: var(--text-dim); text-decoration: line-through; }
+
+/* ---------- respiro nelle pagine di sola lettura ----------
+   Il reset azzera i margini di <p>: nelle schermate La Storia e Come si Gioca erano
+   diciassette paragrafi attaccati, un muro di testo. Nelle scene di gioco lo spazio
+   c'era già; qui mancava. */
+#screen-story p, #screen-howto p { margin-bottom: 10px; }
+#screen-story p:last-child, #screen-howto p:last-child { margin-bottom: 0; }
+#screen-story h3, #screen-howto h3 { margin-top: 18px; }
+
+/* ---------- scelte dentro le modali ----------
+   Un <button> è inline-block: appeso direttamente al corpo della modale si dimensiona
+   sul proprio testo, e due scelte di lunghezza diversa avevano bordi disallineati (272
+   e 289 px nel selettore dell'eroe per una prova). Nelle scene le scelte stanno in un
+   contenitore a colonna; qui la stessa larghezza per tutte, senza toccare i punti in
+   cui vengono create. */
+.modal-box > .choice-btn { display: block; width: 100%; }
+.modal-box > .choice-btn + .choice-btn { margin-top: 8px; }

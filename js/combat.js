@@ -58,6 +58,14 @@ const Combat = (() => {
           e.attack.bonus += 2;
           e.attack.plus = (e.attack.plus || 0) + 2;
         }
+        /* PIETÀ: impostata da Engine.riprendiDaCheckpoint. Ogni ritorno da un
+           checkpoint stanca anche chi vi ha steso. */
+        if (G.pieta) {
+          e.maxHp = Math.max(1, Math.round(e.maxHp * (1 - G.pieta)));
+          e.hp = e.maxHp;
+          e.attack.bonus = Math.max(0, e.attack.bonus - (G.pieta >= 0.24 ? 2 : 1));
+          e.attack.plus = Math.max(0, (e.attack.plus || 0) - (G.pieta >= 0.24 ? 2 : 1));
+        }
         if (porzione < 1) {
           e.maxHp = Math.max(1, Math.round(e.maxHp * porzione));
           e.hp = e.maxHp;
@@ -87,6 +95,9 @@ const Combat = (() => {
     const brun = G.party.find(h => h.id === 'emanuela' && !h.down && !h.preso);
     // bonus stufato: +2 PV primo combattimento
     let openLines = [];
+    if (G.pieta) {
+      openLines.push(`🕯 <b>La notte si riavvolge anche per loro</b>: siete già tornati indietro ${G.stats.checkpointRitorni} volt${G.stats.checkpointRitorni > 1 ? 'e' : 'a'}, e chi vi ha steso è più stanco di allora (<b>−${Math.round(G.pieta * 100)}% PV e ai suoi colpi</b>).`);
+    }
     if (porzione < 1) {
       openLines.push(`🍽 <b>Porzioni ridotte</b>: siete ${attivi === 1 ? 'in UNO' : 'in due'}, e il Belvedere apparecchia in proporzione — nemici meno robusti${attivi === 1 ? ' e meno precisi' : ''}.`);
     }
@@ -176,6 +187,21 @@ const Combat = (() => {
 
   /* ---------- rendering ---------- */
 
+  /* L'elenco dei nemici sotto il quadro: numero, nome, punti vita esatti e stato. È
+     testo vero, quindi non si rimpicciolisce col canvas. Si riscrive solo quando cambia
+     davvero, perché questo gira a ogni fotogramma. */
+  function renderNemici() {
+    const host = document.getElementById('combat-enemies');
+    if (!host || !battle) return;
+    const html = battle.enemies.map((e, i) => {
+      const nome = (e.short || e.name.split(',')[0]);
+      const stato = e.dead ? '✖' : e.stunned ? '💫' : '';
+      return `<span class="nemico-voce${e.dead ? ' morto' : ''}"><b>${i + 1}</b> ${nome} `
+        + (e.dead ? '—' : `${e.hp}/${e.maxHp}`) + (stato ? ' ' + stato : '') + '</span>';
+    }).join('');
+    if (host.dataset.ultimo !== html) { host.innerHTML = html; host.dataset.ultimo = html; }
+  }
+
   function renderCanvas(ts = 0) {
     const canvas = $('combat-canvas');
     const ctx = canvas.getContext('2d');
@@ -206,7 +232,9 @@ const Combat = (() => {
     const eSize = 16 * eScale;
     alive.forEach((e, i) => {
       const bob = (e.dead || reducedMotion) ? 0 : Math.round(Math.sin(ts / 280 + i * 2.1) * 3);
-      const x = W - 60 - eSize - (i % 3) * (eSize + 26);
+      const inRiga = Math.min(3, alive.length - Math.floor(i / 3) * 3);
+      const posInRiga = inRiga - 1 - (i % 3);   // 0 = il più a sinistra
+      const x = W - 60 - eSize - posInRiga * (eSize + 26);
       const y = 60 + Math.floor(i / 3) * (eSize + 30) + (i % 2) * 18 + bob;
       e._x = x; e._y = y; e._size = eSize;
       if (e.dead) { ctx.globalAlpha = 0.18; }
@@ -223,12 +251,14 @@ const Combat = (() => {
         ctx.fillStyle = frac > 0.5 ? '#5fca6a' : frac > 0.25 ? '#f5c542' : '#e05252';
         ctx.fillRect(x, y - 14 - lift, Math.floor(bw * frac), bh);
         // nome
-        ctx.fillStyle = '#fff'; ctx.font = "9px 'Press Start 2P'"; ctx.textAlign = 'center';
-        ctx.fillText((e.short || e.name.split(',')[0]).slice(0, 16), x + eSize / 2, y - 22 - lift);
+        ctx.fillStyle = '#fff'; ctx.font = "30px 'Press Start 2P'"; ctx.textAlign = 'center';
+        ctx.fillText(String(i + 1), x + eSize / 2, Math.max(28, y - 18 - lift));
         ctx.textAlign = 'left';
         if (e.stunned) { ctx.font = "14px 'Press Start 2P'"; ctx.fillText('💫', x + eSize - 10, y + 4); }
       }
     });
+
+    renderNemici();
   }
 
   const now = () => (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
@@ -463,6 +493,10 @@ const Combat = (() => {
           log(`🍀 Il ferro di cavallo <b>Made in China</b> appuntato al colletto VIBRA: "ridicolo e vivo" — Federico ritira il dado!`, 'log-crit');
           return heroAttack(hIdx, tIdx, opts);
         }
+        const concludi = () => {
+          render();
+          if (opts.after) opts.after(res); else endHeroAction();
+        };
         if (res.success) {
           if (e.special === 'evasive' && !res.crit && Math.random() < 0.4) {
             log(`💨 ${e.name} si dissolve nella nebbia — il colpo lo attraversa!`, 'log-info');
@@ -483,14 +517,57 @@ const Combat = (() => {
           if (typeof Sound !== 'undefined') Sound.play('hit');
           floatText(e._x + e._size / 2, e._y, `-${dmg}`, res.crit ? 'float-crit' : 'float-dmg');
           checkEnemyDeath(e);
-        } else {
+          concludi();
+          return;
+        }
+
+        /* COLPO MANCATO — e qui il 🕯 Sangue Freddo fa il suo lavoro: si può PAGARE
+           il secondo tentativo. Le fortune gratuite (Natalino, il ferro di Federico)
+           sono già passate sopra: questa si compra, a prezzo crescente dentro lo
+           STESSO scontro. Attenzione a LESSON #11: la valuta si scala PRIMA del
+           ritiro e da qui non si torna al menu delle azioni, altrimenti il turno
+           raddoppierebbe. */
+        const mancato = () => {
           log(`${h.name} manca ${e.name}. ${res.fumble ? 'Malissimo. Con stile, ma malissimo.' : ''}`, 'log-info');
           floatText(e._x + e._size / 2, e._y, 'MANCATO', 'float-miss');
+          concludi();
+        };
+        const ctx = 'scontro:' + (battle.sceneId || G.lastCombatSceneId || '?');
+        if (!battle.over && Engine.puoiRitirare(ctx)) {
+          offriRitiroDelColpo(h, e, ctx, mancato, () => heroAttack(hIdx, tIdx, opts));
+          return;
         }
-        render();
-        if (opts.after) opts.after(res); else endHeroAction();
+        mancato();
       },
     });
+  }
+
+  /* Le due strade dopo un colpo mancato, DENTRO #combat-actions (mai una modale: in
+     combattimento il gioco — e il simulatore — guardano solo lì). "Lascia perdere"
+     resta il PRIMO bottone: è la scelta di default, e tiene deterministico il
+     pilota automatico dei test, che in assenza di ⚔/✨ clicca il primo abilitato. */
+  function offriRitiroDelColpo(h, e, ctx, lasciaPerdere, ritira) {
+    const box = $('combat-actions');
+    const costo = Engine.costoRitiroOra(ctx);
+    box.innerHTML = `<div class="action-title">🕯 ${h.name} ha mancato ${e.name}. Tenere i nervi e riprovare?</div>`;
+    const mk = (id, html, fn) => {
+      const b = document.createElement('button');
+      b.className = 'action-btn';
+      if (id) b.id = id;
+      b.innerHTML = html;
+      b.onclick = fn;
+      box.appendChild(b);
+      return b;
+    };
+    mk(null, `↩ Lascia perdere <span class="action-sub">Il colpo è andato a vuoto e pazienza: il turno passa.</span>`, lasciaPerdere);
+    mk('btn-freddo-combat', `🕯 Tenere il sangue freddo — ritira (costa ${costo}) <span class="action-sub">Ne avete ${G.gold}. ${h.name} respira, corregge il polso e riprova — in questo scontro il ritiro successivo costerà di più.</span>`,
+      () => {
+        const speso = Engine.spendiRitiro(ctx);
+        if (!speso) return lasciaPerdere();   // saldo cambiato sotto i piedi: niente ritiro gratis
+        log(`🕯 <b>${h.name} tiene il sangue freddo</b> (−${speso} 🕯): un respiro, e la mano riprova.`, 'log-crit');
+        render();
+        ritira();
+      });
   }
 
   function useAbility(hIdx, ab) {
@@ -868,7 +945,9 @@ const Combat = (() => {
     for (const h of G.party) if (h.down) { h.down = false; h.hp = 1; }
 
     const loot = battle.def.loot || {};
-    if (loot.gold) { G.gold += loot.gold; log(`💰 Bottino: <b>${loot.gold} monete d'oro</b>!`, 'log-heal'); }
+    // il bottino del Relais non è oro: è coraggio guadagnato sul campo (e va contato,
+    // perché G.stats.goldEarned è il metro con cui l'economia si tara)
+    if (loot.gold) { Engine.muoviFreddo(loot.gold); log(`🕯 Ne siete usciti in piedi: <b>+${loot.gold} Sangue Freddo</b>.`, 'log-heal'); }
     if (loot.items) for (const it of loot.items) { G.inventory.push(it); log(`🎁 Trovato: <b>${ITEMS[it].name}</b>!`, 'log-heal'); }
 
     const next = battle.def.victory;
@@ -888,8 +967,20 @@ const Combat = (() => {
     if (typeof Sound !== 'undefined') Sound.play('defeat');
     $('combat-actions').innerHTML = '';
     const next = battle.def.defeat;
+
+    /* SE CADETE TUTTI (docs: LESSONS-LEARNED, richiesta ago 2026).
+       1ª caduta in questo scontro → la scena di sconfitta SCRITTA (Gregorio perde
+          le chiavi: il gioco vi raccoglie, e quel testo è troppo bello per buttarlo).
+       2ª caduta nello stesso punto → si riparte dall'ULTIMO CHECKPOINT: la casa
+          rimette a posto la serata e vi porta indietro. La sconfitta COSTA.
+       Nessun checkpoint salvato (chi cade prima del primo nodo) → sconfitta scritta. */
+    Engine.registraCaduta(G.lastCombatSceneId || G.sceneId);
+
     setTimeout(() => {
       banner.classList.add('hidden');
+      // rete di sicurezza: se la scena di sconfitta non esistesse, il checkpoint
+      // evita il vicolo cieco invece di lasciare la partita appesa.
+      if (!CAMPAIGN[next] && Engine.riprendiDaCheckpoint()) return;
       Engine.gotoScene(next);
     }, 2000);
   }
