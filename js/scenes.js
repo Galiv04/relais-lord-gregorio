@@ -11,8 +11,21 @@ const Scenes = (() => {
     };
   }
 
-  function shade(hex, f) {
-    const n = parseInt(hex.slice(1), 16);
+  /* shade(colore, fattore) — schiarisce o scurisce.
+     Accetta '#rrggbb' MA ANCHE 'rgb(r,g,b)', ed è una difesa, non un vezzo:
+     shade() e mix() restituiscono entrambe 'rgb(...)', e blocks() chiama shade()
+     sul colore che riceve. Se shade() sapesse leggere solo l'esadecimale,
+     `blocks(..., mix(a,b,t), ...)` farebbe parseInt('gb(200,160,88)',16) = NaN,
+     e NaN>>16&255 = 0: un NERO perfettamente valido che nessun controllo
+     intercetta (lezione 63). Leggendo entrambi i formati il problema non può
+     nascere in nessuno dei punti di chiamata, presenti e futuri. */
+  function shade(col, f) {
+    let n;
+    if (col[0] === '#') n = parseInt(col.slice(1), 16);
+    else {
+      const m = col.match(/(\d+)\D+(\d+)\D+(\d+)/);
+      n = m ? ((+m[1]) << 16) | ((+m[2]) << 8) | (+m[3]) : 0;
+    }
     let r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
     r = Math.max(0, Math.min(255, Math.round(r * f)));
     g = Math.max(0, Math.min(255, Math.round(g * f)));
@@ -297,11 +310,75 @@ const Scenes = (() => {
     blocks(ctx, x - 8, ceilY, 100, 14, '#5a4530', 10, rand, 0.12);
   }
 
-  // Alone luminoso morbido (fasce concentriche): evita il rettangolo squadrato
+  /* ALONE LUMINOSO — UNITÀ: w e h sono la larghezza e l'altezza TOTALI
+     dell'alone finito (circa 1,8·w per essere esatti), non un raggio.
+
+     La versione precedente disegnava quattro fillRect concentrici di lato w·i
+     con alpha 0,022·i: il rettangolo più esterno era quattro volte quello
+     chiesto ed era opaco al 9% con un bordo a gradino secco. Non si leggeva
+     come luce: si leggeva come un PANNELLO. Dietro il lampadario della hall
+     sembrava un quadro appeso, in cielo sopra i tornanti una vetrata, e attorno
+     al palo dello spaventapasseri era l'oggetto più grande della scena — più
+     grande del palo che doveva illuminare. Lo stesso difetto, dodici volte.
+
+     Adesso: sedici passi di ellisse a pixel (pixelEllipse) con alpha costante
+     per passo, che si somma verso il centro. Il centro resta luminoso come
+     prima (~0,20 composito), il bordo esterno vale un solo passo — sei volte
+     più tenue — e soprattutto è TONDO, quindi non ha un contorno da leggere. */
   function glow(ctx, x, y, w, h, rgb) {
-    for (let i = 4; i >= 1; i--) {
-      ctx.fillStyle = `rgba(${rgb},${0.022 * i})`;
-      ctx.fillRect(x - w * i / 2, y - h * i / 2, w * i, h * i);
+    const steps = 16;
+    for (let i = steps; i >= 1; i--) {
+      const t = i / steps;
+      ctx.fillStyle = `rgba(${rgb},0.014)`;
+      pixelEllipse(ctx, x, y, w * 0.9 * t, h * 0.9 * t, 3);
+    }
+  }
+
+  // Ellisse a pixel, simmetrica come pixelDisc: rx e ry sono SEMIASSI.
+  function pixelEllipse(ctx, cx, cy, rx, ry, px = 3) {
+    const CX = Math.round(cx / px) * px, CY = Math.round(cy / px) * px;
+    const RX = Math.max(px, Math.round(rx / px) * px);
+    const RY = Math.max(px, Math.round(ry / px) * px);
+    for (let dy = -RY; dy < RY; dy += px) {
+      const yy = dy + px / 2;
+      const k = 1 - (yy * yy) / (RY * RY);
+      if (k <= 0) continue;
+      const w = Math.max(px, Math.round(RX * Math.sqrt(k) / px) * px);
+      ctx.fillRect(CX - w, CY + dy, w * 2, px);
+    }
+  }
+
+  /* MURO DI NEBBIA fermo a un confine — «la nebbia si è fermata al confine
+     esatto della proprietà, e ci gira intorno come un mare attorno a un'isola».
+
+     Prima erano quattordici fillRect per lato, alti H·0,05 e distanziati
+     H·0,062: fra una lingua e l'altra restava un vuoto REGOLARE, e ogni lingua
+     aveva il bordo verticale netto. Regolarità più bordo netto fa un manufatto,
+     non del vapore: si leggeva come un pannello a doghe, un radiatore messo in
+     piedi ai due lati del giardino. Ed è l'elemento che tre scene nominano come
+     la cosa più inquietante del posto.
+
+     Adesso: un corpo continuo di colonne che si diradano verso l'interno
+     (nessun vuoto possibile) più poche lingue grandi, sovrapposte e sfalsate,
+     con la punta SFRANGIATA — la larghezza di ogni colonna cala di un valore
+     casuale, così non esiste un filo dritto da nessuna parte. */
+  function fogWall(ctx, W, H, side, rand, depth = 0.11, rgb = '190,180,195') {
+    const inner = Math.max(12, Math.round(W * depth)), step = 3;
+    for (let d = 0; d < inner; d += step) {
+      const t = d / inner;
+      ctx.fillStyle = `rgba(${rgb},${(0.115 * (1 - t) * (1 - t)).toFixed(3)})`;
+      ctx.fillRect(side ? W - d - step : d, 0, step, H);
+    }
+    for (let i = 0; i < 7; i++) {
+      const cy = Math.round(H * (0.05 + i * 0.15) + rand() * H * 0.05);
+      const half0 = Math.round(H * (0.09 + rand() * 0.07));
+      const len = Math.round(inner * (0.6 + rand() * 0.9));
+      for (let c = 0; c < len; c += step) {
+        const t = c / len;
+        const half = Math.max(step, Math.round(half0 * (1 - t * t) - rand() * 5));
+        ctx.fillStyle = `rgba(${rgb},0.05)`;
+        ctx.fillRect(side ? W - c - step : c, Math.round((cy - half) / step) * step, step, half * 2);
+      }
     }
   }
 
@@ -328,6 +405,98 @@ const Scenes = (() => {
       ctx.fillStyle = '#5ad8e0'; ctx.fillRect(cx, cy, s, s);
       ctx.fillStyle = '#a0f0f5'; ctx.fillRect(cx + 1, cy + 1, Math.max(2, s - 4), Math.max(2, s - 4));
     }
+  }
+
+  /* RITRATTO A OLIO — UNO grande, con figure che si leggono davvero.
+
+     Prima ce n'erano quattro da 62×76 nella hall, sei in sala del Banchetto e
+     quattro nel Riflesso, e dentro ognuno «i sorrisi» erano quattro fillRect
+     da 8×12. A otto pixel di lato una persona non è una persona: è una
+     barretta, e quattro barrette in fila sotto una cornice dorata leggono
+     esattamente come una FINESTRA CON LA TAPPARELLA. Il testo chiede l'opposto
+     — «gruppi di persone in vacanza, epoche diverse: costumi anni '20, basette
+     anni '70, un gruppo con gli occhiali», e al Banchetto «vi guardano con
+     l'espressione di chi vorrebbe gridare».
+     Quindi: il dettaglio dei volti sta DENTRO un ritratto grande, dove il
+     giocatore lo cerca (lezione 59), e le altre cornici non pretendono di
+     mostrare facce che a quella larghezza non ci stanno — vedi frameEdgeOn. */
+  const COSTUMES = [
+    { dress: '#2a2630', hair: '#241a14', hat: '#1d1a22' },   // anni '20, cuffia da bagno
+    { dress: '#7a2432', hair: '#c8a86a', sides: true },      // anni '70, basette
+    { dress: '#d8d0c4', hair: '#3a2a20', shades: true },      // il '99, occhiali sui capelli
+    { dress: '#3a5a4a', hair: '#8a6a3a' }
+  ];
+
+  function oilPortrait(ctx, x, y, w, h, o = {}) {
+    const pool = o.pool || '#3d6890';
+    const back = o.back || '#6a4a3a';
+    const skin = o.skin || '#d8c8b8';
+    const frame = o.frame || '#c8a032';
+    const n = o.figures || 3;
+    // cornice con smusso: oro, ombra, oro
+    ctx.fillStyle = frame; ctx.fillRect(x, y, w, h);
+    ctx.fillStyle = shade(frame, 0.55); ctx.fillRect(x + 4, y + 4, w - 8, h - 8);
+    ctx.fillStyle = shade(frame, 1.18); ctx.fillRect(x + 4, y + 4, w - 8, 3);
+    ctx.fillStyle = frame; ctx.fillRect(x + 7, y + 7, w - 14, h - 14);
+    const ix = x + 10, iy = y + 10, iw = w - 20, ih = h - 20;
+    // la tela: il muro della villa in alto, l'acqua della piscina in basso
+    ctx.fillStyle = back; ctx.fillRect(ix, iy, iw, ih);
+    const waterY = iy + Math.round(ih * 0.30);
+    // il muro della villa dipinto in fondo: due finestre e la linea del tetto,
+    // così la fascia alta non resta una banda di colore vuota
+    ctx.fillStyle = shade(back, 0.72); ctx.fillRect(ix, iy, iw, Math.max(3, Math.round(ih * 0.05)));
+    ctx.fillStyle = shade(back, 0.5);
+    ctx.fillRect(ix + Math.round(iw * 0.16), iy + Math.round(ih * 0.11), Math.round(iw * 0.12), Math.round(ih * 0.13));
+    ctx.fillRect(ix + Math.round(iw * 0.66), iy + Math.round(ih * 0.11), Math.round(iw * 0.12), Math.round(ih * 0.13));
+    ctx.fillStyle = pool; ctx.fillRect(ix, waterY, iw, ih - (waterY - iy));
+    ctx.fillStyle = shade(pool, 0.68); ctx.fillRect(ix, waterY, iw, 3);   // il bordo vasca
+    ctx.fillStyle = shade(pool, 1.4);                                     // increspature
+    for (let k = 0; k < 4; k++) ctx.fillRect(ix + 6 + (k % 2) * Math.round(iw * 0.34), waterY + 9 + k * 8, Math.round(iw * 0.3), 2);
+    /* le figure: mezzo busto TAGLIATO dal bordo inferiore, come in un ritratto
+       vero, e la testa larga più di venti pixel — che è la misura sotto la
+       quale una faccia torna a essere una macchia. */
+    const step = iw / (n + 0.35);
+    const hr = Math.max(9, Math.round(iw * 0.068));         // mezza larghezza della testa
+    const bw = Math.round(hr * 3.1);
+    for (let i = 0; i < n; i++) {
+      const cx = Math.round(ix + step * (i + 0.55));
+      const c = COSTUMES[(i + (o.epoca || 0)) % COSTUMES.length];  // epoca: cambia i costumi, così due ritratti non sono due copie
+      const topY = iy + Math.round(ih * 0.34) + (i % 2 ? 5 : 0);   // teste non allineate
+      const shY = topY + hr * 2 + 5;
+      const bh = ih - (shY - iy);                                  // arriva al bordo: mezzo busto
+      ctx.fillStyle = shade(skin, 0.82);                           // le braccia, dietro il busto
+      ctx.fillRect(cx - bw / 2 - 5, shY + 7, 6, Math.round(bh * 0.55));
+      ctx.fillRect(cx + bw / 2 - 1, shY + 7, 6, Math.round(bh * 0.55));
+      ctx.fillStyle = c.dress; ctx.fillRect(cx - bw / 2, shY, bw, bh);
+      ctx.fillStyle = shade(c.dress, 1.22); ctx.fillRect(cx - bw / 2, shY, bw, 3);
+      ctx.fillStyle = shade(c.dress, 0.7);                         // scollatura
+      ctx.fillRect(cx - 7, shY, 15, Math.round(bh * 0.16));
+      ctx.fillStyle = skin;
+      ctx.fillRect(cx - 4, shY - 6, 9, 7);                         // collo
+      ctx.fillRect(cx - hr, topY, hr * 2, hr * 2 + 3);             // testa
+      ctx.fillStyle = c.hair; ctx.fillRect(cx - hr, topY, hr * 2, Math.max(4, Math.round(hr * 0.66)));
+      if (c.sides) { ctx.fillRect(cx - hr, topY + hr - 2, 3, hr); ctx.fillRect(cx + hr - 3, topY + hr - 2, 3, hr); }
+      if (c.hat) { ctx.fillStyle = c.hat; ctx.fillRect(cx - hr - 2, topY - 4, hr * 2 + 4, 6); }
+      if (c.shades) { ctx.fillStyle = '#2a2630'; ctx.fillRect(cx - hr - 1, topY - 1, hr * 2 + 2, 4); }
+      ctx.fillStyle = '#1a1218';                                   // gli occhi
+      ctx.fillRect(cx - hr + 3, topY + hr, 3, 3); ctx.fillRect(cx + hr - 6, topY + hr, 3, 3);
+      ctx.fillStyle = shade(skin, 0.48);                           // il sorriso: una riga, non un blocco
+      ctx.fillRect(cx - 4, topY + Math.round(hr * 1.55), 9, 2);
+    }
+  }
+
+  /* Cornice di scorcio: le altre cornici della parete. Non ci si prova a
+     mettere i volti — a quaranta pixel di larghezza non ci sta una faccia, e
+     provarci è come si è arrivati alle tapparelle (lezione 60: si toglie). */
+  function frameEdgeOn(ctx, x, y, w, h, tint) {
+    ctx.fillStyle = '#c8a032'; ctx.fillRect(x, y, w, h);
+    ctx.fillStyle = '#8a6a1d'; ctx.fillRect(x + 3, y + 3, w - 6, h - 6);
+    ctx.fillStyle = tint || '#241a20'; ctx.fillRect(x + 5, y + 5, w - 10, h - 10);
+    // un solo lampo obliquo sul vetro: con più righe orizzontali tornava a
+    // sembrare una tapparella, che è il difetto da cui siamo partiti
+    ctx.fillStyle = 'rgba(232,224,208,.10)';
+    for (let i = 0; i < Math.round(h * 0.4); i += 3) ctx.fillRect(x + 5 + Math.round(i * 0.5), y + 8 + i, Math.max(3, w - 12 - Math.round(i * 0.5)), 3);
+    ctx.fillStyle = '#e8d8a0'; ctx.fillRect(x + w - 4, y, 3, h);
   }
 
   function heroesRow(ctx, W, groundY, partySpriteKeys, scale = 4) {
@@ -448,33 +617,59 @@ const Scenes = (() => {
       const g = H - 60;
       hills(ctx, W, g + 8, 70, '#0d070a', r, 30);
       ground(ctx, W, H, g, '#141a14', r, 12, 10);
-      // le corsie dei tornanti, più buie: nessun faro le accende
-      for (let i = 0; i < 4; i++) {
-        const y = H * 0.52 + i * H * 0.115;
-        blocks(ctx, W * (0.06 + (i % 2) * 0.16), y, W * 0.72, 15, '#2a2630', 12, r, 0.16);
+      // le corsie che scendono verso il fondovalle: più lontane, più sottili
+      for (let i = 0; i < 3; i++) {
+        const y = H * 0.50 + i * H * 0.075;
+        blocks(ctx, W * (0.06 + (i % 2) * 0.16), y, W * 0.72, 10, '#2a2630', 10, r, 0.16);
         const cx = (i % 2) ? W * 0.06 : W * 0.78;
-        blocks(ctx, cx, y, W * 0.16, H * 0.115 + 14, '#2a2630', 12, r, 0.16);
+        blocks(ctx, cx, y, W * 0.16, H * 0.075 + 10, '#2a2630', 10, r, 0.16);
         ctx.fillStyle = 'rgba(200,190,170,.10)';
-        for (let d = 0; d < 8; d++) ctx.fillRect(W * (0.10 + (i % 2) * 0.16) + d * W * 0.085, y + 6, 16, 3);
+        for (let d = 0; d < 8; d++) ctx.fillRect(W * (0.10 + (i % 2) * 0.16) + d * W * 0.085, y + 4, 14, 2);
       }
-      vineyard(ctx, W * 0.55, H * 0.47, W * 0.4, 3, r, true);
+      vineyard(ctx, W * 0.55, H * 0.44, W * 0.4, 3, r, true);
+      // in fondo alla valle, dove dovrebbe esserci il paese: la facciata del
+      // Belvedere in scala, e sta LONTANO, quindi sta piccola e vicina all'orizzonte
+      const bx = W * 0.62, by = H * 0.70;
+      blocks(ctx, bx, by, 42, 21, '#5a2c24', 6, r, 0.10);
+      ctx.fillStyle = '#e8d8a0'; ctx.fillRect(bx + 6, by + 5, 7, 7); ctx.fillRect(bx + 29, by + 5, 7, 7);
+      ctx.fillStyle = '#1a1014'; ctx.fillRect(bx + 18, by + 10, 7, 11);
+      glow(ctx, bx + 9, by + 8, 14, 10, '232,216,160'); glow(ctx, bx + 32, by + 8, 14, 10, '232,216,160');
       for (let i = 0; i < 3; i++) tree(ctx, 30 + i * (W / 2.6) + (r() * 30 - 15), g + 10, 66 + r() * 40, '#101a14', '#1f1610', r);
       for (let i = 0; i < 3; i++) olive(ctx, 120 + i * (W / 2.8) + (r() * 24 - 12), g + 8, 46 + r() * 18, r, true);
-      ctx.fillStyle = '#4a4a55'; ctx.fillRect(W * 0.08, H * 0.755, W * 0.7, 4); // guardrail, vuoto
-      // TRE TORNANTI PIÙ SOTTO: cinque lucine in fila indiana. Sono le vostre torce.
-      const ly = H * 0.52 + 2 * H * 0.115 + 5;
+
+      /* IL SOGGETTO: il tratto di tornante TRE CURVE PIÙ IN BASSO, e le cinque
+         figure in fila indiana che scendono. ft2_capito e ft2_foto_luci girano
+         tutte intorno al riconoscere cinque persone di spalle: prima erano
+         cinque puntini da 3 px distanti 20, con gli aloni sovrapposti in
+         un'unica macchia dentro un riquadro bruno — leggeva come la vetrina di
+         un capannone, non come gente. Adesso quel tratto di strada è largo e
+         basso nell'inquadratura, le figure stanno a 60 px l'una dall'altra e
+         ognuna ha il suo cono di luce puntato in giù, dove lo punterebbe uno
+         che cerca dove mettere i piedi. */
+      const rx0 = W * 0.06, rw0 = W * 0.88, ry0 = H * 0.775;         // 279
+      ctx.fillStyle = '#3a3644'; ctx.fillRect(rx0 - 4, ry0 - 5, rw0 + 8, 4);       // il guardrail a monte del tratto
+      blocks(ctx, rx0, ry0, rw0, 36, '#2f2b36', 12, r, 0.13);                      // l'asfalto
+      ctx.fillStyle = 'rgba(200,190,170,.13)';                                     // la mezzeria
+      for (let d = 0; d < 14; d++) ctx.fillRect(rx0 + 14 + d * (rw0 / 14), ry0 + 17, 22, 3);
       for (let i = 0; i < 5; i++) {
-        const lx = W * 0.30 + i * 20;
-        glow(ctx, lx, ly, 14, 10, '232,216,160');
-        ctx.fillStyle = '#f0e0a0'; ctx.fillRect(lx - 1, ly - 1, 3, 3);
-        ctx.fillStyle = '#2a2230'; ctx.fillRect(lx - 2, ly + 2, 5, 7); // la sagoma minuscola sotto la torcia
+        const fx = Math.round(W * 0.18 + i * 62), fb = Math.round(ry0 + 23 + i * 4);
+        // il cono di luce: si allarga verso il basso, non è un alone tondo
+        ctx.fillStyle = 'rgba(240,224,160,.085)';
+        for (let k = 0; k < 9; k++) ctx.fillRect(fx + 4 - k, fb - 12 + k * 2, 5 + k * 3, 2);
+        ctx.fillStyle = '#181420';                                                 // gambe
+        ctx.fillRect(fx - 3, fb - 6, 3, 6); ctx.fillRect(fx + 1, fb - 6, 3, 6);
+        ctx.fillRect(fx - 5, fb - 13, 10, 8);                                      // busto e spalle
+        ctx.fillRect(fx - 2, fb - 19, 6, 5);                                       // testa, staccata di un pixel dal collo
+        ctx.fillStyle = '#463c50'; ctx.fillRect(fx - 5, fb - 13, 10, 1);           // il filo di luce sulle spalle
+        ctx.fillStyle = '#181420'; ctx.fillRect(fx - 1, fb - 14, 4, 1);            // il collo
+        ctx.fillStyle = '#241d2c'; ctx.fillRect(fx + 4, fb - 12, 3, 5);            // il braccio che tiene il telefono
+        ctx.fillStyle = '#f0e0a0'; ctx.fillRect(fx + 5, fb - 11, 3, 3);            // la torcia
       }
-      // in fondo alla valle, dove dovrebbe esserci il paese: la facciata del Belvedere, in scala
-      const bx = W * 0.64, by = H - 60;
-      blocks(ctx, bx, by, 52, 26, '#5a2c24', 6, r, 0.10);
-      ctx.fillStyle = '#e8d8a0'; ctx.fillRect(bx + 8, by + 6, 8, 9); ctx.fillRect(bx + 36, by + 6, 8, 9); // due finestre accese
-      ctx.fillStyle = '#1a1014'; ctx.fillRect(bx + 22, by + 12, 9, 14); // e una porta
-      glow(ctx, bx + 12, by + 10, 16, 10, '232,216,160'); glow(ctx, bx + 40, by + 10, 16, 10, '232,216,160');
+      // e il guardrail SOTTO I VOSTRI PIEDI: è da qui che state guardando giù
+      blocks(ctx, 0, H - 26, W, 26, '#232028', 12, r, 0.12);
+      ctx.fillStyle = '#4a4a55'; ctx.fillRect(0, H - 34, W, 5);
+      ctx.fillStyle = '#33333c';
+      for (let d = 0; d < 12; d++) ctx.fillRect(d * (W / 12) + 20, H - 30, 6, 14);
     },
 
     relais(ctx, W, H) {
@@ -499,7 +694,15 @@ const Scenes = (() => {
       // LA VILLA: terracotta con cornicioni chiari
       const vx = W * 0.30, vw = W * 0.52, vh = 150;
       blocks(ctx, vx, g - vh, vw, vh, '#8a4038', 10, r, 0.1);
-      blocks(ctx, vx - 6, g - vh + 68, vw + 12, 8, '#d8ccb8', 8, r, 0.05);   // marcapiano chiaro
+      /* TRE fasce, non due: piano terra, primo piano, secondo piano. Serve
+         perché il gioco chiede di CONTARE e di guardare una finestra precisa —
+         a2_siepi_b conta sei finestre al primo piano e nomina la sesta in
+         fondo a destra, a7_persiane nomina la terza persiana da sinistra al
+         secondo piano. Con due file da quattro finestre identiche il quadro
+         non dava al giocatore niente da contare né da riconoscere. */
+      const p2y = g - vh + 8, p1y = g - vh + 62, terraY = g - 32;   // secondo piano, primo piano, terra
+      blocks(ctx, vx - 6, p1y - 8, vw + 12, 8, '#d8ccb8', 8, r, 0.05);       // marcapiano fra i due piani
+      blocks(ctx, vx - 6, terraY - 8, vw + 12, 8, '#d8ccb8', 8, r, 0.05);    // marcapiano sul piano terra
       blocks(ctx, vx - 6, g - vh - 4, vw + 12, 7, '#d8ccb8', 8, r, 0.05);    // cornicione
       // tetto a coppi
       for (let i = 0; i < 5; i++) {
@@ -508,25 +711,56 @@ const Scenes = (() => {
       }
       ctx.fillStyle = '#8a8478'; ctx.fillRect(vx + vw * 0.72, g - vh - 52, 3, 40); // l'antenna, dettaglio vero
       ctx.fillRect(vx + vw * 0.70, g - vh - 50, 9, 2);
-      // finestre con PERSIANE A DOGHE chiare, luce color miele
-      for (let fx = 0; fx < 4; fx++) {
-        const wx = vx + 20 + fx * (vw - 52) / 3;
-        for (const wy of [g - vh + 18, g - 62]) {
-          // persiane ai lati
-          ctx.fillStyle = '#c8c2b4'; ctx.fillRect(wx - 10, wy, 9, 26); ctx.fillRect(wx + 17, wy, 9, 26);
+      // il passo delle sei campate: lo usano entrambi i piani, così le finestre
+      // di sopra stanno sopra quelle di sotto, come su una facciata vera
+      const campata = fx => vx + 24 + fx * (vw - 78) / 5;
+      /* SECONDO PIANO — tutte le persiane chiuse. Tutte tranne la TERZA DA
+         SINISTRA, socchiusa su un nero più profondo del nero del cielo:
+         a7_persiane fa confrontare una fotografia con quello che si vede. */
+      for (let fx = 0; fx < 6; fx++) {
+        const wx = campata(fx);
+        ctx.fillStyle = '#5a5448'; ctx.fillRect(wx - 4, p2y - 3, 27, 3);            // architrave
+        ctx.fillStyle = '#b8b2a4'; ctx.fillRect(wx - 2, p2y, 23, 40);               // le due ante, chiuse
+        ctx.fillStyle = '#98927e';
+        for (let d = 0; d < 8; d++) ctx.fillRect(wx - 1, p2y + 3 + d * 5, 21, 2);   // le doghe
+        ctx.fillStyle = '#7a7466'; ctx.fillRect(wx + 9, p2y, 2, 40);                // la battuta centrale
+        if (fx === 2) {
+          ctx.fillStyle = '#050308'; ctx.fillRect(wx + 9, p2y + 1, 12, 38);         // il vano, e dentro NIENTE luce
+          ctx.fillStyle = '#c8c2b4'; ctx.fillRect(wx + 20, p2y, 6, 40);             // l'anta aperta a metà, di scorcio
           ctx.fillStyle = '#a8a294';
-          for (let d = 0; d < 5; d++) { ctx.fillRect(wx - 9, wy + 3 + d * 5, 7, 2); ctx.fillRect(wx + 18, wy + 3 + d * 5, 7, 2); }
-          glow(ctx, wx + 8, wy + 13, 20, 24, '232,182,76');
-          ctx.fillStyle = '#e8b64c'; ctx.fillRect(wx, wy, 16, 26);
-          ctx.fillStyle = '#8a6a2d'; ctx.fillRect(wx + 7, wy, 2, 26);
+          for (let d = 0; d < 8; d++) ctx.fillRect(wx + 21, p2y + 3 + d * 5, 4, 2);
         }
       }
-      // ingresso con pensilina
-      ctx.fillStyle = '#d8ccb8'; ctx.fillRect(vx + vw / 2 - 26, g - 96, 52, 6);
-      ctx.fillStyle = '#3a3440'; ctx.fillRect(vx + vw / 2 - 24, g - 90, 4, 32); ctx.fillRect(vx + vw / 2 + 20, g - 90, 4, 32);
-      ctx.fillStyle = '#241a1e'; ctx.fillRect(vx + vw / 2 - 13, g - 86, 26, 28);
-      blocks(ctx, vx + vw / 2 - 20, g - 58, 40, 8, '#c8bca8', 8, r, 0.06);
-      ctx.fillStyle = '#c8a032'; ctx.fillRect(vx + vw / 2 + 6, g - 74, 3, 3);
+      /* PRIMO PIANO — SEI finestre, tutte illuminate. Cinque con le tende
+         bianche; la SESTA, in fondo a destra, ha la tenda scura scostata da
+         dentro, e nello spiraglio di luce c'è una sagoma. */
+      for (let fx = 0; fx < 6; fx++) {
+        const wx = campata(fx), wy = p1y;
+        ctx.fillStyle = '#c8c2b4'; ctx.fillRect(wx - 11, wy, 9, 40); ctx.fillRect(wx + 21, wy, 9, 40);
+        ctx.fillStyle = '#a8a294';
+        for (let d = 0; d < 8; d++) { ctx.fillRect(wx - 10, wy + 3 + d * 5, 7, 2); ctx.fillRect(wx + 22, wy + 3 + d * 5, 7, 2); }
+        glow(ctx, wx + 10, wy + 20, 30, 44, '232,182,76');
+        ctx.fillStyle = '#e8b64c'; ctx.fillRect(wx, wy, 20, 40);                    // il vetro illuminato
+        if (fx < 5) {
+          // tende bianche, ma scaldate dalla luce che le attraversa, e strette
+          // quanto basta perché il miele del vetro si veda ai lati: erano
+          // larghe fino al bordo e la finestra non sembrava accesa
+          ctx.fillStyle = '#f0e4c4'; ctx.fillRect(wx + 2, wy + 2, 6, 36); ctx.fillRect(wx + 13, wy + 2, 6, 36);
+          ctx.fillStyle = '#d8c8a0'; ctx.fillRect(wx + 2, wy + 2, 2, 36); ctx.fillRect(wx + 13, wy + 2, 2, 36); // la piega
+          ctx.fillStyle = '#8a6a2d'; ctx.fillRect(wx + 9, wy, 2, 40);               // il montante
+        } else {
+          ctx.fillStyle = '#241c28';                                                // la tenda SCURA
+          ctx.fillRect(wx, wy, 12, 40); ctx.fillRect(wx + 12, wy, 2, 22);           // il bordo, appena mosso
+          ctx.fillStyle = '#120e16';                                                // e nello spiraglio, qualcuno
+          ctx.fillRect(wx + 13, wy + 11, 5, 8); ctx.fillRect(wx + 12, wy + 20, 7, 14);
+        }
+      }
+      // PIANO TERRA: l'ingresso sotto la pensilina liberty, e nient'altro
+      ctx.fillStyle = '#d8ccb8'; ctx.fillRect(vx + vw / 2 - 26, terraY + 2, 52, 6);
+      ctx.fillStyle = '#3a3440'; ctx.fillRect(vx + vw / 2 - 24, terraY + 8, 4, 24); ctx.fillRect(vx + vw / 2 + 20, terraY + 8, 4, 24);
+      ctx.fillStyle = '#241a1e'; ctx.fillRect(vx + vw / 2 - 11, terraY + 2, 22, 30); // il portone a due battenti
+      ctx.fillStyle = '#1a1216'; ctx.fillRect(vx + vw / 2, terraY + 2, 2, 30);
+      ctx.fillStyle = '#c8a032'; ctx.fillRect(vx + vw / 2 + 4, terraY + 18, 3, 3);   // la maniglia
       // muro di cinta BIANCO (come nella foto), con la nebbia che preme oltre
       blocks(ctx, 0, g - 30, W * 0.055, 34, '#b0a89a', 8, r, 0.08);
       blocks(ctx, W * 0.87, g - 30, W * 0.13, 34, '#b0a89a', 8, r, 0.08);
@@ -581,16 +815,13 @@ const Scenes = (() => {
         ctx.fillStyle = '#e8e0d0'; ctx.fillRect(W * 0.5 + dx, 34, 5, 10);
         ctx.fillStyle = '#e8b64c'; ctx.fillRect(W * 0.5 + dx - 1, 44, 7, 7);
       }
-      // ritratti a olio: gruppi in piscina, epoche diverse
-      for (const fx of [0.10, 0.26, 0.62, 0.78]) {
-        ctx.fillStyle = '#c8a032'; ctx.fillRect(W * fx - 3, 62, 62, 76);
-        ctx.fillStyle = '#8a6a1d'; ctx.fillRect(W * fx, 65, 56, 70);
-        ctx.fillStyle = '#3d6890'; ctx.fillRect(W * fx + 3, 100, 50, 32); // la piscina dipinta
-        ctx.fillStyle = '#2a1d26'; ctx.fillRect(W * fx + 3, 68, 50, 32);
-        // i sorrisi
-        ctx.fillStyle = '#d8c8b8';
-        for (let p = 0; p < 4; p++) ctx.fillRect(W * fx + 8 + p * 12, 84, 8, 12);
-      }
+      // IL RITRATTO A OLIO: uno grande, dove le facce si vedono per davvero.
+      // È quello che a3 descrive ed è quello che z1 fa staccare dalla parete.
+      oilPortrait(ctx, 66, 34, 206, 216, { figures: 3, pool: '#3d6890', back: '#6a4a3a' });
+      // le altre cornici lungo la parete: di scorcio, senza volti
+      frameEdgeOn(ctx, 636, 62, 42, 124);
+      frameEdgeOn(ctx, 722, 70, 36, 110);
+      frameEdgeOn(ctx, 800, 78, 30, 96);
       // il bancone della reception
       blocks(ctx, W * 0.36, floorY - 60, W * 0.28, 60, '#4a3226', 10, r, 0.1);
       blocks(ctx, W * 0.35, floorY - 68, W * 0.30, 10, '#5d4030', 10, r, 0.08);
@@ -873,58 +1104,95 @@ const Scenes = (() => {
       stars(ctx, W, H, r, 30);
       crescentMoon(ctx, W * 0.16, 50, 18, '#c8b8c0', '#0a0710');
       const g = H - 66;
-      // il muro di nebbia FERMO al confine: lingue sfumate, non colonne
-      for (const side of [0, 1]) {
-        for (let i = 0; i < 14; i++) {
-          const fy = H * 0.14 + i * (H * 0.062);
-          const len = W * (0.045 + Math.abs(Math.sin(i * 1.7)) * 0.05);
-          for (let k = 3; k >= 1; k--) {
-            ctx.fillStyle = `rgba(190,180,195,${0.035 * k})`;
-            const lw = len * (1 - (k - 1) * 0.28);
-            ctx.fillRect(side ? W - lw : 0, fy, lw, H * 0.05);
-          }
-        }
-      }
       hills(ctx, W, g - 20, 34, '#0f150f', r, 34);
       ground(ctx, W, H, g, '#16241a', r, 12, 8);
-      // ghiaia azzurrina rastrellata
-      blocks(ctx, W * 0.30, g + 10, W * 0.40, H - g - 14, '#2e3440', 8, r, 0.1);
-      // siepi-animali che non vuoi riguardare
-      for (const [fx, fw, fh] of [[0.13, 0.10, 54], [0.72, 0.12, 62]]) {
-        blocks(ctx, W * fx, g - fh, W * fw, fh + 4, '#14261a', 8, r, 0.2);
-        blocks(ctx, W * fx + 8, g - fh - 20, W * fw - 30, 24, '#101f15', 8, r, 0.2);
-        ctx.fillStyle = '#060a06';
-        ctx.fillRect(W * fx + 14, g - fh - 12, 5, 5); ctx.fillRect(W * fx + 26, g - fh - 12, 5, 5);
+      /* ghiaia azzurrina rastrellata a onde: un vialetto in PROSPETTIVA, che
+         si allarga venendo avanti. Il rettangolo piatto di prima leggeva come
+         il bordo di una vasca. */
+      for (let i = 0; i < 6; i++) {
+        const gw = W * (0.26 + (i / 6) * 0.20);
+        blocks(ctx, W * 0.5 - gw / 2, g + 8 + i * ((H - g - 10) / 6), gw, (H - g) / 6 + 4, '#28303c', 8, r, 0.12);
       }
-      // IL PALO DEL GIARDINIERE: il punto focale del giardino — e adesso è VUOTO
-      const spx = W * 0.55, spy = g - 8;
-      ctx.fillStyle = '#3a2a1c'; ctx.fillRect(spx - 3, spy - 92, 6, 92);            // il palo
-      ctx.fillStyle = '#2e2216'; ctx.fillRect(spx - 34, spy - 78, 68, 5);           // la traversa
-      ctx.fillStyle = '#4a3826'; ctx.fillRect(spx - 34, spy - 80, 5, 9); ctx.fillRect(spx + 29, spy - 80, 5, 9);
-      // sulla traversa: solo la giacca floscia e il cappello appeso. LUI non c'è.
-      ctx.fillStyle = '#4a4034'; ctx.fillRect(spx - 12, spy - 74, 24, 18);
-      ctx.fillStyle = '#8a7a4a'; ctx.fillRect(spx + 22, spy - 86, 14, 5); ctx.fillRect(spx + 26, spy - 90, 6, 5);
-      glow(ctx, spx, spy - 70, 30, 20, '190,180,195');
-      // il capanno degli attrezzi, la porta socchiusa
-      blocks(ctx, W * 0.06, g - 44, W * 0.12, 44, '#241c14', 8, r, 0.14);
-      for (let i = 0; i < 4; i++) blocks(ctx, W * 0.055 + i * 5, g - 50 - i * 4, W * 0.13 - i * 10, 6, '#1a140e', 6, r, 0.1);
-      ctx.fillStyle = '#0d0a08'; ctx.fillRect(W * 0.115, g - 32, 12, 32);           // la porta, socchiusa sul buio
-      ctx.fillStyle = '#d8dce8'; ctx.fillRect(W * 0.10, g - 26, 2, 10);             // il luccichio delle cesoie appese
-      ctx.fillStyle = '#9aa0b0'; ctx.fillRect(W * 0.098, g - 18, 4, 3);
-      // l'orto recintato di Ada
-      blocks(ctx, W * 0.36, g - 34, W * 0.28, 30, '#1d2e1d', 8, r, 0.16);
+      ctx.fillStyle = 'rgba(164,180,204,.10)';
+      for (let i = 0; i < 6; i++) {
+        const gw = W * (0.24 + (i / 6) * 0.19);
+        ctx.fillRect(W * 0.5 - gw / 2, g + 14 + i * ((H - g - 12) / 6), gw, 2);          // le onde del rastrello
+      }
+      /* Il capanno, l'orto e la siepe stanno IN FONDO al giardino, quindi
+         stanno piccoli: il metro della scena è lo spaventapasseri, che è alto
+         come un uomo (lezione 51). */
+      // il capanno degli attrezzi, la porta socchiusa sul buio
+      blocks(ctx, W * 0.05, g - 62, W * 0.135, 62, '#241c14', 8, r, 0.14);
+      for (let i = 0; i < 4; i++) blocks(ctx, W * 0.045 + i * 5, g - 70 - i * 5, W * 0.145 - i * 10, 7, '#1a140e', 6, r, 0.1);
+      ctx.fillStyle = '#0d0a08'; ctx.fillRect(W * 0.105, g - 44, 16, 44);
+      ctx.fillStyle = '#d8dce8'; ctx.fillRect(W * 0.088, g - 36, 3, 13);             // il luccichio delle cesoie appese
+      ctx.fillStyle = '#9aa0b0'; ctx.fillRect(W * 0.085, g - 24, 5, 4);
+      /* UNA siepe sola, e grande. Prima ce n'erano due da 96×54 che dovevano
+         essere animali: a quella misura un animale di bosso non è un animale,
+         sono due macchie con due buchi (lezione 60). Questa è alta 140 px, ha
+         il collo e la testa della potatura sopra il corpo, e i due buchi
+         all'altezza degli occhi restano dove il testo li mette. */
+      const hx = Math.round(W * 0.74), hw = Math.round(W * 0.20);
+      blocks(ctx, hx, g - 72, hw, 76, '#14261a', 8, r, 0.2);
+      blocks(ctx, hx + Math.round(hw * 0.52), g - 132, Math.round(hw * 0.30), 62, '#101f15', 8, r, 0.2);   // il collo
+      blocks(ctx, hx + Math.round(hw * 0.44), g - 146, Math.round(hw * 0.46), 22, '#101f15', 8, r, 0.2);   // il muso
+      ctx.fillStyle = '#060a06';
+      ctx.fillRect(hx + Math.round(hw * 0.56), g - 140, 6, 6); ctx.fillRect(hx + Math.round(hw * 0.76), g - 140, 6, 6);
+      // l'orto recintato di Ada, in fondo, coi cartellini dei semi
+      blocks(ctx, W * 0.34, g - 30, W * 0.22, 26, '#1d2e1d', 8, r, 0.16);
       ctx.fillStyle = '#4a3226';
-      for (let i = 0; i < 8; i++) ctx.fillRect(W * 0.36 + i * W * 0.04, g - 40, 4, 14);
-      ctx.fillRect(W * 0.36, g - 34, W * 0.28, 3);
-      // le erbe argentate che si scostano da sole
+      for (let i = 0; i < 7; i++) ctx.fillRect(W * 0.34 + i * W * 0.032, g - 36, 4, 12);
+      ctx.fillRect(W * 0.34, g - 30, W * 0.22, 3);
       ctx.fillStyle = '#a8b8ac';
-      for (let i = 0; i < 6; i++) ctx.fillRect(W * 0.38 + i * W * 0.04, g - 26 + (i % 2) * 4, 3, 10);
-      // lanterne da giardino
-      for (const fx of [0.28, 0.68]) {
-        ctx.fillStyle = '#3a3440'; ctx.fillRect(W * fx, g - 44, 5, 44);
-        glow(ctx, W * fx + 2, g - 52, 16, 14, '232,182,76');
-        ctx.fillStyle = '#e8b64c'; ctx.fillRect(W * fx - 2, g - 54, 9, 10);
+      for (let i = 0; i < 6; i++) ctx.fillRect(W * 0.355 + i * W * 0.033, g - 24 + (i % 2) * 4, 3, 9);
+      // UNA lanterna sola: la seconda faceva solo concorrenza al soggetto
+      ctx.fillStyle = '#3a3440'; ctx.fillRect(W * 0.245, g - 52, 6, 52);
+      glow(ctx, W * 0.248, g - 60, 20, 18, '232,182,76');
+      ctx.fillStyle = '#e8b64c'; ctx.fillRect(W * 0.239, g - 63, 11, 12);
+
+      /* LO SPAVENTAPASSERI — il soggetto del quadro, e finalmente grande
+         quanto un uomo: 210 px dal cappello alla ghiaia, la traversa da 140,
+         la giacca da lavoro larga 70 e il cappello di paglia da 50.
+         Prima era un bastone da 6 px con una traversa da 68 e una giacca da
+         24×18, e l'unica cosa grande in quella zona era l'alone rettangolare
+         che gli stava attorno: si leggeva il rettangolo, non il palo.
+         b1 lo nomina pezzo per pezzo — «giacca da lavoro, cappello di paglia,
+         guanti da potatura, con delle CESOIE VERE cucite alle maniche» — e
+         quindi ci sono tutti, cesoie comprese. */
+      const spx = Math.round(W * 0.46), spb = g + 8;
+      ctx.fillStyle = '#3a2a1c'; ctx.fillRect(spx - 6, spb - 198, 13, 198);          // il palo
+      ctx.fillStyle = '#26190f'; ctx.fillRect(spx + 2, spb - 198, 5, 198);           // il lato in ombra
+      ctx.fillStyle = '#33241a'; ctx.fillRect(spx - 70, spb - 160, 140, 11);         // la traversa, 140 px
+      ctx.fillStyle = '#241a12'; ctx.fillRect(spx - 70, spb - 149, 140, 3);
+      ctx.fillStyle = '#6a5a3a'; ctx.fillRect(spx - 10, spb - 163, 20, 17);          // la fasciatura di corda
+      // le maniche appese alla traversa, e in punta i guanti da potatura
+      for (const s of [-1, 1]) {
+        const ax = s < 0 ? spx - 62 : spx + 40;
+        ctx.fillStyle = '#443a2e'; ctx.fillRect(ax, spb - 152, 22, 54);
+        ctx.fillStyle = '#37301f'; ctx.fillRect(ax + (s < 0 ? 0 : 17), spb - 152, 5, 54);
+        ctx.fillStyle = '#2a2018'; ctx.fillRect(ax + 1, spb - 100, 20, 14);          // il guanto
+        // LE CESOIE cucite alla manica: perno in alto e due lame che si aprono
+        ctx.fillStyle = '#6a7280'; ctx.fillRect(ax + 4, spb - 87, 14, 3);
+        for (let k = 0; k < 20; k += 2) {
+          ctx.fillStyle = k > 14 ? '#d8dce8' : '#aab0bc';
+          ctx.fillRect(ax + 5 - Math.round(k * 0.22), spb - 84 + k, 3, 2);
+          ctx.fillRect(ax + 14 + Math.round(k * 0.22), spb - 84 + k, 3, 2);
+        }
       }
+      // la giacca da lavoro, floscia: 70 px di spalle
+      ctx.fillStyle = '#4a4034'; ctx.fillRect(spx - 35, spb - 154, 70, 80);
+      ctx.fillStyle = '#3d3428';
+      ctx.fillRect(spx - 35, spb - 154, 70, 4); ctx.fillRect(spx - 4, spb - 150, 8, 76);   // l'abbottonatura
+      ctx.fillRect(spx - 35, spb - 92, 70, 6);                                      // l'orlo che pende
+      ctx.fillStyle = '#5a5040'; ctx.fillRect(spx - 33, spb - 146, 5, 60);          // la piega che prende la luna
+      // il cappello di paglia: 50 px di falda, dove starebbe la testa
+      ctx.fillStyle = '#8a7a4a'; ctx.fillRect(spx - 25, spb - 186, 50, 8);
+      ctx.fillStyle = '#9a8a56'; ctx.fillRect(spx - 25, spb - 186, 50, 3);
+      ctx.fillStyle = '#7a6a3e'; ctx.fillRect(spx - 15, spb - 200, 30, 15);
+      ctx.fillStyle = '#5a4c2a'; ctx.fillRect(spx - 15, spb - 190, 30, 4);          // il nastro
+      // il muro di nebbia, ultimo: preme sul giardino da fuori
+      fogWall(ctx, W, H, 0, r, 0.10);
+      fogWall(ctx, W, H, 1, r, 0.10);
     },
 
     pozzo(ctx, W, H) {
@@ -979,18 +1247,15 @@ const Scenes = (() => {
         }
         rowY += size * 0.62;
       }
-      // i ritratti trasferiti QUI, fitti come parenti a un matrimonio
-      for (let i = 0; i < 6; i++) {
-        const fx = W * 0.06 + i * W * 0.16;
-        ctx.fillStyle = '#c8a032'; ctx.fillRect(fx - 3, 30, 54, 66);
-        ctx.fillStyle = '#8a6a1d'; ctx.fillRect(fx, 33, 48, 60);
-        ctx.fillStyle = '#2a1d26'; ctx.fillRect(fx + 3, 36, 42, 54);
-        ctx.fillStyle = '#d8c8b8';
-        for (let p = 0; p < 3; p++) ctx.fillRect(fx + 7 + p * 13, 52, 9, 14);
-        // gli occhi che seguono
-        ctx.fillStyle = '#100c10';
-        for (let p = 0; p < 3; p++) { ctx.fillRect(fx + 9 + p * 13, 56, 2, 2); ctx.fillRect(fx + 13 + p * 13, 56, 2, 2); }
-      }
+      /* i ritratti trasferiti QUI, fitti come parenti a un matrimonio: DUE
+         abbastanza grandi da mostrare le facce che «vorrebbero gridare», e le
+         altre cornici di scorcio. Sei riquadri da 54×66 non erano sei gruppi
+         di ospiti: erano sei tapparelle (vedi oilPortrait). */
+      oilPortrait(ctx, 44, 14, 184, 190, { figures: 3, pool: '#2a4a68', back: '#5a3a2e' });
+      frameEdgeOn(ctx, 252, 40, 40, 128); frameEdgeOn(ctx, 318, 46, 34, 114); frameEdgeOn(ctx, 380, 52, 28, 100);
+      oilPortrait(ctx, 430, 18, 180, 186, { figures: 3, epoca: 2, pool: '#2a4a68', back: '#4a3444' });
+      frameEdgeOn(ctx, 636, 40, 40, 128); frameEdgeOn(ctx, 700, 46, 34, 114);
+      frameEdgeOn(ctx, 760, 52, 28, 100); frameEdgeOn(ctx, 818, 58, 24, 88);
       // il tavolo del Banchetto: SEI coperti
       blocks(ctx, W * 0.12, floorY - 48, W * 0.62, 16, '#e8e0d0', 10, r, 0.05);
       blocks(ctx, W * 0.12, floorY - 32, W * 0.62, 7, '#4a2a20', 8, r, 0.1);
@@ -1146,17 +1411,13 @@ const Scenes = (() => {
         ctx.fillStyle = '#e8e0d0'; ctx.fillRect(W * 0.5 + dx, 34, 5, 10);
         ctx.fillStyle = '#6ab8ae'; ctx.fillRect(W * 0.5 + dx - 1, 44, 7, 7);
       }
-      // i ritratti del Riflesso: PIENI, e le cornici sono finestre illuminate
-      for (const fx of [0.10, 0.30, 0.62, 0.82]) {
-        ctx.fillStyle = '#c8a032'; ctx.fillRect(W * fx - 3, 62, 62, 76);
-        ctx.fillStyle = '#8a6a1d'; ctx.fillRect(W * fx, 65, 56, 70);
-        ctx.fillStyle = '#2a4a44'; ctx.fillRect(W * fx + 3, 68, 50, 64);
-        ctx.fillStyle = '#d8c8b8';
-        for (let p = 0; p < 4; p++) ctx.fillRect(W * fx + 8 + p * 12, 92, 8, 14);
-        // gli occhi: TUTTI voltati nella stessa direzione
-        ctx.fillStyle = '#0d0a0c';
-        for (let p = 0; p < 4; p++) ctx.fillRect(W * fx + 9 + p * 12, 96, 2, 2);
-      }
+      // i ritratti del Riflesso: la stessa gerarchia della hall (uno grande,
+      // le altre di scorcio) ma con la luce fredda e la pelle spenta di qua
+      const rp = { figures: 3, pool: '#2a4a44', back: '#243a38', skin: '#a8bcb0', frame: '#8aa0a8' };
+      oilPortrait(ctx, 58, 40, 190, 190, rp);
+      frameEdgeOn(ctx, 274, 66, 38, 118, '#16241f'); frameEdgeOn(ctx, 340, 72, 32, 106, '#16241f');
+      oilPortrait(ctx, 596, 44, 178, 184, Object.assign({ epoca: 1 }, rp));
+      frameEdgeOn(ctx, 800, 70, 30, 104, '#16241f');
       // il bancone della reception, SPECCHIATO: qui sta a destra
       blocks(ctx, W * 0.74, floorY - 40, W * 0.20, 40, '#2c1e26', 8, r, 0.12);
       blocks(ctx, W * 0.73, floorY - 46, W * 0.22, 8, '#3a2a34', 8, r, 0.08);
@@ -1254,75 +1515,196 @@ const Scenes = (() => {
     },
 
     garage(ctx, W, H) {
+      /* LA RIMESSA — e qui il quadro doveva essere rifatto da zero, perché
+         diceva l'opposto del testo. C'era la macchina INTERA, montata, in
+         piedi sulle ruote in mezzo al garage; e tutte e quattro le scene del
+         luogo dicono il contrario: gr1 «la vostra macchina non è parcheggiata.
+         È SMONTATA. Il motore è appeso al muro come un trofeo di caccia, i
+         pezzi separati e disposti con la precisione di un museo, ognuno su un
+         gancio», e gr2 è un minigioco sul domino dei pezzi tenuti insieme dal
+         fil di ferro. Il giocatore leggeva «smontata» e vedeva una macchina
+         intera: la scena si smentiva da sola nel primo secondo.
+
+         E la macchina era anche fuori scala: la serranda era larga il doppio
+         di lei e alta cinque volte (9,5 m per 6,2 m di basculante). Il modo
+         onesto di risolvere entrambe le cose è lo stesso: la macchina non c'è
+         più — non c'è più NIENTE di intero — e l'inquadratura si stringe sulla
+         bacheca. Il metro adesso è il blocco motore, 1 px ≈ 0,55 cm, quindi
+         una serranda vera starebbe fuori dai bordi: è fuori inquadratura, e la
+         scala del quadro resta coerente con sé stessa. */
       const r = rng(151);
-      blocks(ctx, 0, 0, W, H, '#241d1a', 16, r, 0.14);
-      const floorY = H - 64;
-      // pavimento in cemento, distinto dal muro
-      blocks(ctx, 0, floorY, W, H - floorY, '#3a3632', 12, r, 0.1);
-      ctx.fillStyle = 'rgba(0,0,0,.25)';
-      for (let i = 0; i < 5; i++) ctx.fillRect(W * 0.12 * i + 30, floorY + 6, 60, 3); // macchie d'olio
-      // la serranda basculante, chiusa
-      blocks(ctx, W * 0.30, 24, W * 0.34, floorY - 60, '#4a453e', 10, r, 0.08);
-      ctx.fillStyle = '#332f2a';
-      for (let y = 32; y < floorY - 44; y += 16) ctx.fillRect(W * 0.30, y, W * 0.34, 4);
-      ctx.fillStyle = '#8a8478'; ctx.fillRect(W * 0.455, floorY - 52, 26, 6); // maniglia
-      // scaffalature cariche a sinistra
-      blocks(ctx, W * 0.03, H * 0.18, W * 0.20, floorY - H * 0.18, '#4a3a28', 8, r, 0.12);
-      for (let sh = 0; sh < 4; sh++) {
-        const sy = H * 0.22 + sh * (floorY - H * 0.26) / 4;
-        ctx.fillStyle = '#33281c'; ctx.fillRect(W * 0.035, sy + 18, W * 0.19, 4);
-        for (let b = 0; b < 5; b++) {
-          const cols = ['#6a5a45', '#5a6a5a', '#7a5a35', '#4a5a6e', '#8a6a2d'];
-          ctx.fillStyle = cols[(sh + b) % 5];
-          ctx.fillRect(W * 0.045 + b * W * 0.036, sy + 2, W * 0.026, 15);
+      const floorY = H - 56;
+      // il muro di PIETRA della rimessa (il testo dice pietra, non mattoni)
+      blocks(ctx, 0, 0, W, floorY + 2, '#3a3630', 16, r, 0.16);
+      ctx.fillStyle = 'rgba(0,0,0,.20)';
+      for (let y = 0; y < floorY; y += 32) ctx.fillRect(0, y, W, 2);        // i corsi della pietra
+      for (let y = 0; y < floorY; y += 32) for (let x = (y / 32) % 2 ? 0 : 44; x < W; x += 88) ctx.fillRect(x, y, 2, 32);
+      // il pavimento in cemento, e la macchia d'olio di chi ci ha lavorato
+      blocks(ctx, 0, floorY, W, H - floorY, '#2e2b28', 10, r, 0.12);
+      ctx.fillStyle = 'rgba(0,0,0,.30)';
+      ctx.fillRect(W * 0.30, floorY + 10, 210, 8); ctx.fillRect(W * 0.36, floorY + 18, 130, 6);
+
+      /* --- un pezzo appeso al gancio, con la targhetta d'ottone --- */
+      const pezzo = (px, py, pw, ph, tipo, tono) => {
+        ctx.fillStyle = '#8a9098'; ctx.fillRect(px + pw / 2 - 1, py - 9, 3, 9);            // il gancio
+        ctx.fillStyle = '#aab0b8'; ctx.fillRect(px + pw / 2 - 4, py - 11, 9, 3);
+        const base = tono || '#4a4d54';
+        // convenzione della lamiera: tre fasce di tono + un pixel chiaro sul filo
+        ctx.fillStyle = shade(base, 1.22); ctx.fillRect(px, py, pw, Math.round(ph * 0.3));
+        ctx.fillStyle = base; ctx.fillRect(px, py + Math.round(ph * 0.3), pw, Math.round(ph * 0.42));
+        ctx.fillStyle = shade(base, 0.68); ctx.fillRect(px, py + Math.round(ph * 0.72), pw, Math.round(ph * 0.28));
+        ctx.fillStyle = shade(base, 1.55); ctx.fillRect(px, py, pw, 2);
+        if (tipo === 'testata') {                                   // quattro sedi valvole
+          ctx.fillStyle = '#1d1f24';
+          for (let k = 0; k < 4; k++) ctx.fillRect(px + 5 + k * Math.round((pw - 12) / 4), py + Math.round(ph * 0.36), 6, 8);
+        } else if (tipo === 'carburatore') {                        // il corpo e la tromba d'aspirazione
+          ctx.fillStyle = '#2a2d33'; ctx.fillRect(px + Math.round(pw * 0.3), py - 6, Math.round(pw * 0.4), 8);
+          ctx.fillStyle = '#5a4a30'; ctx.fillRect(px + 4, py + Math.round(ph * 0.55), pw - 8, 5);
+        } else if (tipo === 'candela') {                            // ceramica bianca e dado esagonale
+          ctx.fillStyle = '#e0dcd0'; ctx.fillRect(px + Math.round(pw * 0.38), py + 3, 7, Math.round(ph * 0.45));
+          ctx.fillStyle = '#8a9098'; ctx.fillRect(px + Math.round(pw * 0.30), py + Math.round(ph * 0.5), 14, 7);
+        } else if (tipo === 'pistone') {                            // mantello, fasce elastiche e biella
+          ctx.fillStyle = '#2a2d33';
+          for (let k = 0; k < 3; k++) ctx.fillRect(px + 3, py + 5 + k * 4, pw - 6, 2);
+          ctx.fillStyle = '#6a7078'; ctx.fillRect(px + Math.round(pw / 2) - 3, py + Math.round(ph * 0.6), 7, Math.round(ph * 0.4));
+        } else if (tipo === 'guarnizione') {                        // un anello piatto
+          ctx.fillStyle = '#1d1f24'; ctx.fillRect(px + 8, py + 6, pw - 16, ph - 12);
+          ctx.fillStyle = shade(base, 1.3); ctx.fillRect(px + 12, py + 9, pw - 24, ph - 18);
+        } else if (tipo === 'cinghia') {                            // un anello di gomma dentata
+          ctx.fillStyle = '#1a1c1e'; ctx.fillRect(px, py, pw, ph);
+          ctx.fillStyle = base; ctx.fillRect(px + 7, py + 6, pw - 14, ph - 12);
+          ctx.fillStyle = '#2e3134'; for (let k = 0; k < 6; k++) ctx.fillRect(px + 2 + k * 7, py + 1, 3, 3);
+        }
+        // la targhetta d'ottone incisa a mano: c'è sotto OGNI pezzo, come dice gr1
+        ctx.fillStyle = '#8a6a1d'; ctx.fillRect(px + pw / 2 - 15, py + ph + 4, 30, 8);
+        ctx.fillStyle = '#c8a032'; ctx.fillRect(px + pw / 2 - 15, py + ph + 4, 30, 3);
+        ctx.fillStyle = '#6a4f14'; ctx.fillRect(px + pw / 2 - 11, py + ph + 8, 22, 2);
+      };
+
+      /* --- LA BACHECA DEL 2024: il soggetto, 364×264 su 960×360 --- */
+      const bx = 298, by = 18, bw = 364, bh = 240;
+      blocks(ctx, bx - 8, by - 8, bw + 16, bh + 16, '#4a3524', 8, r, 0.12);        // la cornice di legno
+      ctx.fillStyle = '#6a5238'; ctx.fillRect(bx - 8, by - 8, bw + 16, 4);
+      blocks(ctx, bx, by, bw, bh, '#1d2a26', 10, r, 0.10);                          // il fondo di feltro
+      ctx.fillStyle = 'rgba(0,0,0,.28)'; ctx.fillRect(bx, by, bw, 6); ctx.fillRect(bx, by, 6, bh);
+      // IL FIL DI FERRO: il domino di gr2 si vede, perché è la meccanica
+      ctx.fillStyle = '#9aa0a8';
+      ctx.fillRect(bx + 22, by + 186, bw - 44, 2);
+      ctx.fillRect(bx + 22, by + 92, 2, 96); ctx.fillRect(bx + bw - 24, by + 92, 2, 96);
+      ctx.fillRect(bx + 22, by + 92, 44, 2); ctx.fillRect(bx + bw - 66, by + 92, 44, 2);
+      // il motore, appeso alle sue due catene come un trofeo di caccia
+      const ex = bx + 108, ey = by + 28, ew = 152, eh = 118;
+      // le catene si disegnano a MAGLIE: due bastoncini bianchi leggevano come
+      // antenne, e un motore appeso deve sembrare appeso a qualcosa di robusto
+      for (const cxx of [ex + 26, ex + ew - 30]) {
+        for (let k = by + 4; k < ey - 2; k += 6) {
+          ctx.fillStyle = '#9aa0a8'; ctx.fillRect(cxx, k, 5, 4);
+          ctx.fillStyle = '#5c6268'; ctx.fillRect(cxx + 1, k + 1, 3, 2);
         }
       }
-      // banco da lavoro a destra con attrezzi appesi
-      blocks(ctx, W * 0.70, floorY - 44, W * 0.26, 44, '#4a3a28', 8, r, 0.12);
-      blocks(ctx, W * 0.69, floorY - 50, W * 0.28, 8, '#5d4a35', 8, r, 0.08);
-      ctx.fillStyle = '#2a241e'; ctx.fillRect(W * 0.70, H * 0.24, W * 0.26, 52); // pannello attrezzi
-      const px = W * 0.70, py = H * 0.24;
-      // martello
-      ctx.fillStyle = '#7a5a35'; ctx.fillRect(px + 12, py + 10, 5, 30);
-      ctx.fillStyle = '#8a8478'; ctx.fillRect(px + 5, py + 8, 19, 8);
-      // chiave inglese
-      ctx.fillStyle = '#9a948a'; ctx.fillRect(px + 38, py + 12, 5, 28);
-      ctx.fillRect(px + 34, py + 8, 13, 6); ctx.fillStyle = '#2a241e'; ctx.fillRect(px + 38, py + 9, 5, 4);
-      // sega a mano
-      ctx.fillStyle = '#b0aa9c'; ctx.fillRect(px + 58, py + 14, 34, 8);
-      ctx.fillStyle = '#2a241e'; for (let z = 0; z < 8; z++) ctx.fillRect(px + 59 + z * 4, py + 22, 2, 3);
-      ctx.fillStyle = '#6a4a2d'; ctx.fillRect(px + 90, py + 10, 8, 16);
-      // tubo di gomma avvolto
-      ctx.strokeStyle = '#3a4a3a'; ctx.lineWidth = 4;
-      ctx.beginPath(); ctx.arc(px + 118, py + 26, 12, 0, Math.PI * 2); ctx.stroke();
-      ctx.beginPath(); ctx.arc(px + 118, py + 26, 7, 0, Math.PI * 2); ctx.stroke();
-      // cacciaviti
-      for (let t = 0; t < 3; t++) {
-        ctx.fillStyle = ['#c05a48', '#4a5a6e', '#8a6a2d'][t]; ctx.fillRect(px + 140 + t * 10, py + 10, 4, 10);
-        ctx.fillStyle = '#9a948a'; ctx.fillRect(px + 141 + t * 10, py + 20, 2, 16);
-      }
-      ctx.fillStyle = '#c05a48'; ctx.fillRect(W * 0.72, floorY - 60, 22, 10); // cassetta attrezzi
-      // lampade da officina appese, una tremolante
-      for (const fx of [0.14, 0.48, 0.82]) {
-        ctx.fillStyle = '#2a2a30'; ctx.fillRect(W * fx, 0, 3, 34);
-        ctx.fillStyle = '#3a3a42'; ctx.fillRect(W * fx - 14, 34, 31, 10);
-        glow(ctx, W * fx + 1, 52, 40, 22, '232,182,76');
-        ctx.fillStyle = '#e8d8a0'; ctx.fillRect(W * fx - 10, 44, 23, 5);
-      }
-      // LA VOSTRA macchina, ferma, col cofano che vi guarda
-      const cx = W * 0.36, cy = floorY - 34;
-      ctx.fillStyle = '#7a2432'; ctx.fillRect(cx, cy, 120, 30);
-      ctx.fillStyle = '#5a1a26'; ctx.fillRect(cx + 14, cy - 16, 84, 18);
-      ctx.fillStyle = '#8ab8d0'; ctx.fillRect(cx + 20, cy - 12, 30, 12); ctx.fillRect(cx + 60, cy - 12, 30, 12);
-      ctx.fillStyle = '#1a1a22'; ctx.fillRect(cx + 12, cy + 26, 24, 16); ctx.fillRect(cx + 84, cy + 26, 24, 16);
-      ctx.fillStyle = '#3a3a45'; ctx.fillRect(cx + 18, cy + 30, 12, 8); ctx.fillRect(cx + 90, cy + 30, 12, 8);
-      ctx.fillStyle = '#e8e4c8'; ctx.fillRect(cx + 112, cy + 8, 7, 6); ctx.fillRect(cx, cy + 8, 7, 6);
-      // il cofano APERTO: qualcuno ha lavorato al motore
-      ctx.fillStyle = '#5a1a26'; ctx.fillRect(cx - 26, cy - 10, 30, 6);
-      ctx.fillStyle = '#0d0a0c'; ctx.fillRect(cx - 20, cy - 4, 24, 16);
-      // taniche e corda in un angolo
-      ctx.fillStyle = '#5a6a5a'; ctx.fillRect(W * 0.26, floorY - 20, 16, 20);
-      ctx.fillStyle = '#6a5a45'; ctx.fillRect(W * 0.28 + 18, floorY - 14, 18, 14);
+      ctx.fillStyle = '#8a9098';                                                   // i golfari di sollevamento
+      ctx.fillRect(ex + 20, ey - 6, 17, 7); ctx.fillRect(ex + ew - 37, ey - 6, 17, 7);
+      ctx.fillStyle = '#aab0b8'; ctx.fillRect(ex + 20, by + 2, 17, 4); ctx.fillRect(ex + ew - 37, by + 2, 17, 4);
+      // il coperchio punterie in alto, in lega chiara, coi suoi bulloni
+      ctx.fillStyle = '#767c86'; ctx.fillRect(ex + 16, ey, ew - 34, 22);
+      ctx.fillStyle = '#8f959f'; ctx.fillRect(ex + 16, ey, ew - 34, 3);
+      ctx.fillStyle = '#5c626c'; ctx.fillRect(ex + 16, ey + 19, ew - 34, 3);
+      ctx.fillStyle = '#aab0ba';
+      for (let k = 0; k < 5; k++) ctx.fillRect(ex + 24 + k * 22, ey + 7, 5, 5);
+      // il corpo del monoblocco: tre fasce di tono, e il filo che prende luce
+      ctx.fillStyle = '#4e525a'; ctx.fillRect(ex, ey + 22, ew, 26);
+      ctx.fillStyle = '#3e424a'; ctx.fillRect(ex, ey + 48, ew, 34);
+      ctx.fillStyle = '#34383f'; ctx.fillRect(ex, ey + 82, ew, 14);
+      ctx.fillStyle = '#6e747e'; ctx.fillRect(ex, ey + 22, ew, 2);
+      ctx.fillStyle = '#20242a';                                                   // la linea della guarnizione di testa
+      ctx.fillRect(ex, ey + 30, ew, 3);
+      ctx.fillStyle = '#8a9098'; for (let k = 0; k < 8; k++) ctx.fillRect(ex + 6 + k * 19, ey + 25, 4, 4);
+      // la coppa dell'olio, più stretta del monoblocco
+      ctx.fillStyle = '#292d33'; ctx.fillRect(ex + 18, ey + 96, ew - 36, 20);
+      ctx.fillStyle = '#3d4149'; ctx.fillRect(ex + 18, ey + 96, ew - 36, 3);
+      ctx.fillStyle = '#22262b'; ctx.fillRect(ex + 44, ey + 114, 22, 4);           // il tappo di scarico
+      // il collettore di scarico: quattro curve che si riuniscono
+      ctx.fillStyle = '#5a4038';
+      for (let k = 0; k < 4; k++) ctx.fillRect(ex + ew - 4, ey + 34 + k * 12, 22 - k * 3, 7);
+      ctx.fillStyle = '#6e4c40'; ctx.fillRect(ex + ew + 16, ey + 34, 9, 46);
+      ctx.fillStyle = '#7a5648'; ctx.fillRect(ex + ew + 16, ey + 34, 9, 3);
+      // la puleggia e la cinghia, a sinistra
+      ctx.fillStyle = '#2a2d33'; pixelDisc(ctx, ex - 6, ey + 62, 16, 3);
+      ctx.fillStyle = '#6a7078'; pixelDisc(ctx, ex - 6, ey + 62, 8, 3);
+      ctx.fillStyle = '#1a1c1e'; ctx.fillRect(ex - 22, ey + 44, 5, 40);
+      // il carburatore in cima, dove sta davvero
+      ctx.fillStyle = '#5a4a30'; ctx.fillRect(ex + 50, ey - 16, 34, 18);
+      ctx.fillStyle = '#6e5c3c'; ctx.fillRect(ex + 50, ey - 16, 34, 3);
+      ctx.fillStyle = '#2a2d33'; ctx.fillRect(ex + 60, ey - 22, 15, 7);
+      // i pezzi appesi in griglia, ognuno sul suo gancio e sulla sua targhetta
+      pezzo(bx + 24, by + 26, 44, 30, 'candela', '#565b62');
+      pezzo(bx + 24, by + 102, 44, 34, 'guarnizione', '#4e525a');
+      pezzo(bx + bw - 68, by + 26, 44, 30, 'pistone', '#5e646c');
+      pezzo(bx + bw - 68, by + 102, 44, 34, 'cinghia', '#3c4046');
+      pezzo(bx + 34, by + 196, 58, 30, 'testata', '#50555d');
+      pezzo(bx + 118, by + 196, 50, 30, 'carburatore', '#5a4a30');
+      pezzo(bx + 196, by + 196, 50, 30, 'pistone', '#5e646c');
+      pezzo(bx + 274, by + 196, 56, 30, 'testata', '#4a4f56');
+      // la targa grande della bacheca: l'anno del gruppo, in ottone
+      ctx.fillStyle = '#8a6a1d'; ctx.fillRect(bx + bw / 2 - 46, by + 152, 92, 20);
+      ctx.fillStyle = '#c8a032'; ctx.fillRect(bx + bw / 2 - 46, by + 152, 92, 5);
+      ctx.fillStyle = '#6a4f14'; ctx.fillRect(bx + bw / 2 - 36, by + 160, 72, 4);
+
+      /* --- LE ALTRE DUE BACHECHE, più vecchie: tagliate dai bordi, perché
+             stanno sulla stessa parete e quindi hanno la stessa scala --- */
+      // 1974, la Bianchina: due cilindri, mezzo motore, e la polvere
+      blocks(ctx, -30, 40, 232, 216, '#3f2d1f', 8, r, 0.12);
+      blocks(ctx, -22, 48, 216, 200, '#1a2320', 10, r, 0.10);
+      ctx.fillStyle = '#8a9098'; ctx.fillRect(-22, 186, 200, 2); ctx.fillRect(150, 112, 2, 74);
+      ctx.fillStyle = '#4a4e56'; ctx.fillRect(28, 78, 92, 20);
+      ctx.fillStyle = '#40444b'; ctx.fillRect(28, 98, 92, 30);
+      ctx.fillStyle = '#5c6068'; ctx.fillRect(28, 78, 92, 2);
+      ctx.fillStyle = '#33373e'; ctx.fillRect(40, 128, 68, 16);
+      ctx.fillStyle = '#6a7078'; ctx.fillRect(40, 64, 30, 14); ctx.fillRect(78, 64, 30, 14);
+      ctx.fillStyle = '#8a9098'; ctx.fillRect(52, 50, 3, 14); ctx.fillRect(92, 50, 3, 14);
+      pezzo(24, 196, 44, 28, 'candela', '#4a4f56');
+      pezzo(104, 196, 44, 28, 'guarnizione', '#43474e');
+      ctx.fillStyle = '#8a6a1d'; ctx.fillRect(40, 154, 76, 16);
+      ctx.fillStyle = '#c8a032'; ctx.fillRect(40, 154, 76, 4);
+      ctx.fillStyle = 'rgba(120,110,86,.16)'; ctx.fillRect(-22, 48, 216, 200);      // il velo di polvere
+      // 1949: quasi solo un'ombra, ma la griglia dei ganci si legge
+      blocks(ctx, 764, 34, 226, 220, '#3f2d1f', 8, r, 0.12);
+      blocks(ctx, 772, 42, 210, 204, '#181f1d', 10, r, 0.10);
+      ctx.fillStyle = '#6a7078'; ctx.fillRect(780, 184, 196, 2); ctx.fillRect(800, 110, 2, 74);
+      ctx.fillStyle = '#42464d'; ctx.fillRect(834, 74, 96, 20);
+      ctx.fillStyle = '#383c42'; ctx.fillRect(834, 94, 96, 32);
+      ctx.fillStyle = '#52565d'; ctx.fillRect(834, 74, 96, 2);
+      ctx.fillStyle = '#2a2e33'; ctx.fillRect(846, 126, 72, 16);
+      ctx.fillStyle = '#8a9098'; ctx.fillRect(858, 44, 3, 30); ctx.fillRect(902, 44, 3, 30);
+      pezzo(788, 194, 42, 26, 'pistone', '#3f444a');
+      pezzo(864, 194, 42, 26, 'testata', '#3a3f45');
+      ctx.fillStyle = '#8a6a1d'; ctx.fillRect(846, 152, 72, 15);
+      ctx.fillStyle = '#c8a032'; ctx.fillRect(846, 152, 72, 4);
+      ctx.fillStyle = 'rgba(120,110,86,.22)'; ctx.fillRect(772, 42, 210, 204);
+
+      /* --- la lampada da officina che tiene il trofeo sotto una luce --- */
+      ctx.fillStyle = '#2a2a30'; ctx.fillRect(bx + bw / 2 - 2, 0, 4, 16);
+      ctx.fillStyle = '#3a3a42'; ctx.fillRect(bx + bw / 2 - 22, 16, 45, 9);
+      ctx.fillStyle = '#4a4a52'; ctx.fillRect(bx + bw / 2 - 22, 16, 45, 3);
+      ctx.fillStyle = '#f0e0a8'; ctx.fillRect(bx + bw / 2 - 9, 25, 20, 5);
+      glow(ctx, bx + bw / 2, 30, 90, 54, '232,216,160');
+      ctx.fillStyle = 'rgba(240,224,168,.055)';                                     // il cono che scende sul motore
+      for (let k = 0; k < 22; k++) ctx.fillRect(bx + bw / 2 - 22 - k * 5, 28 + k * 9, 45 + k * 10, 9);
+      // e una lampada spenta sul fondo, per dire che la stanza continua
+      ctx.fillStyle = '#2a2a30'; ctx.fillRect(214, 0, 3, 22);
+      ctx.fillStyle = '#3a3a42'; ctx.fillRect(200, 22, 31, 8);
+
+      /* --- a terra: il cavalletto vuoto su cui la macchina NON c'è più --- */
+      ctx.fillStyle = '#4a3524';
+      ctx.fillRect(392, floorY - 26, 176, 7);
+      ctx.fillRect(400, floorY - 19, 7, 19); ctx.fillRect(552, floorY - 19, 7, 19);
+      ctx.fillRect(418, floorY - 19, 5, 19); ctx.fillRect(536, floorY - 19, 5, 19);
+      ctx.fillStyle = '#5d4530'; ctx.fillRect(392, floorY - 26, 176, 3);
+      ctx.fillStyle = '#5a6a5a'; ctx.fillRect(690, floorY - 30, 22, 30);            // la tanica
+      ctx.fillStyle = '#6a7a6a'; ctx.fillRect(690, floorY - 30, 22, 3);
+      ctx.fillStyle = '#2e3630'; ctx.fillRect(696, floorY - 34, 9, 5);
+      ctx.fillStyle = '#6a5a45'; ctx.fillRect(724, floorY - 20, 26, 20);            // e una cassetta di legno
+      ctx.fillStyle = '#7d6a52'; ctx.fillRect(724, floorY - 20, 26, 3);
     },
 
     albaRelais(ctx, W, H) {
