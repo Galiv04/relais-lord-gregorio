@@ -989,7 +989,7 @@ Nell'acqua si riflette un cielo. Ma non È il cielo che avete sopra la testa: le
 
 Alzate la testa: sopra di voi, la luna vera è un taglio sottile, bianco, al primo quarto.
 
-> Gaetano: *(molto piano, da ingegnere che ha finito le spiegazioni)* "...rifrazione. No. Inversione termica. No. Ragazzi, io non... io non ho un cazzo di modello per QUELLA."
+> Gaetano: *(molto piano, come uno che ha finito le spiegazioni)* "...rifrazione. No. Inversione termica. No. Ragazzi, io non... io non ho un cazzo di modello per QUELLA."
 
 E mentre lo dice, nel riflesso, la luna rossa **inizia lentissimamente a salire.**`,
     choices: [
