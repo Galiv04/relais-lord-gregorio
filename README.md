@@ -23,7 +23,7 @@ C'è solo un dettaglio: **il Belvedere prende un gruppo di ospiti ogni venticinq
 - 🚪 **Nessuna schermata che ti fa solo premere avanti**: dove il Belvedere ti chiede qualcosa
   hai in media **2,4 strade**, e ogni scena che non te ne offre due almeno cambia qualcosa —
   un oggetto, una ferita, una cosa che hai capito
-- 🏆 **62 imprese e 29 cronache con collezione persistente** per profilo: il Belvedere tiene il registro degli ospiti, voi tenete il suo
+- 🏆 **64 imprese e 29 cronache con collezione persistente** per profilo: il Belvedere tiene il registro degli ospiti, voi tenete il suo
 - ⚔ Combattimenti a turni in stile D&D, con **musica di battaglia diversa per luogo** · 📖 regole in un click · 💾 salvataggio automatico su 3 slot con profili + codici di esportazione tra dispositivi · 🎵 colonna sonora chiptune che cambia con la scena (dal carillon al valzer marcio del Banchetto) · 🕹 pixel art via canvas ispirata al vero relais irpino · zero dipendenze
 
 ## Come si gioca
