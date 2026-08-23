@@ -617,6 +617,7 @@ const BASE_CHOICES = {
   u2_1899: '🚨 Rispettare il lutto e andare',
   u5_specchio: 'Alla porta con la targhetta vuota',
   u4_porta_vuota: 'Giù, al corridoio delle tre porte',
+  os_spaccio: '📊 Il lavoretto',                      // mg_conti, once: true — nessun rischio di loop
   b1: '👁 Il piano di Gaetano',
   b2_orto: 'Al pozzo. È il momento.',
   b3_pozzo: '🪢 Qualcuno si cala nel pozzo',
@@ -634,7 +635,8 @@ const BASE_CHOICES = {
   z_custode: '↩ No. NESSUNO resta.',
   z_resa: '🔥 ALZARSI. Rovesciare la sedia',
   z5_vittoria: 'Guardare l\'alba.',
-  z6_alba: '☕ Il caffè, l\'abbraccio',
+  z6_alba: '👀 Guardare Paternopoli che si sveglia',   // passa per z6_pietrafonda: il cappello di Gennaro
+  z6_pietrafonda: '☕ Il caffè, l\'abbraccio',        // impresa «La Domanda che Resta»
   // ---- Pista Paternopoli (solo se firma_rinviata) e nuove offerte al Banchetto ----
   pp2: '🚪 Bussare alla canonica',
   pp3: '📖 Raccontargli tutto',
@@ -659,6 +661,7 @@ function scenario(name, heroes, choices, opts = {}) {
     forceCombatItem: opts.forceCombatItem || null,
     difficulty: opts.difficulty || 'normale',
     compraRitiri: !!opts.compraRitiri,
+    minigames: opts.minigames || null,   // { [sceneId]: 'success'|'fail' } — letto dal ciclo di gioco
   };
 }
 
@@ -926,6 +929,18 @@ scenarios.push(scenario(
     u1: '🪜 In fondo al corridoio',
     sf4: '👁 Restare a guardare',
   }, { checkBias: 'best', sequences: { h1: ['PIANO PROIBITO', 'barricarsi'] } }));
+
+/* ---- IL VALZER PERSO e IL SALUTO DI GENNARO. Due contenuti che nessuno scenario
+   attraversava. Il primo perché ci si arriva solo PERDENDO il minigioco del valzer
+   (u3_ninna è la sua uscita di fallimento, e il default della suite è vincere); il
+   secondo perché è l'altra delle due scelte d'addio, e le scelte base prendono il
+   caffè. In coda alla lista, come tutti gli scenari nuovi: i semi sono un contatore. ---- */
+scenarios.push(scenario(
+  'valzer PERSO (la filastrocca delle bambole) e il saluto di Gennaro a braccia larghe',
+  ['claudia', 'natalino'], {
+    u1: '🚪 1924 — la stanza del valzer',
+    z6_pietrafonda: '👋 Rispondere al saluto di Gennaro',
+  }, { seed: 777001, minigames: { mg_valzer: 'fail' } }));
 
 /* ---- STANZE 1949 e 1974 (dal piano proibito: la porta "1949" incatena automaticamente
    anche la stanza "1974" subito dopo, vedi s49_3/s49_3_ko -> s74_1). La copertura di
@@ -2345,6 +2360,50 @@ section('Economia del 🕯 Sangue Freddo (raccolto per partita)');
    ciclo delle abilità e il template la cercava fuori — ReferenceError a ogni click,
    proprio sulla schermata che il committente aveva chiesto per vedere gli stati.
    Questa prova apre la scheda di OGNI eroe in OGNI combinazione di stati. */
+/* ==================== TUTTE LE MODALI SI APRONO ====================
+   Fino ad agosto 2026 l'unica finestra provata da un test era la scheda del personaggio
+   — e ci era finita solo DOPO che era crashata per mesi in silenzio. Mappa, zaino,
+   regole, riepilogo della compagnia, diario, menu, fucina e quaderno non venivano mai
+   aperti da nessuna partita simulata: un ReferenceError in uno di quei template sarebbe
+   passato inosservato esattamente come l'altro. Qui si apre tutto quello che il motore
+   espone, a inizio partita e con lo zaino pieno. */
+(function testTutteLeModali() {
+  section('Ogni finestra si apre senza esplodere');
+  const game = buildGame(313131);
+  const E = game.api.Engine;
+  const eroi = (Array.isArray(game.api.HEROES) ? game.api.HEROES : Object.values(game.api.HEROES));
+  game.act(() => E.newGame(eroi.filter(h => !h.locked).slice(0, 2).map(h => ({ heroId: h.id, player: 'Gali' }))));
+  /* zaino pieno: molte finestre disegnano gli oggetti, e un template rotto si vede solo
+     quando c'è qualcosa da disegnare */
+  const G = game.api.Engine.debugState ? game.api.Engine.debugState() : null;
+  try { for (const k of Object.keys(game.api.ITEMS).slice(0, 12)) game.act(() => E.addItem && E.addItem(k)); } catch (e) { /* non tutti i motori hanno addItem */ }
+  const FINESTRE = ['showParty', 'showInventory', 'showMap', 'showRules', 'showMenu', 'showDiary',
+                    'showBestiary', 'showRevive', 'showChronicles', 'showImprese'];
+  let aperte = 0, rotte = 0;
+  for (const nome of FINESTRE) {
+    if (typeof E[nome] !== 'function') continue;
+    try { game.act(() => E[nome]()); aperte++; }
+    catch (e) { fail(`${nome}() esplode: ${(e && e.message) || e}`); rotte++; }
+  }
+  /* il retro degli oggetti: template a sé, e con quarantadue testi dietro */
+  if (typeof E.inspectItem === 'function') {
+    const conLore = Object.keys(game.api.ITEMS).filter(k => game.api.ITEMS[k].lore).slice(0, 3);
+    for (const k of conLore) {
+      try { game.act(() => E.inspectItem(k)); aperte++; }
+      catch (e) { fail(`inspectItem('${k}') esplode: ${(e && e.message) || e}`); rotte++; }
+    }
+  }
+
+  /* e le finestre dei moduli, dove esistono */
+  for (const [mod, metodo] of [['Crafting', 'open'], ['Misteri', 'show']]) {
+    const M = game.api[mod];
+    if (!M || typeof M[metodo] !== 'function') continue;
+    try { game.act(() => M[metodo]()); aperte++; }
+    catch (e) { fail(`${mod}.${metodo}() esplode: ${(e && e.message) || e}`); rotte++; }
+  }
+  if (!rotte) console.log(`  ✔ ${aperte} finestre aperte senza errori`);
+})();
+
 (function testSchedaPersonaggio() {
   section('Scheda del personaggio: si apre sempre, in ogni stato');
   const game = buildGame(424242);
@@ -2392,6 +2451,16 @@ if (failures === 0) {
   const celleRun = results.filter(r => r.ok).map(r => r.log.scenes.filter(sc => sc === 'x_celle').length).sort((a, b) => a - b);
   const q = p => celleRun[Math.min(celleRun.length - 1, Math.floor(celleRun.length * p))];
   console.log(`  ℹ️ Bilanciamento (sconfitte/partita del pilota automatico): mediana ${q(0.5)}, p90 ${q(0.9)}, max ${celleRun[celleRun.length - 1]} — le code lunghe sono i loop di ritentativo del pilota, non l'esperienza umana`);
+  {
+    const probeCoperturaIds = Object.keys(buildGame(999999).api.CAMPAIGN);
+    const maiViste = probeCoperturaIds.filter(id => !allScenesSeen.has(id));
+    const pct = Math.round((allScenesSeen.size / probeCoperturaIds.length) * 100);
+    console.log(`\nℹ️ Copertura della campagna: ${allScenesSeen.size}/${probeCoperturaIds.length} scene (${pct}%)`);
+    if (maiViste.length) {
+      console.log(`   Scene che nessuno scenario attraversa (${maiViste.length}): ${maiViste.join(', ')}`);
+      console.log('   (non è un errore: molte sono rami alternativi. Ma una scena NUOVA in questo elenco è contenuto non finito.)');
+    }
+  }
   console.log(`✅ TUTTE LE PARTITE SIMULATE COMPLETATE SENZA ERRORI (${results.length} run, ${allScenesSeen.size} scene distinte visitate, ${allEndings.size}/6 finali)`);
   process.exit(0);
 } else {

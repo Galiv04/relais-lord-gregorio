@@ -1137,7 +1137,15 @@ Quello che avete capito da lì in poi, <b>non c'è più</b>. E nelle tasche manc
       ctx.font = "10px 'Press Start 2P'";
       ctx.textAlign = 'center';
       ctx.font = "26px 'Press Start 2P'";
-      ctx.fillText(String(WORLD_MAP.indexOf(loc) + 1), x, y + 48);
+      /* Il numero sta sotto il luogo, tranne quando sotto c'è un altro luogo vicino:
+         nel Relais «I Tornanti» e «Paternopoli» distano 29 px in orizzontale e 48 in
+         verticale, e il numero del primo cadeva sull'icona del secondo. In quel caso
+         il numero va SOPRA. Vale per tutti: se un giorno due luoghi si avvicinano,
+         la pianta si aggiusta da sola. */
+      const sottoOccupato = WORLD_MAP.some(altro => altro !== loc
+        && Math.abs(altro.x * W - x) < 60
+        && (altro.y * H - y) > 0 && (altro.y * H - y) < 70);
+      ctx.fillText(String(WORLD_MAP.indexOf(loc) + 1), x, sottoOccupato ? y - 34 : y + 48);
       if (cur && cur.key === loc.key) {
         ctx.fillStyle = '#e8b64c';
         ctx.font = "16px 'Press Start 2P'";
