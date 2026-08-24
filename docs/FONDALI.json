@@ -1,0 +1,18 @@
+{
+  "_perche": "Deroghe e soglie di ../dnd-motore/tools/soggetto.mjs, ognuna con la sua ragione scritta.",
+  "_soglie": {
+    "nero": 0.72,
+    "perche": "tutta la storia del Relais sta in UNA notte, dai tornanti all'alba: diciotto fondali su ventuno hanno piu' della meta' dei pixel sotto la luminanza 42 perche' sono cielo notturno e stanze illuminate da una lampadina sola. La soglia sta al 72%, che e' il punto oltre il quale un quadro non ha piu' un primo piano leggibile."
+  },
+  "titolo": {
+    "nero": "e' la schermata del titolo: il relais visto dal buio, con la luna rossa. Il nome del gioco lo scrive il DOM sopra la tela.",
+    "soggetto": "il soggetto e' l'edificio illuminato, che il misuratore spezza in tante macchie quante sono le finestre accese.",
+    "oggetti": "un titolo con due oggetti sopra i cento pixel sarebbe una scena, non un titolo."
+  },
+  "corridoio": {
+    "nero": "un corridoio d'albergo di notte con DUE applique accese su cinque: il testo dice che «si accendono una alla volta, mentre passate», quindi le tre lontane DEVONO essere spente, e dice che l'ultima porta sta «in fondo, dove il corridoio gira nel buio», quindi il fondo DEVE essere nero. Il terzo vicino del quadro — le due porte grandi, il tappeto, le due pozze sulle pareti e sul soffitto — sta fra 45 e 120 di luminanza."
+  },
+  "ossario": {
+    "oggetti": "l'unico oggetto sopra i cento pixel di lato e' la pila di bauli del 1924 (96 px). Le cinque valigie nuove ne fanno 62 d'altezza ognuna, la cassa del 1949 ne fa 84, lo zaino Invicta 58: sono tutti fra i sessanta e i cento, cioe' ELEMENTI DI CONTESTO, ed e' giusto — il soggetto di questa stanza e' la PARETE di tacche, che e' una tessitura e non un oggetto con un contorno. Cinque valigie da un metro e venti, in quella stanza, sarebbero fuori scala."
+  }
+}
