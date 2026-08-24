@@ -1106,7 +1106,6 @@ L'acqua è tornata normale. Turchese, fumante, invitante. IL problema è esattam
   p4_fuga: {
     location: 'relais',
     caption: 'Il tentativo di fuga — ore 23:52',
-    gold: 1,
     text: `La decisione è unanime nel modo speciale in cui è unanime il panico: nessuno pronuncia la parola "scappiamo", ma Emanuela ha già le chiavi in mano, Claudia dice solo "MACCHINA. ORA." e in novanta secondi siete tutti vestiti a metà, con le valigie richiuse a morsi, giù per le scale.
 
 La macchina è dove l'avete lasciata. Si apre. Si accende. Gaetano ingrana la prima con la delicatezza di un rapinatore e il viale di ghiaia bianca scricchiola sotto le ruote — fino al **cancello.**
@@ -4043,7 +4042,6 @@ Gaetano si volta verso il Belvedere: le persiane sono tutte aperte, per la prima
   w2_riflesso_ko: {
     location: 'riflesso',
     caption: 'Il tuffo — un ingresso più duro',
-    gold: 1,
     text: `Il calcolo di Gaetano — o la stretta di mano di tutti — funziona lo stesso, ma funziona MALE: a metà del tuffo, l'acqua si accorge che qualcuno, dentro, ha ancora paura, e la paura, qui, PESA.
 
 Per un istante che sembra un minuto, qualcuno resta sospeso a mezz'acqua, né di qua né di là, con i polmoni vuoti e la luna rossa che si allarga sopra la testa come una bocca. Le mani degli altri lo tirano dall'altra parte — letteralmente dall'ALTRA parte — e il Riflesso li sputa fuori tutti insieme, in un colpo, sul bordo della piscina capovolta.

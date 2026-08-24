@@ -3,7 +3,7 @@
    Verifica: integrità del grafo delle scene, dati personaggi/nemici/oggetti,
    sprite ben formati, raggiungibilità dei finali, sanità dei dadi, bilanciamento. */
 
-import { readFileSync } from 'fs';
+import { readFileSync, readdirSync } from 'fs';
 import vm from 'vm';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
@@ -284,6 +284,133 @@ for (const c of CHAPTERS) {
 }
 if (!capitoliRotti) { ok(); console.log(`  ✔ ${CHAPTERS.length} capitoli, tutte le destinazioni e gli zaini preparati esistono`); }
 
+/* ---------- chiavi doppie dentro la stessa scena ---------- */
+/* PERCHE' ESISTE, e costa due righe. In un letterale JavaScript una chiave ripetuta non e'
+   un errore: vince l'ULTIMA, in silenzio. Il 24 agosto 2026, spezzando le scene lunghe in
+   due, ho aggiunto `sets` e `gold` DOPO il testo a scene che li avevano gia' PRIMA — e
+   b7_calette, che e' la lezione di apnea di Lilia, ha perso `lezione_lilia`: il flag che
+   Engine.apneaFiato legge per dare piu' aria in immersione. La scena funzionava, il grafo
+   era sano, il collaudo era verde, e la lezione non serviva piu' a niente.
+   Questo controllo guarda le chiavi di primo livello di ogni scena: se una compare due
+   volte, una delle due non esiste. */
+section('Nessuna chiave doppia in una scena');
+{
+  let doppie = 0;
+  for (const f of ['drafts/campaign-header.js', 'drafts/scene-A.js', 'drafts/scene-B.js',
+                   'drafts/scene-C.js', 'drafts/scene-D.js', 'drafts/scene-E.js',
+                   'js/campaign.js']) {
+    let src;
+    try { src = readFileSync(join(root, f), 'utf8'); } catch { continue; }
+    /* Il blocco di una scena finisce al primo dei due: la sua graffa di chiusura, o
+       l'inizio del fratello dopo. Senza il secondo limite il blocco sconfina — gli
+       oggetti di ITEMS chiudono con `},` sulla riga del contenuto e non con `\n  },\n`,
+       quindi un solo item si mangiava tutti quelli dopo di lui e il controllo diceva che
+       la chiave `lore` compariva nove volte. Un falso allarme, e i falsi allarmi si
+       correggono prima dei difetti veri. */
+    for (const m of src.matchAll(/\n  ([a-z0-9_]+):\s*\{/g)) {
+      const dopo = m.index + m[0].length;
+      const chiusa = src.indexOf('\n  },\n', dopo);
+      const fratello = src.slice(dopo).search(/\n  [a-z0-9_]+:\s*\{/);
+      const j = Math.min(chiusa < 0 ? Infinity : chiusa, fratello < 0 ? Infinity : dopo + fratello);
+      if (!isFinite(j)) continue;
+      const blocco = src.slice(dopo, j);
+      const conte = new Map();
+      for (const k of blocco.matchAll(/^ {4}([a-zA-Z_$][\w$]*):/gm)) conte.set(k[1], (conte.get(k[1]) || 0) + 1);
+      for (const [k, n] of conte) if (n > 1) {
+        fail(`${f} — scena "${m[1]}": la chiave "${k}" compare ${n} volte: in JavaScript vince l'ultima, quindi una delle due non esiste`);
+        doppie++;
+      }
+    }
+    break;   // basta il primo file che esiste per i giochi senza pipeline
+  }
+  if (!doppie) { ok(); console.log('  ✔ nessuna chiave dichiarata due volte nella stessa scena'); }
+}
+
+/* ---------- scene in cui TUTTE le uscite si consumano ---------- */
+/* PERCHE' ESISTE. La regola scritta era «mai `once: true` sull'unica uscita di una scena:
+   soft-lock», e il controllo guardava le scene con UNA scelta sola. Ma due scelte tutte e
+   due `once` sono lo stesso difetto con un passo in piu': il giocatore torna, le trova
+   consumate, e la scena non ha piu' uscite. Il 24 agosto 2026 e' capitato per davvero in
+   Pandataria — otto scene, e la partita simulata e' morta in b6, che e' un nodo dove si
+   torna da tre strade diverse. La regola vera e': una scena deve avere sempre almeno
+   un'uscita che non si consuma. */
+section('Ogni scena ha un\'uscita che non si consuma');
+{
+  let rischio = 0;
+  for (const [id, sc] of Object.entries(CAMPAIGN)) {
+    const ch = sc.choices || [];
+    if (!ch.length) continue;                       // finali e scene con combat/minigioco
+    if (ch.every(c => c.once)) {
+      fail(`scena "${id}": tutte le ${ch.length} uscite sono \`once: true\` — chi ci ritorna non ha piu' dove andare`);
+      rischio++;
+    }
+  }
+  if (!rischio) { ok(); console.log('  ✔ nessuna scena si chiude addosso a chi ci ritorna'); }
+}
+
+/* ---------- paragrafi ripetuti dentro la stessa scena ---------- */
+/* PERCHE' ESISTE. Le scene si modificano con inserimenti chirurgici — un paragrafo nuovo
+   prima di un'ancora — e quando l'ancora somiglia a quello che si sta inserendo capita di
+   lasciarci accanto la versione vecchia. Il 24 agosto 2026 in Pandataria ce n'erano due:
+   il cimitero apriva con la stessa frase due volte di fila («sta fuori dal muro, a mezza
+   costa, su un terrazzamento che guarda il mare aperto») e c6 chiudeva due volte lo stesso
+   pensiero con parole quasi identiche. Nessun controllo poteva vederli: il grafo era sano,
+   i dati erano sani, ed erano solo DUE PAROGRAFI IDENTICI a cinque righe di distanza — la
+   cosa che un lettore nota subito e un collaudo non nota mai.
+   Si confrontano le prime dodici parole, normalizzate: due paragrafi che cominciano allo
+   stesso modo nella stessa scena sono un incidente di montaggio, non una figura retorica. */
+section('Nessun paragrafo ripetuto dentro la stessa scena');
+{
+  let ripetuti = 0;
+  const testa = t => t.toLowerCase().replace(/[^a-zà-ù ]+/g, ' ').split(/\s+/).filter(Boolean).slice(0, 12).join(' ');
+  for (const [id, sc] of Object.entries(CAMPAIGN)) {
+    if (!sc.text) continue;
+    const visti = new Map();
+    for (const p of String(sc.text).split(/\n\s*\n/)) {
+      const q = p.trim();
+      /* Si guarda solo la PROSA. Una battuta, una citazione fra virgolette e la riga
+         meccanica fra parentesi possono ripetere la stessa frase di proposito, ed e' una
+         figura voluta: nella Casa che non Finisce «se conosci il trucco, il trucco non
+         funziona» e' detta da un personaggio e poi ripetuta nella riga di chiusura, con
+         «adesso lo sapete anche voi» attaccato. Segnalarla e' un falso allarme, e un falso
+         allarme spegne il controllo per tutto il resto. */
+      if (q.startsWith('>') || q.startsWith('**(') || q.startsWith('*"') || q.startsWith('"') || q.startsWith('*«')) continue;
+      const t = testa(p);
+      if (t.split(' ').length < 8) continue;          // le battute corte si somigliano per forza
+      if (visti.has(t)) {
+        fail(`scena "${id}": due paragrafi cominciano nello stesso modo — «${t.slice(0, 70)}…»`);
+        ripetuti++;
+      } else visti.set(t, true);
+    }
+  }
+  if (!ripetuti) { ok(); console.log('  ✔ nessun paragrafo ripetuto in nessuna scena'); }
+}
+
+/* ---------- il motore cita oggetti di ALTRI giochi della serie ---------- */
+/* PERCHE' ESISTE. Il motore di questi cinque giochi si copia da un repo all'altro, e ogni
+   copia si porta appresso i riferimenti del gioco da cui viene. Il 24 agosto 2026 ce
+   n'erano tre in giro, tutti invisibili perche' `G.inventory.includes('cosa-che-non-c-e')`
+   e' semplicemente falso per sempre: Pandataria toglieva un punto ai colpi dei nemici a chi
+   avesse un ombrellone che non era in ITEMS; la Casa aveva la stessa riga, e l'ombrellone e'
+   di Pandataria; il Relais rendeva i riposi piu' nutrienti a chi avesse le «Provviste di
+   Bocciolo», che sono della Corona di Mezzanotte.
+   Non e' codice morto innocuo: e' un premio che il motore promette e la storia non
+   concede, e il giocatore non ha modo di scoprirlo. Vale come errore. */
+section('Il motore non cita oggetti che questo gioco non ha');
+{
+  let fantasmi = 0;
+  for (const f of readdirSync(join(root, 'js')).filter(f => f.endsWith('.js') && f !== 'campaign.js')) {
+    const src = readFileSync(join(root, 'js', f), 'utf8');
+    for (const m of src.matchAll(/inventory\.includes\(\s*'([^']+)'\s*\)/g)) {
+      if (!ITEMS[m[1]]) {
+        fail(`js/${f} legge l'oggetto "${m[1]}", che non esiste in ITEMS: effetto promesso e mai raggiungibile (residuo di un altro gioco della serie?)`);
+        fantasmi++;
+      }
+    }
+  }
+  if (!fantasmi) { ok(); console.log('  ✔ tutti gli oggetti citati dal motore esistono in ITEMS'); }
+}
+
 /* ---------- stinger dichiarati dalle scene: devono esistere in sound.js ---------- */
 section('Stinger delle scene (nessun suono fantasma)');
 
@@ -307,8 +434,23 @@ const epiSrc = readFileSync(join(root, 'js/epilogues.js'), 'utf8');
 const campSrc = readFileSync(join(root, 'js/campaign.js'), 'utf8');
 const setsBlocks = [...campSrc.matchAll(/sets:\s*{([^}]*)}/g)].map(m => m[1]).join(' ');
 const settableFlags = new Set([...setsBlocks.matchAll(/([a-z_0-9]+)\s*:/g)].map(m => m[1]));
-// flag impostati fuori dalle scene (motore/combattimento) — da tenere aggiornata a mano
-const FLAG_ESTERNI = new Set(['rituale_fatto', 'sorpresa', 'stufato_consumato', 'reputazione']);
+/* I FLAG CHE IMPOSTA IL MOTORE, letti dal codice invece che tenuti a mano.
+   Prima qui c'era una lista scritta a mano con la nota «da tenere aggiornata a mano», e una
+   lista da tenere aggiornata a mano e' una lista che a un certo punto non e' aggiornata: il
+   24 agosto 2026 l'aggiunta di un'impresa sul flag `solo` — che il motore imposta alla
+   riga quattro di newGame(), `flags: solo ? { solo: true } : {}` — ha fatto FALLIRE il
+   collaudo dicendo che quel flag non lo imposta nessuno. Il controllo aveva ragione sulla
+   sua lista e torto sul gioco. Adesso i tre modi in cui il codice scrive un flag si leggono
+   dai sorgenti: assegnamento, incremento, e inizializzazione dentro un letterale. */
+const FLAG_DAL_MOTORE = new Set();
+for (const f of readdirSync(join(root, 'js')).filter(f => f.endsWith('.js') && f !== 'campaign.js')) {
+  const src = readFileSync(join(root, 'js', f), 'utf8');
+  for (const m of src.matchAll(/flags\s*\.\s*([A-Za-z_$][\w$]*)\s*(?:=[^=]|\+\+|--|\+=)/g)) FLAG_DAL_MOTORE.add(m[1]);
+  for (const m of src.matchAll(/flags\s*\[\s*['"]([^'"]+)['"]\s*\]\s*(?:=[^=]|\+\+|--|\+=)/g)) FLAG_DAL_MOTORE.add(m[1]);
+  for (const m of src.matchAll(/flags\s*:\s*[^;\n]{0,240}/g))
+    for (const k of m[0].matchAll(/([A-Za-z_$][\w$]*)\s*:\s*(?:true|false|0|1)\b/g)) FLAG_DAL_MOTORE.add(k[1]);
+}
+const FLAG_ESTERNI = FLAG_DAL_MOTORE;
 const flagRichiesti = new Set([
   ...[...epiSrc.matchAll(/flag:\s*'([a-z_0-9]+)'/g)].map(m => m[1]),
   ...[...campSrc.matchAll(/^\s*\['([a-z_0-9]+)',/gm)].map(m => m[1]), // DIARY_FLAGS

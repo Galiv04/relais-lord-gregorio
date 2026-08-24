@@ -105,11 +105,6 @@ const Combat = (() => {
       for (const h of G.party) if (!h.down && !h.preso) h.hp = Math.min(h.maxHp, h.hp + 3);
       openLines.push(`🧰 <b>Cuore Saldo</b>: Emanuela ha già la borsa aperta — +3 PV a tutti. «Respirate. Ci sono io.»`);
     }
-    if (G.flags.stufato_bonus && !G.flags.stufato_consumato) {
-      for (const h of G.party) h.hp = Math.min(h.maxHp, h.hp + 2);
-      G.flags.stufato_consumato = true;
-      openLines.push(`🍲 Lo stufato di Bocciolo fa effetto: +2 PV a tutti!`);
-    }
 
     // iniziativa
     const combatants = [];

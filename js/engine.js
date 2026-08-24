@@ -384,9 +384,11 @@ const Engine = (() => {
       if (scene.item) G.inventory.push(scene.item);
       if (scene.item2) G.inventory.push(scene.item2);
       if (scene.heal) {
-        // le Provviste di Bocciolo rendono i riposi più nutrienti
-        const bonus = (scene.recharge && G.inventory.includes('provviste')) ? 2 : 0;
-        for (const h of G.party) if (!h.down) h.hp = Math.min(h.maxHp, h.hp + scene.heal + bonus);
+        /* Qui c'era un bonus per le «Provviste di Bocciolo», che sono della Corona di
+           Mezzanotte: in questo gioco `provviste` non esiste in ITEMS, quindi la
+           condizione era falsa per sempre. Il motore si copia fra i giochi della serie ed
+           e' esattamente cosi' che si portano appresso i riferimenti degli altri. */
+        for (const h of G.party) if (!h.down) h.hp = Math.min(h.maxHp, h.hp + scene.heal);
       }
       if (scene.damage) for (const h of G.party) if (!h.down) h.hp = Math.max(1, h.hp - scene.damage);
       if (scene.onEnterOnce && scene.onEnterOnce.itemEach) {
