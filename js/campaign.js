@@ -189,6 +189,7 @@ const CAMPAIGN = {
 
   a0: {
     location: 'tornanti',
+    stinger: 'item',
     caption: 'Autogrill di Baiano — ore 17:50, l\'ultimo caffè normale',
     gold: 1,
     text: `**Venerdì pomeriggio. Partiti da Minturno dopo pranzo: Domiziana, autostrada, e poi la A16 verso l'Irpinia.**
@@ -445,6 +446,7 @@ La parola "completo" è scritta con una cura particolare.
 
   a3_registro_ko: {
     location: 'hall',
+    stinger: 'fail',
     caption: 'Il registro — lettura interrotta',
     text: `Le dita sfogliano all'indietro — 1999... 1974... — ma una mano si posa sulla pagina. Non forte. **Precisa.** Come un fermacarte che ha deciso da solo dove stare.
 
@@ -602,6 +604,7 @@ Nessuno risponde. Di sopra, da qualche parte, una porta si chiude da sola — pi
 
   a5: {
     location: 'corridoio',
+    stinger: 'item',
     caption: 'Il corridoio delle camere — primo piano',
     text: `Il corridoio del primo piano è lungo, coi tappeti rossi che bevono il rumore dei passi e le lampade a muro che si accendono **una alla volta, mentre passate** — mai prima, mai dopo.
 
@@ -920,6 +923,7 @@ E nella tasca dell'accappatoio c'è **un paio di occhiali da sole.** Modello ann
 
   p1_accappatoio_ko: {
     location: 'piscina',
+    stinger: 'fail',
     caption: 'Il sesto accappatoio — ispezione goffa',
     text: `Chi esce dall'acqua per controllare inciampa nel bordo del lettino, si aggrappa all'accappatoio misterioso, e l'appendino cede con uno **strappo di stoffa** che nel silenzio della montagna suona come una fucilata.
 
@@ -1000,6 +1004,7 @@ E mentre lo dice, nel riflesso, la luna rossa **inizia lentissimamente a salire.
 
   p2_esperimento: {
     location: 'piscina',
+    stinger: 'item',
     caption: 'L\'esperimento di Gaetano',
     gold: 1,
     text: `Gaetano, già fuori dall'acqua e col cervello in modalità laboratorio, prende la cosa più scientifica a portata di mano: l'infradito di Federico.
@@ -1059,6 +1064,7 @@ Seconda foto, senza flash: la mano di Gaetano, normale, la sua. Ma l'anello, in 
 
   p2_esperimento_ko: {
     location: 'piscina',
+    stinger: 'fail',
     caption: 'L\'esperimento — variabile imprevista',
     text: `Gaetano si china sul bordo per posare l'infradito-sonda a pelo d'acqua, con la concentrazione di un allunaggio.
 
@@ -1105,6 +1111,7 @@ L'acqua è tornata normale. Turchese, fumante, invitante. IL problema è esattam
 
   p4_fuga: {
     location: 'relais',
+    stinger: 'fail',
     caption: 'Il tentativo di fuga — ore 23:52',
     text: `La decisione è unanime nel modo speciale in cui è unanime il panico: nessuno pronuncia la parola "scappiamo", ma Emanuela ha già le chiavi in mano, Claudia dice solo "MACCHINA. ORA." e in novanta secondi siete tutti vestiti a metà, con le valigie richiuse a morsi, giù per le scale.
 
@@ -1129,6 +1136,7 @@ Dietro la macchina, sulla ghiaia, il rumore delle cesoie. *Clip. Clip.* Viciniss
 
   p4_rientro: {
     location: 'hall',
+    stinger: 'item',
     caption: 'Il rientro — mezzanotte meno cinque',
     gold: 1,
     text: `Rientrate ordinati e velocissimi, con la compostezza isterica delle scolaresche in gita quando inizia il temporale.
@@ -1493,6 +1501,7 @@ Non c'è niente da rispondere che non sia una crudeltà. Rimettete la bottiglia 
 
   k2_sofia_ko: {
     location: 'cantina',
+    stinger: 'fail',
     caption: 'La bottiglia sbagliata',
     text: `L'orecchio si avvicina alla bottiglia sbagliata — quella accanto, **senza etichetta** — e il sussurro sale di volume TUTTO INSIEME, come una mano che afferra.
 
@@ -1547,6 +1556,7 @@ Sul muro, accanto al forno, una mensola: un barattolo di **SALE GROSSO** con l'e
 
   k4_scambio: {
     location: 'cantina',
+    stinger: 'item',
     caption: 'La trattativa dello Chef',
     gold: 1,
     text: `Lo Chef si volta. Il davanti è peggio del dietro: al posto della faccia c'è una **retina da cuoco**, di quelle per i capelli, tesa sul nulla. Eppure, in qualche modo, vi guarda. E ascolta.
@@ -1571,6 +1581,7 @@ Un silenzio lungo come una lievitazione. Poi lo Chef prende la ciocca con due di
 
   k4_nastro: {
     location: 'cantina',
+    stinger: 'item',
     npc: ['cuoco'],
     caption: 'Il piatto del Settantaquattro',
     text: `Federico appoggia il registratore sul tavolo da macellaio — piano, come si posa un documento importante — e preme PLAY.
@@ -1643,6 +1654,7 @@ Solleva la mannaia. Dal buio dietro il forno, due **camerieri in livrea** si rad
 
   k4_furto: {
     location: 'cantina',
+    stinger: 'item',
     caption: 'Il colpo della mensola',
     gold: 1,
     text: `Il piano nasce con gli sguardi, come al biliardino: Federico si schiarisce la voce e parte con la mossa che gli riesce meglio al mondo — **una domanda di quelle che non finiscono più.**
@@ -1692,6 +1704,7 @@ C'è scritto: *"Cucina del Belvedere — citofonare tre volte — chiedere del t
 
   k4_furto_ko: {
     location: 'cantina',
+    stinger: 'fail',
     caption: 'Il colpo della mensola — mano di burro',
     text: `Il piano parte bene: Federico attacca il monologo sulla castagna irpina, lo Chef si volta ipnotizzato, la mano corre alla mensola—
 
@@ -1712,6 +1725,7 @@ Il rumore di vetro sul pavimento di pietra è l'esatto contrario del silenzio. I
 
   k5_dopo_chef: {
     location: 'cantina',
+    stinger: 'item',
     caption: 'La cucina, dopo',
     gold: 1,
     text: `Lo Chef crolla in ginocchio con un suono di pentole vuote, e resta lì, piegato, il cappello afflosciato sulla retina. Non è morto — le cose della villa non muoiono così — ma è **spento**, come un forno a fine servizio.
@@ -1790,6 +1804,7 @@ E sul letto, stesa con cura, una cosa che nessun albergo stende: **un abito da d
 
   u2_1999: {
     location: 'camera',
+    stinger: 'item',
     caption: 'Stanza 1999 — "Sofia era qui"',
     gold: 1,
     text: `La porta si apre su un'estate di venticinque anni fa, conservata come sotto vetro: poster alle pareti, una radio a cassette, cinque zaini ammucchiati in un angolo, **cinque asciugamani stesi ad asciugare da un quarto di secolo** — ancora umidi.
@@ -1887,6 +1902,7 @@ Il problema è che per prenderlo bisogna attraversare la stanza. E il valzer, da
 
   mg_valzer: {
     location: 'camera',
+    stinger: 'dice',
     caption: 'Il valzer del grammofono',
     text: `Il grammofono suona il valzer che salta sempre sullo stesso giro, e la stanza — capite guardando il pavimento consumato in cerchi — vuole essere ATTRAVERSATA a tempo. Non camminata: BALLATA.
 
@@ -2029,6 +2045,7 @@ Il grammofono riparte da solo. Il valzer. Che salta.
 
   u2_1899: {
     location: 'camera',
+    stinger: 'item',
     caption: 'Stanza 1899 — la camera di Ada',
     text: `Quest'ultima porta non è chiusa a chiave. Non ne ha bisogno: si apre su una camera così **triste** che il primo istinto è chiedere scusa ed uscire.
 
@@ -2098,6 +2115,7 @@ Cinque cornici. Illuminate. In attesa.
 
   u4_intercapedine: {
     location: 'pianoProibito',
+    stinger: 'item',
     caption: 'L\'intercapedine',
     gold: 1,
     text: `Gaetano conta i passi lungo la parete di fondo. Poi esce, conta i passi del corridoio, rientra, riconta. La faccia che fa è quella delle revisioni di progetto andate male.
@@ -2148,6 +2166,7 @@ Il pozzo è a quaranta metri, oltre lo spaventapasseri, oltre l'orto recintato d
 
   mg_corsa_siepi: {
     location: 'giardino',
+    stinger: 'dice',
     caption: 'La corsa lungo le siepi',
     text: `Il piano di Natalino è semplice, che è il suo modo di dire "disperato": correre lungo il filare di siepi, piegati in due, PRIMA che lo spaventapasseri finisca il suo giro di ronda. Il bosso è potato a ostacoli — la casa lo pota APPOSTA, capite adesso — e il prato è una pista a tempo.
 
@@ -2259,6 +2278,7 @@ Il lupo di nebbia si disfa per ultimo, controvoglia, un banco di foschia alla vo
 
   b2_orto: {
     location: 'giardino',
+    stinger: 'item',
     caption: 'L\'orto delle erbe — il regno di Ada',
     gold: 1,
     text: `L'orto è l'unico angolo del Belvedere che non fa paura — e questo, ormai l'avete capito, al Belvedere è un'informazione: qualcuno lo **protegge.**
@@ -2331,6 +2351,7 @@ La corda si muove. Piano. Su, e giù. Come un invito col dito.
 
   b4_medaglione: {
     location: 'pozzo',
+    stinger: 'item',
     caption: 'Il medaglione torna a casa',
     text: `Il medaglione d'argento scende nel pozzo dentro il secchio, con la delicatezza con cui si cala un neonato.
 
@@ -2380,6 +2401,7 @@ E il pozzo fa una cosa che il Belvedere non sentiva dal 1974: **ride.** Una risa
 
   b4_vino: {
     location: 'pozzo',
+    stinger: 'item',
     caption: 'Il vino mai aperto',
     text: `La bottiglia del 1899 scende nel secchio, e con lei il messaggio, ripetuto ad alta voce con la voce più ferma che il gruppo riesce a produrre alle tre di notte davanti a un pozzo che parla:
 
@@ -2426,6 +2448,7 @@ Una pausa lunghissima. Poi, con una voce che per un istante ha di nuovo trent'an
 
   b4_parole: {
     location: 'pozzo',
+    stinger: 'item',
     caption: 'Le parole giuste',
     gold: 1,
     text: `Parlare a un pozzo è il colloquio più difficile della vostra vita, e lo affrontate con l'unica tecnica che il gruppo padroneggia davvero: **la sincerità disordinata.**
@@ -2471,6 +2494,7 @@ La corda, da sola, si arrotola ordinata sul bordo, come per ringraziarvi del dis
 
   b4_ira: {
     location: 'pozzo',
+    stinger: 'item',
     caption: 'La parola sbagliata',
     text: `Le parole partono bene e inciampano nel punto peggiore: qualcuno — la stanchezza, le tre di notte, la paura — chiama la voce **"il fantasma del pozzo".**
 
@@ -2515,6 +2539,7 @@ Il gelo, nel petto di chi è stato morso, non se ne va — quello ormai vuole l'
 
   b4_calata: {
     location: 'pozzo',
+    stinger: 'item',
     caption: 'La calata — il fondo del pozzo',
     text: `Qualcuno DEVE calarsi, e la corda regge, e le braccia del gruppo reggono, e i primi cinque metri sono solo pietra fredda e cuore in gola.
 
@@ -2559,6 +2584,7 @@ Ada, dal buio, non dice niente. Ma l'acqua-specchio, per un istante, mostra due 
 
   b4_calata_ko: {
     location: 'pozzo',
+    stinger: 'fail',
     caption: 'La calata — la corda ha fame',
     text: `La calata parte bene. Il problema non è la corda: è **il pozzo.**
 
@@ -2589,6 +2615,7 @@ Il secchio risale da solo, pieno.
 
   pp1: {
     location: 'tornanti',
+    stinger: 'item',
     caption: 'La discesa a Paternopoli — ore 1:20',
     text: `Il cancello si apre.
 
@@ -2755,6 +2782,7 @@ Don Michele vi guida nella cripta sotto la chiesa, tra scaffali di registri parr
 
   pp4: {
     location: 'paese',
+    stinger: 'item',
     caption: 'Il racconto e i doni',
     npc: ['donmichele'],
     text: `Il racconto dura un caffè intero — e con Don Michele il caffè è un'unità di misura seria. Ascolta senza interrompere: il registro coi vostri nomi già scritti, la piscina col cielo sbagliato, la voce dal pozzo, i nodi, il Banchetto delle 5:57.
@@ -2826,6 +2854,7 @@ Si cammina. Al centro. Insieme.`,
 
   pp6_ko: {
     location: 'tornanti',
+    stinger: 'fail',
     caption: 'La nebbia assaggia',
     text: `Qualcuno risponde.
 
@@ -2871,6 +2900,7 @@ Si avvia verso il corridoio, poi si volta:
 
   x_celle: {
     location: 'cantina',
+    stinger: 'heal',
     caption: 'Le celle della cantina — "il Belvedere non spreca"',
     gold: 2,
     text: `Buio. Poi pietra fredda sotto la schiena, e l'odore dolciastro della cantina.
@@ -3021,6 +3051,7 @@ Sul tavolo, tra le carte, un **Libro Mastro** rilegato in pelle scura, chiuso co
 
   os5: {
     location: 'ossario',
+    stinger: 'item',
     caption: 'Il Libro Mastro',
     text: `Il Contabile guarda la moka come un uomo affogato guarda una corda. La prende con due dita d'osso, quasi tremando, e se la porta a un naso che non ha — e ANNUSA. Davvero, annusa.
 
@@ -3064,6 +3095,7 @@ Si sporge attraverso il tavolo, e la candela si abbassa da sola per non ascoltar
 
   os6: {
     location: 'ossario',
+    stinger: 'item',
     caption: 'Il saluto del Contabile',
     gold: 1,
     text: `Che abbiate portato il caffè o solo la vostra compagnia, il Contabile a un certo punto smette di scrivere e resta fermo, la penna appoggiata, come chi si concede una pausa che aspettava da un secolo.
@@ -3114,6 +3146,7 @@ Sul tavolo, con cura da vetrina: barattoli di tisana, antidoti secondo la ricett
 
   mg_conti: {
     location: 'ossario',
+    stinger: 'dice',
     caption: 'I conti del giorno',
     text: `Il Contabile gira il librone verso di voi e vi porge la penna d'oca, dall'alto della sua stanchezza secolare.
 
@@ -3140,6 +3173,7 @@ Sul tavolo, con cura da vetrina: barattoli di tisana, antidoti secondo la ricett
 
   os_conti_ok: {
     location: 'ossario',
+    stinger: 'success',
     caption: 'Bilancio chiuso',
     text: `Il Contabile ricontrolla le cinque voci due volte — deformazione professionale — e poi fa un suono che le ossa non dovrebbero fare: un fischio di ammirazione.
 
@@ -3155,6 +3189,7 @@ Sul tavolo, con cura da vetrina: barattoli di tisana, antidoti secondo la ricett
 
   os_conti_ko: {
     location: 'ossario',
+    stinger: 'fail',
     caption: 'Bilancio in rosso',
     sets: { conti_sbagliati: true },
     text: `Il Contabile guarda le voci sbagliate con la faccia di chi ha visto crollare imperi per meno.
@@ -3243,6 +3278,7 @@ Sta guardando in alto. Verso il telescopio. Verso voi.
 
   sf3: {
     location: 'soffitta',
+    stinger: 'item',
     caption: 'Le casse di Gregorio e Ada',
     text: `Sotto i lenzuoli, le casse custodiscono una vita che nessuno di voi immaginava per un uomo in completo di lino color tortora: la vita **prima** del 1899.
 
@@ -3367,6 +3403,7 @@ I quattro reduci non si muovono. Ma **aspettano.** Si sente, nell'aria, la stess
 
   s49_3: {
     location: 'camera',
+    stinger: 'item',
     caption: 'Scopa!',
     gold: 1,
     text: `La carta giusta scende sul tavolo con un colpetto secco, e per un istante — un istante solo — i quattro reduci **aprono gli occhi insieme** e sorridono, non di un sorriso dipinto o storto: di un sorriso vero, da tavolo di bar, da partita vinta bene.
@@ -3390,6 +3427,7 @@ Sul tavolo, dove prima c'erano le carte, resta un solo asso, appoggiato in bella
 
   s49_3_ko: {
     location: 'camera',
+    stinger: 'fail',
     caption: 'Mano sbagliata',
     text: `La carta scelta è quasi giusta — quasi — e "quasi giusta", a scopa, vuol dire che si prende la presa sbagliata. I quattro reduci non si arrabbiano: semplicemente, per un istante, **scuotono la testa**, tutti insieme, con la delusione paziente di chi ha visto perdere generazioni di nipoti alle carte.
 
@@ -3487,6 +3525,7 @@ Il canto continua per un altro minuto, poi si interrompe di netto — non un fru
 
   s74_3: {
     location: 'camera',
+    stinger: 'item',
     caption: 'La cassetta',
     text: `La cassetta esce dal mangianastri — e il mangianastri a pile, dopo un attimo di esitazione, finisce nello zaino: una cassetta senza niente che la suoni è solo plastica. La cassetta esce, dicevamo, con un clic che suona quasi come un permesso concesso. Sull'etichetta, la stessa grafia allegra della ragazza che rideva nella registrazione: *"ULTIMA — se qualcuno la trova, suonatela a chi ha paura. Funziona anche per quello."*
 
@@ -3775,6 +3814,7 @@ Accanto, altre due bacheche più vecchie: un motore di **Bianchina** targato "gr
 
   gr3: {
     location: 'garage',
+    stinger: 'item',
     caption: 'La candela recuperata',
     gold: 1,
     text: `La candela esce dal suo gancio con un piccolo *clic* pulito, e nient'altro si muove: il domino resta in equilibrio, silenzioso, come se anche la bacheca fosse sollevata di non dover crollare.
@@ -3795,6 +3835,7 @@ Sulla targhetta d'ottone, ancora attaccata alla candela, la scritta resta leggib
 
   gr3_ko: {
     location: 'garage',
+    stinger: 'fail',
     caption: 'Il crollo',
     text: `La candela si stacca, ma il fil di ferro accanto si impiglia in un polsino, e in un secondo l'intero domino di pezzi ordinatissimi crolla dal muro con un frastuono di ottone e metallo che sembra durare un minuto intero, anche se saranno stati tre secondi.
 
@@ -4041,6 +4082,7 @@ Gaetano si volta verso il Belvedere: le persiane sono tutte aperte, per la prima
 
   w2_riflesso_ko: {
     location: 'riflesso',
+    stinger: 'fail',
     caption: 'Il tuffo — un ingresso più duro',
     text: `Il calcolo di Gaetano — o la stretta di mano di tutti — funziona lo stesso, ma funziona MALE: a metà del tuffo, l'acqua si accorge che qualcuno, dentro, ha ancora paura, e la paura, qui, PESA.
 
@@ -4343,6 +4385,7 @@ Il terzo scaffale è a un'altezza scomoda, dietro un vetro che non sembra chiuso
 
   w10_orologio: {
     location: 'riflesso_interno',
+    stinger: 'item',
     npc: ['sofia'],
     caption: 'L\'orologio ritrovato',
     gold: 1,
@@ -4567,6 +4610,7 @@ Sofia si mette in fila con voi, i pugni chiusi, il vecchio orologio da dodicimil
 
   w15_vittoria: {
     location: 'riflesso_interno',
+    stinger: 'item',
     caption: 'L\'Inventario si strappa',
     text: `Il Direttore cade in ginocchio davanti al proprio leggio con un rumore di carta che si accartoccia — non di corpo che cede: di PAGINA. E mentre crolla, l'Inventario si apre da solo, tutte le pagine insieme, e comincia a **sfogliarsi all'incontrario**, velocissimo, come un film riavvolto.
 
@@ -4619,6 +4663,7 @@ Intorno a voi gli ostaggi liberati corrono verso le loro porte, e più d'uno —
 
   w16_amaro: {
     location: 'riflesso_interno',
+    stinger: 'item',
     npc: ['direttore', 'sofia'],
     caption: 'Il prezzo pagato da Sofia',
     text: `Il Direttore intinge di nuovo la penna, e stavolta — è la prima volta in tutta la notte che succede — la usa esattamente come ha promesso.
@@ -4668,6 +4713,7 @@ Sofia resta immobile un istante. Poi fa una cosa che nessun ostaggio della casa 
 
   w17_fuga: {
     location: 'riflesso',
+    stinger: 'fail',
     caption: 'La casa capovolta crolla su se stessa',
     text: `Che abbiate vinto lo scontro a mani nude o strappato un compromesso amarissimo, il risultato per la casa è lo stesso: le hanno portato via dei pezzi, e una casa che si nutre di ordine, privata dell'ordine, **crolla su se stessa** come un castello di carte in una stanza dove qualcuno ha aperto la finestra.
 
@@ -4686,6 +4732,7 @@ Il giardino capovolto, che all'andata camminava all'incontrario sotto i piedi, o
 
   w17_fuga_ko: {
     location: 'riflesso',
+    stinger: 'fail',
     caption: 'La casa cerca di trattenervi',
     text: `Un piede sbaglia l'appoggio sulla ghiaia che ancora si muove all'incontrario, e per un secondo un braccio di siepe sciolta — non più forma, solo ombra liquida — si stringe intorno a una caviglia con la forza di una casa che non vuole lasciare andare l'ultimo pezzo che le resta.
 
@@ -4780,6 +4827,7 @@ Da qualche parte nella villa, una porta verde in fondo a un corridoio aspetta an
 
   nat_tronello: {
     location: 'camera',
+    stinger: 'item',
     caption: 'Il tronello del pozzo',
     gold: 1,
     text: `Nessuno discute. In trent'anni di amicizia, "ho bisogno di un tronello da solo" ha lo stesso peso di "devo chiamare mia madre".
@@ -4865,6 +4913,7 @@ E per il resto della notte, nessuno di voi riuscirà a togliersi dalla testa l'i
 
   ema_orto: {
     location: 'giardino',
+    stinger: 'item',
     caption: 'Emanuela e l\'orto di Ada',
     text: `Nessuno discute nemmeno stavolta — anche perché Emanuela è già uscita.
 
@@ -4911,6 +4960,7 @@ In fondo al corridoio, una porta senza numero e senza targhetta. Non chiusa a ch
 
   cst2: {
     location: 'camera',
+    stinger: 'item',
     caption: 'La stanza del custode',
     text: `È la stanza più piccola della casa, e la più pulita, e la più TRISTE.
 
@@ -5699,6 +5749,7 @@ Si infila nella cucina buia. Poi, dalla porta, un'ultima volta:
 
   z2_bambole: {
     location: 'salaBanchetto',
+    stinger: 'heal',
     caption: 'Le signorine del 1924',
     text: `Il valzer fischiato sale verso il soffitto, esile, un po' stonato — Emanuela non ha mai fischiato bene, e non è mai importato meno a nessuno.
 
@@ -5913,6 +5964,7 @@ Da qualche parte in paese, la campanella di Don Michele suona — a festa, e MAL
 
   e_alba: {
     location: 'albaRelais',
+    stinger: 'victory',
     caption: 'EPILOGO — Il Relais riapre',
     gold: 1,
     text: `**Un anno dopo.**
@@ -5956,6 +6008,7 @@ Scendete i tornanti nel sole — la strada scende e basta — e l'ultima cosa ch
 
   e_custode: {
     location: 'albaRelais',
+    stinger: 'victory',
     caption: 'EPILOGO — Il Nuovo Custode',
     text: `La firma asciuga in fretta. Le firme date per amore, al Belvedere, asciugano sempre in fretta: la casa le riconosce, e le tratta con rispetto.
 
@@ -5980,6 +6033,7 @@ E chi lo indossa **sorride** — davvero, vi giurate ogni anno tornando a valle,
 
   e_ospiti: {
     location: 'salaBanchetto',
+    stinger: 'victory',
     caption: 'EPILOGO — Ospiti per Sempre',
     gold: 1,
     text: `Il Relais Belvedere è, secondo chi c'è stato, il posto più accogliente dei monti d'Irpinia.
@@ -6003,6 +6057,7 @@ E voi, ormai... anche.
 
   e_smemorati: {
     location: 'albaRelais',
+    stinger: 'victory',
     caption: 'EPILOGO — La Vacanza Qualunque',
     gold: 1,
     text: `**Lunedì mattina, a casa.**
