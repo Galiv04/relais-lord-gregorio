@@ -167,7 +167,12 @@ function makeDocument() {
 
 const scriptCache = SOURCES.map(s => ({ name: s.name, script: new vm.Script(s.code, { filename: s.name }) }));
 const scriptGetG = new vm.Script('(typeof G !== "undefined" ? G : null)');
-const scriptGetApi = new vm.Script('({Engine, Combat, Dice, HEROES, BESTIARY, ITEMS, CAMPAIGN, CAMPAIGN_START, WORLD_MAP, Luoghi})');
+/* I moduli si chiedono DENTRO il contesto, non si leggono da fuori: ognuno si
+   dichiara con `const Nome = (() => {...})()`, e un const non diventa una
+   proprietà dell'oggetto globale. Chi cercava game.context.Dialoghi trovava
+   undefined anche con dialoghi.js caricato benissimo — lezione 56: quando
+   esiste un modo di chiedere alla cosa stessa, non si indovina da fuori. */
+const scriptGetApi = new vm.Script('({Engine, Combat, Dice, HEROES, BESTIARY, ITEMS, CAMPAIGN, CAMPAIGN_START, WORLD_MAP, Luoghi, Dialoghi})');
 
 function makeTimers() {
   let seq = 0;
@@ -2457,7 +2462,7 @@ section('Economia del 🕯 Sangue Freddo (raccolto per partita)');
 (function testFinestreDiConferma() {
   section('Le finestre di conferma si aprono e rispondono');
   const game = buildGame(515151);
-  const D = game.context.Dialoghi;
+  const D = game.api.Dialoghi;
   if (!D) { fail('Dialoghi non è caricato nel banco di prova'); return; }
   let aperte = 0;
   const prove = [
