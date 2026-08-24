@@ -461,6 +461,7 @@ I vostri nomi sono **già scritti**, in una calligrafia elegante che non è di n
 **(Flag: registro sfogliato troppo tardi.)**`,
     sets: { registro_bloccato: true },
     choices: [
+      { text: '📖 Rileggere solo l\'ultima riga, piano, e imparare a memoria la data', once: true, gold: 1, next: 'a4_firma' },
       { text: '✍️ Firmate: siete stanchi e il letto chiama', next: 'a4_firma' },
     ],
   },
@@ -942,7 +943,8 @@ L'accappatoio, raccolto in fretta, viene riappeso storto. Quando vi voltate di n
 **(-1 Sangue freddo. Flag: il giardiniere vi ha sentiti.)**`,
     gold: -1,
     sets: { giardiniere_allertato: true },
-    choices: [{ text: 'Tornare in acqua. Vicini.', next: 'p2' }],
+    choices: [
+      { text: '🧺 Contarli un\'altra volta, ad alta voce, tutti e sei, senza fretta', once: true, gold: 1, next: 'p2' },{ text: 'Tornare in acqua. Vicini.', next: 'p2' }],
   },
 
 
@@ -970,6 +972,7 @@ Nessuno rientra in piscina di corsa. Ma nessuno ci mette più i piedi con legger
 **(Sangue freddo +1: un secondo dentro il 1999. Vi è bastato.)**`,
     sets: { occhiali_provati: true },
     choices: [
+      { text: '🕶 Ripiegare le stanghette e rimettere gli occhiali esattamente dove stavano', once: true, gold: 1, next: 'p2' },
       { text: '🌊 In acqua, con MOLTO più rispetto', next: 'p2' },
     ],
   },
@@ -1084,7 +1087,8 @@ Il rigonfiamento si ritira. L'infradito affonda **in verticale**, risucchiata, s
     gold: -1,
     poisonRoller: true,
     sets: { vista_sagoma_99: true },
-    choices: [{ text: 'Fuori. FUORI. Tutti.', next: 'p3_fuori' }],
+    choices: [
+      { text: '🧪 Rifarlo cambiando UNA variabile sola, e scriversi quale', once: true, gold: 1, next: 'p3_fuori' },{ text: 'Fuori. FUORI. Tutti.', next: 'p3_fuori' }],
   },
 
   p3_fuori: {
@@ -1207,6 +1211,7 @@ Grafia elegante, del secolo scorso. Bozze. Decine di bozze della stessa frase, c
 **(Sangue freddo +2: adesso sapete come la casa scrive i suoi contratti — e chi glieli consegna.)**`,
     sets: { sciame_vinto: true },
     choices: [
+      { text: '🐝 Contare quelle rimaste sul bordo. Sono un numero, e i numeri servono', once: true, gold: 1, next: 'h1' },
       { text: '🚪 Dentro. Il minuto è finito da un pezzo', next: 'h1' },
     ],
   },
@@ -1230,6 +1235,7 @@ Gregorio la guarda. E succede una cosa che il maggiordomo perfetto non si conced
 **(Sangue freddo +1: adesso Gregorio SA che ce l'avete. E aspetta quel suono quanto Ada.)**`,
     sets: { campanella_mostrata: true },
     choices: [
+      { text: '🔔 Chiedere due cose: chi la suonava, e chi rispondeva', once: true, gold: 1, next: 'h1' },
       { text: '⬆ Al corridoio delle tre porte', next: 'h1' },
     ],
   },
@@ -1250,6 +1256,7 @@ Natalino richiude la finestra ridendo da solo, e la tenda — lo giurerebbe — 
 **(Sangue freddo +1: c'è una signora del 1899 che ti fa i complimenti, Natalino. La serata è già vinta a metà.)**`,
     sets: { pozzo_salutato: true },
     choices: [
+      { text: '🪟 Lasciare la finestra socchiusa di due dita. Per cortesia, e per rispetto', once: true, gold: 1, next: 'h1' },
       { text: '↩ Tornare dagli altri, con gli occhi rossi e il cuore leggero', next: 'h1' },
     ],
   },
@@ -1274,6 +1281,7 @@ Uscite in silenzio, e sulla porta l'odore d'incenso vi accompagna fino al corrid
 **(Sangue freddo +1: il '74 vi ha sentiti. E ha gradito il pensiero più della tecnica.)**`,
     sets: { chitarra_provata: true },
     choices: [
+      { text: '🗣 Dire il suo nome ad alta voce prima di uscire dalla stanza', once: true, gold: 1, next: 'h1' },
       { text: '↩ Al corridoio delle tre porte, in punta di piedi', next: 'h1' },
     ],
   },
@@ -1325,6 +1333,7 @@ Nessuno beve la seconda tazza. La casa, si direbbe, non se la prende: le piace d
 **(Sangue freddo +1: la tisana era innocua. Il messaggio, no.)**`,
     sets: { tisana_bevuta: true },
     choices: [
+      { text: '🍵 Versarla nel vaso della felce quando nessuno guarda, e ringraziare comunque', once: true, gold: 1, next: 'h1' },
       { text: '🚪 Al corridoio delle tre porte — e niente più bevande omaggio', next: 'h1' },
     ],
   },
@@ -1417,6 +1426,7 @@ In fondo al corridoio, Gregorio si ferma un istante. Senza voltarsi. Come uno ch
 **(Sangue freddo +1: adesso sapete DOVE la casa tiene in pugno Gregorio.)**`,
     sets: { ciocca_bianca_osservata: true },
     choices: [
+      { text: '📷 Non toccare la ciocca: fotografarla e richiudere il medaglione come stava', once: true, gold: 1, next: 'h1' },
       { text: 'Tornare al corridoio delle tre porte', next: 'h1' },
     ],
   },
@@ -1698,6 +1708,7 @@ C'è scritto: *"Cucina del Belvedere — citofonare tre volte — chiedere del t
 **(Sangue freddo +1: avete fatto ridere una cosa della villa. Vale più di quanto sembri.)**`,
     sets: { contatto_chef_chiesto: true },
     choices: [
+      { text: '🧼 Lavarsi le mani fino ai gomiti, come si fa in una cucina vera', once: true, gold: 1, heal: 1, next: 'h1' },
       { text: 'Risalire, prima che il contratto cambi', next: 'h1' },
     ],
   },
@@ -1798,6 +1809,7 @@ E sul letto, stesa con cura, una cosa che nessun albergo stende: **un abito da d
 **(Sangue freddo +2: Ada dice no alla casa da 125 anni. Chi rifiuta così a lungo, è un'alleata — e la casa ha un punto debole: VUOLE essere scelta.)**`,
     sets: { camera6_vista: true },
     choices: [
+      { text: '🚪 Bussare prima di andarsene, e dire grazie attraverso la porta', once: true, gold: 1, heal: 1, next: 'u1' },
       { text: '↩ Richiudere a chiave, per rispetto. Al corridoio', next: 'u1' },
     ],
   },
@@ -1876,6 +1888,7 @@ Poi la musica si abbassa da sola — non si ferma: si ABBASSA, come quando qualc
 **(Sangue freddo +2: Sofia aveva capito TUTTO, e il suo avviso è arrivato — con venticinque anni di ritardo, ma è arrivato.)**`,
     sets: { walkman_ascoltato: true },
     choices: [
+      { text: '🎧 Riavvolgere il nastro fino all\'inizio e lasciarlo pronto per il prossimo', once: true, gold: 2, next: 'u1' },
       { text: '🚪 Uscire dalla stanza 1999, portando il ritornello con voi', next: 'u1' },
     ],
   },
@@ -2316,6 +2329,7 @@ Per un minuto fumano così: lui sopra, lei sotto, il filo di fumo che sale e sce
     heal: 2,
     sets: { ultimo_tiro_condiviso: true },
     choices: [
+      { text: '🚬 Spegnerla contro la pietra e mettersi il mozzicone in tasca', once: true, gold: 1, next: 'b3_pozzo' },
       { text: '↩ Al pozzo: la notte chiama', next: 'b3_pozzo' },
     ],
   },
@@ -2488,6 +2502,7 @@ La corda, da sola, si arrotola ordinata sul bordo, come per ringraziarvi del dis
 **(Sangue freddo +1: una promessa al Belvedere è una COSA. Stanotte, questa lavora per voi.)**`,
     sets: { promessa_ad_ada: true },
     choices: [
+      { text: '🤝 Ripetere la promessa ad alta voce, tutti e cinque, come si ripete una formula', once: true, gold: 2, next: 'h1' },
       { text: 'Dentro. Verso l\'alba, con una promessa da mantenere', next: 'h1' },
     ],
   },
@@ -2533,6 +2548,7 @@ Il gelo, nel petto di chi è stato morso, non se ne va — quello ormai vuole l'
 **(Sangue freddo +1: Ada e la casa NON sono la stessa cosa. Questa distinzione, stanotte, può salvare qualcuno.)**`,
     sets: { scuse_ripetute: true },
     choices: [
+      { text: '🫂 Restare zitti un minuto dopo le scuse, che è la parte difficile', once: true, gold: 1, heal: 2, next: 'h1' },
       { text: 'Dentro. E qualcuno prepari quell\'antidoto', next: 'h1' },
     ],
   },
